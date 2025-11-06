@@ -5,8 +5,12 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.0.4
+- Added support for all variants of ardupilot models, VTOL and some others models were missing.
+- Improved mavlink connection stability and handling.
+
 ## v6.0.3
-- New Flight analtics page for viewing mavlink data in graphs.
+- New Flight analytics page for viewing mavlink data in graphs.
 - New mavlink recording feature to record mavlink data to a file for analysis.
 - Improved read_only user permissions to restrict access to certain pages.
 
