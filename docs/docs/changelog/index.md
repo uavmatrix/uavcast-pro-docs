@@ -5,6 +5,11 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.0.5
+- Fixed telemetry port configuration not being saved correctly when using diffrent port than default 14550.
+- Fixed endpoint naming conflicts when using multiple destinations with the same IP address but different ports -
+  endpoint names now include port number (e.g., `[UdpEndpoint 10.0.0.10:14550]`)
+
 ## v6.0.4
 - Added support for all variants of ardupilot models, VTOL and some others models were missing.
 - Improved mavlink connection stability and handling.
