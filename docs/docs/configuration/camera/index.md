@@ -101,6 +101,52 @@ Bitrate directly affects video quality and bandwidth usage.
 
 Useful for mounting the camera in different orientations.
 
+## Multi-Camera Switching
+
+UAVcast-Pro supports dual camera configurations with instant switching between cameras during flight.
+
+![Multi-Camera UI](img/multi_camera.jpg)
+
+### Adding a Second Camera
+
+1. Select your primary camera (Camera 1)
+2. Click **Add Camera** button
+3. Select a second camera from the dropdown
+
+:::info Resolution Notice
+Camera 2 uses the same resolution and FPS settings as Camera 1. Configure your desired resolution before adding the second camera.
+:::
+
+### Switching Cameras
+
+**Manual Switching:**
+- Click on the camera badge (CAM 1 or CAM 2) to switch
+- Active camera shows a checkmark and highlighted border
+- Use the switch button between badges for quick toggle
+
+**RC Channel Switching:**
+
+Control camera switching from your transmitter during flight:
+
+1. Enable **RC Channel Switching** in the camera settings
+2. Select an RC channel (1-18)
+3. The camera switches based on PWM value:
+   - **PWM < 1500** → Camera 1
+   - **PWM > 1500** → Camera 2
+
+When RC switching is enabled:
+- Manual switching is disabled
+- Current PWM value displays in real-time
+- Camera indicator shows which camera is active
+
+:::tip Flight Controller Setup
+Assign a switch on your transmitter to the selected RC channel. A 2-position switch works well for camera toggling.
+:::
+
+### Removing a Camera
+
+Click the **X** button on any camera badge to remove it. You can remove either Camera 1 or Camera 2.
+
 ## Live Preview
 UAVcast-Pro v6 includes an integrated HLS video player powered by **MediaMTX**:
 
