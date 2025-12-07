@@ -5,6 +5,9 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.1.0
+- Added dual camera support with instant switching via UI badges or RC channel control (channels 1-18)
+
 ## v6.0.5
 - Fixed telemetry port configuration not being saved correctly when using diffrent port than default 14550.
 - Fixed endpoint naming conflicts when using multiple destinations with the same IP address but different ports -
