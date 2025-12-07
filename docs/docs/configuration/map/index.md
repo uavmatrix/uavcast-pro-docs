@@ -323,5 +323,5 @@ For multi-monitor setups, open the flight map in a separate window:
 ## Related Pages
 
 - [Camera](/docs/6.x/configuration-camera) - Configure video streaming
-- [Flight Controller](/docs/6.x/configuration-flightcontroller) - MAVLink connection settings
+- [Flight Controller](/docs/6.x/configuration-flight-controller) - MAVLink connection settings
 - [Ground Control Stations](/docs/6.x/configuration-ground-controller) - External GCS configuration
