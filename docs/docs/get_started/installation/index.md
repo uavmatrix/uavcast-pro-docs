@@ -19,7 +19,7 @@ UAVcast-Pro supports both **arm64** and **amd64** architectures, enabling instal
 | Architecture | Supported Devices |
 |--------------|-------------------|
 | **arm64** | Raspberry Pi (Zero 2W, 3, 4, 5), NVIDIA Jetson Nano, Orange Pi, and other arm64 SBCs |
-| **amd64** | x86/x64 computers, Intel NUC, mini PCs, and standard desktop/laptop hardware |
+| **amd64** | x86/x64 computers, Intel NUC and others. |
 
 ## Operating System Requirements
 
