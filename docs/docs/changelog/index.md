@@ -5,6 +5,10 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.2.1
+- Added Chinese (Traditional) language support.
+- Improved license validation, some users experienced issues not being able to unregister old devices.
+
 ## v6.2.0
 - Added multi-architecture support for arm64 and amd64 platforms. UAVcast is no longer limited to Raspberry Pi boards and now runs on a wider range of hardware including NVIDIA Jetson Nano, x86/x64 systems, and other arm64/amd64 compatible devices.
 
