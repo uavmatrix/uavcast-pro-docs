@@ -5,6 +5,17 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.2.2
+- Added sidebar categories.
+- Fixed an issue with restoring application from sqlite database backup.
+- Improved flightmap icons. 
+- Added link to changelog in application updater card.
+- Fixed an issue where recordings were saved in wrong folder.
+- Added rpicam-apps package to installer for Ubuntu/Debian on Raspberry Pi for CSI camera support
+- Added automatic CMA memory update (128MB → 512MB) in config.txt for multi-camera setups
+- Fixed camera slot manual switching not working after disabling RC channel toggle
+- Fixed MAVLink data not loading on Radio and Inspector tabs without page refresh
+
 ## v6.2.1
 - Added Chinese (Traditional) language support.
 - Improved license validation, some users experienced issues not being able to unregister old devices.
