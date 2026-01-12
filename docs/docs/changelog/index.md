@@ -5,13 +5,13 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
-## v6.2.3
+## v6.2.3 ( 12.01.2026 )
 - Multi-CSI camera support: When multiple CSI cameras are connected, each camera now appears as a separate selectable device (e.g., "Raspberry Pi Camera 0 - imx219" and "Raspberry Pi Camera 1 - imx708")
 - Dynamic resolution detection: CSI camera resolutions and maximum FPS are now automatically detected from the connected sensor rather than using hardcoded values
 - Per-camera capabilities: Each CSI camera displays its actual supported modes, allowing different camera models (imx219, imx708, etc.) to show their specific resolutions and frame rates
 
 
-## v6.2.2
+## v6.2.2 ( 05.01.2026 )
 - Added sidebar categories.
 - Fixed an issue with restoring application from sqlite database backup.
 - Improved flightmap icons. 
@@ -22,14 +22,14 @@ sidebar_position: 40
 - Fixed camera slot manual switching not working after disabling RC channel toggle
 - Fixed MAVLink data not loading on Radio and Inspector tabs without page refresh
 
-## v6.2.1
+## v6.2.1 ( 29.12.2025 )
 - Added Chinese (Traditional) language support.
 - Improved license validation, some users experienced issues not being able to unregister old devices.
 
-## v6.2.0
+## v6.2.0 ( 20.12.2025 )
 - Added multi-architecture support for arm64 and amd64 platforms. UAVcast is no longer limited to Raspberry Pi boards and now runs on a wider range of hardware including NVIDIA Jetson Nano, x86/x64 systems, and other arm64/amd64 compatible devices.
 
-## v6.1.0
+## v6.1.0 ( 07.12.2025 )
 - Added dual camera support with instant switching via UI badges or RC channel control (channels 1-18)
 
 ## v6.0.5
