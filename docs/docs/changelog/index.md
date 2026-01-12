@@ -5,6 +5,12 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.2.3
+- Multi-CSI camera support: When multiple CSI cameras are connected, each camera now appears as a separate selectable device (e.g., "Raspberry Pi Camera 0 - imx219" and "Raspberry Pi Camera 1 - imx708")
+- Dynamic resolution detection: CSI camera resolutions and maximum FPS are now automatically detected from the connected sensor rather than using hardcoded values
+- Per-camera capabilities: Each CSI camera displays its actual supported modes, allowing different camera models (imx219, imx708, etc.) to show their specific resolutions and frame rates
+
+
 ## v6.2.2
 - Added sidebar categories.
 - Fixed an issue with restoring application from sqlite database backup.
