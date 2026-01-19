@@ -143,9 +143,6 @@ When RC switching is enabled:
 Assign a switch on your transmitter to the selected RC channel. A 2-position switch works well for camera toggling.
 :::
 
-### Removing a Camera
-
-Click the **X** button on any camera badge to remove it. You can remove either Camera 1 or Camera 2.
 
 ## Live Preview
 UAVcast-Pro v6 includes an integrated HLS video player powered by **MediaMTX**:
@@ -198,44 +195,134 @@ UAVcast-Pro v6 uses **GStreamer** as the primary video pipeline for streaming to
 - Both streams use the same camera source
 - Stopping the camera stops both UDP and HLS streams
 
-## Service Controls
-
-### Start/Stop Camera
-
-Control the camera service:
-- **Start:** Begins video encoding and streaming (both UDP to GCS and HLS preview)
-- **Stop:** Halts all video streaming
-- **Restart:** Restarts the camera service
 
 ## Receiving Video on Ground Station
 
-### Mission Planner (Windows)
+### Mission Planner / QGroundControl (Easiest Method)
 
-Mission Planner automatically receives video on UDP port 5600.
+Download and install [Mission Planner](http://ardupilot.org/planner/docs/mission-planner-installation.html) or [QGroundControl](http://qgroundcontrol.com/downloads/). Both applications have built-in GStreamer support and receive UDP video on port 5600 without any extra configuration.
 
-1. Ensure firewall allows UDP 5600
-2. Configure GCS destination in [Ground Control Stations](/docs/6.x/configuration-ground-controller)
-3. Enable video streaming for that destination
-4. Video appears in HUD automatically
+**Setup:**
+1. Configure your GCS destination in [Ground Control Stations](/configuration-ground-controller)
+2. Enable video streaming for that destination
+3. Start camera in UAVcast-Pro
+4. Open Mission Planner or QGC - video appears in HUD automatically
 
-**If video doesn't appear:**
+**If video doesn't appear in Mission Planner:**
 - Right-click HUD → Video → Set GStreamer Source
-- Use default or custom pipeline
+- Use default pipeline or enter a custom one
 
-### QGroundControl
+#### Setting Custom GStreamer Source in Mission Planner
 
-QGC automatically detects video on UDP port 5600.
+If you need to use a custom GStreamer pipeline (e.g., for troubleshooting or using a different port):
 
-1. Ensure firewall allows UDP 5600
-2. Video widget should show automatically
-3. If not, go to: Application Settings → General → Video
+1. Right-click on the HUD (video area)
+2. Select **Video** → **Set GStreamer Source**
+3. Enter your custom pipeline
+
+![Mission Planner GStreamer Source](img/hud-gstreamer.jpg)
+
+**Example custom pipeline:**
+```
+udpsrc port=5600 caps = "application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+```
+
+:::info
+Mission Planner's default GStreamer pipeline listens on port 5600. If you use a custom pipeline with a different port, make sure to set the same port in UAVcast-Pro's GCS configuration.
+:::
+
+---
 
 ### Using GStreamer Directly
 
-**Windows/Linux/Mac:**
+For more control, or to view video without Mission Planner/QGC, you can install GStreamer and run it directly.
+
+#### Windows
+
+##### Installing GStreamer
+
+1. Download GStreamer from [https://gstreamer.freedesktop.org/download/](https://gstreamer.freedesktop.org/download/)
+   - Choose the **MSVC 64-bit** runtime installer (e.g., `gstreamer-1.0-msvc-x86_64-X.XX.X.msi`)
+
+2. Run the installer
+
+:::caution Important - Select Complete Installation
+During installation, you **MUST** select **"Complete"** installation type. This installs all the required plugins for video decoding. If you choose "Typical" or "Custom" without all plugins, video streaming will not work.
+:::
+
+3. Open a new Command Prompt and navigate to the GStreamer bin folder:
+   ```cmd
+   cd C:\gstreamer\1.0\msvc_x86_64\bin
+   ```
+   :::info
+   The path may vary depending on your installation. Common paths:
+   - `C:\gstreamer\1.0\msvc_x86_64\bin`
+   - `C:\gstreamer\1.0\x86_64\bin`
+   :::
+
+4. Run the GStreamer receive command (see below)
+
+#### Start GStreamer to Receive UDP Video
+
+Open Command Prompt (Windows) or Terminal (Linux/Mac) and run:
+
 ```bash
 gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
 ```
+
+:::tip
+- Make sure the port number (5600) matches the port configured in UAVcast-Pro for your GCS endpoint
+- **Windows Users:** If the command is not recognized, make sure you're in the GStreamer bin folder, or add the GStreamer bin folder to your system PATH
+:::
+
+Your computer will now wait for the video stream from the Raspberry Pi. Once UAVcast-Pro starts streaming, you'll see real-time video from your drone.
+
+##### Windows Helper Script
+
+For convenience, save the GStreamer command to a `.cmd` file and double-click to start video:
+
+**UDP Receive (save as `start-udp-video.cmd`):**
+```cmd
+@echo off
+cd /d C:\gstreamer\1.0\msvc_x86_64\bin
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+pause
+```
+
+Edit the file with Notepad to change the port number as needed.
+
+#### Ubuntu
+
+```bash
+sudo apt-get update
+sudo apt-get install gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
+```
+
+Then run the same GStreamer command as above in Terminal.
+
+#### Mac OS X
+
+Using Homebrew:
+```bash
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew update
+brew install gstreamer gst-libav gst-plugins-ugly gst-plugins-base gst-plugins-bad gst-plugins-good
+```
+
+Then run the same GStreamer command as above in Terminal.
+
+---
+
+### Android
+
+Download and install [QGroundControl](https://play.google.com/store/apps/details?id=org.mavlink.qgroundcontrol) for Android:
+
+1. Find the IP address of your Android device in the app settings
+2. Add this IP as a GCS destination in UAVcast-Pro
+3. Run QGroundControl - it will automatically detect your vehicle and video stream
+
+Video is received on the default port 5600
+
 
 ## Troubleshooting
 
