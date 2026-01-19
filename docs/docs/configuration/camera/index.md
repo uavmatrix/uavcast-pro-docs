@@ -412,16 +412,16 @@ v4l2-ctl -d /dev/video0 --all
 
 ## Related Pages
 
-- [Ground Control Stations](/docs/6.x/configuration-ground-controller) - Configure video streaming destinations
-- [Dashboard](/docs/6.x/configuration-dashboard) - Monitor camera service status
-- [Networks](/docs/6.x/configuration-networks) - Manage network interfaces for streaming
-- [Flight Map](/docs/6.x/configuration-map) - View camera feed with live map
+- [Ground Control Stations](/configuration-ground-controller) - Configure video streaming destinations
+- [Dashboard](/configuration-dashboard) - Monitor camera service status
+- [Networks](/configuration-networks) - Manage network interfaces for streaming
+- [Flight Map](/configuration-map) - View camera feed with live map
 
 ## Next Steps
 
 After configuring your camera:
 
 1. Test live preview in UAVcast-Pro web interface
-2. Configure video destinations in [Ground Control Stations](/docs/6.x/configuration-ground-controller)
+2. Configure video destinations in [Ground Control Stations](/configuration-ground-controller)
 3. Test video reception on your GCS
 4. Adjust quality settings based on available bandwidth
