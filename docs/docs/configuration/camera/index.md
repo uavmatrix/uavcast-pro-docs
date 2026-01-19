@@ -203,7 +203,7 @@ UAVcast-Pro v6 uses **GStreamer** as the primary video pipeline for streaming to
 Download and install [Mission Planner](http://ardupilot.org/planner/docs/mission-planner-installation.html) or [QGroundControl](http://qgroundcontrol.com/downloads/). Both applications have built-in GStreamer support and receive UDP video on port 5600 without any extra configuration.
 
 **Setup:**
-1. Configure your GCS destination in [Ground Control Stations](/configuration-ground-controller)
+1. Configure your GCS destination in [Ground Control Stations](/docs/6.x/configuration-ground-controller)
 2. Enable video streaming for that destination
 3. Start camera in UAVcast-Pro
 4. Open Mission Planner or QGC - video appears in HUD automatically
@@ -412,16 +412,16 @@ v4l2-ctl -d /dev/video0 --all
 
 ## Related Pages
 
-- [Ground Control Stations](/configuration-ground-controller) - Configure video streaming destinations
-- [Dashboard](/configuration-dashboard) - Monitor camera service status
-- [Networks](/configuration-networks) - Manage network interfaces for streaming
-- [Flight Map](/configuration-map) - View camera feed with live map
+- [Ground Control Stations](/docs/6.x/configuration-ground-controller) - Configure video streaming destinations
+- [Dashboard](/docs/6.x/configuration-dashboard) - Monitor camera service status
+- [Networks](/docs/6.x/configuration-networks) - Manage network interfaces for streaming
+- [Flight Map](/docs/6.x/configuration-map) - View camera feed with live map
 
 ## Next Steps
 
 After configuring your camera:
 
 1. Test live preview in UAVcast-Pro web interface
-2. Configure video destinations in [Ground Control Stations](/configuration-ground-controller)
+2. Configure video destinations in [Ground Control Stations](/docs/6.x/configuration-ground-controller)
 3. Test video reception on your GCS
 4. Adjust quality settings based on available bandwidth
