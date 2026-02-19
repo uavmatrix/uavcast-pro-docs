@@ -5,6 +5,12 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+
+## v6.3.0 ( 19.02.2026 )
+- New feature: Fleet Management - Manage multiple Uavcast devices from a single interface, monitor status, and configure settings across your entire fleet.
+- Improved UX to be same across all services, fleet management, store, and main application.
+- Added support for video preview for custom pipeline with rtsp streams in the Camera page.
+
 ## v6.2.3 ( 12.01.2026 )
 - Multi-CSI camera support: When multiple CSI cameras are connected, each camera now appears as a separate selectable device (e.g., "Raspberry Pi Camera 0 - imx219" and "Raspberry Pi Camera 1 - imx708")
 - Dynamic resolution detection: CSI camera resolutions and maximum FPS are now automatically detected from the connected sensor rather than using hardcoded values
