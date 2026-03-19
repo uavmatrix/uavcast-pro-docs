@@ -5,7 +5,7 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
-## v6.3.1 ( 01.03.2026 )
+## v6.3.1 ( 20.03.2026 )
 - Fix issue in installer for Raspberry Pi Compute Module
 - Added more Baude Rate option for Serial telemetry connection.
 - Improved error handling and user feedback.
