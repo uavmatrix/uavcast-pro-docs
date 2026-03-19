@@ -5,6 +5,11 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.3.1 ( 01.03.2026 )
+- Fix issue in installer for Raspberry Pi Compute Module
+- Added more Baude Rate option for Serial telemetry connection.
+- Improved error handling and user feedback.
+- Bumped several dependencies to latest versions for improved security and performance.
 
 ## v6.3.0 ( 19.02.2026 )
 - New feature: Fleet Management - Manage multiple Uavcast devices from a single interface, monitor status, and configure settings across your entire fleet.
