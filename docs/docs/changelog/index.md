@@ -5,6 +5,12 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.3.2 ( 13.04.2026 )
+- Bumped Vite to latest major version.
+- Bumped Axios to latest version.
+- Bumped multiple backend and frontend dependencies for improved security and performance.
+- Updated Rust dependencies: `sqlx` 0.7 → 0.8, `bytes` 1.10 → 1.11, `time` 0.3.44 → 0.3.47.
+
 ## v6.3.1 ( 20.03.2026 )
 - Fix issue in installer for Raspberry Pi Compute Module
 - Added more Baude Rate option for Serial telemetry connection.
