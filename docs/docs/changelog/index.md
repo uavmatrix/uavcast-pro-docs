@@ -5,6 +5,12 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.4.0 ( 20.05.2026 )
+- New **Data Streams** page: build custom telemetry dashboards with charts, gauges, sparklines, and numeric tiles bound to any MAVLink scalar or `NAMED_VALUE_FLOAT` signal. Multiple named boards, drag/resize layout, history persists across page refresh.
+- New **Telemetry Injectors** (Flight Controller → Injectors): ingest external sensor data into the MAVLink stream over HTTP, UDP, or Serial — emitted as `NAMED_VALUE_FLOAT` / `NAMED_VALUE_INT`. Listeners run inside the Rust factory and auto-start on boot, so injected signals keep flowing without any UI interaction.
+- New **RTK caster** integration on the NTRIP / RTK tab: connect to an NTRIP caster, browse its sourcetable to pick the nearest mountpoint, and stream RTCM corrections to the flight controller — TLS-secured casters supported.
+- Thanks to Bobby Russell for the original feature request and feedback from his high-altitude balloon flights, the inspiration behind both Data Streams and the Injector system.
+
 ## v6.3.2 ( 13.04.2026 )
 - Bumped Vite to latest major version.
 - Bumped Axios to latest version.
