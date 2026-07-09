@@ -9,6 +9,10 @@ sidebar_position: 40
 - New **dual camera streaming**: stream two cameras to the ground station at the same time, each with independent resolution, FPS, and bitrate.
 - New **CPU load indicator** on the Camera page, warns when software H.264 encoding nears the limit.
 - **Flight map** now shows a video window per active stream, with hide/restore as tabs docked at the bottom of the map.
+- Installer now auto-resolves the renamed camera packages (`rpicam-apps` → `rpicam-apps-core`) and GStreamer runtime plugins, fixing install failures on newer Raspberry Pi OS / Debian.
+- CSI streaming now falls back to a GStreamer x264 pipeline when rpicam-apps is built without H.264 support (RPi OS Lite / Debian trixie on Pi 5), so the camera works on every supported OS.
+- Multi-camera and dual-stream now start reliably on every supported OS: the camera server detects a broken system libcamera up front and self-heals, including automatic recovery if the stream stalls.
+- Unsupported resolutions no longer prevent the camera from starting ("Match Camera 1 Resolution" included) - capture falls back automatically and the output is scaled to the configured size.
 
 ## v6.4.0 ( 20.05.2026 )
 - New **Data Streams** page: build custom telemetry dashboards with charts, gauges, sparklines, and numeric tiles bound to any MAVLink scalar or `NAMED_VALUE_FLOAT` signal. Multiple named boards, drag/resize layout, history persists across page refresh.
