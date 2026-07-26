@@ -5,6 +5,10 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.4.2 ( 26.07.2026 )
+- More reliable installs on low-power boards (Pi Zero 2W): interrupted installs self-repair, VPN steps no longer block, and a realistic time estimate is shown.
+- Complete, persistent logging across all services now bundled into the downloadable log archive, plus clearer flight controller connection logging.
+
 ## v6.4.1 ( 09.07.2026 )
 - New **dual camera streaming**: stream two cameras to the ground station at the same time, each with independent resolution, FPS, and bitrate.
 - New **CPU load indicator** on the Camera page, warns when software H.264 encoding nears the limit.
