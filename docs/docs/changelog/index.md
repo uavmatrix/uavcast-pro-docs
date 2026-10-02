@@ -5,6 +5,15 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.4.3 ( 02.10.2026 )
+- **Flight controller connection rebuilt for reliability**: the link now reconnects by itself after a flight controller reboot, USB glitch or late power-up - no manual restart needed.
+- New **Automatic port and baud rate** (now the default, also after upgrading): UAVcast finds the flight controller, remembers what worked, and follows it if the device name changes.
+- New **Auto-detect** button and a live **Connection check** on the Flight Controller page, showing step by step whether the device is found, data is arriving, and telemetry is reaching each ground station - with a plain-language fix for the first problem found.
+- Telemetry and video now **start at power-on without waiting for internet** and begin streaming to the ground station as soon as the connection is up, however long the modem takes.
+- Redesigned **dashboard status card** with an overall health summary, GPS fix type, battery, cellular signal, ground station traffic and a power supply (under-voltage) warning.
+- **Log downloads** now include a `diagnostics.txt` snapshot (settings, serial ports, power and USB events) to speed up support.
+- Controller type selection removed (ArduPilot only), and connection settings now apply instantly without restarting.
+
 ## v6.4.2 ( 26.07.2026 )
 - More reliable installs on low-power boards (Pi Zero 2W) and a realistic time estimate is shown.
 - Complete, persistent logging across all services now bundled into the downloadable log archive, plus clearer flight controller connection logging.
