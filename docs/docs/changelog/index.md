@@ -5,6 +5,19 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.5.0 ( 09.11.2026 )
+- New **camera audio**: add sound from a USB microphone or a USB camera's built-in mic to the video stream (Opus). Enable it on the Camera page; the camera's own microphone is picked automatically when it has one.
+- Audio is carried in the **live preview** (unmute the player to hear it) and can optionally be sent to every ground station as a separate RTP/Opus stream on **Video Port + 2** for GStreamer/VLC receivers.
+- New **audio indicator** on the Camera page: live level meter, the active device, and a plain-language reason if audio could not start. A failing microphone never interrupts video.
+- Selecting a camera that cannot deliver the configured resolution no longer stops video: the stream falls back to the largest supported size and the log tells you which resolution to pick.
+- A fatal video error now restarts the pipeline automatically instead of leaving the camera service running without video.
+- Fixed service actions (live preview toggle, camera start/stop) failing with a "not-found" unit in development installs.
+- **Faster NTRIP/RTK recovery**: after a brief internet drop, RTK corrections now resume within seconds instead of up to ~18 minutes. A silent caster connection is detected within 15 s and reconnected automatically.
+- **Telemetry toggle now fully controls access**: the telemetry router no longer accepts TCP connections on port 5760, so a ground station with telemetry disabled gets no data. If you connected over TCP 5760, add your PC as a ground station and connect over UDP instead.
+- Turning off **Enable Endpoint** on a ground station now also stops its video and audio stream, not just telemetry.
+- Fixed the flight map's Light and Dark layers showing "API key required": they now use Esri map tiles, which need no key.
+- Altitude labels renamed to aviation terms: **REL → AGL** (above ground level) and **MSL → AMSL** (above mean sea level).
+
 ## v6.4.3 ( 02.10.2026 )
 - **Flight controller connection rebuilt for reliability**: the link now reconnects by itself after a flight controller reboot, USB glitch or late power-up - no manual restart needed.
 - New **Automatic port and baud rate** (now the default, also after upgrading): UAVcast finds the flight controller, remembers what worked, and follows it if the device name changes.

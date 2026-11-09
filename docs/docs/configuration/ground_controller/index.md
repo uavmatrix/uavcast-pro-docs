@@ -23,6 +23,12 @@ Each destination can be individually configured for:
 - Video streaming
 - Custom IP addresses and ports
 
+## Fleet Connect Card
+
+At the top of the page there is a built-in **Fleet Connect** card. Fleet Connect links a ground station computer straight to this drone over the internet, for telemetry and video, without a VPN or IP addresses. The card is always there and cannot be removed. It has no IP or port fields: you switch it on, copy the Connect ID and approve ground stations from the card.
+
+See [Fleet Connect](../fleet_connect/index.md) for how to set it up and use it.
+
 ## Adding a GCS Destination
 
 To add a new ground control station:
@@ -109,6 +115,18 @@ Toggle to control whether video is sent to this destination.
 - **OFF:** No video sent (saves bandwidth)
 
 Use case: Disable video for telemetry-only connections or low-bandwidth links.
+
+### Enable Endpoint
+
+Turns the whole destination on or off. When it is off, no telemetry and no video are sent to this destination.
+
+### Read Only
+
+When on, the ground station can watch telemetry and read parameters and the mission, but everything that controls the vehicle is blocked, including all commands.
+
+:::note
+Some ground station software shows warnings in Read Only mode, because some of its requests are not answered.
+:::
 
 ## Ground Control Software Setup
 
@@ -221,6 +239,7 @@ No firewall configuration needed - Android allows incoming UDP.
 - [Flight Controller](/docs/6.x/configuration-flight-controller) - Configure MAVLink source
 - [Camera](/docs/6.x/configuration-camera) - Configure video streaming
 - [VPN/Private Network](/docs/6.x/configuration-vpn) - Set up ZeroTier or Tailscale
+- [Fleet Connect](../fleet_connect/index.md) - Connect a ground station without a VPN
 - [Dashboard](/docs/6.x/configuration-dashboard) - Monitor connection status
 - [Flight Map](/docs/6.x/configuration-map) - View telemetry data on map
 

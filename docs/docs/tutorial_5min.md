@@ -75,6 +75,10 @@ If status doesn't show "Connected":
 
 UAVcast-Pro v6 supports two VPN providers: **ZeroTier** and **Tailscale**. This guide uses ZeroTier.
 
+:::tip Alternative: Fleet Connect
+If you only need telemetry and video on your ground station computer, you can use [Fleet Connect](configuration/fleet_connect/index.md) instead of a VPN. Then skip steps 4 to 6 and follow the Fleet Connect page.
+:::
+
 ### Set Up ZeroTier Network
 
 1. Access [uavnet.uavmatrix.com](https://uavnet.uavmatrix.com) using credentials provided in your license email

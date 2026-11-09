@@ -39,6 +39,10 @@ No. UAVcast-Pro does not care if you use LTE, Wifi or Ethernet cable. As long as
 - For other installation issues, please navigate to `/opt/uavcast-pro/logs` folder and copy the `uavcast_installation.log` to your computer.
   Email the logfile to **support@uavmatrix.com**
 
+### How do I connect my ground station without a VPN?
+
+Use [Fleet Connect](../configuration/fleet_connect/index.md). Switch it on in the **Fleet Connect** card on the Ground Control Stations page, then paste the drone's Connect ID into the free Fleet Connect app on your computer. No VPN, IP addresses or port forwarding are needed.
+
 ### Im not able to receive video or telemetry
 
 - Make sure you have added video and telemetry port to your firewall rules.

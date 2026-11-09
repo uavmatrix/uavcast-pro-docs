@@ -49,6 +49,7 @@ UAVcast-Pro v6 is a complete rewrite with modern architecture and enhanced capab
 ### Connectivity
 - 4G/LTE modem support (Traditional and HiLink types)
 - Dual VPN providers (ZeroTier and Tailscale)
+- [Fleet Connect](../configuration/fleet_connect/index.md) - connect a ground station straight to the drone for telemetry and video, without a VPN
 - Dynamic DNS integration
 - Network interface management and failover
 - Bandwidth monitoring

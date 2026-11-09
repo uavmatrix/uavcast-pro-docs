@@ -11,6 +11,10 @@ tags: []
 
 The VPN page allows you to configure secure remote access to your UAVcast-Pro system using ZeroTier or Tailscale. VPN connections enable you to access your drone and ground control station over the internet without port forwarding or exposing services publicly.
 
+:::tip Only need telemetry and video?
+If you only need telemetry and video on a ground station computer, [Fleet Connect](../fleet_connect/index.md) is the simpler option. It needs no VPN and no IP addresses.
+:::
+
 ## Overview
 
 UAVcast-Pro v6 supports two VPN services:

@@ -59,6 +59,41 @@ The web interface includes an HLS preview powered by MediaMTX.
 - **GCS stream (UDP):** ~100-200ms latency - for flight operations
 :::
 
+## Audio
+
+Available from UAVcast-Pro **v6.5.0**.
+
+UAVcast-Pro can add sound to the video stream from a USB microphone or from the built-in microphone of a USB camera. Audio is encoded as Opus (default 64 kbps) and costs very little CPU.
+
+1. On the **Camera** page, switch on **Audio**.
+2. Pick an **Audio device**. **Auto** uses the microphone that belongs to your configured camera when it has one, otherwise the first capture device found. Microphones built into a camera are labelled with that camera's slot, e.g. *USB Audio (Camera 1 microphone)*. **Test tone** plays a 440 Hz tone so you can check the audio path without a microphone.
+3. Choose a **Bitrate** (24-128 kbps). 48-64 kbps is plenty for voice and ambient sound.
+
+Changing any audio setting restarts the camera service.
+
+### Where the audio goes
+
+- **Live preview:** always, when the preview is enabled. Browsers start video muted, so use the speaker button in the player to hear it.
+- **Ground stations:** switch on **Send audio to ground stations** to send a separate RTP/Opus stream to every ground station that receives video, on its **Video Port + 2** (e.g. `5602` for a video port of `5600`).
+
+:::info GCS audio support
+Mission Planner and QGroundControl play video only and ignore the audio stream. Use a GStreamer or VLC receiver when you need sound at the ground station:
+
+```bash
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp,media=audio,encoding-name=OPUS,clock-rate=48000,payload=97" ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+:::
+
+### Audio indicator
+
+The **Audio** card and the live preview header show the current state: a live level meter while sound is captured, the active device, and a plain-language reason when audio could not start (no capture device found, device could not be opened, or audio has no destination). Audio never interrupts video: if the microphone fails or is unplugged, video keeps streaming and audio is switched off until the camera service restarts.
+
+### Audio troubleshooting
+
+- List capture devices: `arecord -l`
+- The GStreamer ALSA plugin is required: `sudo apt-get install gstreamer1.0-alsa` (installed automatically by the UAVcast installer)
+- A microphone that is already in use by another program cannot be opened; stop that program and restart the camera service.
+
 ## Custom Pipeline
 
 For unsupported cameras or advanced configurations:
@@ -179,6 +214,10 @@ v4l2-ctl --list-devices
 ### Choppy Video
 
 Reduce settings: 640x480, 15 FPS, 1500 Kbps
+
+### Video Stops After Switching Camera
+
+A resolution saved for one camera may not exist on another (for example 2304x1296 from a Pi camera on a 720p webcam). UAVcast falls back to the largest resolution the camera supports and logs which one it used; pick a supported resolution in **Video Settings** to silence the warning.
 
 ---
 
