@@ -5,6 +5,27 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.5.1 ( 16.11.2026 )
+- New **camera recording**: record camera 1 and camera 2 with one click from the flight map, or automatically while the drone is armed. Recording uses the already-encoded stream, so it costs no extra CPU and never interrupts the live video to the ground station.
+- New **storage management**: record to the internal disk or a plugged-in USB drive / SSD, keep a free-space reserve, and let the oldest recordings be removed automatically before the disk fills up (or stop recording instead).
+- New **Camera → Recordings** page: every flight with its video and telemetry, thumbnails, a live badge while recording, downloads as MP4, and delete (video only, or video and telemetry).
+- New **Flight review player**: watch a flight's video together with the map track, the cockpit view and the flight data on one timeline, with arm/disarm and flight-mode markers, 0.5×–4× speed and two-camera layouts.
+- New **Record telemetry** setting: while armed (default), always while connected, or off.
+- New **ARM / DISARM** button on the flight map, always behind a confirmation. The flight controller's own safety checks still decide.
+- **Clear mission** now deletes the mission from the flight controller and waits for its confirmation; before, it only hid it on the map.
+- **AGL** altitude now shows the height above the takeoff point (it showed the height above sea level).
+- New **Messages** list on the flight map: every flight controller message, with the current pre-arm problems shown separately. Messages that arrive in bursts are no longer lost.
+- **Cockpit view** redesigned so no text overlaps at any panel size; the side panel has a visible handle to resize it.
+- **Camera window** redesigned: keeps the camera's own shape (no black bars), with controls that appear on hover.
+- **Lower video latency on Raspberry Pi 5**: about half the CPU, no frame buffering, and full frame rate on CSI cameras.
+- The live preview **recovers by itself** if the video server restarts.
+- **Read-only users** can watch everything but can no longer control the drone or recordings.
+- **Modem auto-connect** fixed on Ubuntu and other netplan systems, and a plugged-in modem now connects automatically by default.
+- **Automatic APN**: leave the APN empty and UAVcast finds the right one for your SIM and remembers it.
+- More robust modem connections: fixes for modems that connected without getting an internet address.
+- The modem page shows its information immediately when opened.
+- The installed version is now shown in the sidebar for every brand.
+
 ## v6.5.0 ( 09.11.2026 )
 - New **camera audio**: add sound from a USB microphone or a USB camera's built-in mic to the video stream (Opus). Enable it on the Camera page; the camera's own microphone is picked automatically when it has one.
 - Audio is carried in the **live preview** (unmute the player to hear it) and can optionally be sent to every ground station as a separate RTP/Opus stream on **Video Port + 2** for GStreamer/VLC receivers.
