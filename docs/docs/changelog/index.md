@@ -5,6 +5,11 @@ authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40
 ---
+## v6.5.2 ( 21.11.2026 )
+- Fixed the web interface crashing when the Camera page was opened, which logged users out and showed **"Insufficient permissions"** when enabling the camera.
+- Fixed the camera stopping when the **live preview** was switched off while recording was enabled. Video to the ground station now keeps running, and preview and recording come back by themselves when the video server is available again.
+- Fixed the camera service hanging after an automatic video restart until the service was restarted.
+
 ## v6.5.1 ( 16.11.2026 )
 - New **camera recording**: record camera 1 and camera 2 with one click from the flight map, or automatically while the drone is armed. Recording uses the already-encoded stream, so it costs no extra CPU and never interrupts the live video to the ground station.
 - New **storage management**: record to the internal disk or a plugged-in USB drive / SSD, keep a free-space reserve, and let the oldest recordings be removed automatically before the disk fills up (or stop recording instead).
