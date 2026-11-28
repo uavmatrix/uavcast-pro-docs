@@ -13,7 +13,7 @@
     "@fontsource-variable/inter": "5.1.0",
     "@fontsource-variable/jetbrains-mono": "5.1.1",
     "@types/node": "22.10.2",
-    "playwright": "1.49.1",
+    "playwright": "1.55.1",
     "sharp": "0.33.5",
     "tsx": "4.19.2",
     "typescript": "5.7.2"
