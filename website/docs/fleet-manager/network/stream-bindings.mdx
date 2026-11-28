@@ -34,8 +34,6 @@ If the drone doesn't confirm within 15 seconds, Fleet Manager cancels the bindin
 
 ## How ports are assigned
 
-{/* PENDING-RELEASE: port-blocks */}
-
 Ports are counted **per ground station**. Each binding gets its own block of UDP ports on that ground station, so drones never overlap:
 
 - a **video** port for camera 1, followed by room for **camera 2** (dual stream) and **audio**, which UAVcast-Pro sends to the next ports after the video port;
@@ -49,6 +47,7 @@ A few consequences worth knowing:
 - **Freed ports are reused.** Removing a binding frees its block for the next new binding to that laptop.
 - **Ports don't follow the drone.** Removing and re-adding a binding can give it different ports. Always read the **Ports** column before setting up the ground station software.
 - Ports are assigned by Fleet Manager and can't be edited in the app.
+- A **Video Port (Camera 2)** set by hand on the drone is kept when Fleet Manager updates its destinations only from UAVcast-Pro 6.5.3. On earlier versions the next update clears it.
 
 ## Set up the ground station software
 

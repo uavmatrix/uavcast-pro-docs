@@ -49,7 +49,7 @@ Apesar do rótulo **IP ou Host de Destino**, o UAVcast-Pro aceita apenas um ende
 | **Porta de Vídeo (Câmera 2)** | vazio = Porta de Vídeo + 1 | 1–65535 | Só é exibida quando a [transmissão dupla](../camera/multi-camera.mdx) está ativada. |
 | **Ativar Vídeo** | Desativado | Ativado, desativado | Envia a transmissão da câmera para este destino. |
 | **Ativar Telemetria** | Desativado | Ativado, desativado | Envia MAVLink para este destino e aceita comandos vindos dele. |
-| **Somente leitura** | Desativado | Ativado, desativado | Requer **Ativar Telemetria**. A estação de controle terrestre recebe a telemetria, mas não pode alterar nada no veículo: comandos, armamento, mudanças de modo, gravações de parâmetros, gravações de missão, RC override e controle manual vindos dela são bloqueados. {/* PENDING-RELEASE: read-only */} |
+| **Somente leitura** | Desativado | Ativado, desativado | Requer **Ativar Telemetria**. A estação de controle terrestre recebe a telemetria, mas não pode alterar nada no veículo: comandos, armamento, mudanças de modo, gravações de parâmetros, gravações de missão, RC override e controle manual vindos dela são bloqueados. Isso vale a partir do UAVcast-Pro 6.5.3; em versões anteriores, **Somente leitura** não bloqueia gravações de parâmetros. |
 
 O áudio, quando você ativa **Enviar áudio para as estações de solo** na página Câmera, vai para todos os destinos que recebem vídeo, na **Porta de Vídeo + 2** (por exemplo `5602`). Veja [Áudio](../camera/audio.mdx).
 

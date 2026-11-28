@@ -60,7 +60,7 @@ Desde a v6.5.0, o roteador de telemetria não aceita conexões TCP na porta 5760
 
 ## Verificação 5: comandos são ignorados {/* #check-5 */}
 
-Se a telemetria aparece, mas armar, trocar de modo ou enviar missões não faz nada, verifique **Somente leitura** nesse destino. **Somente leitura** bloqueia tudo o que alteraria o veículo (comandos, mudanças de modo, gravações de parâmetros e de missão), então a estação só pode observar. {/* PENDING-RELEASE: read-only */} Algumas estações de controle terrestre mostram avisos nesse modo, porque parte das requisições delas fica sem resposta.
+Se a telemetria aparece, mas armar, trocar de modo ou enviar missões não faz nada, verifique **Somente leitura** nesse destino. **Somente leitura** bloqueia tudo o que alteraria o veículo (comandos, mudanças de modo, gravações de parâmetros e de missão), então a estação só pode observar. Isso vale a partir do UAVcast-Pro 6.5.3; em versões anteriores, **Somente leitura** não bloqueia gravações de parâmetros. Algumas estações de controle terrestre mostram avisos nesse modo, porque parte das requisições delas fica sem resposta.
 
 ## Ainda sem resultado? {/* #still-nothing */}
 

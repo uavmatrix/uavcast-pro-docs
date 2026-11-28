@@ -1214,5 +1214,32 @@
   },
   "drawer.installGuide": {
     "message": "Руководство по установке"
+  },
+  "buy.cta": {
+    "message": "Купить UAVcast-Pro"
+  },
+  "buy.plans": {
+    "message": "Тарифы и цены"
+  },
+  "buy.boxAria": {
+    "message": "Купить лицензию UAVcast-Pro"
+  },
+  "buy.activateText": {
+    "message": "Для активации дрона нужна лицензия UAVcast-Pro. Купите её в магазине UAVmatrix."
+  },
+  "buy.fleetText": {
+    "message": "Fleet Manager входит в лицензию UAVcast-Pro. Каждому сопрягаемому дрону нужна своя лицензия."
+  },
+  "buy.license": {
+    "message": "Купить лицензию"
+  },
+  "nav.buy": {
+    "message": "Купить"
+  },
+  "nav.buyTitle": {
+    "message": "Купить UAVcast-Pro в магазине UAVmatrix"
+  },
+  "drawer.buy": {
+    "message": "Лицензия"
   }
 }

@@ -7,7 +7,7 @@ sidebar_position: 4
 
 # 支持的硬件 {/* #supported-hardware */}
 
-UAVcast-Pro v6 可在任何运行 Raspberry Pi OS、Debian 或 Ubuntu 的 64 位 Linux 计算机上运行，支持 **arm64** 或 **amd64** 架构（除 Raspberry Pi 外的 arm64 主板将从 {/* PENDING-RELEASE: non-pi-arm64 version */}下一个 UAVcast-Pro 版本起支持）。下表列出了已检测和经过测试的设备。关于电源、接线和采购建议，请参阅 [硬件要求](../get-started/hardware-requirements.mdx)。
+UAVcast-Pro v6 可在任何运行 Raspberry Pi OS、Debian 或 Ubuntu 的 64 位 Linux 计算机上运行，支持 **arm64** 或 **amd64** 架构（除 Raspberry Pi 外的 arm64 主板从 UAVcast-Pro 6.5.3 起支持）。下表列出了已检测和经过测试的设备。关于电源、接线和采购建议，请参阅 [硬件要求](../get-started/hardware-requirements.mdx)。
 
 ## 伴随计算机 {/* #companion-computers */}
 
@@ -24,7 +24,7 @@ UAVcast-Pro v6 可在任何运行 Raspberry Pi OS、Debian 或 Ubuntu 的 64 位
 | x86 迷你主机、Intel NUC、笔记本电脑 | amd64 | USB 转串口适配器 | USB 摄像头。 |
 
 :::note 非 Raspberry Pi 的 arm64 主板
-Jetson、Orange Pi、Banana Pi 及其他非 Raspberry Pi 的 arm64 主板需要 {/* PENDING-RELEASE: non-pi-arm64 version */}下一个 UAVcast-Pro 版本或更高版本。旧版安装程序会在这些设备上停止，并显示 *Device is not a Raspberry Pi*。
+Jetson、Orange Pi、Banana Pi 及其他非 Raspberry Pi 的 arm64 主板需要 UAVcast-Pro 6.5.3 或更高版本。旧版安装程序会在这些设备上停止，并显示 *Device is not a Raspberry Pi*。
 :::
 
 **仅限 Raspberry Pi：** CSI 摄像头（rpicam/libcamera）需要 Raspberry Pi。在 Pi 上，安装程序会启用 UART 并移除串口控制台；在 Pi 3/4/Zero 2 W 上，还会禁用蓝牙，以释放完整的 UART。

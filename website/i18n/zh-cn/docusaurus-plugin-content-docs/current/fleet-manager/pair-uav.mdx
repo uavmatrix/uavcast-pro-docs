@@ -91,7 +91,7 @@ nc -vz fleet-manager.uavmatrix.com 8883
 
 ## 向地面站发送视频和遥测数据 {/* #send-video-and-telemetry-to-a-ground-station */}
 
-配对本身不会启动任何数据流。要使用 QGroundControl 或 Mission Planner 飞行，请先将[地面站连接](./connect-gcs.mdx)到 VPN，并添加[流绑定](./network/stream-bindings.mdx)。Fleet Manager 会为每个绑定分配独立的端口组（包括视频、为摄像头 2 和音频预留的端口，以及遥测端口），因此多台无人机可以同时向同一个地面站传输数据。第一台无人机使用默认端口 5600 和 14550；其他无人机的端口请在绑定的 **Ports** 列中查看。 {/* PENDING-RELEASE: port-blocks */}
+配对本身不会启动任何数据流。要使用 QGroundControl 或 Mission Planner 飞行，请先将[地面站连接](./connect-gcs.mdx)到 VPN，并添加[流绑定](./network/stream-bindings.mdx)。Fleet Manager 会为每个绑定分配独立的端口组（包括视频、为摄像头 2 和音频预留的端口，以及遥测端口），因此多台无人机可以同时向同一个地面站传输数据。第一台无人机使用默认端口 5600 和 14550；其他无人机的端口请在绑定的 **Ports** 列中查看。
 
 ## 配对失败时 {/* #if-pairing-fails */}
 

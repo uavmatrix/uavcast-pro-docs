@@ -60,7 +60,7 @@ Since v6.5.0 the telemetry router does not accept TCP connections on port 5760, 
 
 ## Check 5: Commands are ignored {/* #check-5 */}
 
-If telemetry shows but arming, mode changes or mission uploads do nothing, check **Read Only** on that destination. Read Only blocks everything that would change the vehicle (commands, mode changes, parameter and mission writes), so the ground station can only watch. {/* PENDING-RELEASE: read-only */} Some ground stations show warnings in this mode because some of their requests go unanswered.
+If telemetry shows but arming, mode changes or mission uploads do nothing, check **Read Only** on that destination. Read Only blocks everything that would change the vehicle (commands, mode changes, parameter and mission writes), so the ground station can only watch. This applies from UAVcast-Pro 6.5.3; on earlier versions, Read Only does not block parameter writes. Some ground stations show warnings in this mode because some of their requests go unanswered.
 
 ## Still nothing?
 

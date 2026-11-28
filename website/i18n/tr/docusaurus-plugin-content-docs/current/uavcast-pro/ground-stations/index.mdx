@@ -49,7 +49,7 @@ Her alan Enter'a bastığınızda veya alandan çıktığınızda kaydedilir. Ka
 | **Video Portu (Kamera 2)** | boş = Video Portu + 1 | 1–65535 | Yalnızca [çift akış](../camera/multi-camera.mdx) açıkken görünür. |
 | **Videoyu Etkinleştir** | Kapalı | Açık, kapalı | Kamera akışını bu hedefe gönderir. |
 | **Telemetriyi Etkinleştir** | Kapalı | Açık, kapalı | MAVLink'i bu hedefe gönderir ve bu hedeften komut kabul eder. |
-| **Read Only** | Kapalı | Açık, kapalı | **Telemetriyi Etkinleştir** gerektirir. Yer kontrol istasyonu telemetriyi alır ancak araç üzerinde hiçbir şeyi değiştiremez: komutlar, arm, mod değişiklikleri, parametre ve görev yazmaları, RC override ve manuel kontrol engellenir. {/* PENDING-RELEASE: read-only */} |
+| **Read Only** | Kapalı | Açık, kapalı | **Telemetriyi Etkinleştir** gerektirir. Yer kontrol istasyonu telemetriyi alır ancak araç üzerinde hiçbir şeyi değiştiremez: komutlar, arm, mod değişiklikleri, parametre ve görev yazmaları, RC override ve manuel kontrol engellenir. Bu, UAVcast-Pro 6.5.3'ten itibaren geçerlidir; önceki sürümlerde Read Only parametre yazmalarını engellemez. |
 
 Ses, **Sesi yer kontrol istasyonlarına gönder** seçeneği Kamera sayfasında açıkken, video alan her hedefe **Video Portu + 2** üzerinden gider (ör. `5602`). Bkz. [Ses](../camera/audio.mdx).
 

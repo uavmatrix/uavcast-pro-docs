@@ -10,6 +10,7 @@ import {useDocResolver} from '@site/src/hooks/useDocResolver';
 import {useLocales} from '@site/src/hooks/useLocales';
 import {useTopNav} from '@site/src/theme/Navbar/Content';
 import {InstallCommandBox, useInstallLinks} from '@site/src/components/InstallCommand';
+import {BuyButton, PlansLink} from '@site/src/components/BuyLicense';
 
 export default function NavbarMobilePrimaryMenu() {
   const mobileSidebar = useNavbarMobileSidebar();
@@ -50,6 +51,11 @@ export default function NavbarMobilePrimaryMenu() {
           <Icon name="term" size={14} />
           {translate({id: 'drawer.installGuide', message: 'Installation guide'})}
         </Link>
+      </div>
+      <div className="uvm-drawer__label">{translate({id: 'drawer.buy', message: 'License'})}</div>
+      <div className="uvm-drawer__buy">
+        <BuyButton />
+        <PlansLink />
       </div>
       <div className="uvm-drawer__label">{translate({id: 'nav.language', message: 'Language'})}</div>
       <div className="uvm-drawer__langs">

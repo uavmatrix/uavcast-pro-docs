@@ -34,8 +34,6 @@ Se o drone não confirmar em 15 segundos, o Fleet Manager cancela a vinculação
 
 ## Como as portas são atribuídas {/* #how-ports-are-assigned */}
 
-{/* PENDING-RELEASE: port-blocks */}
-
 As portas são contadas **por estação de controle terrestre**. Cada vinculação recebe seu próprio bloco de portas UDP nessa estação, então os drones nunca se sobrepõem:
 
 - uma porta de **vídeo** para a câmera 1, seguida de espaço para a **câmera 2** (dual stream) e para o **áudio**, que o UAVcast-Pro envia para as portas seguintes à porta de vídeo;
@@ -49,6 +47,7 @@ Algumas consequências que vale conhecer:
 - **Portas liberadas são reutilizadas.** Remover uma vinculação libera seu bloco para a próxima nova vinculação com aquele notebook.
 - **As portas não acompanham o drone.** Remover e adicionar novamente uma vinculação pode resultar em portas diferentes. Sempre leia a coluna **Ports** antes de configurar o software da estação de controle terrestre.
 - As portas são atribuídas pelo Fleet Manager e não podem ser editadas no aplicativo.
+- Uma **Porta de Vídeo (Câmera 2)** definida manualmente no drone só é mantida quando o Fleet Manager atualiza seus destinos a partir do UAVcast-Pro 6.5.3. Em versões anteriores, a próxima atualização a apaga.
 
 ## Configurar o software da estação de controle terrestre {/* #set-up-the-ground-station-software */}
 

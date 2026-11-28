@@ -60,7 +60,7 @@ Desde la v6.5.0, el enrutador de telemetría no acepta conexiones TCP en el puer
 
 ## Comprobación 5: Los comandos se ignoran {/* #check-5 */}
 
-Si la telemetría se muestra, pero el armado, los cambios de modo o las cargas de misión no hacen nada, revisa **Solo lectura** en ese destino. Solo lectura bloquea todo lo que cambiaría el vehículo (comandos, cambios de modo y escrituras de parámetros y de misiones), así que la estación de control solo puede observar. {/* PENDING-RELEASE: read-only */} Algunas estaciones de control muestran advertencias en este modo porque parte de sus solicitudes quedan sin respuesta.
+Si la telemetría se muestra, pero el armado, los cambios de modo o las cargas de misión no hacen nada, revisa **Solo lectura** en ese destino. Solo lectura bloquea todo lo que cambiaría el vehículo (comandos, cambios de modo y escrituras de parámetros y de misiones), así que la estación de control solo puede observar. Esto se aplica a partir de UAVcast-Pro 6.5.3; en versiones anteriores, Read Only no bloquea la escritura de parámetros. Algunas estaciones de control muestran advertencias en este modo porque parte de sus solicitudes quedan sin respuesta.
 
 ## ¿Sigue sin funcionar? {/* #still-nothing */}
 

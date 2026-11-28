@@ -34,8 +34,6 @@ Se il drone non conferma entro 15 secondi, Fleet Manager annulla l'associazione 
 
 ## Come vengono assegnate le porte {/* #how-ports-are-assigned */}
 
-{/* PENDING-RELEASE: port-blocks */}
-
 Le porte sono contate **per stazione di terra**. Ogni associazione ottiene il proprio blocco di porte UDP su quella stazione di terra, così i droni non si sovrappongono mai:
 
 - una porta **video** per la telecamera 1, seguita dallo spazio per la **telecamera 2** (doppio flusso) e per l'**audio**, che UAVcast-Pro invia alle porte successive a quella video;
@@ -49,6 +47,7 @@ Alcune conseguenze da sapere:
 - **Le porte liberate vengono riutilizzate.** Rimuovere un'associazione libera il suo blocco per la prossima nuova associazione verso quel laptop.
 - **Le porte non seguono il drone.** Rimuovere e riaggiungere un'associazione può assegnare porte diverse. Leggi sempre la colonna **Ports** prima di configurare il software della stazione di terra.
 - Le porte sono assegnate da Fleet Manager e non possono essere modificate nell'applicazione.
+- Una **Porta Video (Telecamera 2)** impostata a mano sul drone viene mantenuta quando Fleet Manager aggiorna le sue destinazioni solo a partire da UAVcast-Pro 6.5.3. Nelle versioni precedenti l'aggiornamento successivo la cancella.
 
 ## Configura il software della stazione di terra {/* #set-up-the-ground-station-software */}
 

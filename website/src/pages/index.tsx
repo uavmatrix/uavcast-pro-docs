@@ -13,6 +13,7 @@ import {AREA_BY_KEY, AREA_HOME} from '@site/src/data/navigation';
 import {FEATURES, GOALS, POPULAR, PRODUCT_LINKS, RECENT, START_HERE, SUGGESTED_QUERIES, TROUBLESHOOTING, type HomeLink} from '@site/src/data/home';
 import {useDocResolver} from '@site/src/hooks/useDocResolver';
 import {InstallHero} from '@site/src/components/InstallCommand';
+import {BuyHero, useStoreLinks} from '@site/src/components/BuyLicense';
 
 function useResolved<T extends {to: readonly string[]}>(items: T[]) {
   const {resolve} = useDocResolver();
@@ -62,6 +63,7 @@ function Hero() {
             ))}
           </div>
           <InstallHero />
+          <BuyHero />
         </div>
         <DataPath version={version} />
       </div>
@@ -154,6 +156,7 @@ function ProductLinks({items}: {items: HomeLink[]}) {
 }
 
 function Products() {
+  const store = useStoreLinks();
   const {siteConfig} = useDocusaurusContext();
   const {resolve} = useDocResolver();
   const uavcast = resolve(['/uavcast-pro/'], {areaFallback: 'uavcast-pro'});
@@ -193,6 +196,11 @@ function Products() {
                 </Translate>
               </p>
               <ProductLinks items={PRODUCT_LINKS.uavcast} />
+              <a href={store.buy} className="uvm-pcard__buy" target="_blank" rel="noopener">
+                <Icon name="key" size={13} />
+                {translate({id: 'buy.license', message: 'Buy a license'})}
+                <Icon name="ext" size={12} />
+              </a>
               {uavcast && (
                 <span className="uvm-pcard__go">
                   <Translate id="home.uavcast.go">Explore UAVcast-Pro</Translate> <Icon name="arrow" size={14} />
@@ -254,6 +262,7 @@ function Products() {
 }
 
 function StartHere() {
+  const store = useStoreLinks();
   const cards = useResolved(START_HERE);
   if (!cards.length) return null;
   return (
@@ -265,7 +274,8 @@ function StartHere() {
         />
         <div className="uvm-paths">
           {cards.map((c) => (
-            <Link key={c.key} to={c.href} className="uvm-path">
+            <div key={c.key} className={clsx('uvm-pathwrap', c.key === 'license' && 'uvm-pathwrap--buy')}>
+            <Link to={c.href} className="uvm-path">
               <div className="uvm-path__meta">
                 <Icon name={c.icon} size={13} />
                 {c.meta}
@@ -289,6 +299,14 @@ function StartHere() {
                 </ul>
               )}
             </Link>
+            {c.key === 'license' && (
+              <a href={store.buy} className="uvm-path__buy" target="_blank" rel="noopener">
+                <Icon name="key" size={13} />
+                {translate({id: 'buy.license', message: 'Buy a license'})}
+                <Icon name="ext" size={12} />
+              </a>
+            )}
+            </div>
           ))}
         </div>
       </div>

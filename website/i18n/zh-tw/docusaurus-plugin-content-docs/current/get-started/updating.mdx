@@ -58,9 +58,7 @@ curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.1
 | 錄製內容與遙測記錄 | systemd 服務檔案 |
 | ZeroTier 與 Tailscale 的成員資格 | UAVcast-Pro 所依賴的系統套件（由 apt 更新） |
 
-{/* PENDING-RELEASE: port-persist */}
-
-在**應用程式**頁面設定的自訂**伺服器連接埠**，在更新後會保留。
+從 UAVcast-Pro 6.5.3 起，在**應用程式**頁面設定的自訂**伺服器連接埠**會在更新時保留。較早的版本會將其重設為 80：從這些版本更新後，請透過 80 號連接埠開啟網頁介面，並重新儲存您的連接埠。
 
 ## 查看變更內容 {/* #see-what-changed */}
 

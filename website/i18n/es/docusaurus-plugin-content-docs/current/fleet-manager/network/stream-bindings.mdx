@@ -34,8 +34,6 @@ Si el dron no confirma en 15 segundos, Fleet Manager cancela la vinculación con
 
 ## Cómo se asignan los puertos {/* #how-ports-are-assigned */}
 
-{/* PENDING-RELEASE: port-blocks */}
-
 Los puertos se cuentan **por estación de control en tierra**. Cada vinculación obtiene su propio bloque de puertos UDP en esa estación, así que los drones nunca se solapan:
 
 - un puerto de **video** para la cámara 1, seguido de espacio para la **cámara 2** (doble stream) y el **audio**, que UAVcast-Pro envía a los puertos siguientes al de video;
@@ -49,6 +47,7 @@ Algunas consecuencias que conviene conocer:
 - **Los puertos liberados se reutilizan.** Eliminar una vinculación libera su bloque para la siguiente vinculación nueva con esa laptop.
 - **Los puertos no siguen al dron.** Eliminar y volver a añadir una vinculación puede darle puertos distintos. Lee siempre la columna **Ports** antes de configurar el software de la estación de control en tierra.
 - Fleet Manager asigna los puertos, y no se pueden editar en la aplicación.
+- Un **Puerto de Video (Cámara 2)** definido a mano en el dron se conserva cuando Fleet Manager actualiza sus destinos solo a partir de UAVcast-Pro 6.5.3. En versiones anteriores, la siguiente actualización lo borra.
 
 ## Configurar el software de la estación de control en tierra {/* #set-up-the-ground-station-software */}
 

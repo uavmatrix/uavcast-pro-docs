@@ -15,6 +15,7 @@ import {PRODUCTS, TOP_NAV} from '@site/src/data/navigation';
 import {useDocResolver} from '@site/src/hooks/useDocResolver';
 import {useLocales} from '@site/src/hooks/useLocales';
 import {useInstallLinks} from '@site/src/components/InstallCommand';
+import {useStoreLinks} from '@site/src/components/BuyLicense';
 
 export function Brand({onClick}: {onClick?: () => void}) {
   const home = useBaseUrl('/');
@@ -89,10 +90,10 @@ function localeCode(locale: string): string {
 /**
  * Keeps the top bar on one row in every language: when the items don't fit,
  * first drop the "Docs" label and narrow the search box, then hide the text
- * links, then the "Install" label, then the product switcher. Measured on the real DOM (no fixed breakpoints), on resize,
+ * links, then the "Buy" label, then the "Install" label, then the product switcher. Measured on the real DOM (no fixed breakpoints), on resize,
  * after web fonts load and when the route changes the product label.
  */
-const COLLAPSE_LEVELS = 4;
+const COLLAPSE_LEVELS = 5;
 function useBarCollapse(ref: React.RefObject<HTMLDivElement | null>, deps: unknown[]) {
   useEffect(() => {
     const bar = ref.current;
@@ -198,6 +199,7 @@ export default function NavbarContent() {
   const area = useCurrentArea();
   const fleetUrl = siteConfig.customFields?.fleetManagerUrl as string;
   const install = useInstallLinks();
+  const store = useStoreLinks();
   const {pathname} = useLocation();
   const barRef = useRef<HTMLDivElement>(null);
   useBarCollapse(barRef, [pathname]);
@@ -241,6 +243,16 @@ export default function NavbarContent() {
       <LocaleMenu />
       <ThemeToggle />
       <span className="uvm-vsep uvm-hide-md" />
+      <a
+        className="uvm-btn uvm-btn--primary uvm-navbuy uvm-hide-md"
+        href={store.buy}
+        target="_blank"
+        rel="noopener"
+        title={translate({id: 'nav.buyTitle', message: 'Buy UAVcast-Pro in the UAVmatrix store'})}
+        aria-label={translate({id: 'nav.buyTitle', message: 'Buy UAVcast-Pro in the UAVmatrix store'})}>
+        <Icon name="key" size={13} />
+        <span className="uvm-navbuy__label">{translate({id: 'nav.buy', message: 'Buy'})}</span>
+      </a>
       <a className="uvm-btn uvm-btn--outline uvm-hide-md" href={fleetUrl} target="_blank" rel="noopener">
         {translate({id: 'nav.openFleet', message: 'Open Fleet Manager'})}
         <Icon name="ext" size={13} className="uvm-faint" />

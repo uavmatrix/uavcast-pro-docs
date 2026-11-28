@@ -1206,7 +1206,8 @@
 }
 .uvm-install--hero {
   margin-top: 28px;
-  max-width: 540px;
+  /* a little wider than the search box, so the full command fits next to a localized Copy button */
+  max-width: 584px;
   display: grid;
   gap: 8px;
 }
@@ -1285,7 +1286,7 @@
 /* Top bar: always one row, in every language. Items never shrink or wrap
    their text; useBarCollapse (Navbar/Content) adds is-c1..is-c4 when they
    don't fit: c1 drops the "Docs" label and narrows search, c2 hides the text
-   links, c3 the Install label, c4 the product switcher. */
+   links, c3 the Buy label, c4 the Install label, c5 the product switcher. */
 .navbar__inner.uvm-bar {
   flex-wrap: nowrap;
 }
@@ -1312,14 +1313,20 @@
 .uvm-bar.is-c2 .uvm-navlinks {
   display: none;
 }
-.uvm-bar.is-c3 .uvm-navinstall__label {
+.uvm-bar.is-c3 .uvm-navbuy__label {
   display: none;
 }
-.uvm-bar.is-c3 .uvm-navinstall {
+.uvm-bar.is-c3 .uvm-navbuy {
+  padding: 0 9px;
+}
+.uvm-bar.is-c4 .uvm-navinstall__label {
+  display: none;
+}
+.uvm-bar.is-c4 .uvm-navinstall {
   padding: 0 8px;
 }
-.uvm-bar.is-c4 .uvm-product,
-.uvm-bar.is-c4 .uvm-slash {
+.uvm-bar.is-c5 .uvm-product,
+.uvm-bar.is-c5 .uvm-slash {
   display: none;
 }
 @media (min-width: 997px) and (max-width: 1520px) {
@@ -1378,4 +1385,135 @@
   font-size: clamp(28px, 3.6vw, 48px);
   max-width: 13em;
   letter-spacing: -0.02em;
+}
+
+/* ---------- store: buy buttons and boxes ---------- */
+.uvm-buy__btn,
+.uvm-navbuy {
+  background: var(--accent);
+  color: var(--on-accent) !important;
+  text-decoration: none !important;
+}
+.uvm-buy__btn:hover,
+.uvm-navbuy:hover {
+  background: var(--accent-hover);
+  opacity: 1;
+}
+.uvm-buy__btn .uvm-i,
+.uvm-navbuy .uvm-i {
+  color: currentColor;
+  opacity: 0.85;
+}
+.uvm-buy__plans {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+.uvm-buy__plans:hover {
+  color: var(--accent-hover);
+}
+.uvm-buy--hero {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+}
+.uvm-buy--hero .uvm-buy__btn {
+  height: 38px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+.uvm-buy--box {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px 12px;
+  align-items: start;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.uvm-buy__ico {
+  grid-row: span 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.uvm-buy__text {
+  margin: 4px 0 0 !important;
+  font-size: 14.5px;
+  color: var(--ink-2);
+  max-width: none !important;
+}
+.uvm-buy__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 4px;
+}
+.uvm-prose > .uvm-buy--box {
+  margin-top: 24px;
+}
+.uvm-prose a.uvm-buy__plans {
+  text-decoration: none !important;
+}
+.uvm-pcard__buy,
+.uvm-path__buy {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none !important;
+}
+.uvm-pcard__buy:hover,
+.uvm-path__buy:hover {
+  color: var(--accent-hover);
+}
+.uvm-pathwrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.uvm-pathwrap > .uvm-path {
+  flex: 1;
+}
+.uvm-pathwrap--buy > .uvm-path {
+  padding-bottom: 50px;
+}
+.uvm-pathwrap--buy > .uvm-path__buy {
+  position: absolute;
+  left: 20px;
+  bottom: 18px;
+  margin: 0;
+}
+.uvm-drawer__buy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 2px 10px 0;
+}
+.uvm-drawer__buylink .uvm-i:last-child {
+  margin-left: auto;
+  color: var(--faint);
 }

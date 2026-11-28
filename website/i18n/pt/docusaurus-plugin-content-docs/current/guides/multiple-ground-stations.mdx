@@ -34,7 +34,7 @@ Os comandos de todos os destinos chegam ao controlador de voo, a menos que aquel
 
 ## 2. Torne os observadores somente leitura {/* #2-make-observers-read-only */}
 
-Para quem deve acompanhar, mas nunca pilotar, ative **Somente leitura** no destino dessa pessoa. A estação continua recebendo telemetria ao vivo, mas não pode alterar nada no veículo: comandos, mudanças de modo, armamento, gravações de parâmetros, gravações de missão e substituições de canais RC vindas dela são bloqueados. {/* PENDING-RELEASE: read-only */} O software da estação de controle terrestre pode exibir avisos neste modo, porque algumas de suas solicitações (como baixar os parâmetros ou a missão) ficam sem resposta.
+Para quem deve acompanhar, mas nunca pilotar, ative **Somente leitura** no destino dessa pessoa. A estação continua recebendo telemetria ao vivo, mas não pode alterar nada no veículo: comandos, mudanças de modo, armamento, gravações de parâmetros, gravações de missão e substituições de canais RC vindas dela são bloqueados. Isso vale a partir do UAVcast-Pro 6.5.3; em versões anteriores, **Somente leitura** não bloqueia gravações de parâmetros. O software da estação de controle terrestre pode exibir avisos neste modo, porque algumas de suas solicitações (como baixar os parâmetros ou a missão) ficam sem resposta.
 
 :::warning Dois pilotos, um drone
 Sem a opção Somente leitura, qualquer estação pode comandar o drone. Combinem quem pilota e deixem todas as outras estações como somente leitura.
@@ -63,4 +63,4 @@ No **Painel**, a linha **Estação de controle terrestre** mostra *Enviando para
 
 ## Com o Fleet Manager {/* #with-fleet-manager */}
 
-No Fleet Manager, as estações de controle terrestre entram na VPN da organização, e você as conecta aos drones com **Stream Bindings** na página **Network**. Cada drone adicional vinculado à mesma estação recebe seu próprio bloco de portas. {/* PENDING-RELEASE: port-blocks */} Veja [Vinculações de fluxo](../fleet-manager/network/stream-bindings.mdx).
+No Fleet Manager, as estações de controle terrestre entram na VPN da organização, e você as conecta aos drones com **Stream Bindings** na página **Network**. Cada drone adicional vinculado à mesma estação recebe seu próprio bloco de portas. Veja [Vinculações de fluxo](../fleet-manager/network/stream-bindings.mdx).

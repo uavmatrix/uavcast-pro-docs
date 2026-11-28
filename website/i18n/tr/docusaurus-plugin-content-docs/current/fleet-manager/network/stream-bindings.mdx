@@ -34,8 +34,6 @@ Drone 15 saniye içinde onaylamazsa Fleet Manager, bağlamayı **Failed to send 
 
 ## Portların nasıl atandığı {/* #how-ports-are-assigned */}
 
-{/* PENDING-RELEASE: port-blocks */}
-
 Portlar **yer kontrol istasyonu başına** sayılır. Her bağlama, o yer kontrol istasyonunda kendi UDP port bloğunu alır; böylece drone'lar asla çakışmaz:
 
 - kamera 1 için bir **video** portu, ardından **kamera 2** (çift akış) ve **ses** için yer. UAVcast-Pro bunları video portundan sonraki portlara gönderir;
@@ -49,6 +47,7 @@ Bilmeye değer birkaç sonuç vardır:
 - **Boşalan portlar yeniden kullanılır.** Bir bağlamayı kaldırmak, o dizüstü bilgisayara gelecek bir sonraki yeni bağlama için bloğunu serbest bırakır.
 - **Portlar drone'u izlemez.** Bir bağlamayı kaldırıp yeniden eklemek farklı portlar verebilir. Yer kontrol istasyonu yazılımını kurmadan önce her zaman **Ports** sütununu okuyun.
 - Portlar Fleet Manager tarafından atanır ve uygulamada düzenlenemez.
+- Drone'da elle ayarlanan bir **Video Portu (Kamera 2)**, Fleet Manager hedeflerini güncellediğinde yalnızca UAVcast-Pro 6.5.3'ten itibaren korunur. Önceki sürümlerde bir sonraki güncelleme bunu siler.
 
 ## Yer kontrol istasyonu yazılımını kurma {/* #set-up-the-ground-station-software */}
 

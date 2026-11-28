@@ -49,7 +49,7 @@ Ondanks het label **Bestemmings-IP of Host** accepteert UAVcast-Pro alleen een I
 | **Videopoort (Camera 2)** | leeg = Videopoort + 1 | 1–65535 | Alleen zichtbaar wanneer [dubbele stream](../camera/multi-camera.mdx) aan staat. |
 | **Video Inschakelen** | Uit | Aan, uit | Stuurt de camerastream naar deze bestemming. |
 | **Telemetrie Inschakelen** | Uit | Aan, uit | Stuurt MAVLink naar deze bestemming en accepteert commando's van daar. |
-| **Read Only** | Uit | Aan, uit | Vereist **Telemetrie Inschakelen**. Het grondstation ontvangt telemetrie maar kan niets op het voertuig wijzigen: commando's, armen, moduswijzigingen, parameterschrijfacties, missieschrijfacties, RC-override en handmatige besturing vanaf dat station worden geblokkeerd. {/* PENDING-RELEASE: read-only */} |
+| **Read Only** | Uit | Aan, uit | Vereist **Telemetrie Inschakelen**. Het grondstation ontvangt telemetrie maar kan niets op het voertuig wijzigen: commando's, armen, moduswijzigingen, parameterschrijfacties, missieschrijfacties, RC-override en handmatige besturing vanaf dat station worden geblokkeerd. Dit geldt vanaf UAVcast-Pro 6.5.3; in eerdere versies blokkeert Read Only geen parameterschrijfacties. |
 
 Audio, wanneer u **Audio naar grondstations sturen** aanzet op de pagina Camera, gaat naar elke bestemming die video ontvangt, op **Videopoort + 2** (bijvoorbeeld `5602`). Zie [Audio](../camera/audio.mdx).
 

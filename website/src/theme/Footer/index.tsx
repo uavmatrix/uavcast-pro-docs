@@ -6,6 +6,7 @@ import Translate, {translate} from '@docusaurus/Translate';
 import {useDocResolver} from '@site/src/hooks/useDocResolver';
 import {useLocales} from '@site/src/hooks/useLocales';
 import {INSTALL_ANCHOR, INSTALL_DOC} from '@site/src/data/install';
+import {useStoreLinks} from '@site/src/components/BuyLicense';
 import {track} from '@site/src/analytics';
 
 type Item = {label: string; to?: string; href?: string};
@@ -38,6 +39,7 @@ export default function Footer() {
   const home = useBaseUrl('/');
   const locales = useLocales();
   const cf = siteConfig.customFields as Record<string, string>;
+  const store = useStoreLinks();
   const r = (label: string, cands: string[], area?: string): Item | null => {
     const to = resolve(cands, {areaFallback: area, homeOk: false});
     return to ? {label, to} : null;
@@ -45,7 +47,8 @@ export default function Footer() {
   const products = [
     r('UAVcast-Pro', ['/uavcast-pro/'], 'uavcast-pro'),
     r('Fleet Manager', ['/fleet-manager/'], 'fleet-manager'),
-    {label: translate({id: 'footer.store', message: 'UAVmatrix store'}), href: `${cf.storeUrl}/products`},
+    {label: translate({id: 'footer.store', message: 'UAVmatrix store'}), href: store.plans},
+    {label: translate({id: 'buy.cta', message: 'Buy UAVcast-Pro'}), href: store.buy},
   ].filter(Boolean) as Item[];
   const installDoc = resolve(INSTALL_DOC, {areaFallback: 'get-started', homeOk: false});
   const resources = [

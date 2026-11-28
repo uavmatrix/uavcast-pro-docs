@@ -1214,5 +1214,32 @@
   },
   "drawer.installGuide": {
     "message": "安装指南"
+  },
+  "buy.cta": {
+    "message": "购买 UAVcast-Pro"
+  },
+  "buy.plans": {
+    "message": "查看套餐和价格"
+  },
+  "buy.boxAria": {
+    "message": "购买 UAVcast-Pro 许可证"
+  },
+  "buy.activateText": {
+    "message": "激活无人机需要 UAVcast-Pro 许可证。请在 UAVmatrix 商店购买。"
+  },
+  "buy.fleetText": {
+    "message": "Fleet Manager 已包含在 UAVcast-Pro 许可证中。每架配对的无人机都需要一个许可证。"
+  },
+  "buy.license": {
+    "message": "购买许可证"
+  },
+  "nav.buy": {
+    "message": "购买"
+  },
+  "nav.buyTitle": {
+    "message": "在 UAVmatrix 商店购买 UAVcast-Pro"
+  },
+  "drawer.buy": {
+    "message": "许可证"
   }
 }

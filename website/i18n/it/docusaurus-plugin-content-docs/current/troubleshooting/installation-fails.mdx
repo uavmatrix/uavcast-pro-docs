@@ -17,7 +17,7 @@ Hai eseguito `curl -fsSL https://install.uavmatrix.com | sudo bash` e si è ferm
 
 ## Verifica 1: sistema operativo a 64 bit {/* #check-1 */}
 
-UAVcast-Pro v6 richiede un SO a 64 bit: arm64 o amd64 (PC x86). Su arm64, le schede diverse da un Raspberry Pi (Jetson e altre schede ARM) richiedono {/* PENDING-RELEASE: non-pi-arm64 version */}la prossima release di UAVcast-Pro o una successiva; gli installer più vecchi si fermano con *Device is not a Raspberry Pi*.
+UAVcast-Pro v6 richiede un SO a 64 bit: arm64 o amd64 (PC x86). Su arm64, le schede diverse da un Raspberry Pi (Jetson e altre schede ARM) richiedono UAVcast-Pro 6.5.3 o successivo; gli installer più vecchi si fermano con *Device is not a Raspberry Pi*.
 
 ```bash
 dpkg --print-architecture   # must print arm64 or amd64

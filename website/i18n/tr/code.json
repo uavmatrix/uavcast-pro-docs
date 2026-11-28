@@ -1214,5 +1214,32 @@
   },
   "drawer.installGuide": {
     "message": "Kurulum kılavuzu"
+  },
+  "buy.cta": {
+    "message": "UAVcast-Pro satın al"
+  },
+  "buy.plans": {
+    "message": "Planları ve fiyatları gör"
+  },
+  "buy.boxAria": {
+    "message": "UAVcast-Pro lisansı satın al"
+  },
+  "buy.activateText": {
+    "message": "Drone'u etkinleştirmek için bir UAVcast-Pro lisansına ihtiyacınız var. UAVmatrix mağazasından satın alın."
+  },
+  "buy.fleetText": {
+    "message": "Fleet Manager, UAVcast-Pro lisansına dahildir. Eşleştirdiğiniz her drone için bir lisans gerekir."
+  },
+  "buy.license": {
+    "message": "Lisans satın al"
+  },
+  "nav.buy": {
+    "message": "Satın al"
+  },
+  "nav.buyTitle": {
+    "message": "UAVcast-Pro'yu UAVmatrix mağazasından satın alın"
+  },
+  "drawer.buy": {
+    "message": "Lisans"
   }
 }

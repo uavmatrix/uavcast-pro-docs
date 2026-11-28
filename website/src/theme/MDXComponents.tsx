@@ -7,6 +7,7 @@ import SymptomTable from '@site/src/components/mdx/SymptomTable';
 import {Card, CardGrid} from '@site/src/components/mdx/Card';
 import UiSketch from '@site/src/components/mdx/UiSketch';
 import InstallCommand from '@site/src/components/InstallCommand';
+import BuyLicense from '@site/src/components/BuyLicense';
 
 /** Components available in every MDX file without an import. */
 export default {
@@ -20,4 +21,5 @@ export default {
   CardGrid,
   UiSketch,
   InstallCommand,
+  BuyLicense,
 };

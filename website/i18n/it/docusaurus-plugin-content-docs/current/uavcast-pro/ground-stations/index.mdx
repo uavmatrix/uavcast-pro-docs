@@ -49,7 +49,7 @@ Nonostante l'etichetta **IP o Host di Destinazione**, UAVcast-Pro accetta solo u
 | **Porta Video (Telecamera 2)** | vuoto = Porta Video + 1 | 1–65535 | Visibile solo quando il [doppio flusso](../camera/multi-camera.mdx) è attivo. |
 | **Attiva Video** | Disattivo | Attivo, disattivato | Invia il flusso della telecamera a questa destinazione. |
 | **Attiva Telemetria** | Disattivo | Attivo, disattivato | Invia MAVLink a questa destinazione e accetta da essa comandi di ritorno. |
-| **Read Only** | Disattivo | Attivo, disattivato | Richiede **Attiva Telemetria**. La stazione di terra riceve la telemetria ma non può modificare nulla sul velivolo: comandi, armo, cambi di modalità, scritture di parametri e di missione, RC override e controllo manuale da essa sono bloccati. {/* PENDING-RELEASE: read-only */} |
+| **Read Only** | Disattivo | Attivo, disattivato | Richiede **Attiva Telemetria**. La stazione di terra riceve la telemetria ma non può modificare nulla sul velivolo: comandi, armo, cambi di modalità, scritture di parametri e di missione, RC override e controllo manuale da essa sono bloccati. Vale a partire da UAVcast-Pro 6.5.3; nelle versioni precedenti, Read Only non blocca le scritture dei parametri. |
 
 L'audio, quando attivi **Invia audio alle stazioni di terra** nella pagina Telecamera, va a ogni destinazione che riceve il video, sulla **Porta Video + 2** (per esempio `5602`). Vedi [Audio](../camera/audio.mdx).
 

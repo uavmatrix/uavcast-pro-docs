@@ -34,7 +34,7 @@ sidebar_position: 4
 
 ## 2. 將觀察者設為唯讀 {/* #2-make-observers-read-only */}
 
-對於只需觀看、絕不操控飛行的人員，請在其目的地上開啟 **Read Only**。該地面站仍會接收即時遙測，但無法變更無人機上的任何設定：來自該站的指令、模式變更、解鎖、參數寫入、任務寫入與 RC 覆寫都會被阻擋。{/* PENDING-RELEASE: read-only */} 在此模式下，地面站軟體可能會顯示警告，因為它的部分請求（例如下載參數或任務）將得不到回應。
+對於只需觀看、絕不操控飛行的人員，請在其目的地上開啟 **Read Only**。該地面站仍會接收即時遙測，但無法變更無人機上的任何設定：來自該站的指令、模式變更、解鎖、參數寫入、任務寫入與 RC 覆寫都會被阻擋。此行為自 UAVcast-Pro 6.5.3 起適用；在較早的版本中，Read Only 不會阻擋參數寫入。 在此模式下，地面站軟體可能會顯示警告，因為它的部分請求（例如下載參數或任務）將得不到回應。
 
 :::warning 兩位飛行員，一台無人機
 若未設定 Read Only，每個地面站都能操控無人機。請事先約定由誰駕駛，並將其他所有地面站設為唯讀。
@@ -63,4 +63,4 @@ sidebar_position: 4
 
 ## 搭配 Fleet Manager {/* #with-fleet-manager */}
 
-在 Fleet Manager 中，地面站會加入組織的 VPN，您可在 **Network** 頁面上透過 **Stream Bindings** 將它們連接到無人機。每台額外綁定到同一地面站的無人機，都會取得自己的一組連接埠。{/* PENDING-RELEASE: port-blocks */} 請參閱[串流綁定](../fleet-manager/network/stream-bindings.mdx)。
+在 Fleet Manager 中，地面站會加入組織的 VPN，您可在 **Network** 頁面上透過 **Stream Bindings** 將它們連接到無人機。每台額外綁定到同一地面站的無人機，都會取得自己的一組連接埠。 請參閱[串流綁定](../fleet-manager/network/stream-bindings.mdx)。

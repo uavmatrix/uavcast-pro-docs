@@ -1214,5 +1214,32 @@
   },
   "drawer.installGuide": {
     "message": "Installatiegids"
+  },
+  "buy.cta": {
+    "message": "UAVcast-Pro kopen"
+  },
+  "buy.plans": {
+    "message": "Abonnementen en prijzen"
+  },
+  "buy.boxAria": {
+    "message": "Een UAVcast-Pro-licentie kopen"
+  },
+  "buy.activateText": {
+    "message": "Je hebt een UAVcast-Pro-licentie nodig om de drone te activeren. Koop er een in de UAVmatrix-winkel."
+  },
+  "buy.fleetText": {
+    "message": "Fleet Manager is inbegrepen bij een UAVcast-Pro-licentie. Elke drone die je koppelt heeft er een nodig."
+  },
+  "buy.license": {
+    "message": "Licentie kopen"
+  },
+  "nav.buy": {
+    "message": "Kopen"
+  },
+  "nav.buyTitle": {
+    "message": "UAVcast-Pro kopen in de UAVmatrix-winkel"
+  },
+  "drawer.buy": {
+    "message": "Licentie"
   }
 }

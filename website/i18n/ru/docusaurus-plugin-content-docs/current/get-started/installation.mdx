@@ -10,6 +10,8 @@ keywords: [установка, как установить, ссылка для 
 
 <InstallCommand />
 
+<BuyLicense />
+
 UAVcast-Pro устанавливается одной командой в любой 64-битной Linux-системе на основе Debian: Raspberry Pi OS, Debian или Ubuntu, на arm64 или amd64. Установщик загружает последнюю версию, устанавливает её зависимости и службы и по завершении выводит адрес веб-интерфейса. Установка занимает около 10 минут или около 30 минут на Raspberry Pi Zero 2 W, 2 или 3.
 
 ## Перед началом работы {/* #before-you-begin */}
@@ -40,7 +42,7 @@ Ubuntu Server 64-bit для Raspberry Pi также подходит.
 
 Запишите 64-битный образ Ubuntu или Debian от производителя (например, Ubuntu из JetPack для NVIDIA Jetson), выполните первоначальную настройку при первом запуске и включите SSH.
 
-Платы arm64, отличные от Raspberry Pi, требуют {/* PENDING-RELEASE: non-pi-arm64 version */}следующей версии UAVcast-Pro или новее; старые установщики останавливаются с сообщением *Device is not a Raspberry Pi*.
+Платы arm64, отличные от Raspberry Pi, требуют UAVcast-Pro 6.5.3 или новее; старые установщики останавливаются с сообщением *Device is not a Raspberry Pi*.
 
 </TabItem>
 <TabItem value="amd64" label="ПК x86-64">
@@ -156,13 +158,13 @@ sudo systemctl status uavcast-web
 
 ## Удаление {/* #uninstall */}
 
-У исполняемого файла установщика есть режим удаления. Он останавливает и удаляет все службы UAVcast-Pro, удаляет `/opt/uavcast-pro` (включая настройки и записи) и полностью очищает установленные им пакеты ZeroTier, Tailscale и Redis. Общие пакеты, такие как NetworkManager, ModemManager и GStreamer, остаются.
+У исполняемого файла установщика есть режим удаления. Он останавливает и удаляет все службы UAVcast-Pro, базу настроек и файлы программы в `/opt/uavcast-pro`, а также удаляет ZeroTier, Tailscale и Redis, если их установил UAVcast-Pro. Общие пакеты, такие как NetworkManager, ModemManager и GStreamer, остаются.
 
 ```bash
 sudo /opt/uavcast-pro/factory/ApplicationInstaller --uninstall
 ```
 
-{/* PENDING-RELEASE: uninstall */}
+Начиная с UAVcast-Pro 6.5.3 записи полётов в `/opt/uavcast-pro/recordings` сохраняются. Добавьте `--delete-recordings`, чтобы удалить и их, или `--purge-deps`, чтобы удалить также ZeroTier, Tailscale и Redis, установленные до UAVcast-Pro. В более ранних версиях удаление стирает всю папку `/opt/uavcast-pro` вместе с записями, поэтому сначала скопируйте записи, которые хотите сохранить.
 
 :::warning Сначала снимите устройство с регистрации
 Удаление не освобождает слот лицензии. Снимите устройство с регистрации в разделе **Приложение → Менеджер лицензий** до очистки, иначе освободить слот можно будет только с помощью другого устройства. См. [Лицензирование и активация](./license-activation.mdx#unregister-a-device).

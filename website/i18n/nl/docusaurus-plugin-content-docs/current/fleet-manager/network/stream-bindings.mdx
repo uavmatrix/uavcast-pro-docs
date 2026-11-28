@@ -34,8 +34,6 @@ Als de drone niet binnen 15 seconden bevestigt, annuleert Fleet Manager de koppe
 
 ## Hoe poorten worden toegewezen {/* #how-ports-are-assigned */}
 
-{/* PENDING-RELEASE: port-blocks */}
-
 Poorten worden **per grondstation** geteld. Elke koppeling krijgt een eigen blok UDP-poorten op dat grondstation, zodat drones elkaar nooit overlappen:
 
 - een **video**-poort voor camera 1, gevolgd door ruimte voor **camera 2** (dubbele stream) en **audio**, die UAVcast-Pro naar de volgende poorten na de videopoort stuurt;
@@ -49,6 +47,7 @@ Enkele gevolgen die het waard zijn om te weten:
 - **Vrijgekomen poorten worden hergebruikt.** Het verwijderen van een koppeling maakt het blok vrij voor de volgende nieuwe koppeling naar die laptop.
 - **Poorten volgen de drone niet.** Een koppeling verwijderen en opnieuw toevoegen kan andere poorten opleveren. Lees altijd de kolom **Ports** voordat u de software op het grondstation instelt.
 - Poorten worden door Fleet Manager toegewezen en kunnen in de app niet worden bewerkt.
+- Een handmatig ingestelde **Videopoort (Camera 2)** op de drone blijft pas vanaf UAVcast-Pro 6.5.3 behouden wanneer Fleet Manager de bestemmingen bijwerkt. In eerdere versies wist de volgende update hem.
 
 ## De software op het grondstation instellen {/* #set-up-the-ground-station-software */}
 

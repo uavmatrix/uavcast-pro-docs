@@ -10,6 +10,8 @@ keywords: [kurulum, nasıl kurulur, kurulum bağlantısı, kurulum komutu, kurul
 
 <InstallCommand />
 
+<BuyLicense />
+
 UAVcast-Pro, 64 bit Debian tabanlı herhangi bir Linux sistemine (Raspberry Pi OS, Debian veya Ubuntu; arm64 veya amd64) tek komutla kurulur. Yükleyici en son sürümü indirir, bağımlılıklarını ve servislerini kurar, işlem bittiğinde web arayüzünün adresini yazdırır. Yaklaşık 10 dakika sürer; Raspberry Pi Zero 2 W, 2 veya 3 üzerinde yaklaşık 30 dakika.
 
 ## Başlamadan önce {/* #before-you-begin */}
@@ -40,7 +42,7 @@ Raspberry Pi için Ubuntu Server 64-bit de çalışır.
 
 Satıcının 64 bit Ubuntu veya Debian imajını yazın (örneğin NVIDIA Jetson için JetPack'in Ubuntu'su), ilk açılış kurulumunu tamamlayın ve SSH'yi etkinleştirin.
 
-Raspberry Pi dışındaki arm64 kartlar {/* PENDING-RELEASE: non-pi-arm64 version */}bir sonraki UAVcast-Pro sürümünü veya daha yenisini gerektirir. Eski yükleyiciler *Device is not a Raspberry Pi* mesajıyla durur.
+Raspberry Pi dışındaki arm64 kartlar UAVcast-Pro 6.5.3 veya daha yenisini gerektirir. Eski yükleyiciler *Device is not a Raspberry Pi* mesajıyla durur.
 
 </TabItem>
 <TabItem value="amd64" label="x86-64 PC">
@@ -156,13 +158,13 @@ sudo systemctl status uavcast-web
 
 ## Kaldırma {/* #uninstall */}
 
-Yükleyici ikili dosyasının bir kaldırma modu vardır. Tüm UAVcast-Pro servislerini durdurur ve kaldırır, `/opt/uavcast-pro` dizinini siler (ayarlar ve kayıtlar dahil) ve kurduğu ZeroTier, Tailscale ve Redis paketlerini temizler. NetworkManager, ModemManager ve GStreamer gibi genel paketler kalır.
+Yükleyici ikili dosyasının bir kaldırma modu vardır. Tüm UAVcast-Pro servislerini durdurur ve kaldırır, ayar veritabanını ve `/opt/uavcast-pro` içindeki program dosyalarını siler; ZeroTier, Tailscale ve Redis'i UAVcast-Pro kurduysa bunları da temizler. NetworkManager, ModemManager ve GStreamer gibi genel paketler kalır.
 
 ```bash
 sudo /opt/uavcast-pro/factory/ApplicationInstaller --uninstall
 ```
 
-{/* PENDING-RELEASE: uninstall */}
+UAVcast-Pro 6.5.3'ten itibaren `/opt/uavcast-pro/recordings` içindeki uçuş kayıtları korunur. Bunları da kaldırmak için `--delete-recordings` ekleyin; UAVcast-Pro'dan önce kurulmuş ZeroTier, Tailscale ve Redis'i de kaldırmak için `--purge-deps` ekleyin. Önceki sürümlerde kaldırma işlemi kayıtlar dahil tüm `/opt/uavcast-pro` klasörünü siler; saklamak istediğiniz kayıtları önce kopyalayın.
 
 :::warning Önce lisansın kaydını silin
 Kaldırmak lisans yuvasını serbest bırakmaz. Silmeden önce **Uygulama → Lisans Yöneticisi** üzerinden cihazın kaydını silin; aksi halde yuvayı başka bir cihaz olmadan serbest bırakamazsınız. Bkz. [Lisanslama ve etkinleştirme](./license-activation.mdx#unregister-a-device).

@@ -34,8 +34,6 @@ Jeśli dron nie potwierdzi w ciągu 15 sekund, Fleet Manager anuluje powiązanie
 
 ## Jak przydzielane są porty {/* #how-ports-are-assigned */}
 
-{/* PENDING-RELEASE: port-blocks */}
-
 Porty są liczone **dla każdej stacji naziemnej**. Każde powiązanie dostaje własny blok portów UDP na tej stacji, dzięki czemu drony się nie nakładają:
 
 - port **wideo** dla kamery 1, a po nim miejsce na **kamerę 2** (podwójny strumień) i **audio**, które UAVcast-Pro wysyła na kolejne porty po porcie wideo;
@@ -49,6 +47,7 @@ Warto znać kilka konsekwencji:
 - **Zwolnione porty są ponownie używane.** Usunięcie powiązania zwalnia jego blok dla następnego nowego powiązania z tym laptopem.
 - **Porty nie podążają za dronem.** Usunięcie i ponowne dodanie powiązania może dać inne porty. Zawsze odczytaj kolumnę **Ports** przed konfiguracją oprogramowania stacji naziemnej.
 - Porty przydziela Fleet Manager i nie można ich edytować w aplikacji.
+- Ręcznie ustawiony na dronie **Port Wideo (Kamera 2)** zostaje zachowany, gdy Fleet Manager aktualizuje swoje miejsca docelowe, dopiero od UAVcast-Pro 6.5.3. We wcześniejszych wersjach kolejna aktualizacja go usuwa.
 
 ## Konfiguracja oprogramowania stacji naziemnej {/* #set-up-the-ground-station-software */}
 

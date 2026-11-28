@@ -34,7 +34,7 @@ I comandi di ogni destinazione raggiungono il controllore di volo, a meno che qu
 
 ## 2. Rendi gli osservatori in sola lettura {/* #2-make-observers-read-only */}
 
-Per chi deve osservare senza mai pilotare, attiva **Read Only** sulla sua destinazione. La stazione riceve comunque la telemetria in tempo reale, ma non può modificare nulla sul velivolo: comandi, cambi di modalità, armamento, scritture di parametri, scritture di missione e override RC da essa sono bloccati. {/* PENDING-RELEASE: read-only */} Il software della stazione di terra può mostrare avvisi in questa modalità, perché alcune sue richieste (come lo scaricamento dei parametri o della missione) restano senza risposta.
+Per chi deve osservare senza mai pilotare, attiva **Read Only** sulla sua destinazione. La stazione riceve comunque la telemetria in tempo reale, ma non può modificare nulla sul velivolo: comandi, cambi di modalità, armamento, scritture di parametri, scritture di missione e override RC da essa sono bloccati. Vale a partire da UAVcast-Pro 6.5.3; nelle versioni precedenti, Read Only non blocca le scritture dei parametri. Il software della stazione di terra può mostrare avvisi in questa modalità, perché alcune sue richieste (come lo scaricamento dei parametri o della missione) restano senza risposta.
 
 :::warning Due piloti, un drone
 Senza Read Only, ogni stazione può comandare il drone. Stabilite chi pilota e rendete in sola lettura tutte le altre stazioni.
@@ -63,4 +63,4 @@ Nella **Dashboard**, la riga **Ground station** mostra *Sending to n · x packet
 
 ## Con Fleet Manager {/* #with-fleet-manager */}
 
-In Fleet Manager, le stazioni di terra entrano nella VPN dell'organizzazione e le colleghi ai droni con gli **Stream Bindings** nella pagina **Network**. Ogni drone aggiuntivo associato alla stessa stazione di terra ottiene il proprio blocco di porte. {/* PENDING-RELEASE: port-blocks */} Vedi [Stream binding](../fleet-manager/network/stream-bindings.mdx).
+In Fleet Manager, le stazioni di terra entrano nella VPN dell'organizzazione e le colleghi ai droni con gli **Stream Bindings** nella pagina **Network**. Ogni drone aggiuntivo associato alla stessa stazione di terra ottiene il proprio blocco di porte. Vedi [Stream binding](../fleet-manager/network/stream-bindings.mdx).

@@ -10,6 +10,8 @@ keywords: [安装, 如何安装, 安装链接, 安装命令, 安装指令, 安�
 
 <InstallCommand />
 
+<BuyLicense />
+
 UAVcast-Pro 只需一条命令即可在任何基于 Debian 的 64 位 Linux 系统上安装：Raspberry Pi OS、Debian 或 Ubuntu，架构为 arm64 或 amd64。安装程序会下载最新版本、安装其依赖项和服务，并在完成后显示网页界面的地址。安装约需 10 分钟；在 Pi Zero 2 W、2 或 3 上约需 30 分钟。
 
 ## 开始之前 {/* #before-you-begin */}
@@ -40,7 +42,7 @@ UAVcast-Pro 只需一条命令即可在任何基于 Debian 的 64 位 Linux 系�
 
 刷写厂商提供的 64 位 Ubuntu 或 Debian 镜像（例如 NVIDIA Jetson 上的 JetPack Ubuntu），完成首次启动设置并启用 SSH。
 
-非树莓派的 arm64 主板需要 {/* PENDING-RELEASE: non-pi-arm64 version */}UAVcast-Pro 的下一个发行版或更高版本；较旧的安装程序会因提示 *Device is not a Raspberry Pi* 而停止。
+非树莓派的 arm64 主板需要 UAVcast-Pro 6.5.3 或更高版本；较旧的安装程序会因提示 *Device is not a Raspberry Pi* 而停止。
 
 </TabItem>
 <TabItem value="amd64" label="x86-64 电脑">
@@ -156,13 +158,13 @@ sudo systemctl status uavcast-web
 
 ## 卸载 {/* #uninstall */}
 
-安装程序具有卸载模式。它会停止并移除所有 UAVcast-Pro 服务，删除 `/opt/uavcast-pro`（包括设置和录像），并清除其安装的 ZeroTier、Tailscale 和 Redis 软件包。NetworkManager、ModemManager 和 GStreamer 等常用软件包将保留。
+安装程序具有卸载模式。它会停止并移除所有 UAVcast-Pro 服务、设置数据库以及 `/opt/uavcast-pro` 中的程序文件；如果 ZeroTier、Tailscale 和 Redis 是由 UAVcast-Pro 安装的，也会将其清除。NetworkManager、ModemManager 和 GStreamer 等常用软件包将保留。
 
 ```bash
 sudo /opt/uavcast-pro/factory/ApplicationInstaller --uninstall
 ```
 
-{/* PENDING-RELEASE: uninstall */}
+从 UAVcast-Pro 6.5.3 起，`/opt/uavcast-pro/recordings` 中的飞行录像会被保留。添加 `--delete-recordings` 可一并删除录像；添加 `--purge-deps` 可同时移除在 UAVcast-Pro 之前就已安装的 ZeroTier、Tailscale 和 Redis。在更早的版本中，卸载会删除整个 `/opt/uavcast-pro` 文件夹（包括录像），因此请先复制要保留的录像。
 
 :::warning 请先注销许可证
 卸载不会释放许可证名额。请先在**应用程序 → 许可证管理器**中注销该设备，再将其清除；否则，只能借助另一台设备才能释放该名额。参见[注销设备](./license-activation.mdx#unregister-a-device)。

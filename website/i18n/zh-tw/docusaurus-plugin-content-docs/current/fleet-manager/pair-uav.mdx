@@ -91,7 +91,7 @@ nc -vz fleet-manager.uavmatrix.com 8883
 
 ## 將視訊與遙測傳送到地面站 {/* #send-video-and-telemetry-to-a-ground-station */}
 
-配對本身不會啟動任何串流。若要使用 QGroundControl 或 Mission Planner 飛行，請[將地面站連接到 VPN](./connect-gcs.mdx)，並新增[串流綁定](./network/stream-bindings.mdx)。Fleet Manager 會為每個綁定分配一組專屬的連接埠（包含視訊、攝影機 2 與音訊所需的空間，以及遙測），因此多架無人機可同時串流到同一個地面站。第一架無人機使用預設值 5600 與 14550；其他無人機的連接埠請從綁定的 **Ports** 欄讀取。{/* PENDING-RELEASE: port-blocks */}
+配對本身不會啟動任何串流。若要使用 QGroundControl 或 Mission Planner 飛行，請[將地面站連接到 VPN](./connect-gcs.mdx)，並新增[串流綁定](./network/stream-bindings.mdx)。Fleet Manager 會為每個綁定分配一組專屬的連接埠（包含視訊、攝影機 2 與音訊所需的空間，以及遙測），因此多架無人機可同時串流到同一個地面站。第一架無人機使用預設值 5600 與 14550；其他無人機的連接埠請從綁定的 **Ports** 欄讀取。
 
 ## 配對失敗時 {/* #if-pairing-fails */}
 

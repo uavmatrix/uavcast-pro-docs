@@ -34,7 +34,7 @@ Her hedeften gelen komutlar uçuş kontrolcüsüne ulaşır; hedef **Read Only**
 
 ## 2. Gözlemcileri salt okunur yapın {/* #2-make-observers-read-only */}
 
-Yalnızca izlemesi, asla uçurmaması gereken kişiler için hedeflerinde **Read Only** seçeneğini açın. İstasyon yine canlı telemetri alır, ancak araç üzerinde hiçbir şeyi değiştiremez: komutlar, mod değişiklikleri, arm işlemleri, parametre yazmaları, görev yazmaları ve RC geçersiz kılmaları engellenir. {/* PENDING-RELEASE: read-only */} Bu modda yer kontrol istasyonu yazılımı uyarılar gösterebilir; çünkü bazı istekleri (parametreleri veya görevi indirme gibi) yanıtsız kalır.
+Yalnızca izlemesi, asla uçurmaması gereken kişiler için hedeflerinde **Read Only** seçeneğini açın. İstasyon yine canlı telemetri alır, ancak araç üzerinde hiçbir şeyi değiştiremez: komutlar, mod değişiklikleri, arm işlemleri, parametre yazmaları, görev yazmaları ve RC geçersiz kılmaları engellenir. Bu, UAVcast-Pro 6.5.3'ten itibaren geçerlidir; önceki sürümlerde Read Only parametre yazmalarını engellemez. Bu modda yer kontrol istasyonu yazılımı uyarılar gösterebilir; çünkü bazı istekleri (parametreleri veya görevi indirme gibi) yanıtsız kalır.
 
 :::warning Bir drone'da iki pilot
 **Read Only** kullanılmazsa her istasyon drone'a komut verebilir. Kimin uçuracağını kararlaştırın ve diğer tüm istasyonları salt okunur yapın.
@@ -63,4 +63,4 @@ Her video hedefi, akışın ayrı bir kopyasıdır. 1500 kbps hızında üç vid
 
 ## Fleet Manager ile {/* #with-fleet-manager */}
 
-Fleet Manager'da yer kontrol istasyonları organizasyonun VPN'ine katılır ve bunları **Network** sayfasındaki **Stream Bindings** ile drone'lara bağlarsınız. Aynı yer kontrol istasyonuna bağlanan her ek drone kendi port bloğunu alır. {/* PENDING-RELEASE: port-blocks */} Bkz. [Stream bindings](../fleet-manager/network/stream-bindings.mdx).
+Fleet Manager'da yer kontrol istasyonları organizasyonun VPN'ine katılır ve bunları **Network** sayfasındaki **Stream Bindings** ile drone'lara bağlarsınız. Aynı yer kontrol istasyonuna bağlanan her ek drone kendi port bloğunu alır. Bkz. [Stream bindings](../fleet-manager/network/stream-bindings.mdx).

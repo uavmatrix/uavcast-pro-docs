@@ -49,7 +49,7 @@ Mimo etykiety **IP lub Host Docelowy** UAVcast-Pro akceptuje wyłącznie adres I
 | **Port Wideo (Kamera 2)** | puste = Port Wideo + 1 | 1–65535 | Widoczne tylko wtedy, gdy [podwójny strumień](../camera/multi-camera.mdx) jest włączony. |
 | **Włącz Wideo** | Wyłączony | Włączony, wyłączony | Wysyła strumień z kamery do tego miejsca. |
 | **Włącz Telemetrię** | Wyłączony | Włączony, wyłączony | Wysyła MAVLink do tego miejsca i przyjmuje z niego polecenia. |
-| **Read Only** | Wyłączony | Włączony, wyłączony | Wymaga **Włącz Telemetrię**. Stacja naziemna odbiera telemetrię, ale nie może niczego zmienić w pojeździe: polecenia, uzbrajanie, zmiany trybu, zapisy parametrów i misji, RC override oraz sterowanie ręczne są zablokowane. {/* PENDING-RELEASE: read-only */} |
+| **Read Only** | Wyłączony | Włączony, wyłączony | Wymaga **Włącz Telemetrię**. Stacja naziemna odbiera telemetrię, ale nie może niczego zmienić w pojeździe: polecenia, uzbrajanie, zmiany trybu, zapisy parametrów i misji, RC override oraz sterowanie ręczne są zablokowane. Dotyczy to UAVcast-Pro od wersji 6.5.3; we wcześniejszych wersjach Read Only nie blokuje zapisu parametrów. |
 
 Dźwięk, po włączeniu opcji **Send audio to ground stations** na stronie Kamera, trafia do każdego miejsca docelowego, które odbiera wideo, na **Port Wideo + 2** (na przykład `5602`). Zobacz [Audio](../camera/audio.mdx).
 

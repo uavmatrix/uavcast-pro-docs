@@ -34,7 +34,7 @@ Los comandos de cada destino llegan al controlador de vuelo, salvo que ese desti
 
 ## 2. Haz que los observadores sean de solo lectura {/* #2-make-observers-read-only */}
 
-Para quien deba observar pero nunca volar, activa **Read Only** en su destino. La estación sigue recibiendo telemetría en vivo, pero no puede cambiar nada en el vehículo: los comandos, cambios de modo, armado, escritura de parámetros, escritura de misiones y sobrescrituras de RC desde ella quedan bloqueados. {/* PENDING-RELEASE: read-only */} El software de la estación de control en tierra puede mostrar advertencias en este modo, porque algunas de sus solicitudes (como descargar parámetros o la misión) quedan sin respuesta.
+Para quien deba observar pero nunca volar, activa **Read Only** en su destino. La estación sigue recibiendo telemetría en vivo, pero no puede cambiar nada en el vehículo: los comandos, cambios de modo, armado, escritura de parámetros, escritura de misiones y sobrescrituras de RC desde ella quedan bloqueados. Esto se aplica a partir de UAVcast-Pro 6.5.3; en versiones anteriores, Read Only no bloquea la escritura de parámetros. El software de la estación de control en tierra puede mostrar advertencias en este modo, porque algunas de sus solicitudes (como descargar parámetros o la misión) quedan sin respuesta.
 
 :::warning Dos pilotos, un dron
 Sin Read Only, cada estación puede dar órdenes al dron. Acuerda quién vuela y haz que todas las demás estaciones sean de solo lectura.
@@ -63,4 +63,4 @@ En **Tablero**, la fila **Ground station** muestra *Sending to n · x packets/s*
 
 ## Con Fleet Manager {/* #with-fleet-manager */}
 
-En Fleet Manager, las estaciones de control en tierra se unen a la VPN de la organización y las conectas con los drones mediante **Stream Bindings** en la página **Network**. Cada dron adicional vinculado a la misma estación de control en tierra obtiene su propio bloque de puertos. {/* PENDING-RELEASE: port-blocks */} Consulta [Vinculaciones de stream](../fleet-manager/network/stream-bindings.mdx).
+En Fleet Manager, las estaciones de control en tierra se unen a la VPN de la organización y las conectas con los drones mediante **Stream Bindings** en la página **Network**. Cada dron adicional vinculado a la misma estación de control en tierra obtiene su propio bloque de puertos. Consulta [Vinculaciones de stream](../fleet-manager/network/stream-bindings.mdx).
