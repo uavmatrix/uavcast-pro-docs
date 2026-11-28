@@ -1163,3 +1163,63 @@ a code {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Copy page split button: primary action + page actions menu (src/components/DocMeta) */
+.uvm-pagecopy {
+  display: inline-flex;
+  align-items: stretch;
+}
+.uvm-pagecopy > .uvm-pagecopy__main {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.uvm-pagecopy__menu .uvm-pagecopy__more {
+  height: 28px;
+  padding: 0 7px;
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.uvm-pagecopy__menu .uvm-pagecopy__more[aria-expanded='true'] {
+  background: var(--bg-subtle);
+  color: var(--ink);
+}
+.uvm-pagecopy__menu .uvm-menu {
+  min-width: 290px;
+  max-width: calc(100vw - 32px);
+  padding: 6px;
+}
+.uvm-pagecopy__menu .uvm-mi {
+  text-align: left;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+  text-decoration: none !important;
+}
+.uvm-pagecopy__menu .uvm-mi__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+@media (max-width: 996px) {
+  /* The actions wrap to the left edge on narrow screens: open the menu rightwards,
+     anchored to the button group (the navbar menus switch to a fixed sheet on phones). */
+  .uvm-pagecopy {
+    position: relative;
+  }
+  .uvm-pagecopy > .uvm-pagecopy__menu {
+    position: static;
+  }
+  .uvm-pagecopy__menu .uvm-menu,
+  .uvm-pagecopy__menu .uvm-menu--right {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0 !important;
+    right: auto !important;
+    width: min(300px, calc(100vw - 32px)) !important;
+    max-height: none;
+    overflow: visible;
+  }
+}

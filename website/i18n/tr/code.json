@@ -1241,5 +1241,35 @@
   },
   "drawer.buy": {
     "message": "Lisans"
+  },
+  "doc.pageActions": {
+    "message": "Diğer sayfa işlemleri: kopyala, bir yapay zekâ asistanında aç, Markdown olarak görüntüle"
+  },
+  "doc.copyMarkdown": {
+    "message": "Sayfayı Markdown olarak kopyala"
+  },
+  "doc.copyMarkdownSub": {
+    "message": "Notlar veya herhangi bir yapay zekâ asistanı için"
+  },
+  "doc.openChatGPT": {
+    "message": "ChatGPT'de aç"
+  },
+  "doc.openChatGPTSub": {
+    "message": "Bu sayfa hakkında ChatGPT'ye sorun"
+  },
+  "doc.openClaude": {
+    "message": "Claude'da aç"
+  },
+  "doc.openClaudeSub": {
+    "message": "Bu sayfa hakkında Claude'a sorun"
+  },
+  "doc.viewMarkdown": {
+    "message": "Markdown olarak görüntüle"
+  },
+  "doc.viewMarkdownSub": {
+    "message": "Bu sayfanın düz metin sürümü"
+  },
+  "doc.aiPrompt": {
+    "message": "{url} adresini oku ve bana bu konuda yardım et. {product} kullanıyorum."
   }
 }

@@ -1241,5 +1241,35 @@
   },
   "drawer.buy": {
     "message": "许可证"
+  },
+  "doc.pageActions": {
+    "message": "更多页面操作：复制、在 AI 助手中打开、以 Markdown 查看"
+  },
+  "doc.copyMarkdown": {
+    "message": "将页面复制为 Markdown"
+  },
+  "doc.copyMarkdownSub": {
+    "message": "用于笔记或任何 AI 助手"
+  },
+  "doc.openChatGPT": {
+    "message": "在 ChatGPT 中打开"
+  },
+  "doc.openChatGPTSub": {
+    "message": "向 ChatGPT 询问本页内容"
+  },
+  "doc.openClaude": {
+    "message": "在 Claude 中打开"
+  },
+  "doc.openClaudeSub": {
+    "message": "向 Claude 询问本页内容"
+  },
+  "doc.viewMarkdown": {
+    "message": "以 Markdown 查看"
+  },
+  "doc.viewMarkdownSub": {
+    "message": "本页的纯文本版本"
+  },
+  "doc.aiPrompt": {
+    "message": "请阅读 {url} 并帮助我。我正在使用 {product}。"
   }
 }

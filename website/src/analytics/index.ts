@@ -14,6 +14,8 @@ export type DocsEvent =
   | ['docs_feedback', {helpful: boolean; comment?: string; path: string}]
   | ['docs_code_copied', {path: string; language: string}]
   | ['docs_copy_page', {path: string}]
+  | ['docs_open_in_ai', {provider: 'chatgpt' | 'claude'; path: string}]
+  | ['docs_view_markdown', {path: string}]
   | ['docs_outbound_click', {url: string; destination: 'store' | 'fleet-manager' | 'discord' | 'github' | 'email' | 'other'}]
   | ['docs_404', {path: string; referrer: string}]
   | ['docs_locale_switch', {from: string; to: string}]

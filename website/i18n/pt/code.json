@@ -1241,5 +1241,35 @@
   },
   "drawer.buy": {
     "message": "Licença"
+  },
+  "doc.pageActions": {
+    "message": "Mais ações da página: copiar, abrir em um assistente de IA, ver como Markdown"
+  },
+  "doc.copyMarkdown": {
+    "message": "Copiar página como Markdown"
+  },
+  "doc.copyMarkdownSub": {
+    "message": "Para notas ou qualquer assistente de IA"
+  },
+  "doc.openChatGPT": {
+    "message": "Abrir no ChatGPT"
+  },
+  "doc.openChatGPTSub": {
+    "message": "Pergunte ao ChatGPT sobre esta página"
+  },
+  "doc.openClaude": {
+    "message": "Abrir no Claude"
+  },
+  "doc.openClaudeSub": {
+    "message": "Pergunte ao Claude sobre esta página"
+  },
+  "doc.viewMarkdown": {
+    "message": "Ver como Markdown"
+  },
+  "doc.viewMarkdownSub": {
+    "message": "Versão em texto simples desta página"
+  },
+  "doc.aiPrompt": {
+    "message": "Leia {url} e me ajude com isso. Estou usando o {product}."
   }
 }

@@ -4,6 +4,7 @@ import Metadata from '@theme-original/DocItem/Metadata';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import {useDoc} from '@docusaurus/plugin-content-docs/client';
+import {markdownHref} from '@site/src/data/markdown';
 
 /** Adds TechArticle JSON-LD. BreadcrumbList comes from DocBreadcrumbs. */
 export default function MetadataWrapper(props: Record<string, never>) {
@@ -37,6 +38,8 @@ export default function MetadataWrapper(props: Record<string, never>) {
       <Metadata {...props} />
       <Head>
         <script type="application/ld+json">{JSON.stringify(data)}</script>
+        {/* Clean Markdown copy written at build time by plugins/markdown-export. */}
+        <link rel="alternate" type="text/markdown" href={`${siteConfig.url}${markdownHref(metadata.permalink)}`} />
       </Head>
     </>
   );

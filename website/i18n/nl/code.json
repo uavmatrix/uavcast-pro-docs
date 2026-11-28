@@ -1241,5 +1241,35 @@
   },
   "drawer.buy": {
     "message": "Licentie"
+  },
+  "doc.pageActions": {
+    "message": "Meer pagina-acties: kopiëren, openen in een AI-assistent, bekijken als Markdown"
+  },
+  "doc.copyMarkdown": {
+    "message": "Pagina kopiëren als Markdown"
+  },
+  "doc.copyMarkdownSub": {
+    "message": "Voor notities of een AI-assistent"
+  },
+  "doc.openChatGPT": {
+    "message": "Openen in ChatGPT"
+  },
+  "doc.openChatGPTSub": {
+    "message": "Stel ChatGPT vragen over deze pagina"
+  },
+  "doc.openClaude": {
+    "message": "Openen in Claude"
+  },
+  "doc.openClaudeSub": {
+    "message": "Stel Claude vragen over deze pagina"
+  },
+  "doc.viewMarkdown": {
+    "message": "Bekijken als Markdown"
+  },
+  "doc.viewMarkdownSub": {
+    "message": "Platte-tekstversie van deze pagina"
+  },
+  "doc.aiPrompt": {
+    "message": "Lees {url} en help me ermee. Ik gebruik {product}."
   }
 }
