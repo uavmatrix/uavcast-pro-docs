@@ -6,7 +6,7 @@
 /*
  * Prose rhythm. `.markdown` is a flex column so the meta row (rendered after
  * the MDX in the DOM) can sit between the lede and the body (see
- * DocItem/Content). Every direct child gets margin-top only, no collapsing.
+ * DocItem/Content). The mobile TOC sits before `.markdown` in the DOM. Every direct child gets margin-top only, no collapsing.
  */
 .uvm-prose {
   display: flex;
@@ -39,11 +39,7 @@
 .uvm-prose > .uvm-docmeta {
   order: 3;
 }
-.uvm-prose > .uvm-toc-mobile {
-  order: 4;
-}
-.uvm-prose > .uvm-docmeta + *,
-.uvm-prose > .uvm-toc-mobile + * {
+.uvm-prose > .uvm-docmeta + * {
   margin-top: 28px;
 }
 .uvm-prose p,
@@ -988,7 +984,10 @@ a code {
   border-color: var(--accent-line) !important;
 }
 
-/* mobile TOC */
+/* mobile TOC: rendered before the article in the DOM (reading/focus order), hidden on desktop */
+.uvm-toc-mobile {
+  margin: 0 0 24px;
+}
 .uvm-toc-mobile .theme-doc-toc-mobile {
   margin: 0;
   border: 1px solid var(--line);

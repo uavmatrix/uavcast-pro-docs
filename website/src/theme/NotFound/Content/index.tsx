@@ -43,8 +43,8 @@ export default function NotFoundContent({className}: Props) {
             <Link key={a.key} to={a.href!} className={clsx('uvm-404__area', `uvm-area--${a.key}`)}>
               <span className="uvm-dot" />
               <span>
-                <b>{translate({id: a.id, message: a.label})}</b>
-                <small>{translate({id: `${a.id}.blurb`, message: a.blurb})}</small>
+                <b>{a.label}</b>
+                <small>{a.blurb}</small>
               </span>
               <Icon name="arrow" size={14} />
             </Link>

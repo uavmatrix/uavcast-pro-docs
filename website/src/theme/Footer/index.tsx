@@ -66,7 +66,7 @@ export default function Footer() {
           <Link to={home} className="uvm-brand">
             <img src={logo} alt="" width={22} height={22} loading="lazy" decoding="async" />
             <span>UAVmatrix</span>
-            <span className="uvm-brand__docs">Docs</span>
+            <span className="uvm-brand__docs">{translate({id: 'nav.brandDocs', message: 'Docs'})}</span>
           </Link>
           <p>
             <Translate id="footer.tagline">Connectivity software for professional drone operators: UAVcast-Pro on the aircraft, Fleet Manager in the browser.</Translate>

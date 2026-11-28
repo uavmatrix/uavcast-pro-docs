@@ -7,7 +7,7 @@ sidebar_position: 4
 
 # Supported hardware
 
-UAVcast-Pro v6 runs on any 64-bit Linux computer that runs Raspberry Pi OS, Debian or Ubuntu, on **arm64** or **amd64**. The tables below list what is detected and tested. For power supplies, wiring and buying advice, see [Hardware requirements](../get-started/hardware-requirements.mdx).
+UAVcast-Pro v6 runs on any 64-bit Linux computer that runs Raspberry Pi OS, Debian or Ubuntu, on **arm64** or **amd64** (arm64 boards other than a Raspberry Pi from {/* PENDING-RELEASE: non-pi-arm64 version */}the next UAVcast-Pro release). The tables below list what is detected and tested. For power supplies, wiring and buying advice, see [Hardware requirements](../get-started/hardware-requirements.mdx).
 
 ## Companion computers
 
@@ -23,7 +23,9 @@ UAVcast-Pro v6 runs on any 64-bit Linux computer that runs Raspberry Pi OS, Debi
 | Banana Pi and other arm64 boards | arm64 | Model dependent | USB cameras. |
 | x86 mini PC, Intel NUC, laptop | amd64 | USB-serial adapter | USB cameras. |
 
-{/* PENDING-RELEASE: non-pi-arm64 (the current arm64 installer still stops on non-Raspberry Pi boards; fix in progress) */}
+:::note Non-Raspberry Pi arm64 boards
+Jetson, Orange Pi, Banana Pi and other arm64 boards that aren't a Raspberry Pi need {/* PENDING-RELEASE: non-pi-arm64 version */}the next UAVcast-Pro release or later. Older installers stop on them with *Device is not a Raspberry Pi*.
+:::
 
 **Raspberry Pi only:** CSI cameras (rpicam/libcamera) need a Raspberry Pi, and on a Pi the installer enables the UART, removes the serial console and, on Pi 3/4/Zero 2 W, disables Bluetooth so the full UART is free.
 

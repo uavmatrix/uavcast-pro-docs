@@ -30,7 +30,7 @@ function Results() {
   const hits = useMemo(() => (engine && q.trim() ? engine.search(q.trim(), scope).slice(0, 50) : []), [engine, q, scope]);
   const label = (k: string) => {
     const a = AREA_BY_KEY[k as keyof typeof AREA_BY_KEY];
-    return a ? translate({id: a.id, message: a.label}) : k;
+    return a ? a.label : k;
   };
 
   return (
@@ -91,7 +91,7 @@ function Results() {
 
 export default function SearchPage() {
   return (
-    <Layout title={translate({id: 'searchPage.metaTitle', message: 'Search'})} description="Search the UAVmatrix documentation.">
+    <Layout title={translate({id: 'searchPage.metaTitle', message: 'Search'})} description={translate({id: 'searchPage.metaDescription', message: 'Search the UAVmatrix documentation.'})}>
       <Head>
         <meta name="robots" content="noindex, follow" />
       </Head>

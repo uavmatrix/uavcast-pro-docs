@@ -7,6 +7,26 @@
 #   KEEP=1 ./run.sh          # leave the stack running afterwards (stop with ./run.sh --down)
 #   ./run.sh --down          # stop everything
 set -euo pipefail
+
+# Tear the stack down however the script ends (error, Ctrl+C, kill), unless KEEP is set.
+# Registered before anything is created; it only acts once this run has started
+# creating resources (STARTED=1), and it keeps the original exit status.
+STARTED=0
+CLEANED=0
+cleanup() {
+  local rc=$?
+  [[ -n "${1:-}" ]] && rc=$1
+  trap - EXIT INT TERM
+  if [[ $CLEANED -eq 0 && $STARTED -eq 1 ]]; then
+    CLEANED=1
+    if [[ -z "${KEEP:-}" ]]; then down; else echo "KEEP set: stack left running (stop with ./run.sh --down)"; fi
+  fi
+  exit "$rc"
+}
+trap cleanup EXIT
+trap 'cleanup 130' INT
+trap 'cleanup 143' TERM
+
 cd "$(dirname "$0")"
 HERE="$PWD"
 export FM_DIR="${FM_DIR:-/home/sinamics/core/uavmatrix-fleet-manager}"
@@ -23,12 +43,13 @@ down() {
   docker rm -f "$DB" "$REDIS" "$MQTT" >/dev/null 2>&1 || true
   echo "stack stopped"
 }
-if [[ "${1:-}" == "--down" ]]; then down; exit 0; fi
+if [[ "${1:-}" == "--down" ]]; then trap - EXIT INT TERM; down; exit 0; fi
 
 [[ -d "$FM_DIR/node_modules" ]] || { echo "Run 'npm install' in $FM_DIR first (npx npm@11 install if npm 10 crashes)"; exit 1; }
 [[ -d node_modules ]] || npm install --no-audit --no-fund
 
 echo "== containers"
+STARTED=1
 docker inspect "$DB" >/dev/null 2>&1 || docker run -d --name "$DB" -e POSTGRES_USER=fleet -e POSTGRES_PASSWORD=fleet_docs \
   -e POSTGRES_DB=fleet -p 127.0.0.1:55433:5432 timescale/timescaledb:2.17.2-pg16 >/dev/null
 docker inspect "$REDIS" >/dev/null 2>&1 || docker run -d --name "$REDIS" -p 127.0.0.1:16390:6379 redis:7-alpine \
@@ -57,5 +78,4 @@ node_modules/.bin/tsx capture.ts "$@"
 status=$?
 set -e
 
-if [[ -z "${KEEP:-}" ]]; then down; fi
-exit $status
+exit $status   # the EXIT trap tears the stack down (unless KEEP is set)

@@ -68,9 +68,17 @@ http
   .createServer((req, res) => {
     try {
       const url = new URL(req.url, 'http://x');
-      const pathname = decodeURIComponent(url.pathname);
-      const target = path.join(root, pathname);
-      if (!target.startsWith(root)) return res.writeHead(400).end();
+      let pathname;
+      try {
+        pathname = decodeURIComponent(url.pathname);
+      } catch {
+        return res.writeHead(400).end();
+      }
+      if (pathname.includes('\0')) return res.writeHead(400).end();
+      // Resolve, then require the result to stay inside the build root.
+      const target = path.resolve(root, `.${pathname}`);
+      const rel = path.relative(root, target);
+      if (rel === '..' || rel.startsWith(`..${path.sep}`) || path.isAbsolute(rel)) return res.writeHead(400).end();
       if (fs.existsSync(target) && fs.statSync(target).isDirectory()) {
         if (!pathname.endsWith('/')) {
           res.writeHead(301, {Location: `${url.pathname}/${url.search}`});

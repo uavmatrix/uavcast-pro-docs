@@ -24,12 +24,20 @@ const TITLES: Record<UiSketchVariant, string> = {
 };
 
 const ALTS: Record<UiSketchVariant, string> = {
-  'mission-planner-connect':
-    'Illustration of Mission Planner: in the top-right corner the connection type set to UDP and the Connect button, then a dialog asking for the listen port with 14550 entered.',
-  'mission-planner-gstreamer':
-    'Illustration of Mission Planner: right-click menu on the HUD with Video highlighted and its submenu item Set GStreamer Source.',
-  'qgc-video-settings':
-    'Illustration of QGroundControl Application Settings: the Video page with Source set to UDP h.264 Video Stream, the UDP address 0.0.0.0:5600 and Low Latency Mode.',
+  'mission-planner-connect': translate({
+    id: 'sketch.alt.mpConnect',
+    message:
+      'Illustration of Mission Planner: in the top-right corner the connection type set to UDP and the Connect button, then a dialog asking for the listen port with 14550 entered.',
+  }),
+  'mission-planner-gstreamer': translate({
+    id: 'sketch.alt.mpGstreamer',
+    message: 'Illustration of Mission Planner: right-click menu on the HUD with Video highlighted and its submenu item Set GStreamer Source.',
+  }),
+  'qgc-video-settings': translate({
+    id: 'sketch.alt.qgcVideo',
+    message:
+      'Illustration of QGroundControl Application Settings: the Video page with Source set to UDP h.264 Video Stream, the UDP address 0.0.0.0:5600 and Low Latency Mode.',
+  }),
 };
 
 /** Numbered call-out matching the numbered steps on the page. */

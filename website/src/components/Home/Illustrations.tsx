@@ -22,23 +22,23 @@ export function DataPath({version}: {version: string}) {
 
       <g transform="translate(20 34)">
         <rect className="node" x=".5" y=".5" width="201" height="160" rx="10" />
-        <text className="t-lbl" x="16" y="24">AIRCRAFT</text>
+        <text className="t-lbl" x="16" y="24">{translate({id: 'home.schematic.aircraft', message: 'AIRCRAFT'})}</text>
         <circle className="ok pulse" cx="186" cy="20" r="3.5" />
-        <text className="t-h" x="16" y="46">Companion computer</text>
+        <text className="t-h" x="16" y="46">{translate({id: 'home.schematic.companion', message: 'Companion computer'})}</text>
         <text className="t-s" x="16" y="63">UAVcast-Pro {short} · Raspberry Pi 5</text>
         <rect className="chipr" x="12.5" y="78.5" width="88" height="26" rx="6" />
         <text className="t-m" x="21" y="95">FC · MAVLink</text>
         <rect className="chipr" x="106.5" y="78.5" width="84" height="26" rx="6" />
         <text className="t-m" x="115" y="95">CAM · H.264</text>
         <rect className="chipr" x="16.5" y="112.5" width="170" height="26" rx="6" />
-        <text className="t-m" x="26" y="129">LTE modem · 4G/5G</text>
+        <text className="t-m" x="26" y="129">{translate({id: 'home.schematic.modem', message: 'LTE modem · 4G/5G'})}</text>
       </g>
 
       <g transform="translate(326 22)">
         <rect className="node" x=".5" y=".5" width="213" height="98" rx="10" />
-        <text className="t-lbl" x="16" y="24">CLOUD</text>
+        <text className="t-lbl" x="16" y="24">{translate({id: 'home.schematic.cloud', message: 'CLOUD'})}</text>
         <text className="t-h" x="16" y="46">Fleet Manager</text>
-        <text className="t-s" x="16" y="63">Status, position, licenses</text>
+        <text className="t-s" x="16" y="63">{translate({id: 'home.schematic.cloudBody', message: 'Status, position, licenses'})}</text>
         <text className="t-m" x="16" y="84">mqtts://…:8883</text>
       </g>
 
@@ -49,20 +49,20 @@ export function DataPath({version}: {version: string}) {
 
       <g transform="translate(326 222)">
         <rect className="node" x=".5" y=".5" width="213" height="126" rx="10" />
-        <text className="t-lbl" x="16" y="24">GROUND</text>
-        <text className="t-h" x="16" y="46">Ground station</text>
+        <text className="t-lbl" x="16" y="24">{translate({id: 'home.schematic.ground', message: 'GROUND'})}</text>
+        <text className="t-h" x="16" y="46">{translate({id: 'home.schematic.gcs', message: 'Ground station'})}</text>
         <text className="t-s" x="16" y="63">Mission Planner · QGroundControl</text>
         <rect className="chipr" x="16.5" y="78.5" width="80" height="26" rx="6" />
         <text className="t-m" x="25" y="95">Video :5600</text>
         <rect className="chipr" x="102.5" y="78.5" width="84" height="26" rx="6" />
         <text className="t-m" x="110" y="95">MAV :14550</text>
         <text className="t-s" x="16" y="118" style={{fontSize: 10.5}}>
-          Direct, or over a WireGuard VPN
+          {translate({id: 'home.schematic.gcsVpn', message: 'Direct, or over a WireGuard VPN'})}
         </text>
       </g>
 
       <line x1="20" y1="372" x2="540" y2="372" className="axis" />
-      <text className="t-lbl" x="20" y="362">LINK · CELLULAR / WI-FI / ETHERNET</text>
+      <text className="t-lbl" x="20" y="362">{translate({id: 'home.schematic.link', message: 'LINK · CELLULAR / WI-FI / ETHERNET'})}</text>
       <text className="t-lbl" x="540" y="362" textAnchor="end">
         UDP · TCP · MQTT
       </text>
@@ -89,7 +89,7 @@ export function UavcastMini() {
           <div className="v">38%</div>
         </div>
         <div className="uvm-tile">
-          <div className="k">Temp</div>
+          <div className="k">{translate({id: 'home.mini.temp', message: 'Temp'})}</div>
           <div className="v">52.3°C</div>
         </div>
         <div className="uvm-tile">
@@ -97,7 +97,7 @@ export function UavcastMini() {
           <div className="v">−71 dBm</div>
         </div>
         <div className="uvm-tile wide">
-          <div className="k">Uplink · last 60 s</div>
+          <div className="k">{translate({id: 'home.mini.uplink', message: 'Uplink · last 60 s'})}</div>
           <svg viewBox="0 0 300 46" width="100%" height="46" preserveAspectRatio="none">
             <path d="M0 34 L20 30 L40 32 L60 22 L80 26 L100 18 L120 24 L140 14 L160 20 L180 12 L200 18 L220 10 L240 16 L260 8 L280 14 L300 9 L300 46 L0 46Z" fill="var(--accent-soft)" />
             <path d="M0 34 L20 30 L40 32 L60 22 L80 26 L100 18 L120 24 L140 14 L160 20 L180 12 L200 18 L220 10 L240 16 L260 8 L280 14 L300 9" fill="none" stroke="var(--accent)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
@@ -137,15 +137,15 @@ export function FleetMini() {
       <div className="uvm-mapmini__list">
         <div className="row">
           <span className="uvm-dot" style={{['--dot' as string]: 'var(--warn)'}} />
-          Inspect-07<span className="s">ARMED</span>
+          Inspect-07<span className="s">{translate({id: 'home.mini.armed', message: 'ARMED'})}</span>
         </div>
         <div className="row">
           <span className="uvm-dot" style={{['--dot' as string]: 'var(--ok)'}} />
-          Survey-03<span className="s">ONLINE</span>
+          Survey-03<span className="s">{translate({id: 'home.mini.online', message: 'ONLINE'})}</span>
         </div>
         <div className="row">
           <span className="uvm-dot" />
-          Mapper-11<span className="s">4 h ago</span>
+          Mapper-11<span className="s">{translate({id: 'home.mini.ago', message: '4 h ago'})}</span>
         </div>
       </div>
     </div>

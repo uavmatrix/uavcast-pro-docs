@@ -47,9 +47,11 @@ Two programs on one computer can't listen on the same port. Add two destinations
 | Destination | Telemetry Port | Video Port |
 |---|---|---|
 | Mission Planner | 14550 | 5600 |
-| QGroundControl | 14551 | 5602 |
+| QGroundControl | 14551 | 5603 |
 
-Then set the second program to listen on those ports (in QGroundControl, add a UDP comm link on 14551 and set the video UDP port to 5602). Leave a gap between video ports if you use [dual stream](./dual-camera-rc-switching.mdx), because the second camera goes to video port + 1.
+Then set the second program to listen on those ports (in QGroundControl, add a UDP comm link on 14551 and set the video UDP port to 5603).
+
+Space video ports **3 apart** (5600, 5603, 5606 …). Each destination uses its video port, plus video port + 1 for the second camera in [dual stream](./dual-camera-rc-switching.mdx) and video port + 2 for [audio](../uavcast-pro/camera/audio.mdx). Ports closer together collide as soon as you turn on dual stream or audio.
 
 ## 4. Mind the uplink
 

@@ -40,7 +40,7 @@ export default function DocMeta() {
       {area && (
         <span className={`uvm-area--${area.key}`}>
           <span className="uvm-dot" />
-          {translate({id: area.id, message: area.label})}
+          {area.label}
         </span>
       )}
       {fm.requires && (

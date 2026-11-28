@@ -36,11 +36,14 @@ curl -fsSL https://install.uavmatrix.com | sudo bash
 sudo reboot
 ```
 
-To install a particular version, list the versions and pass one with `-b`:
+To install a particular version, list the versions (no root needed), then install one with `-b`:
 
-```bash
+```bash title="On the drone"
+# List the versions available for this device
 curl -fsSL https://install.uavmatrix.com | bash -s -- -l
-curl -fsSL https://install.uavmatrix.com | bash -s -- -b 6.5.1
+
+# Install a specific version
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.1
 ```
 
 ## Go back to an older version

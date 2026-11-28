@@ -162,7 +162,7 @@ export default function SearchModal({initialQuery, onClose}: {initialQuery: stri
   };
 
   const areaLabel = (k: string) =>
-    AREA_BY_KEY[k as keyof typeof AREA_BY_KEY] ? translate({id: AREA_BY_KEY[k as keyof typeof AREA_BY_KEY].id, message: AREA_BY_KEY[k as keyof typeof AREA_BY_KEY].label}) : translate({id: 'search.other', message: 'Other'});
+    AREA_BY_KEY[k as keyof typeof AREA_BY_KEY] ? AREA_BY_KEY[k as keyof typeof AREA_BY_KEY].label : translate({id: 'search.other', message: 'Other'});
 
   let idx = -1;
   const body = (
@@ -233,7 +233,7 @@ export default function SearchModal({initialQuery, onClose}: {initialQuery: stri
               {SUGGESTED_QUERIES.map((s) => (
                 <button key={s.q} type="button" className="uvm-palette__suggest" onClick={() => setQ(s.q)}>
                   <Icon name="search" size={14} />
-                  {translate({id: s.id, message: s.label})}
+                  {s.label}
                 </button>
               ))}
             </div>

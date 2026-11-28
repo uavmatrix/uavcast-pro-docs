@@ -27,7 +27,7 @@ A microphone that fails never interrupts the video. The indicator shows **Audio 
 
 ## Send audio to ground stations
 
-Turn on **Send audio to ground stations**. UAVcast-Pro then sends a separate RTP/Opus stream to every ground station that receives video, on that destination's **Video Port + 2**. With the default video port that's `5602`.
+Turn on **Send audio to ground stations**. UAVcast-Pro then sends a separate RTP/Opus stream to every ground station that receives video, on that destination's **Video Port + 2**. With the default video port that's `5602`. Two destinations on the same computer therefore need video ports at least 3 apart, for example `5600` and `5603`.
 
 QGroundControl and Mission Planner ignore audio. Play it with GStreamer:
 

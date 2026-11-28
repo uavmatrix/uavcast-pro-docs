@@ -22,7 +22,7 @@ export function Brand({onClick}: {onClick?: () => void}) {
     <Link to={home} className="uvm-brand" onClick={onClick} aria-label={translate({id: 'nav.homeAria', message: 'UAVmatrix Docs home'})}>
       <img src={logo} alt="" width={22} height={22} decoding="async" />
       <span>UAVmatrix</span>
-      <span className="uvm-brand__docs">Docs</span>
+      <span className="uvm-brand__docs">{translate({id: 'nav.brandDocs', message: 'Docs'})}</span>
     </Link>
   );
 }
@@ -39,7 +39,7 @@ function ProductMenu() {
   const area = useCurrentArea();
   const current = PRODUCTS.find((p) => p.key === area) ?? PRODUCTS[2];
   const label =
-    current.key === 'all' ? translate({id: 'product.allShort', message: 'All products'}) : translate({id: current.id, message: current.label});
+    current.key === 'all' ? translate({id: 'product.allShort', message: 'All products'}) : current.label;
   return (
     <Menu
       label={translate({id: 'product.menuLabel', message: 'Products'})}
@@ -66,8 +66,8 @@ function ProductMenu() {
                 <Icon name={p.icon} />
               </span>
               <span>
-                <span className="uvm-mi__title">{translate({id: p.id, message: p.label})}</span>
-                <span className="uvm-mi__sub">{translate({id: `${p.id}.sub`, message: p.sub})}</span>
+                <span className="uvm-mi__title">{p.label}</span>
+                <span className="uvm-mi__sub">{p.sub}</span>
               </span>
               <Icon name="check" className="uvm-mi__tick" />
             </Link>
@@ -184,7 +184,7 @@ export default function NavbarContent() {
             to={l.href!}
             className={clsx(l.area && area === l.area && 'is-active')}
             aria-current={l.area && area === l.area ? 'true' : undefined}>
-            {translate({id: l.id, message: l.label})}
+            {l.label}
           </Link>
         ))}
       </nav>

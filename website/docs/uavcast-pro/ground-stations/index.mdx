@@ -53,6 +53,8 @@ Despite the label **Destination IP or Host**, UAVcast-Pro only accepts an IPv4 a
 
 Audio, when you turn on **Send audio to ground stations** on the Camera page, goes to every destination that receives video, on **Video Port + 2** (for example `5602`). See [Audio](../camera/audio.mdx).
 
+So each destination occupies three video-side ports: **Video Port**, + 1 (camera 2) and + 2 (audio). If two destinations point at the same computer, space their video ports 3 apart, for example `5600` and `5603`. See [Two stations on one computer](../../guides/multiple-ground-stations.mdx#3-two-stations-on-one-computer).
+
 ## Set up the receiving side
 
 Pick the program you use on the ground. Each page has the exact settings, the firewall step and fixes for the usual errors.

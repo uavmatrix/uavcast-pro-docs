@@ -56,7 +56,7 @@ function Hero() {
             </span>
             {SUGGESTED_QUERIES.slice(0, 4).map((s) => (
               <button key={s.q} type="button" className="uvm-chip" onClick={() => openSearch(s.q)}>
-                {translate({id: s.id, message: s.label})}
+                {s.label}
               </button>
             ))}
           </div>
@@ -100,26 +100,26 @@ function Goals() {
               <div key={g.key} className={clsx('uvm-goal', `uvm-area--${g.area}`)}>
                 <div className="uvm-goal__art">
                   <GoalArt kind={g.key} />
-                  <span className="uvm-goal__tag">{translate({id: `goal.${g.key}.tag`, message: g.tag})}</span>
+                  <span className="uvm-goal__tag">{g.tag}</span>
                 </div>
                 <div className="uvm-goal__body">
                   <h3 className="uvm-goal__title">
                     {main ? (
                       <Link to={main} className="uvm-stretch">
-                        {translate({id: `goal.${g.key}.title`, message: g.title})}
+                        {g.title}
                       </Link>
                     ) : (
-                      translate({id: `goal.${g.key}.title`, message: g.title})
+                      g.title
                     )}
                   </h3>
-                  <p>{translate({id: `goal.${g.key}.body`, message: g.body})}</p>
+                  <p>{g.body}</p>
                 </div>
                 {links.length > 0 && (
                   <ul className="uvm-goal__links">
                     {links.map((l) => (
                       <li key={l.id}>
                         <Link to={l.href!}>
-                          {translate({id: l.id, message: l.label})}
+                          {l.label}
                           <Icon name="arrow" size={13} />
                         </Link>
                       </li>
@@ -143,7 +143,7 @@ function ProductLinks({items}: {items: HomeLink[]}) {
         <li key={l.id}>
           <Link to={l.href}>
             <Icon name="right" size={13} />
-            {translate({id: l.id, message: l.label})}
+            {l.label}
           </Link>
         </li>
       ))}
@@ -240,8 +240,8 @@ function Products() {
                 <span className="uvm-feature__ico">
                   <Icon name={f.icon} />
                 </span>
-                <span className="uvm-feature__t">{translate({id: f.id, message: f.label})}</span>
-                <span className="uvm-feature__d">{translate({id: `${f.id}.desc`, message: f.desc!})}</span>
+                <span className="uvm-feature__t">{f.label}</span>
+                <span className="uvm-feature__d">{f.desc}</span>
               </Link>
             ))}
           </div>
@@ -266,23 +266,23 @@ function StartHere() {
             <Link key={c.key} to={c.href} className="uvm-path">
               <div className="uvm-path__meta">
                 <Icon name={c.icon} size={13} />
-                {translate({id: `start.${c.key}.meta`, message: c.meta})}
+                {c.meta}
               </div>
               <div className="uvm-path__ttl">
-                {translate({id: `start.${c.key}.title`, message: c.title})} <Icon name="arrow" size={14} />
+                {c.title} <Icon name="arrow" size={14} />
               </div>
-              <p>{translate({id: `start.${c.key}.desc`, message: c.desc})}</p>
+              <p>{c.desc}</p>
               {c.steps && (
                 <ol>
-                  {c.steps.map((s, i) => (
-                    <li key={s}>{translate({id: `start.${c.key}.step${i}`, message: s})}</li>
+                  {c.steps.map((s) => (
+                    <li key={s}>{s}</li>
                   ))}
                 </ol>
               )}
               {c.bullets && (
                 <ul>
-                  {c.bullets.map((s, i) => (
-                    <li key={s}>{translate({id: `start.${c.key}.b${i}`, message: s})}</li>
+                  {c.bullets.map((s) => (
+                    <li key={s}>{s}</li>
                   ))}
                 </ul>
               )}
@@ -327,12 +327,12 @@ function Popular() {
         {items.map((p) => (
           <Link key={p.id} to={p.href} className="uvm-grow">
             <div>
-              <div className="uvm-grow__t">{translate({id: p.id, message: p.label})}</div>
-              <div className="uvm-grow__d">{translate({id: `${p.id}.desc`, message: p.desc!})}</div>
+              <div className="uvm-grow__t">{p.label}</div>
+              <div className="uvm-grow__d">{p.desc}</div>
             </div>
             <span className={clsx('uvm-tag', `uvm-area--${p.area}`)}>
               <span className="uvm-dot" />
-              {translate({id: AREA_BY_KEY[p.area].id, message: AREA_BY_KEY[p.area].label})}
+              {AREA_BY_KEY[p.area].label}
             </span>
           </Link>
         ))}
@@ -371,7 +371,7 @@ function Troubleshooting() {
         {items.map((t) => (
           <li key={t.id}>
             <Link to={t.href}>
-              <span>{translate({id: t.id, message: t.label})}</span>
+              <span>{t.label}</span>
               <Icon name="right" size={14} />
             </Link>
           </li>
@@ -383,7 +383,7 @@ function Troubleshooting() {
           <Translate
             id="home.trouble.foot"
             values={{
-              path: <b>Application › Logging</b>,
+              path: <b>{translate({id: 'home.trouble.path', message: 'Application › Logging', description: 'Menu path in the UAVcast-Pro web app; use the app’s own translated labels'})}</b>,
             }}>
             {'Contacting support? Attach the log archive from {path} in UAVcast-Pro.'}
           </Translate>{' '}
@@ -506,7 +506,7 @@ function Recent() {
                 <span className="uvm-dot" />
                 {r.label === 'Fleet Manager' ? 'Fleet Manager' : `UAVcast-Pro ${r.label}`}
               </span>
-              <p>{translate({id: `recent.${r.date}`, message: r.text})}</p>
+              <p>{r.text}</p>
             </li>
           ))}
         </ol>

@@ -37,7 +37,7 @@ Ubuntu Server 64-bit for Raspberry Pi also works.
 
 Flash the vendor's 64-bit Ubuntu or Debian image (for example JetPack's Ubuntu on NVIDIA Jetson), complete the first-boot setup and enable SSH.
 
-{/* PENDING-RELEASE: non-pi-arm64 (the current arm64 installer still stops on non-Raspberry Pi boards; fix in progress) */}
+Arm64 boards other than a Raspberry Pi need {/* PENDING-RELEASE: non-pi-arm64 version */}the next UAVcast-Pro release or later; older installers stop with *Device is not a Raspberry Pi*.
 
 </TabItem>
 <TabItem value="amd64" label="x86-64 PC">
@@ -100,7 +100,7 @@ curl -fsSL https://install.uavmatrix.com | bash -s -- -l
 Install one of them with `-b`:
 
 ```bash
-curl -fsSL https://install.uavmatrix.com | bash -s -- -b 6.5.2
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.2
 ```
 
 You can also switch versions later from the web interface. See [Update UAVcast-Pro](./updating.mdx).

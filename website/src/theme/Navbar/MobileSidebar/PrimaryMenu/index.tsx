@@ -26,7 +26,7 @@ export default function NavbarMobilePrimaryMenu() {
           <li key={a.key} className="menu__list-item">
             <Link className={`menu__link uvm-drawer__area uvm-area--${a.key}`} to={a.href!} onClick={close}>
               <span className="uvm-dot" />
-              {translate({id: a.id, message: a.label})}
+              {a.label}
             </Link>
           </li>
         ))}
@@ -36,7 +36,7 @@ export default function NavbarMobilePrimaryMenu() {
             <li key={l.id} className="menu__list-item">
               <Link className="menu__link uvm-drawer__area" to={l.href!} onClick={close}>
                 <Icon name="history" size={14} />
-                {translate({id: l.id, message: l.label})}
+                {l.label}
               </Link>
             </li>
           ))}
