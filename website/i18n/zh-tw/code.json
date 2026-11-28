@@ -1241,5 +1241,35 @@
   },
   "drawer.buy": {
     "message": "許可證"
+  },
+  "doc.pageActions": {
+    "message": "更多頁面操作：複製、在 AI 助理中開啟、以 Markdown 檢視"
+  },
+  "doc.copyMarkdown": {
+    "message": "將頁面複製為 Markdown"
+  },
+  "doc.copyMarkdownSub": {
+    "message": "用於筆記或任何 AI 助理"
+  },
+  "doc.openChatGPT": {
+    "message": "在 ChatGPT 中開啟"
+  },
+  "doc.openChatGPTSub": {
+    "message": "向 ChatGPT 詢問本頁內容"
+  },
+  "doc.openClaude": {
+    "message": "在 Claude 中開啟"
+  },
+  "doc.openClaudeSub": {
+    "message": "向 Claude 詢問本頁內容"
+  },
+  "doc.viewMarkdown": {
+    "message": "以 Markdown 檢視"
+  },
+  "doc.viewMarkdownSub": {
+    "message": "本頁的純文字版本"
+  },
+  "doc.aiPrompt": {
+    "message": "請閱讀 {url} 並協助我。我正在使用 {product}。"
   }
 }

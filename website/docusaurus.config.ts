@@ -190,6 +190,7 @@ const config: Config = {
     './plugins/screenshots/index.ts',
     ['./plugins/search-index/index.ts', {publishedLocales}],
     './plugins/redirects/index.ts',
+    './plugins/markdown-export/index.ts',
   ],
 
   themeConfig: {

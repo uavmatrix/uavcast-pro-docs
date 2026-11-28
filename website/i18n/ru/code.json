@@ -1241,5 +1241,35 @@
   },
   "drawer.buy": {
     "message": "Лицензия"
+  },
+  "doc.pageActions": {
+    "message": "Другие действия: копировать, открыть в ИИ-ассистенте, показать как Markdown"
+  },
+  "doc.copyMarkdown": {
+    "message": "Копировать страницу как Markdown"
+  },
+  "doc.copyMarkdownSub": {
+    "message": "Для заметок или любого ИИ-ассистента"
+  },
+  "doc.openChatGPT": {
+    "message": "Открыть в ChatGPT"
+  },
+  "doc.openChatGPTSub": {
+    "message": "Спросить ChatGPT об этой странице"
+  },
+  "doc.openClaude": {
+    "message": "Открыть в Claude"
+  },
+  "doc.openClaudeSub": {
+    "message": "Спросить Claude об этой странице"
+  },
+  "doc.viewMarkdown": {
+    "message": "Показать как Markdown"
+  },
+  "doc.viewMarkdownSub": {
+    "message": "Текстовая версия этой страницы"
+  },
+  "doc.aiPrompt": {
+    "message": "Прочитай {url} и помоги мне с этим. Я использую {product}."
   }
 }
