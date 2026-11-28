@@ -50,7 +50,7 @@ UAVcast-Pro sends MAVLink over UDP to the address and port you set. The ground s
 
 ## Check 3: Use the VPN address over cellular {/* #check-3 */}
 
-Over 4G the drone can't reach a local address like `192.168.1.20`. Put your computer's VPN address (UAVnet/ZeroTier or Tailscale) in **Destination IP or Host**.
+Over 4G the drone can't reach a local address like `192.168.1.20`. Put your computer's VPN address (Fleet Manager VPN, Tailscale or ZeroTier) in **Destination IP or Host**.
 
 From the computer, ping the drone's VPN address. If the ping fails, the VPN is the problem: see [VPN connected but can't reach the drone](./vpn-cant-reach-drone.mdx).
 
@@ -60,7 +60,7 @@ Since v6.5.0 the telemetry router does not accept TCP connections on port 5760, 
 
 ## Check 5: Commands are ignored {/* #check-5 */}
 
-If telemetry shows but arming, mode changes or mission uploads do nothing, check **Read Only** on that destination. Read Only blocks outgoing commands so the ground station can only watch. Some ground stations show warnings in this mode because some of their requests go unanswered.
+If telemetry shows but arming, mode changes or mission uploads do nothing, check **Read Only** on that destination. Read Only blocks everything that would change the vehicle (commands, mode changes, parameter and mission writes), so the ground station can only watch. {/* PENDING-RELEASE: read-only */} Some ground stations show warnings in this mode because some of their requests go unanswered.
 
 ## Still nothing?
 

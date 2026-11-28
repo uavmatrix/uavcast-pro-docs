@@ -1,7 +1,7 @@
 ---
 title: "UAVcast-Pro supported hardware and OS"
 sidebar_label: Supported hardware
-description: "Boards, operating systems, flight controllers, cameras, LTE modems and RTK receivers that work with UAVcast-Pro v6 on Raspberry Pi and x86-64 PCs."
+description: "Boards, operating systems, flight controllers, cameras, LTE modems and RTK receivers that work with UAVcast-Pro v6: Raspberry Pi, Jetson and other arm64 boards, and x86 PCs."
 sidebar_position: 4
 ---
 
@@ -18,13 +18,14 @@ UAVcast-Pro v6 runs on any 64-bit Linux computer that runs Raspberry Pi OS, Debi
 | Raspberry Pi 3 | arm64 | GPIO UART | Fine for telemetry and one camera at moderate settings. |
 | Raspberry Pi Zero 2 W | arm64 | GPIO UART | Works, but slow to install and limited for video. One camera, low resolution. |
 | Raspberry Pi Compute Module | arm64 | Depends on carrier board | Installer support fixed in v6.3.1. |
+| NVIDIA Jetson (Nano, Orin Nano, Xavier NX, AGX, TX2) | arm64 | `ttyTHS*` on the 40-pin header | USB cameras. Jetson CSI cameras aren't handled by the camera server; they need a hand-written **Custom Pipeline**. |
+| Orange Pi (Zero, Zero 2, 3, 4, 5, Plus) | arm64 | `ttyS*`, model dependent | USB cameras. The UART may need enabling in the device tree. |
+| Banana Pi and other arm64 boards | arm64 | Model dependent | USB cameras. |
 | x86 mini PC, Intel NUC, laptop | amd64 | USB-serial adapter | USB cameras. |
 
-:::note Other arm64 boards
-NVIDIA Jetson, Orange Pi and Banana Pi are not supported by the current installer: on arm64 it installs only on a Raspberry Pi and stops with *Device is not a Raspberry Pi* on other boards. UAVcast-Pro's serial-port detection already recognises these boards (for example `ttyTHS*` on Jetson). The camera server handles Raspberry Pi CSI cameras (rpicam/libcamera) and USB cameras; Jetson CSI cameras would need a hand-written **Custom Pipeline**.
-:::
+{/* PENDING-RELEASE: non-pi-arm64 (the current arm64 installer still stops on non-Raspberry Pi boards; fix in progress) */}
 
-On a Raspberry Pi, the installer enables the UART, removes the serial console and, on Pi 3/4/Zero 2 W, disables Bluetooth so the full UART is free.
+**Raspberry Pi only:** CSI cameras (rpicam/libcamera) need a Raspberry Pi, and on a Pi the installer enables the UART, removes the serial console and, on Pi 3/4/Zero 2 W, disables Bluetooth so the full UART is free.
 
 ## Operating systems
 
@@ -37,7 +38,7 @@ On a Raspberry Pi, the installer enables the UART, removes the serial console an
 
 ## Flight controllers
 
-UAVcast-Pro v6 talks MAVLink to ArduPilot flight controllers (Copter, Plane, Rover, VTOL and other vehicle types) over USB or a TELEM port. That includes Pixhawk and Cube family boards, Matek, Holybro, CUAV and other ArduPilot boards. See the [ArduPilot autopilot list](https://ardupilot.org/copter/docs/common-autopilots.html).
+UAVcast-Pro v6 works with any MAVLink flight controller over USB or a TELEM port: ArduPilot (Copter, Plane, Rover, VTOL and other vehicle types) and PX4, on Pixhawk and Cube family boards, Matek, Holybro, CUAV and others. Flight-mode names and mode buttons in the Flight Map and Fleet Manager follow ArduPilot; with PX4, change modes from your ground station.
 
 ## Cameras
 

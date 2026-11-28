@@ -7,11 +7,11 @@ sidebar_label: "Hardware requirements"
 
 # Hardware requirements
 
-UAVcast-Pro runs on a 64-bit Linux companion computer connected to an ArduPilot flight controller. Add a camera for video and a 4G/LTE modem for flights beyond Wi-Fi range. A Raspberry Pi 4 or 5 with a Pi camera and a USB modem is the most common setup.
+UAVcast-Pro runs on a 64-bit Linux companion computer connected to any MAVLink flight controller (ArduPilot or PX4). Add a camera for video and a 4G/LTE modem for flights beyond Wi-Fi range. A Raspberry Pi 4 or 5 with a Pi camera and a USB modem is the most common setup.
 
 ## Companion computer
 
-UAVcast-Pro needs a **64-bit** operating system on an **arm64** or **amd64 (x86-64)** CPU. 32-bit systems (`armv7l`, `i686`) are not supported.
+UAVcast-Pro installs on any **64-bit** Linux board or PC with an **arm64** or **amd64 (x86-64)** CPU running Raspberry Pi OS, Debian or Ubuntu. 32-bit systems (`armv7l`, `i686`) are not supported.
 
 | Board | Status | Notes |
 |---|---|---|
@@ -20,10 +20,12 @@ UAVcast-Pro needs a **64-bit** operating system on an **arm64** or **amd64 (x86-
 | Raspberry Pi 3 / 3B+ | Supported | Fine for telemetry and one 720p stream. Installation takes about 30 minutes. |
 | Raspberry Pi Zero 2 W | Supported | Smallest and lightest. Installation takes about 30 minutes; keep video modest. |
 | Raspberry Pi Compute Module 3+/4 | Supported | Same as the matching Pi model. |
-| NVIDIA Jetson, Orange Pi, Banana Pi | Not supported | The arm64 installer only installs on a Raspberry Pi and stops on other arm64 boards. |
+| NVIDIA Jetson, Orange Pi, Banana Pi and other arm64 boards | Supported | Use the vendor's 64-bit Ubuntu or Debian image. UAVcast-Pro recognises these boards and suggests their serial ports for the flight controller. Use a USB camera (Raspberry Pi CSI cameras need a Pi). |
 | x86-64 PC (Intel NUC, mini PC, laptop) | Supported | Uses the amd64 build. USB serial adapters show up as `/dev/ttyUSB*` or `/dev/ttyACM*`. |
 
 Run `uname -m` on the board to check the architecture. You want `aarch64` or `x86_64`.
+
+{/* PENDING-RELEASE: non-pi-arm64 (the current arm64 installer still stops on non-Raspberry Pi boards; fix in progress) */}
 
 ### Storage
 
@@ -44,18 +46,20 @@ The Raspberry Pi needs a stable **5.1 V** supply that can carry the Pi plus ever
 
 ## Flight controller
 
-UAVcast-Pro supports **ArduPilot** flight controllers (Copter, Plane, Rover, Sub) that speak MAVLink 2: Pixhawk and Cube families, Matek, Holybro, CUAV, mRo and most other ArduPilot boards.
+UAVcast-Pro works with **any MAVLink flight controller**: ArduPilot (Copter, Plane, Rover, Sub) and PX4, on Pixhawk and Cube families, Matek, Holybro, CUAV, mRo and most other boards. MAVLink 2 is recommended.
 
-Flight modes, arming and the other controls in UAVcast-Pro use ArduPilot's definitions. There is no PX4-specific support.
+Flight-mode names and the mode buttons (in the Flight Map and in Fleet Manager) use ArduPilot's modes for Copter, Plane, Rover and Sub. On a PX4 flight controller, telemetry, video, routing to ground stations, the map and the HUD work the same way; use your ground station to change PX4 flight modes.
 
 Connect it in one of two ways:
 
 | Link | Wiring | When to use |
 |---|---|---|
-| **USB** | USB cable from the flight controller's USB port to the Pi. | Easiest. No baud rate to set. Use a short, good-quality data cable. |
-| **UART / Serial** | TELEM port TX → Pi RX, RX → Pi TX, GND → GND. Or a USB-serial (FTDI) cable. | When the USB port is used for something else, or for a cleaner install. Set `SERIALx_PROTOCOL = 2` (MAVLink2) on the flight controller. |
+| **USB** | USB cable from the flight controller's USB port to the companion computer. | Easiest. No baud rate to set. Use a short, good-quality data cable. |
+| **UART / Serial** | TELEM port TX → computer RX, RX → computer TX, GND → GND. Or a USB-serial (FTDI) cable. | When the USB port is used for something else, or for a cleaner install. Enable MAVLink on that port: `SERIALx_PROTOCOL = 2` (MAVLink2) on ArduPilot, `MAV_x_CONFIG` on PX4. |
 
-On a Raspberry Pi the GPIO UART is `/dev/serial0` (GPIO 14 TX, GPIO 15 RX). The installer frees it for the flight controller: it disables the serial login console and, on Pi 3, 4 and Zero 2 W, moves Bluetooth off the UART. Never connect the flight controller's 5 V pin to the Pi when both have their own supply.
+**Raspberry Pi only:** the GPIO UART is `/dev/serial0` (GPIO 14 TX, GPIO 15 RX). The installer frees it for the flight controller: it disables the serial login console and, on Pi 3, 4 and Zero 2 W, moves Bluetooth off the UART. Never connect the flight controller's 5 V pin to the Pi when both have their own supply.
+
+On other boards, use the board's UART (for example `ttyTHS*` on Jetson, `ttyS*` on Orange Pi) or a USB-serial adapter.
 
 | Flight controller TELEM port | Raspberry Pi GPIO header |
 |---|---|

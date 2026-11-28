@@ -1,13 +1,13 @@
 ---
-title: "Connect an ArduPilot flight controller to UAVcast-Pro"
-description: "Connect a Pixhawk or other ArduPilot flight controller to UAVcast-Pro over USB or UART, with automatic port and baud detection and a live connection check."
+title: "Connect a MAVLink flight controller to UAVcast-Pro"
+description: "Connect a Pixhawk or any other ArduPilot or PX4 flight controller to UAVcast-Pro over USB or UART, with automatic port and baud detection and a live connection check."
 sidebar_position: 1
 sidebar_label: "Connection"
 ---
 
 # Connect the flight controller
 
-UAVcast-Pro reads MAVLink from your ArduPilot flight controller over USB or a UART (TELEM port) and forwards it to every ground station you add. With **Port** and **Baud rate** on **Automatic**, the default, it finds the flight controller by itself, remembers what worked and reconnects after a reboot, USB glitch or late power-up. You'll find it under **Flight Controller → Connection**.
+UAVcast-Pro reads MAVLink from your flight controller (ArduPilot, PX4 or any other MAVLink autopilot) over USB or a UART (TELEM port) and forwards it to every ground station you add. With **Port** and **Baud rate** on **Automatic**, the default, it finds the flight controller by itself, remembers what worked and reconnects after a reboot, USB glitch or late power-up. You'll find it under **Flight Controller → Connection**.
 
 <Screenshot id="uavcast-pro/flight-controller" alt="Flight Controller Connection page showing Connected, the Connection check with four passed steps, and the MAVLink Inspector" caption="Flight Controller → Connection with a USB link to a Pixhawk." />
 

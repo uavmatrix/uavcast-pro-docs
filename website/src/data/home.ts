@@ -141,7 +141,7 @@ export const START_HERE: StartCard[] = [
     title: 'Hardware requirements',
     desc: 'Companion computers, flight controllers, cameras and modems. Check this before you buy parts.',
     to: ['/get-started/hardware-requirements/', '/uavcast-pro/hardware-requirements/', '/reference/supported-hardware/'],
-    bullets: ['Raspberry Pi and other arm64 boards', 'amd64 computers, NVIDIA Jetson', 'ArduPilot flight controllers', 'USB and HiLink LTE modems'],
+    bullets: ['Raspberry Pi, NVIDIA Jetson, Orange Pi', 'Any arm64 or amd64 Linux computer', 'Any MAVLink flight controller (ArduPilot, PX4)', 'USB and HiLink LTE modems'],
     cta: 'Hardware requirements',
   },
   {
@@ -160,7 +160,7 @@ export const POPULAR: (HomeLink & {area: Area['key']})[] = [
   {id: 'pop.mp', label: 'Mission Planner: telemetry and video', desc: 'Telemetry on UDP 14550 and the GStreamer video source for the HUD.', area: 'uavcast-pro', to: ['/uavcast-pro/ground-stations/mission-planner/']},
   {id: 'pop.qgc', label: 'QGroundControl: telemetry and video', desc: 'Telemetry and H.264 video on UDP 5600, on desktop and Android.', area: 'uavcast-pro', to: ['/uavcast-pro/ground-stations/qgroundcontrol/']},
   {id: 'pop.gstwin', label: 'Receive video with GStreamer on Windows', desc: 'Install the right GStreamer build and play the stream from the drone.', area: 'uavcast-pro', to: ['/uavcast-pro/ground-stations/gstreamer-windows/']},
-  {id: 'pop.4g', label: 'Fly beyond visual range over 4G', desc: 'Modem, ZeroTier VPN, telemetry and video to QGroundControl or Mission Planner.', area: 'guides', to: ['/guides/bvlos-4g-zerotier/']},
+  {id: 'pop.4g', label: 'Fly beyond visual range over 4G', desc: 'Modem, Fleet Manager VPN, telemetry and video to QGroundControl or Mission Planner.', area: 'guides', to: ['/guides/bvlos-4g/']},
   {id: 'pop.pair', label: 'Pair a drone with Fleet Manager', desc: 'Enter the 8-digit code that UAVcast-Pro shows into Fleet Manager.', area: 'fleet-manager', to: ['/fleet-manager/pair-uav/']},
   {id: 'pop.modem', label: 'Set up a cellular modem', desc: 'HiLink or stick modem, APN and automatic connection.', area: 'uavcast-pro', to: ['/uavcast-pro/connectivity/cellular-modem/']},
   {id: 'pop.gcs', label: 'Connect Mission Planner or QGroundControl', desc: 'Telemetry on UDP 14550 and video on UDP 5600 to each ground station.', area: 'uavcast-pro', to: ['/uavcast-pro/ground-control-stations/']},

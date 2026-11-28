@@ -55,9 +55,7 @@ Select **Delete** on the user's row and confirm.
 
 ## Forgot the admin password
 
-There's no reset link, because the drone has no email. If no admin can log in, remove all users from the database over SSH. The web interface then opens without a login and you can create a new admin.
+There's no reset link, because the drone has no email, and password recovery isn't self-service.
 
-```bash title="On the drone"
-sudo apt install -y sqlite3
-sudo sqlite3 /opt/uavcast-pro/uavcast.db "DELETE FROM users;"
-```
+- If another admin can still log in, they can delete your user under **Users** and create it again.
+- If nobody with the admin role can log in, contact support at **support@uavmatrix.com**. Include your license key (or the email you bought it with), the device's hostname or name as shown under **Application → License Manager → Activated Devices**, the UAVcast-Pro version, and whether you can reach the device over SSH.

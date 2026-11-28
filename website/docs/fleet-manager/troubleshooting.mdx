@@ -55,7 +55,7 @@ Fleet Manager only saves a binding after the drone confirms it. Check that the d
 <Steps>
 
 1. On **Network → Stream Bindings**, check that **Video** and **Telemetry** are switched on and note the **Ports**.
-2. Check that the ground station software listens on exactly those ports. The second drone on a laptop is on 5601 / 14551, not 5600 / 14550.
+2. Check that the ground station software listens on exactly those ports. Only the first drone on a laptop uses 5600 / 14550; every further drone has its own ports.
 3. Allow inbound UDP on those ports in the laptop's firewall. On Windows, allow QGroundControl or Mission Planner on **Private** and **Public** networks.
 4. Run `tailscale status` on the laptop and check that the drone is listed.
 

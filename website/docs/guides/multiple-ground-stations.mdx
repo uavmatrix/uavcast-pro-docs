@@ -34,7 +34,7 @@ Commands from every destination reach the flight controller, unless that destina
 
 ## 2. Make observers read-only
 
-For anyone who should watch but never fly, switch on **Read Only** on their destination. The station still receives live telemetry, but commands, mode changes, arming, RC overrides and mission transfers from it are blocked. Parameter writes are not blocked, so don't treat Read Only as protection against someone changing parameters. Ground station software may show warnings in this mode, because some of its requests (such as downloading parameters or the mission) go unanswered.
+For anyone who should watch but never fly, switch on **Read Only** on their destination. The station still receives live telemetry, but it can't change anything on the vehicle: commands, mode changes, arming, parameter writes, mission writes and RC overrides from it are blocked. {/* PENDING-RELEASE: read-only */} Ground station software may show warnings in this mode, because some of its requests (such as downloading parameters or the mission) go unanswered.
 
 :::warning Two pilots, one drone
 Without Read Only, every station can command the drone. Agree who flies, and make every other station read-only.
@@ -61,4 +61,4 @@ On **Dashboard**, the **Ground station** row shows *Sending to n · x packets/s*
 
 ## With Fleet Manager
 
-In Fleet Manager, ground stations join the organization's VPN and you connect them to drones with **Stream Bindings** on the **Network** page. Each additional drone bound to the same ground station gets the next free ports (5601/14551, 5602/14552 …). See [Stream bindings](../fleet-manager/network/stream-bindings.mdx).
+In Fleet Manager, ground stations join the organization's VPN and you connect them to drones with **Stream Bindings** on the **Network** page. Each additional drone bound to the same ground station gets its own block of ports. {/* PENDING-RELEASE: port-blocks */} See [Stream bindings](../fleet-manager/network/stream-bindings.mdx).

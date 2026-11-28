@@ -49,7 +49,7 @@ Despite the label **Destination IP or Host**, UAVcast-Pro only accepts an IPv4 a
 | **Video Port (Camera 2)** | empty = Video Port + 1 | 1–65535 | Only shown when [dual stream](../camera/multi-camera.mdx) is on. |
 | **Enable Video** | Off | On, off | Sends the camera stream to this destination. |
 | **Enable Telemetry** | Off | On, off | Sends MAVLink to this destination and accepts commands back from it. |
-| **Read Only** | Off | On, off | Needs **Enable Telemetry**. The ground station receives telemetry, but commands from it (arm and disarm, mode changes, starting a mission upload or download, parameter downloads, RC override and manual control) are blocked. Parameter writes (`PARAM_SET`) are not blocked. |
+| **Read Only** | Off | On, off | Needs **Enable Telemetry**. The ground station receives telemetry but can't change anything on the vehicle: commands, arming, mode changes, parameter writes, mission writes, RC override and manual control from it are blocked. {/* PENDING-RELEASE: read-only */} |
 
 Audio, when you turn on **Send audio to ground stations** on the Camera page, goes to every destination that receives video, on **Video Port + 2** (for example `5602`). See [Audio](../camera/audio.mdx).
 

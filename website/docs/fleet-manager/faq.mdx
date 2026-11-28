@@ -11,6 +11,10 @@ sidebar_position: 18
 
 A UAVmatrix account, and drones running UAVcast-Pro with an activated license. Each drone's license must be owned by a member of your organization. See [Licenses and seats](./licenses.mdx).
 
+### Does Fleet Manager cost extra?
+
+No. Fleet Manager is included with your UAVcast-Pro license. There is no separate subscription, and team members are free.
+
 ### How many drones can I manage?
 
 Fleet Manager itself sets no limit. Each drone needs its own UAVcast-Pro license activation, so the number of drones follows the licenses and device slots you own.
@@ -37,15 +41,15 @@ Only to send video and telemetry from drones to ground stations through Fleet Ma
 
 ### Can one ground station receive several drones?
 
-Yes. Each [stream binding](./network/stream-bindings.mdx) gets its own ports on that ground station: 5600 / 14550 for the first drone, 5601 / 14551 for the second, and so on.
+Yes. Each [stream binding](./network/stream-bindings.mdx) gets its own block of ports on that ground station, with room for a second camera and audio. The first drone uses 5600 / 14550. {/* PENDING-RELEASE: port-blocks */}
 
 ### Can I keep using my own ZeroTier or Tailscale network?
 
-Yes, if you don't need Fleet Manager's stream bindings. You can decline VPN when pairing. If you accept, a drone already on a Tailscale network is moved to your organization's network. A drone on ZeroTier (UAVnet) keeps its ZeroTier network and joins the organization's network alongside it; ZeroTier is only left when you unpair the drone.
+Yes, if you don't need Fleet Manager's stream bindings. You can decline VPN when pairing. If you accept, a drone already on a Tailscale network is moved to your organization's network. A drone on ZeroTier keeps its ZeroTier network and joins the organization's network alongside it; ZeroTier is only left when you unpair the drone.
 
 ### Does it work with ArduPilot and PX4?
 
-Fleet Manager is built for ArduPilot. Flight-mode controls use ArduPilot's modes for Copter, Plane, Rover and Sub, and the mission command list follows ArduPilot naming. There is no PX4-specific support.
+Fleet Manager works with any MAVLink flight controller that UAVcast-Pro talks to, ArduPilot or PX4: live map, telemetry, status, the terminal and stream bindings are the same. The flight-mode controls use ArduPilot's modes for Copter, Plane, Rover and Sub, and the mission command list follows ArduPilot naming, so on PX4 change modes and plan missions from your ground station.
 
 ### Can I fly a drone from Fleet Manager alone?
 

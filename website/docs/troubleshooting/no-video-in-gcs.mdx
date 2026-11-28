@@ -7,7 +7,9 @@ sidebar_position: 2
 
 # No video in QGroundControl or Mission Planner
 
-Telemetry arrives and the drone shows on the map, but the video area stays black or says *No video*. Work through the checks in order. Most cases are solved by check 2 or 3.
+Telemetry arrives and the drone shows on the map, but the video area stays black, or QGroundControl's video window says **WAITING FOR VIDEO**. Work through the checks in order. Most cases are solved by check 2 or 3.
+
+<Screenshot id="gcs/qgroundcontrol--fly-view" url="QGroundControl" alt="QGroundControl Fly view connected to an ArduPilot vehicle: toolbar with Not Ready and Stabilize, a five-waypoint mission on the map with No GPS Lock for Vehicle, and the video window in the bottom-left corner showing WAITING FOR VIDEO" caption="The symptom in QGroundControl: telemetry arrives (Not Ready, Stabilize in the toolbar; No GPS Lock because this bench setup has no GPS), but the video window in the bottom-left corner says WAITING FOR VIDEO." />
 
 <SymptomTable rows={[
   {symptom: 'Video is black in the GCS and in the UAVcast-Pro live preview', cause: 'The camera is not running on the drone', start: '#check-1'},
@@ -56,10 +58,10 @@ UAVcast-Pro only sends video to destinations where video is switched on. Telemet
 <Screenshot id="uavcast-pro/ground-control--video-enabled" alt="Video Port 5600 and the Enable Video switch turned on" caption="Ground Control Stations: a destination with Enable Video on and Video Port 5600." />
 
 :::warning Flying over 4G? Use the VPN IP
-Over a cellular link the drone can't reach your laptop's local address (like `192.168.1.20`). Use the address your laptop has on UAVnet/ZeroTier or Tailscale. On Windows, run `ipconfig` and look for the ZeroTier or Tailscale adapter.
+Over a cellular link the drone can't reach your laptop's local address (like `192.168.1.20`). Use the address your laptop has on the VPN (Fleet Manager VPN, Tailscale or ZeroTier). On Windows, run `ipconfig` and look for the Tailscale or ZeroTier adapter.
 :::
 
-Using Fleet Manager? Destinations are created for you when you add a stream binding, and each extra drone on the same ground station gets its own port (5601, 5602 …). Check the port shown on the binding, not 5600. See [Stream bindings](../fleet-manager/network/stream-bindings.mdx).
+Using Fleet Manager? Destinations are created for you when you add a stream binding, and each extra drone on the same ground station gets its own ports. Check the video port shown on the binding, not 5600. {/* PENDING-RELEASE: port-blocks */} See [Stream bindings](../fleet-manager/network/stream-bindings.mdx).
 
 ## Check 3: Allow UDP 5600 through the firewall {/* #check-3 */}
 

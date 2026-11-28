@@ -15,13 +15,11 @@ No. UAVcast-Pro works over any IP connection: 4G/LTE, Wi-Fi or Ethernet. A modem
 
 ### Which computers can run UAVcast-Pro?
 
-A Raspberry Pi (Zero 2 W, 3, 4, 5 or Compute Module) with a 64-bit Raspberry Pi OS, Debian or Ubuntu, or an x86-64 PC or mini PC with 64-bit Debian or Ubuntu. Other arm64 boards such as NVIDIA Jetson and Orange Pi are not supported by the current installer. A Raspberry Pi 4 or 5 is the comfortable choice for video. See [Supported hardware](../reference/supported-hardware.mdx).
+Any 64-bit Linux board or PC on arm64 or amd64 running Raspberry Pi OS, Debian or Ubuntu: Raspberry Pi Zero 2 W, 3, 4 and 5, NVIDIA Jetson, Orange Pi and x86 mini PCs. A Raspberry Pi 4 or 5 is the comfortable choice for video. See [Supported hardware](../reference/supported-hardware.mdx).
 
 ### Which flight controllers are supported?
 
-Flight controllers running ArduPilot (Copter, Plane, Rover, VTOL and the other vehicle types) that output MAVLink over USB or a TELEM port: Pixhawk and Cube family boards, Matek and similar.
-
-Flight modes, arming and the other controls use ArduPilot's definitions; there is no PX4-specific support.
+Any flight controller that speaks MAVLink over USB or a TELEM port: ArduPilot (Copter, Plane, Rover, VTOL and the other vehicle types) and PX4, on Pixhawk and Cube family boards, Matek and similar. Telemetry, video and routing to ground stations work with any of them. The flight-mode buttons in the Flight Map and in Fleet Manager use ArduPilot's mode names; with PX4, change modes from your ground station.
 
 ### Can I connect over the flight controller's USB port?
 
@@ -43,7 +41,7 @@ By default telemetry goes to UDP **14550** and video to UDP **5600** on each gro
 
 ### Do I need port forwarding on my router?
 
-No. Over 4G, put the drone and the ground station on the same VPN (UAVnet/ZeroTier, Tailscale or the Fleet Manager network). The drone sends telemetry and video to the ground station's VPN address. See [Fly beyond visual range over 4G](../guides/bvlos-4g-zerotier.mdx).
+No. Over 4G, put the drone and the ground station on the same VPN: the Fleet Manager VPN (included with your license), or your own Tailscale or ZeroTier network. The drone sends telemetry and video to the ground station's VPN address. See [Fly beyond visual range over 4G](../guides/bvlos-4g.mdx).
 
 ### Can I still connect over TCP 5760?
 
@@ -59,13 +57,21 @@ Yes. The flight controller link, telemetry and video start at power-on without w
 
 See [License won't activate](./license-activation-failed.mdx). The usual causes are a mistyped key, no free device slot, or no internet on the device.
 
+### What happens when my license expires?
+
+UAVcast-Pro is locked: the web interface only opens **Application**, and telemetry, video and the other services stop until you renew. Renew in the store before the expiry date, then validate the key on the drone. See [When a license expires](../get-started/license-activation.mdx#when-a-license-expires).
+
+### Is Fleet Manager included with my license?
+
+Yes. Fleet Manager, including its VPN, is included with your UAVcast-Pro license at no extra cost.
+
 ### I replaced the SD card. Do I need a new license?
 
 No, but the device counts as new and takes a slot. Unregister the old entry under **Application → License Manager → Activated Devices**.
 
 ### Is Fleet Manager a separate product?
 
-Fleet Manager is UAVmatrix's web dashboard for managing many drones at [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com). You sign in with your uavmatrix.com account, and each drone you pair needs an active UAVcast-Pro license owned by a member of your organization. See [Fleet Manager](../fleet-manager/index.mdx).
+Fleet Manager is UAVmatrix's web dashboard for managing many drones at [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com). It is included with your UAVcast-Pro license. You sign in with your uavmatrix.com account, and each drone you pair needs an active UAVcast-Pro license owned by a member of your organization. See [Fleet Manager](../fleet-manager/index.mdx).
 
 ### How do I pair a drone with Fleet Manager?
 
@@ -91,7 +97,7 @@ Under `/opt/uavcast-pro`: the database `uavcast.db`, `logs/`, `recordings/` and 
 
 ### I forgot the admin password.
 
-There is no password reset in the web interface. Another admin can delete your user under **Users** and create it again. If you were the only admin, you can remove all users over SSH and create a new admin: see [Forgot the admin password](../uavcast-pro/users.mdx#forgot-the-admin-password).
+There is no password reset in the web interface. Another admin can delete your user under **Users** and create it again. If you were the only admin, recovery isn't self-service: contact **support@uavmatrix.com** with the details listed in [Forgot the admin password](../uavcast-pro/users.mdx#forgot-the-admin-password).
 
 ### Where do I get help?
 

@@ -17,7 +17,7 @@ The name of the carrier's gateway a cellular modem connects through. UAVcast-Pro
 
 ### ArduPilot
 
-Open-source autopilot firmware for multicopters, planes, VTOL, rovers and boats. UAVcast-Pro v6 is built for ArduPilot flight controllers.
+Open-source autopilot firmware for multicopters, planes, VTOL, rovers and boats. UAVcast-Pro works with ArduPilot and with any other MAVLink flight controller, such as PX4. Its flight-mode buttons use ArduPilot's mode names.
 
 ### Auth key
 
@@ -97,7 +97,7 @@ The 8-digit code UAVcast-Pro shows when you connect a drone to Fleet Manager. Va
 
 ### Read Only (destination)
 
-A ground station destination that receives telemetry but whose commands are blocked.
+A ground station destination that receives telemetry but can't change anything on the vehicle: commands, mode changes, parameter and mission writes from it are blocked. {/* PENDING-RELEASE: read-only */}
 
 ### Read Only (user)
 
@@ -137,7 +137,7 @@ A WireGuard-based VPN. UAVcast-Pro can join your tailnet, or the Fleet Manager o
 
 ### UAVnet
 
-UAVmatrix's hosted ZeroTier network controller at uavnet.uavmatrix.com.
+UAVmatrix's hosted ZeroTier network controller at uavnet.uavmatrix.com. It is being discontinued in favour of the Fleet Manager VPN; existing users should move to Fleet Manager.
 
 ### VRS (virtual reference station)
 
@@ -145,4 +145,4 @@ A correction service that computes corrections for your position from a network 
 
 ### ZeroTier
 
-A peer-to-peer VPN. UAVnet is a ZeroTier controller run by UAVmatrix.
+A peer-to-peer VPN. UAVcast-Pro can join your own ZeroTier network.

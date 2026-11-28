@@ -34,24 +34,21 @@ If the drone doesn't confirm within 15 seconds, Fleet Manager cancels the bindin
 
 ## How ports are assigned
 
-Ports are counted **per ground station**. For each new binding to a ground station, Fleet Manager takes the lowest free video port starting at **5600** and the lowest free telemetry port starting at **14550**:
+{/* PENDING-RELEASE: port-blocks */}
 
-| Bindings to ground station **ops-laptop-03** | Video (UDP) | Telemetry (UDP) |
-|---|---|---|
-| Survey-14 (first) | 5600 | 14550 |
-| Survey-15 (second) | 5601 | 14551 |
-| Inspection-07 (third) | 5602 | 14552 |
+Ports are counted **per ground station**. Each binding gets its own block of UDP ports on that ground station, so drones never overlap:
+
+- a **video** port for camera 1, followed by room for **camera 2** (dual stream) and **audio**, which UAVcast-Pro sends to the next ports after the video port;
+- a **telemetry** port for MAVLink.
+
+The first binding on a ground station uses the defaults, video **5600** and telemetry **14550**. Later bindings get the next free block.
 
 A few consequences worth knowing:
 
-- **Every ground station starts at 5600 / 14550.** Survey-14 can use 5600 on one laptop and 5601 on another, depending on what else each laptop receives.
-- **Freed ports are reused.** If you remove Survey-15's binding, the next new binding to that laptop gets 5601 / 14551.
+- **Every ground station starts at the defaults.** The same drone can have different ports on two laptops, depending on what else each laptop receives.
+- **Freed ports are reused.** Removing a binding frees its block for the next new binding to that laptop.
 - **Ports don't follow the drone.** Removing and re-adding a binding can give it different ports. Always read the **Ports** column before setting up the ground station software.
 - Ports are assigned by Fleet Manager and can't be edited in the app.
-
-:::warning Second camera and audio
-In UAVcast-Pro, a second camera stream uses the video port + 1 and audio uses the video port + 2. Fleet Manager doesn't reserve those ports, so on a ground station that receives several drones they belong to the next drones' bindings. Give drones with dual camera or audio their own ground station. Setting **Video Port (Camera 2)** by hand on the drone doesn't last: Fleet Manager rewrites its destinations without that field.
-:::
 
 ## Set up the ground station software
 
@@ -60,7 +57,7 @@ Use the ports from the binding's **Ports** column. The stream arrives from the d
 <Tabs>
 <TabItem value="qgc" label="QGroundControl">
 
-- **Telemetry:** QGroundControl listens on UDP 14550 by default, so the first drone connects by itself. For more drones, open **Application Settings → Comm Links**, add a link of type **UDP** with the binding's telemetry port (14551, 14552, ...), and connect it.
+- **Telemetry:** QGroundControl listens on UDP 14550 by default, so the first drone connects by itself. For more drones, open **Application Settings → Comm Links**, add a link of type **UDP** with the binding's telemetry port, and connect it.
 - **Video:** in **Application Settings → Video** (under **General** in older versions), set **Source** to **UDP h.264 Video Stream** and the UDP port to the binding's video port (**UDP URL** `0.0.0.0:<port>` in current versions). QGroundControl shows one video at a time; to watch several drones, run a second instance or use a video player for the others.
 
 </TabItem>
@@ -85,7 +82,7 @@ More on running many vehicles from one station: [Stream to multiple ground stati
 
 Use the search box and the **Video Status** filter (**All Video**, **Video On**, **Video Off**) to find bindings in a large fleet.
 
-<Screenshot id="fleet-manager/network--stream-bindings" alt="Stream Bindings table listing drones, ground stations, video and telemetry switches and ports" caption="Stream Bindings tab: each ground station counts its own ports from 5600 / 14550, so Ålesund Survey Van has 5600 and 5601 while Rotterdam Ops Center has 5602, 5604, 5605 and 5607." />
+<Screenshot id="fleet-manager/network--stream-bindings" alt="Stream Bindings table listing drones, ground stations, video and telemetry switches and ports" caption="Stream Bindings tab: each binding lists its drone, ground station, Video and Telemetry switches and its ports." />
 
 ## Bindings on the UAV page
 

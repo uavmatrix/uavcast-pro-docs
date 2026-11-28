@@ -19,6 +19,8 @@ QGroundControl listens for MAVLink on UDP port 14550 by default, so a UAVcast-Pr
 
 Start QGroundControl. Within a few seconds of the first packet the vehicle appears and the toolbar shows its flight mode and battery.
 
+<Screenshot id="gcs/qgroundcontrol--fly-view" url="QGroundControl" alt="QGroundControl Fly view connected to an ArduPilot vehicle: toolbar with Not Ready and Stabilize, a five-waypoint mission on the map with No GPS Lock for Vehicle, and the video window in the bottom-left corner showing WAITING FOR VIDEO" caption="Telemetry working: the toolbar shows the vehicle's state and flight mode (Not Ready, Stabilize). This is a bench setup without GPS, hence No GPS Lock for Vehicle. The video window (bottom left) says WAITING FOR VIDEO until video is set up below." />
+
 Nothing appears? Check that automatic UDP connection is on: **Q** icon → **Application Settings**, then **AutoConnect to the following devices** → **UDP** ticked (the default). Depending on your QGroundControl version, the AutoConnect list is on the **Comm Links** page or on the **General** page. If you set a **Telemetry Port** other than 14550 on the drone, add a link instead: **Application Settings** → **Comm Links** → **Add**, type **UDP**, the port you chose, then **Connect**.
 
 ## Video

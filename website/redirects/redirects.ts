@@ -106,6 +106,7 @@ export const targets = {
     '/uavcast-pro/connectivity/',
     '/uavcast-pro/',
   ],
+  bvlos4g: ['/guides/bvlos-4g/', '/guides/'],
   zerotier: [
     '/guides/zerotier/',
     '/uavcast-pro/guides/zerotier/',
@@ -253,6 +254,8 @@ const otherRedirects: Record<string, TargetKey> = {
   '/installation/': 'installation',
   '/docs/': 'uavcastOverview',
   '/markdown-page/': 'home',
+  // Renamed guide slug (docs v2 preview): the 4G guide no longer centres on UAVnet/ZeroTier.
+  '/guides/bvlos-4g-zerotier/': 'bvlos4g',
 };
 
 export type RedirectRule = {from: string; to: TargetKey};

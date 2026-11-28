@@ -35,7 +35,9 @@ Ubuntu Server 64-bit for Raspberry Pi also works.
 </TabItem>
 <TabItem value="other" label="Other arm64 boards">
 
-The current installer supports Raspberry Pi only on arm64. On other arm64 boards (NVIDIA Jetson, Orange Pi, Banana Pi) it stops with *Device is not a Raspberry Pi*. See [Hardware requirements](./hardware-requirements.mdx).
+Flash the vendor's 64-bit Ubuntu or Debian image (for example JetPack's Ubuntu on NVIDIA Jetson), complete the first-boot setup and enable SSH.
+
+{/* PENDING-RELEASE: non-pi-arm64 (the current arm64 installer still stops on non-Raspberry Pi boards; fix in progress) */}
 
 </TabItem>
 <TabItem value="amd64" label="x86-64 PC">
@@ -156,6 +158,8 @@ The installer binary has an uninstall mode. It stops and removes all UAVcast-Pro
 ```bash
 sudo /opt/uavcast-pro/factory/ApplicationInstaller --uninstall
 ```
+
+{/* PENDING-RELEASE: uninstall */}
 
 :::warning Unregister the license first
 Uninstalling doesn't free the license slot. Unregister the device on **Application → License Manager** before you wipe it, or you can't free the slot without another device. See [Licensing & activation](./license-activation.mdx#unregister-a-device).

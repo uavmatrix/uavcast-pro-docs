@@ -55,9 +55,9 @@ Pick the older version in **Select version to update** and update as usual, or u
 | Recordings and telemetry logs | systemd service files |
 | ZeroTier and Tailscale membership | System packages UAVcast-Pro depends on (updated by apt) |
 
-:::warning A custom server port resets to 80
-The web server port lives in the `uavcast-web` service file, and every update installs a fresh copy with port 80. If you changed **Server Port** on the Application page, open the web interface on port 80 after the update and save your port again. The Application page still shows your old value until you do.
-:::
+{/* PENDING-RELEASE: port-persist */}
+
+A custom **Server Port** set on the Application page is kept across updates.
 
 ## See what changed
 

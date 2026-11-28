@@ -71,7 +71,7 @@ Use **Rename** in the device's actions menu (the **⋯** button) to give it a na
 2. Choose the **Drone** and the **Ground Station**, then select **Create Binding**. The drone must be online.
 3. Read the ports in the **Ports** column, for example `5600 / 14550`.
 4. In your ground control software, listen on those ports:
-   - **QGroundControl:** telemetry on UDP 14550 connects automatically. For video, open **Application Settings → Video** (under **General** in older versions), set **Source** to **UDP h.264 Video Stream** and the UDP port to the binding's video port (**UDP URL** `0.0.0.0:<port>` in current versions). For a second drone on 14551, add a UDP link on that port under **Application Settings → Comm Links**.
+   - **QGroundControl:** telemetry on UDP 14550 connects automatically. For video, open **Application Settings → Video** (under **General** in older versions), set **Source** to **UDP h.264 Video Stream** and the UDP port to the binding's video port (**UDP URL** `0.0.0.0:<port>` in current versions). For further drones, add a UDP link on each binding's telemetry port under **Application Settings → Comm Links**.
    - **Mission Planner:** choose **UDP** in the connection drop-down, select **Connect** and enter the telemetry port.
 
 </Steps>

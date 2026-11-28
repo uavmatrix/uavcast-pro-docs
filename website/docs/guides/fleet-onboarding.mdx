@@ -65,16 +65,16 @@ Open **Fleet**. Every drone should be listed as online. On **Fleet Map**, each d
 2. Press **Connect a Device**, choose **Ground Control Station (GCS)** and copy the **GCS Connection Command**. Run it in a terminal **on the ground station laptop**, with Tailscale installed. Do not paste it into UAVcast-Pro.
 3. The laptop appears under **Ground Stations** once it is connected.
 4. Under **Stream Bindings**, press **Add Stream Binding** and link each drone to the ground station that should receive it. The drone must be online, because Fleet Manager pushes the destination to it.
-5. Each binding gets its own ports on that ground station: the first drone uses 5600 (video) and 14550 (telemetry), the next 5601 and 14551, and so on. Set up the ground station software with the ports shown on each binding.
+5. Each binding gets its own block of ports on that ground station: the first drone uses the defaults, 5600 (video) and 14550 (telemetry), and each further drone gets the next free block. Set up the ground station software with the ports shown on each binding.
 
 </Steps>
 
-<Screenshot id="fleet-manager/network--stream-bindings" alt="Fleet Manager Network page with stream bindings linking several drones to one ground station with auto-assigned ports" caption="Network → Stream Bindings. Several drones bound to one ground station get consecutive ports, for example 5600 / 14550 and 5601 / 14551." />
+<Screenshot id="fleet-manager/network--stream-bindings" alt="Fleet Manager Network page with stream bindings linking several drones to one ground station with auto-assigned ports" caption="Network → Stream Bindings: each binding shows its ground station and its video and telemetry ports." />
 
 Details: [Connect a ground station](../fleet-manager/connect-gcs.mdx) and [Stream bindings](../fleet-manager/network/stream-bindings.mdx).
 
-:::warning Dual stream and stream bindings
-With dual stream on, a drone sends its second camera to its video port + 1, and audio always goes to video port + 2. Fleet Manager gives the next drone on the same ground station video port + 1, so the streams collide. Don't bind a dual-stream or audio drone to a ground station that other drones also use. A **Video Port (Camera 2)** set by hand on the drone doesn't help here: Fleet Manager rewrites its destinations (the ones with the cloud icon) without that field, so the next update clears it.
+:::note Dual stream and audio
+Each binding gets its own block of ports on the ground station, with room for the drone's second camera and audio after its video port, so several drones can share one ground station. {/* PENDING-RELEASE: port-blocks */}
 :::
 
 ## 7. Day-to-day

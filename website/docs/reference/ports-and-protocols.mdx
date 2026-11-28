@@ -24,7 +24,7 @@ UAVcast-Pro **sends** telemetry and video to each ground station. The ground sta
 Since v6.5.0 the telemetry router does not listen on TCP 5760. Ground stations connect over UDP to the destinations you add.
 :::
 
-**With Fleet Manager stream bindings**, each additional drone bound to the same ground station gets the next free port pair: 5600/14550, 5601/14551, 5602/14552 and so on.
+**With Fleet Manager stream bindings**, the first drone bound to a ground station uses 5600/14550, and each additional drone gets its own block of ports: a video port with room for camera 2 and audio after it, and a telemetry port. Read the ports on each binding. {/* PENDING-RELEASE: port-blocks */}
 
 ## Drone: services you connect to
 

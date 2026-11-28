@@ -61,7 +61,7 @@ One card per destination.
 | **Enable Endpoint** | On | Off stops everything to this destination: telemetry, video and audio. |
 | **Enable Video** | **Off** | |
 | **Enable Telemetry** | **Off** | |
-| **Read Only** | Off | Blocks commands from this ground station; it receives telemetry only. |
+| **Read Only** | Off | The ground station receives telemetry but can't change anything on the vehicle. {/* PENDING-RELEASE: read-only */} |
 
 ## Camera → Camera settings
 
@@ -114,7 +114,7 @@ One card per destination.
 |---|---|---|
 | **Enable VPN** | No | |
 | **Services** | **ZeroTier** | **ZeroTier** or **Tailscale**. |
-| **Network ID** (ZeroTier) | empty | From your UAVnet network. |
+| **Network ID** (ZeroTier) | empty | From your own ZeroTier controller. |
 | **Auth Key** / **Hostname (Optional)** (Tailscale) | empty | Or log in with **Web Login**, or the **Fleet Manager** tab after pairing. |
 
 ## Dynamic DNS

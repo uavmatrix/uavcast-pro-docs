@@ -1,6 +1,6 @@
 ---
 title: "UAVcast-Pro quick start: telemetry and video in 10 minutes"
-description: "Connect an ArduPilot flight controller to UAVcast-Pro and get telemetry and live video in Mission Planner or QGroundControl, first on your LAN, then over 4G/LTE."
+description: "Connect a MAVLink flight controller to UAVcast-Pro and get telemetry and live video in Mission Planner or QGroundControl, first on your LAN, then over 4G/LTE."
 sidebar_position: 2
 sidebar_label: "Quick start"
 ---
@@ -88,6 +88,8 @@ For video: click the **Q** icon → **Application Settings** → **Video** (in o
 
 In the top-right corner choose **UDP**, select **Connect** and accept port `14550`.
 
+<Screenshot id="gcs/mission-planner--connected" url="Mission Planner" alt="Mission Planner Flight Data view connected over UDP: the top-right connection box shows UDP, the link UDP14550-1-QUADRO and the DISCONNECT button; the HUD shows DISARMED, Unhealthy AHRS and GPS: No Fix" caption="Mission Planner connected over UDP 14550: the connection box (top right) shows the link and DISCONNECT. Bench setup without GPS, hence Unhealthy AHRS and GPS: No Fix on the HUD." />
+
 For video: right-click the HUD → **Video** → **Set GStreamer Source**, and paste:
 
 ```text
@@ -107,24 +109,23 @@ You now have telemetry and video on your local network. The dashboard's **Ground
 
 ## 6. Fly over 4G/LTE
 
-Over a cellular network the drone has no address your laptop can reach, so both join the same VPN. Your license includes a UAVnet (ZeroTier) network.
+Over a cellular network the drone has no address your laptop can reach, so both join the same VPN. The Fleet Manager VPN is included with your license.
 
 <Steps>
 
 1. Plug in the modem. On **Modem**, set **Modem type** to **HiLink** or **Traditional (PPP)**. Leave **Access Point Name** empty: UAVcast-Pro finds the APN. See [Cellular modem](../uavcast-pro/connectivity/cellular-modem.mdx).
-2. Sign in to [uavnet.uavmatrix.com](https://uavnet.uavmatrix.com) with the UAVnet account from your order email and create a network. Copy the **Network ID**.
-3. In UAVcast-Pro, go to **Virtual Private Network**. Set **Enable VPN** to **Yes**, choose **ZeroTier**, paste the **Network ID** and select **Join Network**.
-4. Install [ZeroTier](https://www.zerotier.com/download/) on the laptop and join the same network ID.
-5. In UAVnet, authorize both members if they show as unauthorized, and note the IP address UAVnet assigned to the laptop.
-6. On **Ground Control Stations**, change **Destination IP or Host** to the laptop's **ZeroTier** IP.
-7. On **Networks**, select **Modem Priority (Outdoor Mode)** so traffic goes over the modem when Wi-Fi drops.
+2. Sign in to [Fleet Manager](https://fleet-manager.uavmatrix.com), open **Network** and select **Enable VPN Network** if it isn't on yet.
+3. Pair the drone: in UAVcast-Pro, **Management → Fleet Management → Connect to Fleet Manager**, then enter the code in Fleet Manager under **Fleet → Pair Device**. Keep **Enable VPN for this UAV** ticked.
+4. Put the laptop on the VPN: install Tailscale and run the **GCS Connection Command** from Fleet Manager's **Network** page, then mark the laptop as a **Ground Control Station (GCS)**.
+5. In **Network → Stream Bindings**, add a binding from the drone to the laptop. Fleet Manager sends the destination to the drone, and the **Ports** column shows which ports to listen on.
+6. On **Networks**, select **Modem Priority (Outdoor Mode)** so traffic goes over the modem when Wi-Fi drops.
 
 </Steps>
 
-Full details: [VPN](../uavcast-pro/connectivity/vpn.mdx). Prefer Tailscale or Fleet Manager? Both work the same way: put the laptop and the drone on one network and use the laptop's VPN IP as the destination.
+Full walkthrough: [Fly beyond visual range over 4G](../guides/bvlos-4g.mdx). Already run your own Tailscale or ZeroTier network? Join the drone and the laptop to it instead and use the laptop's VPN IP as the destination: see [VPN](../uavcast-pro/connectivity/vpn.mdx).
 
 :::danger Set a GCS failsafe before flying over LTE
-Cellular links drop. Make sure the flight controller has a GCS failsafe configured (`FS_GCS_ENABLE` on ArduPilot). The top bar shows **GCS Failsafe Enabled** or **GCS Failsafe Disabled**.
+Cellular links drop. Make sure the flight controller has a GCS failsafe configured (`FS_GCS_ENABLE` on ArduPilot, `NAV_DLL_ACT` on PX4). The top bar shows **GCS Failsafe Enabled** or **GCS Failsafe Disabled**.
 :::
 
 ## Next steps

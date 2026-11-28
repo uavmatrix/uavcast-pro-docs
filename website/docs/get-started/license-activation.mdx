@@ -11,7 +11,7 @@ UAVcast-Pro needs an activated license key on every drone. You buy a license in 
 
 ## Buy a license
 
-Licenses are sold at [uavmatrix.com/products](https://uavmatrix.com/products/). Every license includes updates for its whole period and a UAVnet (ZeroTier) VPN account, and a drone with an active license can be paired with [Fleet Manager](../fleet-manager/index.mdx).
+Licenses are sold at [uavmatrix.com/products](https://uavmatrix.com/products/). Every license includes updates for its whole period and [Fleet Manager](../fleet-manager/index.mdx), including its VPN for reaching the drone over 4G.
 
 | Plan | Device slots | Valid for |
 |---|---|---|
@@ -21,10 +21,7 @@ Licenses are sold at [uavmatrix.com/products](https://uavmatrix.com/products/). 
 
 The store page always shows the current plans and prices. There is no free trial license.
 
-After payment you get an order confirmation email with:
-
-- the **license key**, five groups of four characters, and
-- your **UAVnet account**: the address, your email and a temporary password. You use it to create the VPN network your drone and ground station join. See [VPN](../uavcast-pro/connectivity/vpn.mdx).
+After payment you get an order confirmation email with the **license key**, five groups of four characters.
 
 The key is also in your store account under **Licenses**, with its device slots and expiry date.
 
@@ -117,10 +114,14 @@ The drone picks up the new expiry date and slots at its next check, within 4 hou
 
 ## When a license expires
 
-When the license server reports the license as expired, the drone marks itself unlicensed: the web interface only opens **Application**, and the telemetry, camera, NTRIP and DNS services don't start after the next restart. Renew the license and validate the key again to unlock it.
+:::danger An expired license locks UAVcast-Pro
+When a license expires, UAVcast-Pro can no longer be used on any of its drones. It does not keep running on the installed version.
+:::
+
+When the license server reports the license as expired, the drone marks itself unlicensed: the web interface only opens **Application**, and telemetry, video, NTRIP and Dynamic DNS stop at the next restart of their services. Renew the license before the expiry date to avoid downtime, and validate the key again on the drone (or wait for its next check, within 4 hours) to unlock it.
 
 ## Licenses and Fleet Manager
 
-Fleet Manager uses the same license. A drone can only be paired with an organization if its license belongs to a member of that organization. If you bought the license with a different email than the one you sign in to Fleet Manager with, add that email in Fleet Manager (see [Licenses in Fleet Manager](../fleet-manager/licenses.mdx)). See [Pair a drone with Fleet Manager](../uavcast-pro/fleet-pairing.mdx).
+Fleet Manager is included with your UAVcast-Pro license and uses the same license. A drone can only be paired with an organization if its license belongs to a member of that organization. If you bought the license with a different email than the one you sign in to Fleet Manager with, add that email in Fleet Manager (see [Licenses in Fleet Manager](../fleet-manager/licenses.mdx)). See [Pair a drone with Fleet Manager](../uavcast-pro/fleet-pairing.mdx).
 
 Activation problems: see [License activation failed](../troubleshooting/license-activation-failed.mdx).
