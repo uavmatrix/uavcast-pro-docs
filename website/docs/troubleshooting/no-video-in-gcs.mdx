@@ -1,0 +1,151 @@
+---
+title: "No video in QGroundControl or Mission Planner"
+sidebar_label: No video in the ground station
+description: "Telemetry works but video stays black in QGroundControl or Mission Planner? Check the camera, Enable Video, the destination IP, UDP 5600 and the GCS."
+sidebar_position: 2
+---
+
+# No video in QGroundControl or Mission Planner
+
+Telemetry arrives and the drone shows on the map, but the video area stays black or says *No video*. Work through the checks in order. Most cases are solved by check 2 or 3.
+
+<SymptomTable rows={[
+  {symptom: 'Video is black in the GCS and in the UAVcast-Pro live preview', cause: 'The camera is not running on the drone', start: '#check-1'},
+  {symptom: 'Live preview works, the ground station stays black', cause: 'Enable Video is off for this ground station, or the IP is wrong', start: '#check-2'},
+  {symptom: 'Worked on Wi-Fi at home, black over 4G', cause: 'The destination uses a local IP instead of the VPN IP', start: '#check-2'},
+  {symptom: 'Everything looks right, still black on Windows', cause: 'The firewall blocks incoming UDP on port 5600', start: '#check-3'},
+  {symptom: 'QGroundControl shows video, Mission Planner does not', cause: 'Mission Planner has no GStreamer source set', start: '#check-4'},
+]} />
+
+## Check 1: Confirm the camera is streaming on the drone {/* #check-1 */}
+
+If the drone isn't producing video, no ground station setting will help.
+
+<Steps>
+
+1. Open the UAVcast-Pro web interface and go to **Camera → Camera settings**.
+2. Check that **Enable Camera?** is **Yes** and that a camera is chosen in **Select Camera**.
+3. Check that the camera runs: the dashboard's **Video** row should say **Running**. If it is stopped, press **Start** on the Camera page (the button reads **Restart** while the camera runs).
+4. Turn on **Enable Live Preview?** and look at **Live Preview**. If you see a picture, the camera works and you can go to check 2.
+5. If **Select Camera** says **No cameras available**, go to [Camera not detected](./camera-not-detected.mdx).
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera" alt="UAVcast-Pro Camera settings page with CAM 1 enabled and the Live Preview panel showing No Video Available" caption="Camera → Camera settings with CAM 1 enabled. Live Preview shows No Video Available until Enable Live Preview? is ticked." />
+
+:::note The preview is not the ground station stream
+The browser preview goes through the built-in media server (WebRTC on port 8889). The ground station gets a separate H.264 stream over UDP. A working preview proves the camera works, not that the UDP stream reaches your laptop.
+:::
+
+If the **Action Logs** on the Camera page say a camera *does not support* a resolution, pick another value in **Resolution**. UAVcast-Pro falls back to the largest supported size and logs which one it used.
+
+## Check 2: Check the ground station destination {/* #check-2 */}
+
+UAVcast-Pro only sends video to destinations where video is switched on. Telemetry and video have separate switches, and **both are off on a new destination**.
+
+<Steps>
+
+1. Go to **Ground Control Stations** and find the card for the computer that runs your ground station.
+2. Make sure **Enable Endpoint** and **Enable Video** are both on.
+3. Check **Destination IP or Host**. It must be the IPv4 address of the ground station computer as seen from the drone. Hostnames are not accepted.
+4. Check that **Video Port** is `5600`, or the port your ground station listens on.
+5. Fields save when you leave them or press Enter. A green tick confirms the save.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/ground-control--video-enabled" alt="Video Port 5600 and the Enable Video switch turned on" caption="Ground Control Stations: a destination with Enable Video on and Video Port 5600." />
+
+:::warning Flying over 4G? Use the VPN IP
+Over a cellular link the drone can't reach your laptop's local address (like `192.168.1.20`). Use the address your laptop has on UAVnet/ZeroTier or Tailscale. On Windows, run `ipconfig` and look for the ZeroTier or Tailscale adapter.
+:::
+
+Using Fleet Manager? Destinations are created for you when you add a stream binding, and each extra drone on the same ground station gets its own port (5601, 5602 …). Check the port shown on the binding, not 5600. See [Stream bindings](../fleet-manager/network/stream-bindings.mdx).
+
+## Check 3: Allow UDP 5600 through the firewall {/* #check-3 */}
+
+Video arrives as incoming UDP traffic. On Windows this is blocked by default, even when telemetry gets through because the ground station asked for an exception.
+
+<Tabs>
+<TabItem value="windows" label="Windows" default>
+
+Open **PowerShell as Administrator** and run:
+
+```powershell title="PowerShell (Administrator)"
+New-NetFirewallRule -DisplayName "UAV Video" -Direction Inbound -Protocol UDP -LocalPort 5600 -Action Allow
+New-NetFirewallRule -DisplayName "MAVLink Telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+```
+
+The ZeroTier and Tailscale adapters are often classed as a *Public* network. A rule created this way applies to all profiles.
+
+</TabItem>
+<TabItem value="linux" label="Linux">
+
+```bash title="UFW"
+sudo ufw allow 5600/udp comment 'UAV Video'
+sudo ufw allow 14550/udp comment 'MAVLink Telemetry'
+```
+
+</TabItem>
+<TabItem value="macos" label="macOS">
+
+The macOS firewall allows incoming UDP for apps you approve. If you clicked *Deny* when QGroundControl first started, allow it again in **System Settings → Network → Firewall → Options**.
+
+</TabItem>
+</Tabs>
+
+## Check 4: Set up video in your ground station {/* #check-4 */}
+
+<Tabs>
+<TabItem value="qgc" label="QGroundControl" default>
+
+<Steps>
+
+1. Click the **Q** icon, then **Application Settings**.
+2. Open the video settings (**Video**, or **General → Video** in older versions).
+3. Set **Source** to **UDP h.264 Video Stream**, and check that the UDP address uses port `5600` (**UDP URL** `0.0.0.0:5600` in current versions, **UDP Port** `5600` in older ones).
+4. Go back to the Fly view. The video tile should show a picture within a few seconds.
+
+</Steps>
+
+</TabItem>
+<TabItem value="mp" label="Mission Planner">
+
+Mission Planner shows video in the HUD. If it stays black, set the source by hand:
+
+<Steps>
+
+1. Right-click the HUD and choose **Video → Set GStreamer Source**.
+2. Paste this pipeline and confirm:
+
+</Steps>
+
+```text title="Mission Planner GStreamer source"
+udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+```
+
+</TabItem>
+</Tabs>
+
+## Check 5: Test the stream without a ground station {/* #check-5 */}
+
+This takes the ground station software out of the picture. If a window with video opens, the drone, network and firewall are fine and the problem is in the GCS settings.
+
+```bash title="Windows, Linux and macOS"
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+:::warning Windows: choose the Complete installation
+When you install GStreamer (MSVC 64-bit runtime), pick **Complete**. The Typical installation leaves out the H.264 decoder and the command fails with `no element "avdec_h264"`.
+:::
+
+Close the test before you open your ground station again: only one program can listen on port 5600 at a time. Step-by-step receiver setup: [Mission Planner](../uavcast-pro/ground-stations/mission-planner.mdx), [QGroundControl](../uavcast-pro/ground-stations/qgroundcontrol.mdx), and GStreamer on [Windows](../uavcast-pro/ground-stations/gstreamer-windows.mdx), [Linux](../uavcast-pro/ground-stations/gstreamer-linux.mdx) or [macOS](../uavcast-pro/ground-stations/gstreamer-macos.mdx).
+
+:::tip Video now, but choppy over 4G?
+See [Choppy or delayed video](./choppy-or-delayed-video.mdx).
+:::
+
+## Still no video?
+
+[Download the logs](./collect-logs.mdx) with **Camera Server** selected in the log list, and send them to **support@uavmatrix.com** together with your UAVcast-Pro version, the camera model and the ground station you use.
+
+Related: [Camera settings](../uavcast-pro/camera/index.mdx) · [Ground Control Stations](../uavcast-pro/ground-stations/index.mdx)

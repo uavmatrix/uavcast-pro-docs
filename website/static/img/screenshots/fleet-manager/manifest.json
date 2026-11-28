@@ -1,0 +1,644 @@
+{
+  "generated": "2026-11-28T06:38:39.308Z",
+  "source": "Local Fleet Manager dev server with seeded demo data (Nordwind Aerial Services). Not production.",
+  "viewport": "1440x900 @2x (lite-view: 390x844 @2x)",
+  "format": "webp q88",
+  "shots": [
+    {
+      "id": "fleet-manager/landing",
+      "file": "landing.webp",
+      "description": "Public Fleet Manager landing page.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 118114,
+      "darkFile": "landing.dark.webp",
+      "darkBytes": 116092
+    },
+    {
+      "id": "fleet-manager/onboarding--create-organization",
+      "file": "onboarding--create-organization.webp",
+      "description": "Create Organization dialog on first sign-in, filled in with a company name.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 39960,
+      "darkFile": "onboarding--create-organization.dark.webp",
+      "darkBytes": 40224
+    },
+    {
+      "id": "fleet-manager/dashboard--organization-switcher",
+      "file": "dashboard--organization-switcher.webp",
+      "description": "Organization switcher open in the sidebar.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 156392,
+      "darkFile": "dashboard--organization-switcher.dark.webp",
+      "darkBytes": 153706
+    },
+    {
+      "id": "fleet-manager/invite",
+      "file": "invite.webp",
+      "description": "Invitation page as the invitee sees it, with Accept Invitation.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 33094,
+      "darkFile": "invite.dark.webp",
+      "darkBytes": 32702
+    },
+    {
+      "id": "fleet-manager/dashboard",
+      "file": "dashboard.webp",
+      "description": "Dashboard of a large operator: stats, UAV status and recent team activity. Captured before the stats fix in #223 (Online and Organizations counts are not representative); recapture pending.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 152518,
+      "darkFile": "dashboard.dark.webp",
+      "darkBytes": 150128
+    },
+    {
+      "id": "fleet-manager/dashboard--getting-started",
+      "file": "dashboard--getting-started.webp",
+      "description": "Getting-started checklist in a new organization without UAVs.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 94482,
+      "darkFile": "dashboard--getting-started.dark.webp",
+      "darkBytes": 92720
+    },
+    {
+      "id": "fleet-manager/fleet",
+      "file": "fleet.webp",
+      "description": "Fleet page: UAV cards with status, battery and last seen.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 196564,
+      "darkFile": "fleet.dark.webp",
+      "darkBytes": 194638
+    },
+    {
+      "id": "fleet-manager/fleet--repair-required",
+      "file": "fleet--repair-required.webp",
+      "description": "Fleet page with the re-pair banner and Re-pair required badges.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 207168,
+      "darkFile": "fleet--repair-required.dark.webp",
+      "darkBytes": 203522
+    },
+    {
+      "id": "fleet-manager/drone-detail",
+      "file": "drone-detail.webp",
+      "description": "UAV details, Overview tab: UAVcast Application and MAVLink / Flight Controller cards.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 121806,
+      "darkFile": "drone-detail.dark.webp",
+      "darkBytes": 120962
+    },
+    {
+      "id": "fleet-manager/drone-detail--full",
+      "file": "drone-detail--full.webp",
+      "description": "UAV details Overview, full length incl. Connected Ground Stations.",
+      "width": 2880,
+      "height": 2208,
+      "bytes": 142132
+    },
+    {
+      "id": "fleet-manager/drone-detail--ground-stations",
+      "file": "drone-detail--ground-stations.webp",
+      "description": "Connected Ground Stations card on the UAV details page.",
+      "width": 2336,
+      "height": 524,
+      "bytes": 31092,
+      "darkFile": "drone-detail--ground-stations.dark.webp",
+      "darkBytes": 30680
+    },
+    {
+      "id": "fleet-manager/drone-detail--proxy-warning",
+      "file": "drone-detail--proxy-warning.webp",
+      "description": "Remote UAVcast Access via Proxy warning dialog.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 75366,
+      "darkFile": "drone-detail--proxy-warning.dark.webp",
+      "darkBytes": 75994
+    },
+    {
+      "id": "fleet-manager/drone-detail--terminal",
+      "file": "drone-detail--terminal.webp",
+      "description": "Terminal tab: SSH session after the df -h quick command.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 150016,
+      "darkFile": "drone-detail--terminal.dark.webp",
+      "darkBytes": 149098
+    },
+    {
+      "id": "fleet-manager/drone-detail--logs",
+      "file": "drone-detail--logs.webp",
+      "description": "Logs tab streaming TELEMETRY and HEARTBEAT entries (JSON) from the drone.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 363400,
+      "darkFile": "drone-detail--logs.dark.webp",
+      "darkBytes": 337438
+    },
+    {
+      "id": "fleet-manager/drone-detail--actions",
+      "file": "drone-detail--actions.webp",
+      "description": "Actions tab with the Confirm Reboot dialog asking to type reboot.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 37330,
+      "darkFile": "drone-detail--actions.dark.webp",
+      "darkBytes": 37576
+    },
+    {
+      "id": "fleet-manager/drone-detail--actions-tab",
+      "file": "drone-detail--actions-tab.webp",
+      "description": "Actions tab: System Actions and command history.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 72562,
+      "darkFile": "drone-detail--actions-tab.dark.webp",
+      "darkBytes": 71884
+    },
+    {
+      "id": "fleet-manager/drone-detail--repair-required",
+      "file": "drone-detail--repair-required.webp",
+      "description": "UAV page with the This UAV must be re-paired banner.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 137608,
+      "darkFile": "drone-detail--repair-required.dark.webp",
+      "darkBytes": 134752
+    },
+    {
+      "id": "fleet-manager/drone-detail--delete",
+      "file": "drone-detail--delete.webp",
+      "description": "Delete UAV confirmation dialog for a retired airframe.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 44862,
+      "darkFile": "drone-detail--delete.dark.webp",
+      "darkBytes": 45156
+    },
+    {
+      "id": "fleet-manager/control-panel",
+      "file": "control-panel.webp",
+      "description": "UAV Control Panel: Flight Mode, Mission and Actions columns for a quadcopter in LOITER.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 146650,
+      "darkFile": "control-panel.dark.webp",
+      "darkBytes": 146090
+    },
+    {
+      "id": "fleet-manager/control-panel--mode-confirm",
+      "file": "control-panel--mode-confirm.webp",
+      "description": "Flight mode confirmation for LAND, which must be typed to confirm.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 65948,
+      "darkFile": "control-panel--mode-confirm.dark.webp",
+      "darkBytes": 65698
+    },
+    {
+      "id": "fleet-manager/control-panel--arm-confirm",
+      "file": "control-panel--arm-confirm.webp",
+      "description": "Arm confirmation with the propeller warning and Force arm option.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 52228,
+      "darkFile": "control-panel--arm-confirm.dark.webp",
+      "darkBytes": 52622
+    },
+    {
+      "id": "fleet-manager/map",
+      "file": "map.webp",
+      "description": "Live fleet map, Dark style, over the Port of Rotterdam: armed UAVs with heading lines and 5-minute trails.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 145794,
+      "darkFile": "map.dark.webp",
+      "darkBytes": 144710
+    },
+    {
+      "id": "fleet-manager/map--satellite",
+      "file": "map--satellite.webp",
+      "description": "Live fleet map on Satellite over the Port of Rotterdam.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 467944,
+      "darkFile": "map--satellite.dark.webp",
+      "darkBytes": 464244
+    },
+    {
+      "id": "fleet-manager/map--close-up",
+      "file": "map--close-up.webp",
+      "description": "Fleet map close-up at Maasvlakte: survey grids and an inspection orbit in progress.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 331314,
+      "darkFile": "map--close-up.dark.webp",
+      "darkBytes": 322696
+    },
+    {
+      "id": "fleet-manager/map--overview",
+      "file": "map--overview.webp",
+      "description": "Fleet map fitted to all 46 UAVs across Norway, Rotterdam and Texas.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 156518,
+      "darkFile": "map--overview.dark.webp",
+      "darkBytes": 145118
+    },
+    {
+      "id": "fleet-manager/map--indicators",
+      "file": "map--indicators.webp",
+      "description": "Marker states close-up: healthy, OFFLINE with clock badge, NO MAVLINK and WEAK GPS.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 343464,
+      "darkFile": "map--indicators.dark.webp",
+      "darkBytes": 342944
+    },
+    {
+      "id": "fleet-manager/map--popup",
+      "file": "map--popup.webp",
+      "description": "Popup for an armed survey UAV in AUTO, with Follow, History and Controls.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 257028,
+      "darkFile": "map--popup.dark.webp",
+      "darkBytes": 249652
+    },
+    {
+      "id": "fleet-manager/map--follow",
+      "file": "map--follow.webp",
+      "description": "Follow mode on a fixed-wing flying a pipeline corridor.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 637034,
+      "darkFile": "map--follow.dark.webp",
+      "darkBytes": 641308
+    },
+    {
+      "id": "fleet-manager/map--settings",
+      "file": "map--settings.webp",
+      "description": "Map Settings panel: Airspace Layers on, Drone Filter Online Only, Map Style Satellite.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 344568,
+      "darkFile": "map--settings.dark.webp",
+      "darkBytes": 343650
+    },
+    {
+      "id": "fleet-manager/map--history",
+      "file": "map--history.webp",
+      "description": "Flight history drawer: session picker, playback, flight stats and the replayed path.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 306044,
+      "darkFile": "map--history.dark.webp",
+      "darkBytes": 303398
+    },
+    {
+      "id": "fleet-manager/missions",
+      "file": "missions.webp",
+      "description": "Mission Planner on Satellite with a saved survey grid, takeoff and Return to Launch.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 375476,
+      "darkFile": "missions.dark.webp",
+      "darkBytes": 374896
+    },
+    {
+      "id": "fleet-manager/missions--waypoint-drawer",
+      "file": "missions--waypoint-drawer.webp",
+      "description": "Waypoint drawer: Takeoff, waypoints, Change Speed and Return to Launch.",
+      "width": 2368,
+      "height": 788,
+      "bytes": 63026,
+      "darkFile": "missions--waypoint-drawer.dark.webp",
+      "darkBytes": 63718
+    },
+    {
+      "id": "fleet-manager/missions--upload",
+      "file": "missions--upload.webp",
+      "description": "Upload Mission to Drone dialog with the online UAVs to choose from.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 147040,
+      "darkFile": "missions--upload.dark.webp",
+      "darkBytes": 147156
+    },
+    {
+      "id": "fleet-manager/network",
+      "file": "network.webp",
+      "description": "Network page, Devices tab: device counters, GCS connection command, Push to Drone and the devices table (full length).",
+      "width": 2880,
+      "height": 3456,
+      "bytes": 233004,
+      "darkFile": "network.dark.webp",
+      "darkBytes": 229110
+    },
+    {
+      "id": "fleet-manager/network--top",
+      "file": "network--top.webp",
+      "description": "Network page, Devices tab, first screen: counters and Connect a Device.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 124240,
+      "darkFile": "network--top.dark.webp",
+      "darkBytes": 122458
+    },
+    {
+      "id": "fleet-manager/network--enable",
+      "file": "network--enable.webp",
+      "description": "Network page before VPN is enabled, with Enable VPN Network.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 70154,
+      "darkFile": "network--enable.dark.webp",
+      "darkBytes": 69980
+    },
+    {
+      "id": "fleet-manager/network--connect-device",
+      "file": "network--connect-device.webp",
+      "description": "Connect a Device card with the GCS Computer Only warning and the tailscale up command (auth key blurred).",
+      "width": 2336,
+      "height": 640,
+      "bytes": 54868,
+      "darkFile": "network--connect-device.dark.webp",
+      "darkBytes": 54834
+    },
+    {
+      "id": "fleet-manager/network--devices",
+      "file": "network--devices.webp",
+      "description": "Connected devices table: ground stations and UAVs with VPN IPs and status.",
+      "width": 2336,
+      "height": 1658,
+      "bytes": 107898,
+      "darkFile": "network--devices.dark.webp",
+      "darkBytes": 107590
+    },
+    {
+      "id": "fleet-manager/network--device-actions",
+      "file": "network--device-actions.webp",
+      "description": "Device actions menu: Rename, Change Type, Remove.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 137446,
+      "darkFile": "network--device-actions.dark.webp",
+      "darkBytes": 136448
+    },
+    {
+      "id": "fleet-manager/network--setup-wizard",
+      "file": "network--setup-wizard.webp",
+      "description": "Configure dialog: What type of device is this? with Ground Control Station selected.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 71844,
+      "darkFile": "network--setup-wizard.dark.webp",
+      "darkBytes": 72840
+    },
+    {
+      "id": "fleet-manager/network--stream-bindings",
+      "file": "network--stream-bindings.webp",
+      "description": "Stream Bindings: GCS, UAV, video/telemetry switches and incrementing ports.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 150978,
+      "darkFile": "network--stream-bindings.dark.webp",
+      "darkBytes": 148660
+    },
+    {
+      "id": "fleet-manager/network--add-binding",
+      "file": "network--add-binding.webp",
+      "description": "Add Stream Binding dialog with drone and ground station selected.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 66426,
+      "darkFile": "network--add-binding.dark.webp",
+      "darkBytes": 66850
+    },
+    {
+      "id": "fleet-manager/network--settings",
+      "file": "network--settings.webp",
+      "description": "Network Settings tab.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 64854,
+      "darkFile": "network--settings.dark.webp",
+      "darkBytes": 63540
+    },
+    {
+      "id": "fleet-manager/team",
+      "file": "team.webp",
+      "description": "Team Management: Owner, Admins, Viewers and pending invitations.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 102030,
+      "darkFile": "team.dark.webp",
+      "darkBytes": 101296
+    },
+    {
+      "id": "fleet-manager/team--full",
+      "file": "team--full.webp",
+      "description": "Team Management, full length incl. pending invitations.",
+      "width": 2880,
+      "height": 2688,
+      "bytes": 144940
+    },
+    {
+      "id": "fleet-manager/team--invite",
+      "file": "team--invite.webp",
+      "description": "Invite Team Member dialog with Role set to Viewer.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 49284,
+      "darkFile": "team--invite.dark.webp",
+      "darkBytes": 49824
+    },
+    {
+      "id": "fleet-manager/team--member-menu",
+      "file": "team--member-menu.webp",
+      "description": "Member menu opened by the Owner: Change Role, Transfer Ownership, Remove Member.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 107016,
+      "darkFile": "team--member-menu.dark.webp",
+      "darkBytes": 106016
+    },
+    {
+      "id": "fleet-manager/settings--profile",
+      "file": "settings--profile.webp",
+      "description": "Settings, Profile tab.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 88976,
+      "darkFile": "settings--profile.dark.webp",
+      "darkBytes": 87956
+    },
+    {
+      "id": "fleet-manager/settings--organizations",
+      "file": "settings--organizations.webp",
+      "description": "Settings, Organizations tab for the Owner.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 69644,
+      "darkFile": "settings--organizations.dark.webp",
+      "darkBytes": 68728
+    },
+    {
+      "id": "fleet-manager/settings--history",
+      "file": "settings--history.webp",
+      "description": "Settings, History tab: storage, retention and per-UAV telemetry.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 106272,
+      "darkFile": "settings--history.dark.webp",
+      "darkBytes": 105584
+    },
+    {
+      "id": "fleet-manager/settings--support",
+      "file": "settings--support.webp",
+      "description": "Settings, Support tab: your support tickets.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 86702,
+      "darkFile": "settings--support.dark.webp",
+      "darkBytes": 85782
+    },
+    {
+      "id": "fleet-manager/support-bubble--fleetbot",
+      "file": "support-bubble--fleetbot.webp",
+      "description": "Support panel, FleetBot tab, answering how to add a stream binding.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 205150,
+      "darkFile": "support-bubble--fleetbot.dark.webp",
+      "darkBytes": 202294
+    },
+    {
+      "id": "fleet-manager/support-bubble--ticket",
+      "file": "support-bubble--ticket.webp",
+      "description": "Support panel, Ticket tab filled in as a bug report.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 186072,
+      "darkFile": "support-bubble--ticket.dark.webp",
+      "darkBytes": 184442
+    },
+    {
+      "id": "fleet-manager/status",
+      "file": "status.webp",
+      "description": "System Status: all systems operational, with past incidents.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 90616,
+      "darkFile": "status.dark.webp",
+      "darkBytes": 91814
+    },
+    {
+      "id": "fleet-manager/pair-device--organization",
+      "file": "pair-device--organization.webp",
+      "description": "Pair UAV, Organization step.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 54752,
+      "darkFile": "pair-device--organization.dark.webp",
+      "darkBytes": 54518
+    },
+    {
+      "id": "fleet-manager/pair-device--code",
+      "file": "pair-device--code.webp",
+      "description": "Pair UAV, Pairing Code step with an 8-digit code entered.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 59850,
+      "darkFile": "pair-device--code.dark.webp",
+      "darkBytes": 59580
+    },
+    {
+      "id": "fleet-manager/pair-device--confirm",
+      "file": "pair-device--confirm.webp",
+      "description": "Pair UAV, Confirm Device step: name, hostname, OS, architecture, UAVcast version.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 64110,
+      "darkFile": "pair-device--confirm.dark.webp",
+      "darkBytes": 63686
+    },
+    {
+      "id": "fleet-manager/pair-device--vpn",
+      "file": "pair-device--vpn.webp",
+      "description": "Pair UAV, VPN Connection step with Enable VPN for this UAV ticked.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 85972,
+      "darkFile": "pair-device--vpn.dark.webp",
+      "darkBytes": 85912
+    },
+    {
+      "id": "fleet-manager/pair-device--complete",
+      "file": "pair-device--complete.webp",
+      "description": "Pairing Complete with the UAV Name being edited.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 62864,
+      "darkFile": "pair-device--complete.dark.webp",
+      "darkBytes": 62754
+    },
+    {
+      "id": "fleet-manager/pair-device--code-expired",
+      "file": "pair-device--code-expired.webp",
+      "description": "Pairing error toast: This pairing code has expired.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 61054,
+      "darkFile": "pair-device--code-expired.dark.webp",
+      "darkBytes": 60728
+    },
+    {
+      "id": "fleet-manager/pair-device--license-not-owned",
+      "file": "pair-device--license-not-owned.webp",
+      "description": "Pairing error toast: License is not owned by any member of this organization.",
+      "width": 2880,
+      "height": 1800,
+      "bytes": 90232,
+      "darkFile": "pair-device--license-not-owned.dark.webp",
+      "darkBytes": 89822
+    },
+    {
+      "id": "fleet-manager/admin-user--license-emails",
+      "file": "admin-user--license-emails.webp",
+      "description": "Admin user page (UAVmatrix staff): extra license e-mails counted as this user's when pairing.",
+      "width": 788,
+      "height": 620,
+      "bytes": 21122,
+      "darkFile": "admin-user--license-emails.dark.webp",
+      "darkBytes": 20766
+    },
+    {
+      "id": "fleet-manager/lite",
+      "file": "lite.webp",
+      "description": "Lite view on a 390x844 phone: fleet list.",
+      "width": 780,
+      "height": 1688,
+      "bytes": 58572,
+      "darkFile": "lite.dark.webp",
+      "darkBytes": 60480
+    },
+    {
+      "id": "fleet-manager/lite--drone",
+      "file": "lite--drone.webp",
+      "description": "Lite view for an armed UAV in AUTO: status cards and controls.",
+      "width": 780,
+      "height": 1688,
+      "bytes": 54456,
+      "darkFile": "lite--drone.dark.webp",
+      "darkBytes": 55434
+    }
+  ]
+}

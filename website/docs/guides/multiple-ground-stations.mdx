@@ -1,0 +1,64 @@
+---
+title: "Stream MAVLink and video to multiple ground stations"
+sidebar_label: Multiple ground stations
+description: "Send telemetry and live video from one drone to several QGroundControl or Mission Planner stations with UAVcast-Pro, with read-only observers."
+sidebar_position: 4
+---
+
+# Stream to multiple ground stations
+
+One drone, several screens: a pilot on Mission Planner, a payload operator on QGroundControl, a supervisor watching from the office. UAVcast-Pro sends telemetry and video to every destination you add, each with its own switches.
+
+## How it works
+
+Each entry under **Ground Control Stations** is one destination: an IPv4 address plus a telemetry port and a video port. UAVcast-Pro sends:
+
+- MAVLink telemetry over UDP to **Telemetry Port** (default 14550) when **Enable Telemetry** is on,
+- H.264 video over RTP/UDP to **Video Port** (default 5600) when **Enable Video** is on,
+- nothing at all when **Enable Endpoint** is off.
+
+Commands from every destination reach the flight controller, unless that destination is **Read Only**.
+
+## 1. Add a destination per station
+
+<Steps>
+
+1. Open **Ground Control Stations** and press **Add Destination** once for each station.
+2. Give each a **Name** you will recognize in the field, for example *Pilot – Mission Planner* and *Payload – QGC*.
+3. Enter each computer's IPv4 address in **Destination IP or Host**. Over 4G, use VPN addresses.
+4. Switch on **Enable Telemetry** and **Enable Video** where they are needed. A station that only needs telemetry saves bandwidth with video off.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/ground-control" alt="Ground Control Station page with two destination cards and the Add Destination button" caption="Ground Control Station with two destination cards. Add Destination adds one card per station." />
+
+## 2. Make observers read-only
+
+For anyone who should watch but never fly, switch on **Read Only** on their destination. The station still receives live telemetry, but commands, mode changes, arming, RC overrides and mission transfers from it are blocked. Parameter writes are not blocked, so don't treat Read Only as protection against someone changing parameters. Ground station software may show warnings in this mode, because some of its requests (such as downloading parameters or the mission) go unanswered.
+
+:::warning Two pilots, one drone
+Without Read Only, every station can command the drone. Agree who flies, and make every other station read-only.
+:::
+
+## 3. Two stations on one computer
+
+Two programs on one computer can't listen on the same port. Add two destinations with the same IP and different ports, for example:
+
+| Destination | Telemetry Port | Video Port |
+|---|---|---|
+| Mission Planner | 14550 | 5600 |
+| QGroundControl | 14551 | 5602 |
+
+Then set the second program to listen on those ports (in QGroundControl, add a UDP comm link on 14551 and set the video UDP port to 5602). Leave a gap between video ports if you use [dual stream](./dual-camera-rc-switching.mdx), because the second camera goes to video port + 1.
+
+## 4. Mind the uplink
+
+Every video destination is a separate copy of the stream. Three video destinations at 1500 kbps need about 4.5 Mbit/s of uplink from the drone. Over 4G, send video only to the stations that need it, or lower the bitrate on **Camera → Camera settings**. **Dashboard → Network Traffic** shows what the modem actually sends.
+
+## 5. Check that every station gets data
+
+On **Dashboard**, the **Ground station** row shows *Sending to n · x packets/s*. The **Connection check** on **Flight Controller → Connection** lists each ground station output, and any destination left out because its address is invalid.
+
+## With Fleet Manager
+
+In Fleet Manager, ground stations join the organization's VPN and you connect them to drones with **Stream Bindings** on the **Network** page. Each additional drone bound to the same ground station gets the next free ports (5601/14551, 5602/14552 …). See [Stream bindings](../fleet-manager/network/stream-bindings.mdx).

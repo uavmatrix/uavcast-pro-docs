@@ -1,0 +1,155 @@
+---
+title: "UAVcast-Pro settings reference with defaults"
+sidebar_label: Settings reference
+description: "Every UAVcast-Pro setting on one page with its exact label, default and range: flight controller, NTRIP, ground stations, camera, recording, modem, VPN."
+sidebar_position: 3
+---
+
+# Settings reference
+
+Every setting in the UAVcast-Pro web interface, grouped by page, with the label exactly as the app shows it and the default on a fresh install. Pages that change settings live apply them straight away unless noted. The feature pages explain each area in depth; this page is for looking things up.
+
+## Flight Controller → Connection
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Link enabled** | On | Turns the flight controller link on or off. |
+| **Link type** | **USB** | **USB** (the flight controller's own USB port) or **UART / Serial** (TELEM port on GPIO pins or a USB-serial cable). |
+| **Port** | **Automatic** | Automatic finds the flight controller and follows it if the device number changes. **Custom path…** takes a device such as `/dev/ttyAMA0`. |
+| **Baud rate** | **Automatic** | Must match `SERIALx_BAUD` on the flight controller. Automatic tries 57600, 115200, 921600, 1500000, 460800, 230400 and 500000. Not used for USB. |
+
+Buttons: **Auto-detect** (scan all ports and speeds and save the result), **Connect**, **Restart link**, **Stop**. Changes apply immediately, without a restart.
+
+## Flight Controller → NTRIP / RTK
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Enable NTRIP client** | Off | |
+| **Caster host** | empty | Host name of the NTRIP caster. |
+| **Port** | `2101` | Some TLS casters use 2102 or 443. |
+| **Mountpoint** | empty | Pick with **Browse mountpoints**. |
+| **Use TLS (HTTPS)** | Off | For casters that require TLS. |
+| **Username** / **Password** | empty | rtk2go.com: e-mail address as username, no password. |
+| **Send GGA upstream** | On | Needed by VRS and nearest-mountpoint casters. |
+| **Send interval (seconds)** | `10` | |
+| **Position source** | **Live position from flight controller** | Or **Fixed manual position** (**Latitude**, **Longitude**, **Altitude (m)**), also used as fallback before the first GPS fix. |
+
+## Flight Controller → Injectors
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Input type** | | **HTTP**, **UDP** or **Serial**. Can't be changed after creation. |
+| **MAVLink sysid** | `1` | Same as the flight controller. |
+| **MAVLink compid** | `194` | User payload. |
+| **Name prefix** | empty | Up to 8 ASCII characters, prepended to every signal name. |
+| **Rate limit (Hz per signal)** | | Maximum samples per second per signal name. |
+| **Protocol** (UDP, Serial) | | **Key=Value (line-delimited)** or **JSON** (`{name, value}`). |
+| **Port** / **Bind address** (UDP) | | Pick an unused port, for example 14600. `0.0.0.0` = all interfaces, `127.0.0.1` = local only. |
+| **Device path** / **Baud rate** (Serial) | | For example `/dev/ttyUSB0`; the baud rate must match the sender. |
+
+## Ground Control Stations
+
+One card per destination.
+
+| Setting | Default on a new destination | Values and notes |
+|---|---|---|
+| **Name** | empty | Up to 50 characters. |
+| **Destination IP or Host** | empty | An IPv4 address. Required before video or telemetry can be switched on. |
+| **Telemetry Port** | `14550` | 1–65535. |
+| **Video Port** | `5600` | 1–65535. |
+| **Video Port (Camera 2)** | empty (= Video Port + 1) | Only shown when **Dual stream** is on. |
+| **Enable Endpoint** | On | Off stops everything to this destination: telemetry, video and audio. |
+| **Enable Video** | **Off** | |
+| **Enable Telemetry** | **Off** | |
+| **Read Only** | Off | Blocks commands from this ground station; it receives telemetry only. |
+
+## Camera → Camera settings
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Enable Camera?** | Yes | |
+| **Select Camera** | Raspberry Pi camera | Detected CSI and USB cameras. |
+| **Resolution** | 640×480 | Only sizes the camera supports are offered. |
+| **Select FPS** | **Auto** | The camera negotiates. |
+| **Bitrate:** | `0` (auto) | 0–10000 kbps. |
+| **Stream Recovery Rate** | **Auto** | Keyframe interval. Auto = one keyframe per second. Faster levels recover sooner from packet loss and use more bandwidth. |
+| **Rotation:** / **Flip Settings** | 0°, no flip | **Horizontal Flip**, **Vertical Flip**. |
+| **Enable Live Preview?** | Yes | Preview on this page and in the Flight Map. |
+| **Custom Pipeline** | test pipeline | Overrides the Ground Control Stations destinations. Omit the `gst-launch-1.0` prefix. |
+| **Enable RC channel camera switching** | Off | |
+| **RC Channel** | 7 | PWM < 1500 = Camera 1, PWM > 1500 = Camera 2. |
+| **Match Camera 1 Resolution** | Off | Camera 2 captures at camera 1's resolution. |
+| **Dual stream** | Off | Streams both cameras at once. |
+| **Audio** | Off | Opus audio in the preview. |
+| **Audio device** | **Auto (camera microphone if present)** | Or a capture device, or **Test tone (no microphone needed)**. |
+| **Bitrate** (audio) | 64 kbps | |
+| **Send audio to ground stations** | Off | RTP/Opus to each video destination on Video Port + 2. |
+
+## Camera → Recordings → Settings
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Storage location** | **Internal storage** | A USB drive or SSD, or **Or another folder**. |
+| **Keep free** | 2 GB | 0.5–1000 GB. |
+| **Delete oldest recordings when space runs low** | On | Off = recording stops when the disk is full. |
+| **Delete recordings older than** | 0 days | 0 keeps them until the space is needed. |
+| **Record automatically when armed** | On | |
+| **Record camera 1** / **Record camera 2** | On / On | Camera 2 only with dual stream. |
+| **File length** | 1 min | 1–30 minutes per file. |
+| **Record telemetry** | **While armed** | **Always while connected** or **Off**. |
+
+## Modem
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Enable cellular Modem?** | Yes | |
+| **Modem type** | **Traditional (PPP)** | Or **HiLink**. |
+| **Access Point Name (Optional)** | empty (**Automatic**) | Leave empty to detect it automatically. |
+| **Username (Optional)** / **Password (Optional)** | empty | Most carriers need neither. |
+| **PIN code (Optional)** | empty | SIM PIN, unless PIN is disabled. |
+
+## Virtual Private Network
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Enable VPN** | No | |
+| **Services** | **ZeroTier** | **ZeroTier** or **Tailscale**. |
+| **Network ID** (ZeroTier) | empty | From your UAVnet network. |
+| **Auth Key** / **Hostname (Optional)** (Tailscale) | empty | Or log in with **Web Login**, or the **Fleet Manager** tab after pairing. |
+
+## Dynamic DNS
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Enable Dynamic DNS?** | No | |
+| **DNS System** | `noip` | `generic` (with **DNS URL**), `noip`, `dyndns`, `duck`. |
+| Username, **Password**, **Alias** | empty | From your DNS provider. |
+
+## Networks
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Network Priority** | system routing | **WiFi Priority (Indoor Mode)**, **Modem Priority (Outdoor Mode)** or **Auto (System Default)**. |
+
+## Fleet Management
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Device Name** | empty | Shown in Fleet Manager. Without it, the hostname is used. |
+
+## Users
+
+| Setting | Values and notes |
+|---|---|
+| **Role** | **Admin - Full access** or **Read Only - View only**. The first user must be an admin. |
+
+## Application
+
+| Setting | Default | Values and notes |
+|---|---|---|
+| **Server Port** | `80` | 80 or higher. **Submit and restart server** applies it; the address becomes `http://<device>:<port>/`. |
+| **Language** | Browser language | English, Spanish, Portuguese, Italian, Dutch, Polish, Turkish, Russian, Chinese (Simplified and Traditional). |
+| **Dark Theme** | | |
+| **Logging**: log list / time range | **All Logs** / **Last 2 hours** | See [Collect logs](../troubleshooting/collect-logs.mdx). |
+
+**Database** offers **Backup Database**, **Restore Database** (a `.db` file) and **Reset Database**, which deletes all settings.

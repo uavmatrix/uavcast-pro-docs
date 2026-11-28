@@ -1,0 +1,7 @@
+{
+  "label": "UAVcast-Pro",
+  "position": 2,
+  "collapsible": true,
+  "collapsed": true,
+  "link": { "type": "doc", "id": "uavcast-pro/index" }
+}

@@ -1,0 +1,65 @@
+---
+title: "Fleet Manager pairing code invalid or expired"
+sidebar_label: Pairing code invalid or expired
+description: "Fix Invalid pairing code, This pairing code has expired and License is not owned by any member of this organization when pairing a UAV with Fleet Manager."
+sidebar_position: 15
+---
+
+# Pairing code invalid or expired
+
+You entered the code from UAVcast-Pro in Fleet Manager's **Pair Device** wizard, and it was refused.
+
+Pairing works in this direction: **UAVcast-Pro shows the code, you type it into Fleet Manager**. The code has 8 digits and is valid for 5 minutes.
+
+<Screenshot id="fleet-manager/pair-device--code-expired" alt="Fleet Manager Pair UAV wizard with the error toast This pairing code has expired" caption="Fleet Manager refusing a code: the error appears as a toast on the Pairing Code step, here This pairing code has expired." />
+
+| Error in Fleet Manager | Cause | Fix |
+|---|---|---|
+| **Pairing code must be 8 digits** / **Please enter a valid 8-digit code** | Too few digits, or letters | [Check 1](#check-1) |
+| **Invalid pairing code** | A typo, or a code that never existed | [Check 1](#check-1) |
+| **This pairing code has expired** | More than 5 minutes passed | [Check 2](#check-2) |
+| **This pairing code has already been used** | The code was used once | [Check 2](#check-2) |
+| **License is not owned by any member of this organization** | The drone's license belongs to an account outside the org | [Check 3](#check-3) |
+| **Invalid license key** / **License has expired** / **License has been refunded** | The drone's license is not valid in the store | [Check 4](#check-4) |
+| **This UAV is already paired to an organization** | Paired to another organization | [Check 5](#check-5) |
+| **Too many attempts. Please wait a minute and try again.** | Rate limit after repeated tries | Wait one minute |
+
+## Check 1: Type the current code {/* #check-1 */}
+
+<Steps>
+
+1. In UAVcast-Pro, go to **Fleet Management** and press **Connect to Fleet Manager**.
+2. Copy the 8 digits shown under **Pairing Code**.
+3. In Fleet Manager, go to **Fleet → Pair Device**, choose the organization and enter the code under **Enter Pairing Code**.
+
+</Steps>
+
+## Check 2: Get a fresh code {/* #check-2 */}
+
+A code is valid for 5 minutes and works once. When **Expires in** reaches zero, press **Connect to Fleet Manager** again in UAVcast-Pro for a new code. If UAVcast-Pro can't get a code at all, it shows *Unable to connect to Fleet Manager. Please check your internet connection.*: fix the drone's internet first.
+
+## Check 3: License owned by someone outside the organization {/* #check-3 */}
+
+Fleet Manager only accepts a drone whose UAVcast-Pro license was bought by a member of the organization you pair into. The match is made on the e-mail address of the store account that owns the license.
+
+Fix it one of these ways:
+
+- Invite the account that bought the license to the organization (**Team**), then pair again.
+- Pair into an organization where the license owner is a member.
+- If the license was bought with another e-mail address of yours, ask **support@uavmatrix.com** to add that address as a license e-mail on your Fleet Manager user.
+
+See [Licenses in Fleet Manager](../fleet-manager/licenses.mdx).
+
+## Check 4: License not valid {/* #check-4 */}
+
+Open **Application → License Manager** on the drone and check **License Status**. An expired or refunded license must be renewed on [uavmatrix.com](https://uavmatrix.com). If UAVcast-Pro itself has no active license, it can't request a code (*No valid license found. Please activate your license first.*): see [License won't activate](./license-activation-failed.mdx).
+
+## Check 5: Already paired elsewhere {/* #check-5 */}
+
+A UAV belongs to one organization. To move it, remove it from the old organization first. Re-pairing into the same organization is allowed and keeps the UAV's history. See [Remove or transfer a UAV](../fleet-manager/fleet/remove-or-transfer.mdx).
+
+## Still refused?
+
+Send the exact error text, the UAV hostname and the organization name to **support@uavmatrix.com**.
+
+Related: [Fleet Manager pairing in UAVcast-Pro](../uavcast-pro/fleet-pairing.mdx) · [Pair your first UAV](../fleet-manager/pair-uav.mdx)

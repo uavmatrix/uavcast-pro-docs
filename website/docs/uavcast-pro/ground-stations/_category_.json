@@ -1,0 +1,7 @@
+{
+  "label": "Ground stations & video",
+  "position": 6,
+  "collapsible": true,
+  "collapsed": true,
+  "link": { "type": "doc", "id": "uavcast-pro/ground-stations/index" }
+}

@@ -1,0 +1,7 @@
+{
+  "label": "Network & VPN",
+  "position": 10,
+  "collapsible": true,
+  "collapsed": true,
+  "link": { "type": "doc", "id": "fleet-manager/network/index" }
+}

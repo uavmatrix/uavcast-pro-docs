@@ -1,0 +1,48 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Geist;src:url(../../static/fonts/geist-latin-wght-normal.woff2) format('woff2');font-weight:100 900}
+@font-face{font-family:'Geist Mono';src:url(../../static/fonts/geist-mono-latin-wght-normal.woff2) format('woff2');font-weight:100 900}
+:root{--ink:#0a1222;--ink2:#344054;--muted:#5d687e;--line:#e7eaf0;--line2:#d6dbe4;--accent:#1747cf;--soft:#eff3fe;--aline:#cbd8fa;--sub:#f7f8fa;--ok:#0f7a55}
+*{box-sizing:border-box;margin:0}
+html,body{width:1200px;height:630px;overflow:hidden;background:#fff;font-family:Geist,sans-serif;-webkit-font-smoothing:antialiased}
+.bg{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:40px 40px;background-position:-1px -1px;-webkit-mask-image:radial-gradient(ellipse 60% 85% at 78% 45%,#000,transparent 72%)}
+.wrap{position:absolute;inset:0;padding:48px 64px 96px;display:grid;grid-template-columns:540px 1fr;gap:20px;align-items:center}
+.brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:26px;letter-spacing:-.02em;color:var(--ink)}
+.brand img{width:36px;height:36px}.brand span{color:var(--muted);font-weight:500}
+.eyebrow{margin-top:40px;font-family:'Geist Mono';font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:12px}
+.eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--soft)}
+h1{margin-top:18px;font-size:58px;line-height:1.02;letter-spacing:-.045em;font-weight:600;color:var(--ink)}
+p{margin-top:20px;font-size:21px;line-height:1.5;color:var(--ink2);max-width:30ch}
+.foot{position:absolute;left:64px;right:64px;bottom:36px;display:flex;justify-content:space-between;font-family:'Geist Mono';font-size:15px;color:var(--muted);border-top:1px solid var(--line);padding-top:18px}
+.foot b{color:var(--accent);font-weight:500}
+svg .node{fill:#fff;stroke:var(--line2)}svg .chipr{fill:var(--sub);stroke:var(--line)}
+svg .t-lbl{font-family:'Geist Mono';font-size:9.5px;letter-spacing:.08em;fill:var(--muted)}
+svg .t-h{font-family:Geist;font-size:14px;font-weight:600;fill:var(--ink)}
+svg .t-s{font-family:Geist;font-size:11.5px;fill:var(--muted)}
+svg .t-m{font-family:'Geist Mono';font-size:10.5px;fill:var(--ink2)}
+svg .t-a{font-family:'Geist Mono';font-size:10px;fill:var(--accent)}
+svg .wire{fill:none;stroke:var(--line2);stroke-width:1.2}
+svg .flow{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:4 10}
+svg .pill{fill:var(--soft);stroke:var(--aline)}
+</style></head><body>
+<div class="bg"></div>
+<div class="wrap">
+  <div>
+    <div class="brand"><img src="../../static/img/logo.webp" alt="">UAVmatrix <span>Docs</span></div>
+    <div class="eyebrow"><i></i>UAVcast-Pro · Fleet Manager</div>
+    <h1>Build, fly and manage connected drones.</h1>
+    <p>Video and MAVLink telemetry over 4G/LTE, from the companion computer to your ground station.</p>
+  </div>
+  <svg viewBox="0 0 560 384" width="500">
+    <path class="wire" d="M222 104 C 280 104, 278 70, 326 70"/><path class="flow" d="M222 104 C 280 104, 278 70, 326 70"/>
+    <path class="wire" d="M222 160 C 296 160, 262 286, 326 286"/><path class="flow" d="M222 160 C 296 160, 262 286, 326 286"/>
+    <text class="t-a" x="236" y="130">MQTT · TLS</text>
+    <g transform="translate(20 34)"><rect class="node" x=".5" y=".5" width="201" height="160" rx="10"/><text class="t-lbl" x="16" y="24">AIRCRAFT</text><circle fill="#0f7a55" cx="186" cy="20" r="3.5"/><text class="t-h" x="16" y="46">Companion computer</text><text class="t-s" x="16" y="63">UAVcast-Pro · Raspberry Pi</text><rect class="chipr" x="12.5" y="78.5" width="88" height="26" rx="6"/><text class="t-m" x="21" y="95">FC · MAVLink</text><rect class="chipr" x="106.5" y="78.5" width="84" height="26" rx="6"/><text class="t-m" x="115" y="95">CAM · H.264</text><rect class="chipr" x="16.5" y="112.5" width="170" height="26" rx="6"/><text class="t-m" x="26" y="129">LTE modem · 4G/5G</text></g>
+    <g transform="translate(326 22)"><rect class="node" x=".5" y=".5" width="213" height="98" rx="10"/><text class="t-lbl" x="16" y="24">CLOUD</text><text class="t-h" x="16" y="46">Fleet Manager</text><text class="t-s" x="16" y="63">Status, position, licenses</text><text class="t-m" x="16" y="84">mqtts://…:8883</text></g>
+    <g transform="translate(240 196)"><rect class="pill" x=".5" y=".5" width="84" height="24" rx="12"/><text class="t-a" x="14" y="16.5">VPN · UDP</text></g>
+    <g transform="translate(326 222)"><rect class="node" x=".5" y=".5" width="213" height="126" rx="10"/><text class="t-lbl" x="16" y="24">GROUND</text><text class="t-h" x="16" y="46">Ground station</text><text class="t-s" x="16" y="63">Mission Planner · QGroundControl</text><rect class="chipr" x="16.5" y="78.5" width="80" height="26" rx="6"/><text class="t-m" x="25" y="95">Video :5600</text><rect class="chipr" x="102.5" y="78.5" width="84" height="26" rx="6"/><text class="t-m" x="110" y="95">MAV :14550</text></g>
+  </svg>
+</div>
+<div class="foot"><span><b>docs.uavmatrix.com</b></span><span>Guides · Reference · Troubleshooting</span></div>
+</body></html>

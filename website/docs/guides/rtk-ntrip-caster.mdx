@@ -1,0 +1,104 @@
+---
+title: "RTK GPS over 4G with an NTRIP caster and ArduPilot"
+sidebar_label: RTK over 4G with NTRIP
+description: "Stream RTCM3 corrections from an NTRIP caster over LTE to your ArduPilot flight controller with UAVcast-Pro for RTK Fixed, with no base station on site."
+sidebar_position: 5
+---
+
+# RTK GPS over 4G with an NTRIP caster
+
+UAVcast-Pro can pull RTCM3 corrections from an NTRIP caster over the drone's own internet link and pass them to the flight controller. You get RTK Float or RTK Fixed positioning without carrying a base station or a separate radio. Any standard NTRIP v1 or v2 caster works.
+
+```text
+NTRIP caster ──RTCM3 over TCP/TLS──► UAVcast-Pro ──MAVLink GPS_RTCM_DATA──► flight controller ──► RTK GPS
+      ▲                                    │
+      └──────── GGA position (VRS) ────────┘
+```
+
+**You need:**
+
+- An RTK-capable GPS on the flight controller, such as a u-blox F9P module, Here3+ or Septentrio Mosaic. Standard M8N/M10 navigation modules can't do RTK.
+- UAVcast-Pro with the flight controller **Connected** and internet on the drone.
+- A caster account: a national CORS network, a commercial service (Trimble, Hexagon, Topcon …) or the free community caster rtk2go.com.
+
+## 1. Enter the caster
+
+<Steps>
+
+1. Open **Flight Controller → NTRIP / RTK**.
+2. Enter **Caster host** and **Port** (usually `2101`).
+3. Turn on **Use TLS (HTTPS)** only if your provider requires it. Commercial casters often do, public ones rarely.
+4. Enter **Username** and **Password**. For rtk2go.com, use your e-mail address as the username and leave the password empty.
+5. Press **Test connection**. Wait for **Caster accepted the credentials.**
+
+</Steps>
+
+## 2. Pick a mountpoint
+
+<Steps>
+
+1. Press **Browse mountpoints**. UAVcast-Pro loads the caster's list.
+2. Pick the mountpoint closest to where you fly. The list shows **Format**, **GNSS**, **Country**, **Location** and whether it needs a position (**NMEA**: **Required**).
+3. Press **Select**. The name lands in **Mountpoint**.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/flight-controller--ntrip-caster" alt="Caster card with Enable NTRIP client, caster host, port 2101, mountpoint field, Browse mountpoints button and Use TLS" caption="The Caster card. Browse mountpoints, next to the Mountpoint field, opens the list of mountpoints." />
+
+## 3. Send your position (VRS and nearest-mountpoint casters)
+
+VRS and nearest-mountpoint casters build corrections for your location, so they need your position as an NMEA GGA sentence.
+
+<Steps>
+
+1. Leave **Send GGA upstream** on (the default) with **Send interval (seconds)** at 10.
+2. Keep **Position source** on **Live position from flight controller**.
+3. Enter **Latitude**, **Longitude** and **Altitude (m)** under the manual position as well. UAVcast-Pro uses it until the flight controller has a GPS fix.
+
+</Steps>
+
+For a single fixed base, GGA does no harm, but you can turn it off.
+
+## 4. Start the stream
+
+Turn on **Enable NTRIP client**. Within seconds the status panel should show:
+
+1. **Status**: **Streaming corrections**, with **Caster response** like `ICY 200 OK`.
+2. **RTCM messages forwarded** climbing and **Last RTCM frame** at *just now*.
+3. **Recent message types** with your constellations, for example 1005, 1077, 1087, 1097.
+4. The RTK fix badge moving from **3D fix** to **RTK Float** and then **RTK Fixed** under open sky.
+
+<Screenshot id="uavcast-pro/flight-controller--ntrip" alt="NTRIP / RTK tab with the status panel showing Disabled and zero counters, and the GPS quality card showing No fix" caption="The status panel and GPS quality card, shown here before a caster is set up (Disabled, no GPS fix). Once corrections flow, these are the fields to watch." />
+
+The **GPS quality** card adds the receiver's reported accuracy and a measured **Position stability (1σ)** that doesn't rely on the receiver's own estimate. The dashboard shows the state under **RTK corrections** and the fix type under **GPS**.
+
+## Presets
+
+```text title="Community caster (rtk2go.com)"
+Caster host   rtk2go.com
+Port          2101
+TLS           off
+Username      you@example.com
+Password      (empty)
+Mountpoint    nearest one from Browse mountpoints
+```
+
+```text title="Commercial VRS service"
+Caster host   provider host name
+Port          2101 (sometimes 2102 or 443)
+TLS           as the provider says
+Username      provider account
+Password      provider password
+Mountpoint    the provider's VRS mountpoint
+GGA upstream  on, 10 s, live position from flight controller
+```
+
+## Good to know
+
+- Corrections travel over the same MAVLink link as telemetry, so the flight controller link must be up.
+- After a brief internet drop, corrections resume within seconds. If the caster goes silent, UAVcast-Pro reconnects by itself.
+- Accuracy drops with distance from the base station. Pick the nearest mountpoint, or use a VRS service.
+
+## Troubleshooting
+
+Stuck on **Connecting**, a `401` response, no RTCM data or no RTK fix: [RTK corrections not arriving](../troubleshooting/rtk-corrections-not-arriving.mdx). All settings on this page are described in [NTRIP / RTK](../uavcast-pro/flight-controller/ntrip-rtk.mdx).

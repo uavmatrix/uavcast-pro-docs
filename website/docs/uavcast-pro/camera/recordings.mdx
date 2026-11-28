@@ -1,0 +1,73 @@
+---
+title: "Record drone video and telemetry on the companion computer"
+description: "Record camera video and MAVLink telemetry on the drone with UAVcast-Pro, automatically when armed, to the SD card or a USB SSD, and review flights with video, map and data."
+sidebar_position: 5
+sidebar_label: "Recordings & flight review"
+---
+
+# Recordings and flight review
+
+UAVcast-Pro records each flight on the drone itself: the camera video and a MAVLink telemetry log (`.tlog`). Recording uses the stream that is already encoded, so it costs no extra CPU and never interrupts the live video to your ground station. Because the files are written on the drone, you get full-quality video even when the cellular link drops. Recordings start automatically when you arm, or by hand from the Flight Map. Requires v6.5.1 or later.
+
+Open **Camera → Recordings**. It has two tabs: **Library** and **Settings**.
+
+<Screenshot id="uavcast-pro/camera--recordings" alt="Recordings library with a storage bar and two recorded flights with durations, CAM 1 and Telemetry badges" caption="Camera → Recordings → Library with two recorded flights." />
+
+## Record automatically when armed
+
+This is on by default. Recording starts when the motors arm and stops when they disarm. If the link drops in flight, recording carries on.
+
+Before you rely on it:
+
+- Check the free space in **Recording storage** on the Flight Map or in **Settings**.
+- Recording doesn't need **Enable Live Preview?**. With recording on, the camera keeps a copy of the stream in the built-in media server even when the preview is off.
+
+## Record by hand
+
+The Flight Map's top bar has a **Recording** group: **CAM 1** (and **CAM 2** with dual stream) to start and stop video, and **Telemetry** to start and stop a telemetry log. A red dot shows what is recording. Read-only users can't start recordings.
+
+## Storage settings
+
+Open **Camera → Recordings → Settings**.
+
+| Setting | Default | Values | Notes |
+|---|---|---|---|
+| **Storage location** | **Internal storage** | Internal storage, a detected USB drive or SSD, **Or another folder** | Plug in a disk and select **Look for disks again** to see it. Internal storage is `/opt/uavcast-pro/recordings/video`. |
+| **Keep free** | `2` GB | 0.5–1000 GB | Recording never fills the disk past this. The system needs room too. |
+| **Delete oldest recordings when space runs low** | On | On, off | Like a dashcam: recording never stops for lack of space. Off: recording stops instead. |
+| **Delete recordings older than** | `0` days | 0–3650 days | `0` keeps recordings until the space is needed. |
+| **Record automatically when armed** | On | On, off | |
+| **Record camera 1** | On | On, off | Applies to automatic recording. |
+| **Record camera 2** | On | On, off | Only when dual stream is on. |
+| **File length** | `1` min | 1–30 min | Video is saved in pieces of this length. Shorter pieces lose less after a power cut. |
+| **Record telemetry** | **While armed** | **While armed**, **Always while connected**, **Off** | The `.tlog` shown next to the video. **Always** also logs on the ground and starts a new file at every arm, disarm and hour. |
+
+<Screenshot id="uavcast-pro/camera--recordings-settings" alt="Recordings settings with Internal storage selected, 2 GB keep free, delete oldest recordings on and record automatically when armed on" caption="Internal storage selected, with automatic recording on arm." />
+
+:::tip Record to a USB SSD
+A USB 3 SSD is faster and far more durable than a microSD card for continuous video. Plug it in, select **Look for disks again**, then pick it under **Storage location**.
+:::
+
+## Files and formats
+
+- Video is written as fragmented MP4 segments, which stay playable if power is cut mid-flight. Downloads are MP4.
+- Telemetry is a standard MAVLink `.tlog`, readable in Mission Planner, MAVExplorer, UAV Log Viewer and [Flight Analytics](../flight-map/flight-analytics.mdx).
+- A recording in the library is one clip as long as its files follow each other without a gap of more than 15 seconds.
+
+## Review a flight
+
+Select **Play** on a recording to open **Flight review**: the video, the map track, the cockpit view and the flight data on one timeline.
+
+- The timeline marks **Armed**, **Disarmed** and flight-mode changes.
+- **Back 10 seconds**, **Play**/**Pause**, **Forward 10 seconds** and **Playback speed** (0.5× to 4×).
+- With two cameras, **Change video layout** switches between **Picture in picture** and **Side by side**; **Show this camera large** swaps them.
+- The data panel shows **Altitude**, **Speed**, **Battery**, **Satellites** and **Mode** at the current moment.
+- **Download** saves the clip as MP4.
+
+<Screenshot id="uavcast-pro/camera--flight-review" alt="Flight review player with the video area, map track, cockpit view and a timeline with playback controls" caption="Flight review: video, map, cockpit and telemetry on one timeline." />
+
+If the player says *No telemetry log for this recording*, telemetry wasn't recording at the time (by default it only logs while armed).
+
+## Delete recordings
+
+Select **Delete** on a recording. If it has a telemetry log you choose **Delete video only** or **Delete video and telemetry**. Deleting is permanent. A recording that is still running must be stopped first.

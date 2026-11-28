@@ -1,0 +1,68 @@
+---
+title: "Build live telemetry dashboards for any MAVLink value"
+description: "Create UAVcast-Pro Data Streams dashboards with charts, gauges and tiles for any MAVLink field or NAMED_VALUE_FLOAT sensor value, with thresholds, history and JSON import/export."
+sidebar_position: 3
+sidebar_label: "Data Streams"
+---
+
+# Data Streams
+
+Data Streams lets you build your own live telemetry dashboards. Add numeric tiles, line charts, gauges, bars and status lights, and bind each one to any MAVLink value the flight controller sends or any `NAMED_VALUE_FLOAT` signal from a sensor or [injector](./flight-controller/injectors.mdx). Dashboards are stored on the drone, so everyone who opens the web interface sees the same boards. Open **Data Streams** in the sidebar.
+
+Typical uses: a payload operator's screen with sensor readings, an LTE link panel with RSRP and SINR, or a battery and power board for long flights.
+
+<Screenshot id="uavcast-pro/mission-data" alt="Data Streams page with No dashboards yet and the Create dashboard button" caption="Data Streams before the first dashboard: Create dashboard starts one." />
+
+## Create a dashboard
+
+<Steps>
+
+1. Select **Create dashboard** (or **New dashboard** if you already have one), give it a **Name** and select **Create**.
+2. Select **Edit** to enter edit mode, then **Add widget** and pick a type.
+3. On the **Source** tab, search for a signal and pick it. A green dot means samples are arriving.
+4. Set the title, units and decimals on **Display**, limits and colour thresholds on **Range**, and chart options on **Chart**. Select **Save**.
+5. Drag and resize widgets, then select **Done**.
+
+</Steps>
+
+Only admins can create and edit dashboards. Read-only users can view them.
+
+## Widget types
+
+| Type | Shows |
+|---|---|
+| **Numeric tile** | The current value, large, with optional prefix and suffix. |
+| **Sparkline** | A small trend line under the value. |
+| **Line chart** | One or more signals over a time window. |
+| **Gauge** | The value on a round scale with coloured thresholds. |
+| **Bar indicator** | The value as a bar between min and max. |
+| **Status** | A coloured state from thresholds, for example OK / warning / alarm. |
+| **Named-value table** | Every `NAMED_VALUE_FLOAT` signal with **Value**, **Age** and **Src**. **Filter** accepts a substring or a `*.glob`. |
+
+A widget shows **Stale** when no sample has arrived for 5 seconds, and *No samples yet* when the signal has never been seen.
+
+## Signals
+
+- **MAVLink fields**: every numeric field the flight controller sends (attitude, VFR HUD, battery, GPS, home, RTK, failsafe, heartbeat and status values) appears automatically, with friendly names and units where known.
+- **Named values**: `NAMED_VALUE_FLOAT` signals, shown as `NAME@sysid:compid`, for example `LTE_RSRP@1:194`.
+
+You can type a signal that isn't sending yet and press Enter to add it, so you can build the board before you wire up the sensor. Use the pencil icon on a selected source to give it a display name.
+
+## Chart options
+
+| Option | Values |
+|---|---|
+| **Window** | **1 min**, **5 min**, **15 min**, **1 hour**, or **Custom (seconds)** |
+| **Curve** | **Linear**, **Smooth (monotone)**, **Step**, **Step before**, **Step after**, **Basis spline** |
+| Other | **Show legend**, **Show grid**, **Line width**, **Area fill**, **Show data points**, **Threshold reference lines**, **Y-axis label** |
+
+## History
+
+UAVcast-Pro keeps a short history of every signal on the drone (up to 3600 samples per signal, about one hour at 1 Hz), so charts are filled as soon as you open a dashboard, even after a page refresh.
+
+## Share dashboards
+
+- **Export JSON** copies the dashboard to the clipboard.
+- **Import JSON** creates a dashboard from pasted JSON. Use it to copy a board to another drone.
+- **Duplicate** and **Rename** are in the toolbar; **Delete** removes a dashboard and its widgets.
+- **Fullscreen** hides the rest of the interface, for a dedicated monitor.

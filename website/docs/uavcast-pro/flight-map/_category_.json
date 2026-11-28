@@ -1,0 +1,7 @@
+{
+  "label": "Flight Map",
+  "position": 5,
+  "collapsible": true,
+  "collapsed": true,
+  "link": { "type": "doc", "id": "uavcast-pro/flight-map/index" }
+}

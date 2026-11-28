@@ -1,0 +1,60 @@
+---
+title: "UAVcast-Pro documentation: every page of the web interface"
+description: "Reference for the UAVcast-Pro web interface: dashboard, flight controller, flight map, ground stations, camera, modem, VPN, Fleet Manager pairing, users and settings."
+sidebar_position: 1
+sidebar_label: "Overview"
+---
+
+# UAVcast-Pro
+
+This section explains every page of the UAVcast-Pro web interface, in the order of the app's sidebar. Each page tells you what the screen is for, how to set it up, and lists every setting with its default. New to UAVcast-Pro? Start with the [Quick start](../get-started/quick-start.mdx).
+
+## Operations
+
+<CardGrid>
+  <Card href="/uavcast-pro/dashboard/" title="Dashboard" description="Health of the flight controller, GPS, links, video and power at a glance." />
+  <Card href="/uavcast-pro/data-streams/" title="Data Streams" description="Custom live dashboards for any MAVLink or sensor value." />
+  <Card href="/uavcast-pro/flight-controller/" title="Flight Controller" description="USB or UART link with automatic port and baud detection, NTRIP/RTK and injectors." />
+  <Card href="/uavcast-pro/flight-map/" title="Flight Map" description="Live map, cockpit HUD, arm/disarm, modes, missions, radio, inspector and log analysis." />
+  <Card href="/uavcast-pro/ground-stations/" title="Ground stations and video" description="Destinations, plus step-by-step Mission Planner, QGroundControl, GStreamer, Android and VLC setup." />
+</CardGrid>
+
+## Connectivity
+
+<CardGrid>
+  <Card href="/uavcast-pro/connectivity/cellular-modem/" title="Modem" description="HiLink and traditional 4G/LTE modems with automatic APN." />
+  <Card href="/uavcast-pro/connectivity/vpn/" title="Virtual Private Network" description="ZeroTier (UAVnet), Tailscale and the Fleet Manager VPN." />
+  <Card href="/uavcast-pro/connectivity/dynamic-dns/" title="Dynamic DNS" description="Keep a hostname pointed at the drone's public IP." />
+  <Card href="/uavcast-pro/connectivity/networks/" title="Networks" description="Interfaces and Wi-Fi vs modem priority." />
+</CardGrid>
+
+## Media
+
+<CardGrid>
+  <Card href="/uavcast-pro/camera/" title="Camera settings" description="CSI and USB cameras, resolution, bitrate, low-latency H.264 over UDP." />
+  <Card href="/uavcast-pro/camera/multi-camera/" title="Two cameras" description="RC channel switching or dual stream." />
+  <Card href="/uavcast-pro/camera/audio/" title="Audio" description="Microphone audio in the preview and to ground stations." />
+  <Card href="/uavcast-pro/camera/recordings/" title="Recordings" description="On-drone video and telemetry recording with flight review." />
+</CardGrid>
+
+## Management
+
+<CardGrid>
+  <Card href="/uavcast-pro/fleet-pairing/" title="Fleet Management" description="Pair the drone with UAVmatrix Fleet Manager." />
+  <Card href="/uavcast-pro/users/" title="Users" description="Admin login and read-only users." />
+  <Card href="/uavcast-pro/application-settings/" title="Application" description="Port, language, logs for support, database backup and restore." />
+</CardGrid>
+
+## Ports at a glance
+
+| Port | Direction | Used for |
+|---|---|---|
+| TCP 80 | Browser → drone | Web interface (configurable) and HTTP injectors |
+| UDP 14550 | Drone → ground station | MAVLink telemetry (per destination, configurable) |
+| UDP 5600 | Drone → ground station | Video, camera 1 (per destination, configurable) |
+| UDP 5601 | Drone → ground station | Video, camera 2 with dual stream (Video Port + 1 by default) |
+| UDP 5602 | Drone → ground station | Audio (Video Port + 2) |
+| TCP 8889, UDP 8189 | Browser → drone | Live preview (WebRTC signalling and media) |
+| TCP 8883 | Drone → Fleet Manager | Fleet Manager connection (MQTT over TLS) |
+| TCP 2101 | Drone → NTRIP caster | RTK corrections (caster's port) |
+| UDP 14600 | Sensor → drone | UDP injector (default, configurable) |

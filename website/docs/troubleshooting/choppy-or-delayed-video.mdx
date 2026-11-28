@@ -1,0 +1,85 @@
+---
+title: "Choppy, laggy or grey video over 4G"
+sidebar_label: Choppy or delayed video
+description: "Fix stuttering, grey smears and lag in UAVcast-Pro video over LTE or VPN by matching bitrate, resolution, FPS and Stream Recovery Rate to the link."
+sidebar_position: 3
+---
+
+# Choppy, laggy or grey video over 4G
+
+The picture arrives, but it stutters, freezes, smears grey blocks across the screen or runs seconds behind. Almost always the stream asks for more than the link can carry, or the encoder sends keyframes too rarely to recover from lost packets.
+
+<SymptomTable rows={[
+  {symptom: 'Grey or green smears that clear up after a second or two', cause: 'Packets lost and too few keyframes to recover', start: '#check-2'},
+  {symptom: 'Smooth on Wi-Fi, stutters or freezes over LTE', cause: 'Bitrate above what the cellular uplink carries', start: '#check-1'},
+  {symptom: 'Stutters even on the local network', cause: 'CPU limit on the drone, or the GCS can not decode fast enough', start: '#check-3'},
+  {symptom: 'Video is seconds behind the drone', cause: 'You are looking at the browser preview, or the GCS buffers', start: '#check-4'},
+]} />
+
+## Check 1: Lower the bitrate and resolution {/* #check-1 */}
+
+A cellular uplink is much slower than its download speed and changes as the drone moves between cells. Start low and step up.
+
+<Steps>
+
+1. Go to **Camera → Camera settings**.
+2. Set **Resolution** to 1280×720 or lower.
+3. Set **Select FPS** to 15 or 20.
+4. Move the **Bitrate:** slider to about 1000–1500 kbps. `0` means auto.
+5. Settings save as you change them, and the camera picks them up.
+6. Fly, or drive, the route you care about. If it holds up, raise one value at a time.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera--settings" alt="Camera Settings card with Resolution, Select FPS, Bitrate and Stream Recovery Rate" caption="Camera → Camera Settings: Resolution, Select FPS, Bitrate and Stream Recovery Rate are the values to tune for the uplink." />
+
+:::tip How much does the link carry?
+**Dashboard → Network Traffic** shows the live TX rate per interface. If the modem interface sits at the same ceiling whatever bitrate you set, that ceiling is your uplink.
+:::
+
+## Check 2: Set a faster Stream Recovery Rate {/* #check-2 */}
+
+Grey overlays come from lost packets. The decoder can only repair the picture at the next keyframe. **Stream Recovery Rate** sets how often keyframes are sent.
+
+<Steps>
+
+1. In **Camera → Camera settings**, find **Stream Recovery Rate**.
+2. Move the slider from **Auto** towards **Ultra Fast**: fewer frames between keyframes repair the picture sooner but use more bandwidth. Towards **Bandwidth Saver** saves bandwidth but recovers slowly. The hint under the slider (for example *VPN/WiFi Friendly*) tells you what each position suits.
+3. Save, and compare. If the link is very slow, combine a faster recovery rate with a lower bitrate (check 1).
+
+</Steps>
+
+On **Auto**, UAVcast-Pro sends one keyframe per second (one every *FPS* frames, or every 30 frames when FPS is on auto).
+
+## Check 3: Look at the CPU load {/* #check-3 */}
+
+UAVcast-Pro encodes H.264 in software. On a Raspberry Pi Zero 2 W, or with two cameras streaming at once, the CPU can run out.
+
+<Steps>
+
+1. Open **Camera → Camera settings** and look at the **System load** card.
+2. If it says **CPU is near its limit. Lower the resolution or bitrate.**, do exactly that.
+3. With **Dual stream** on, lower one stream's resolution or bitrate, or turn the second stream off.
+4. Check **Dashboard** for **Slowed down (heat or power)** under **Power supply**. A throttled CPU encodes slower. See [Undervoltage and throttling](./undervoltage-and-throttling.mdx).
+
+</Steps>
+
+## Check 4: Know which stream you are watching {/* #check-4 */}
+
+The **Live Preview** in the browser and the video window on the **Flight Map** go through the built-in media server, which adds delay. They are for setup, not for flying. The stream to your ground station goes straight over UDP and has much lower latency.
+
+If the ground station itself lags:
+
+- In QGroundControl, check that low-latency mode is on in the video settings.
+- In GStreamer pipelines, use `sync=false` on the video sink, as in the [test command](./no-video-in-gcs.mdx#check-5).
+- Over VPN, make sure ZeroTier or Tailscale reaches the drone directly and not through a relay. Tailscale shows the relay in use under **Relay** on the **Virtual Private Network** page.
+
+## Check 5: Check the cellular signal {/* #check-5 */}
+
+Go to **Modem** and look at **Signal Quality** and **Technology** under **Modem Information**. A weak signal, or a fall back from LTE to 3G, cuts the uplink. Move the modem away from the flight controller, ESCs and power wires, or use a modem with external antennas.
+
+## Still choppy?
+
+[Download the logs](./collect-logs.mdx) (**Camera Server**, last 30 minutes) and send them to **support@uavmatrix.com** with your camera model, resolution, FPS, bitrate and the kind of link you fly on.
+
+Related: [Camera settings](../uavcast-pro/camera/index.mdx) · [Cellular modem](../uavcast-pro/connectivity/cellular-modem.mdx)

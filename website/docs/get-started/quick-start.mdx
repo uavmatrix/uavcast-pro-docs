@@ -1,0 +1,135 @@
+---
+title: "UAVcast-Pro quick start: telemetry and video in 10 minutes"
+description: "Connect an ArduPilot flight controller to UAVcast-Pro and get telemetry and live video in Mission Planner or QGroundControl, first on your LAN, then over 4G/LTE."
+sidebar_position: 2
+sidebar_label: "Quick start"
+---
+
+# Quick start
+
+This guide takes a drone with UAVcast-Pro installed to live telemetry and video in Mission Planner or QGroundControl. You'll do it on your local network first, where there are fewer things that can go wrong, and then switch to 4G/LTE. The local part takes about 10 minutes.
+
+## Before you begin
+
+- UAVcast-Pro installed and the device rebooted. See [Installation](./installation.mdx).
+- Your license key. See [Licensing & activation](./license-activation.mdx).
+- The flight controller connected to the companion computer over USB or a TELEM port, and powered.
+- A camera connected (optional).
+- A laptop with Mission Planner or QGroundControl on the **same network** as the drone. Note the laptop's IP address (`ipconfig` on Windows, `ip a` on Linux, **System Settings → Network** on macOS).
+
+## 1. Activate the license
+
+<Steps>
+
+1. Open `http://<drone-ip>` in a browser. You land on **Application**.
+2. Paste your key into **Enter License Key** and select **Validate**.
+
+</Steps>
+
+The sidebar unlocks. Now go to **Users**, select **Add User** and create an admin account, so the web interface isn't open to anyone on the network.
+
+## 2. Connect the flight controller
+
+<Steps>
+
+1. Go to **Flight Controller → Connection**.
+2. Under **Link type**, pick **USB** or **UART / Serial** to match your wiring.
+3. Leave **Port** and **Baud rate** on **Automatic**.
+4. If the status panel says **Link stopped**, select **Connect**.
+5. Wait for the state to change to **Connected**. **Mavlink Information** fills with the vehicle type, flight mode, GPS and battery, and the top bar shows **FC Connected**.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/flight-controller" alt="Flight Controller Connection page showing Connected over USB, the Connection check with four passed steps, and the MAVLink Inspector" caption="Flight Controller → Connection with a working USB link." />
+
+Stuck on **Waiting for device**, **Detecting baud rate** or **No heartbeat**? Select **Auto-detect** and read the **Connection check** panel: it names the first thing that's wrong. More in [Flight controller](../uavcast-pro/flight-controller/index.mdx).
+
+## 3. Send telemetry and video to your laptop
+
+<Steps>
+
+1. Go to **Ground Control Stations**. There is already one empty destination card.
+2. Enter a **Name**, for example `Laptop`.
+3. In **Destination IP or Host**, enter your laptop's IPv4 address, for example `192.168.1.20`, and press Enter. A green check means it's saved.
+4. Leave **Telemetry Port** at `14550` and **Video Port** at `5600`.
+5. Turn on **Enable Telemetry**.
+6. Turn on **Enable Video** if you have a camera.
+
+</Steps>
+
+Fields save as you leave them. There is no Save button.
+
+## 4. Start the camera
+
+Skip this if you have no camera.
+
+<Steps>
+
+1. Go to **Camera → Camera settings**.
+2. Set **Enable Camera?** to **Yes**.
+3. Click the **CAM 1** slot and choose your camera, for example *Raspberry Pi Camera - imx708 (CSI)* or your USB webcam.
+4. Under **Camera Settings**, pick a **Resolution**. Start with `1280x720` or the closest size your camera offers.
+5. Leave **Select FPS** on **Auto** and **Bitrate** at `0` (auto).
+6. Under **Stream Settings**, tick **Enable Live Preview?** and select **Start**. **Live Preview** shows the picture.
+
+</Steps>
+
+## 5. Open your ground station
+
+<Tabs groupId="gcs">
+<TabItem value="qgc" label="QGroundControl" default>
+
+QGroundControl listens on UDP 14550 by default, so the drone appears by itself within a few seconds.
+
+For video: click the **Q** icon → **Application Settings** → **Video** (in older versions, the **Video** section of **General**). Set **Source** to **UDP h.264 Video Stream** and keep the default UDP port `5600`. The video shows in the Fly view.
+
+</TabItem>
+<TabItem value="mp" label="Mission Planner">
+
+In the top-right corner choose **UDP**, select **Connect** and accept port `14550`.
+
+For video: right-click the HUD → **Video** → **Set GStreamer Source**, and paste:
+
+```text
+udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+```
+
+</TabItem>
+</Tabs>
+
+Full walkthroughs with screenshots and fixes: [Mission Planner](../uavcast-pro/ground-stations/mission-planner.mdx), [QGroundControl](../uavcast-pro/ground-stations/qgroundcontrol.mdx), [Android](../uavcast-pro/ground-stations/android.mdx), and GStreamer on [Windows](../uavcast-pro/ground-stations/gstreamer-windows.mdx), [Linux](../uavcast-pro/ground-stations/gstreamer-linux.mdx) or [macOS](../uavcast-pro/ground-stations/gstreamer-macos.mdx).
+
+:::warning Windows firewall
+Windows blocks incoming UDP unless the app asked for an exception. If telemetry or video doesn't arrive, allow Mission Planner or QGroundControl through the firewall for **private and public** networks, or open UDP 14550 and 5600.
+:::
+
+You now have telemetry and video on your local network. The dashboard's **Ground station** row reads *Sending · … packets/s*.
+
+## 6. Fly over 4G/LTE
+
+Over a cellular network the drone has no address your laptop can reach, so both join the same VPN. Your license includes a UAVnet (ZeroTier) network.
+
+<Steps>
+
+1. Plug in the modem. On **Modem**, set **Modem type** to **HiLink** or **Traditional (PPP)**. Leave **Access Point Name** empty: UAVcast-Pro finds the APN. See [Cellular modem](../uavcast-pro/connectivity/cellular-modem.mdx).
+2. Sign in to [uavnet.uavmatrix.com](https://uavnet.uavmatrix.com) with the UAVnet account from your order email and create a network. Copy the **Network ID**.
+3. In UAVcast-Pro, go to **Virtual Private Network**. Set **Enable VPN** to **Yes**, choose **ZeroTier**, paste the **Network ID** and select **Join Network**.
+4. Install [ZeroTier](https://www.zerotier.com/download/) on the laptop and join the same network ID.
+5. In UAVnet, authorize both members if they show as unauthorized, and note the IP address UAVnet assigned to the laptop.
+6. On **Ground Control Stations**, change **Destination IP or Host** to the laptop's **ZeroTier** IP.
+7. On **Networks**, select **Modem Priority (Outdoor Mode)** so traffic goes over the modem when Wi-Fi drops.
+
+</Steps>
+
+Full details: [VPN](../uavcast-pro/connectivity/vpn.mdx). Prefer Tailscale or Fleet Manager? Both work the same way: put the laptop and the drone on one network and use the laptop's VPN IP as the destination.
+
+:::danger Set a GCS failsafe before flying over LTE
+Cellular links drop. Make sure the flight controller has a GCS failsafe configured (`FS_GCS_ENABLE` on ArduPilot). The top bar shows **GCS Failsafe Enabled** or **GCS Failsafe Disabled**.
+:::
+
+## Next steps
+
+- [Two cameras, RC switching and dual stream](../uavcast-pro/camera/multi-camera.mdx)
+- [Record every flight on the drone](../uavcast-pro/camera/recordings.mdx)
+- [RTK corrections over 4G with NTRIP](../uavcast-pro/flight-controller/ntrip-rtk.mdx)
+- [Pair the drone with Fleet Manager](../uavcast-pro/fleet-pairing.mdx)

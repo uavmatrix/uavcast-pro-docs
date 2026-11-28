@@ -1,0 +1,81 @@
+---
+title: "Two cameras on one drone: RC switching and dual stream"
+description: "Connect two cameras to UAVcast-Pro and switch between them from your RC transmitter, or stream both at once to QGroundControl or Mission Planner on separate UDP ports."
+sidebar_position: 2
+sidebar_label: "Two cameras & RC switching"
+---
+
+# Two cameras: RC switching and dual stream
+
+UAVcast-Pro handles two cameras, for example a forward FPV camera and a downward or gimbal camera. You can use them in two ways:
+
+- **Switching**: one stream, and you choose which camera feeds it, from the web interface or from an RC channel on your transmitter. Uses the bandwidth and CPU of one stream.
+- **Dual stream**: both cameras stream at the same time, each to its own UDP port, each with its own resolution, FPS and bitrate. Uses twice the bandwidth and CPU.
+
+Supported combinations: CSI + USB, two USB cameras, or two CSI cameras on boards with two camera connectors (Raspberry Pi 5, Compute Module carrier boards).
+
+## Add the second camera
+
+<Steps>
+
+1. Go to **Camera → Camera settings**. Make sure **CAM 1** has a camera.
+2. Select **Add Camera** next to CAM 1 and pick the second camera. It appears in the **CAM 2** slot.
+3. Click a slot to make that camera the active one (*Click to switch to Camera 2*).
+
+</Steps>
+
+In switching mode both cameras share Camera 1's resolution and frame rate (*Resolution and FPS from Camera 1 will be used*). If Camera 2 doesn't support that size, it uses its native resolution and is scaled, unless you turn on **Match Camera 1 Resolution** for a camera that supports it.
+
+## Switch cameras from your RC transmitter
+
+**RC Channel Switching** appears when two cameras are set and dual stream is off.
+
+<Steps>
+
+1. On your transmitter, assign a two-position switch to a free channel, for example channel 7. Check in Mission Planner or on **Flight Map → Radio** that the channel moves between about 1000 and 2000 µs.
+2. Under **RC Channel Switching**, turn on **Enable RC channel camera switching**.
+3. Pick the **RC Channel**.
+4. Flip the switch and watch **Current PWM**. Below 1500 selects Camera 1, above 1500 selects Camera 2.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera--control-panel" alt="Camera Control Panel with CAM 1 filled and an empty Add Camera slot" caption="The camera slots: CAM 1 in use and Add Camera for the second camera. RC Channel Switching shows up once both slots are filled and dual stream is off." />
+
+While RC switching is on, clicking a camera slot does nothing: the transmitter is in control. Turn RC switching off to choose cameras by hand.
+
+| Setting | Default | Values | Notes |
+|---|---|---|---|
+| **Enable RC channel camera switching** | Off | On, off | |
+| **RC Channel** | Channel 7 | Channel 1–18 | Read from the flight controller's RC input. |
+| Switch point | 1500 µs | fixed | PWM < 1500 = Camera 1, PWM > 1500 = Camera 2. |
+
+## Stream both cameras at once (dual stream)
+
+<Steps>
+
+1. With two cameras set, turn on **Dual stream** on the Camera page. The badge shows **Both live**.
+2. Under **Per-camera settings**, set resolution, FPS and bitrate for each camera.
+3. On [Ground Control Stations](../ground-stations/index.mdx), each destination now has **Video Port (Camera 2)**. Leave it empty to use **Video Port** + 1 (`5601`), or enter another port.
+4. Set up a second video receiver on the ground station for that port.
+
+</Steps>
+
+Camera 1 goes to each ground station's **Video Port** (default `5600`), Camera 2 to **Video Port (Camera 2)** (default `5601`).
+
+QGroundControl shows one video stream at a time. To watch Camera 2, run a second receiver, for example a second QGroundControl instance on port 5601, Mission Planner with a GStreamer source on 5601, or GStreamer directly:
+
+```bash
+gst-launch-1.0 udpsrc port=5601 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264" ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+:::warning Watch the CPU and the link
+Two streams double the encoding load and the bandwidth. Keep an eye on **System load** (*CPU is near its limit. Lower a stream's resolution/bitrate, or turn off the second stream.*) and keep the combined bitrate well inside your cellular uplink. A common split is 1280x720 at 1500 kbps for the main camera and 854x480 at 600 kbps for the second.
+:::
+
+The Flight Map shows one video window per active stream. Recordings can include both cameras: see **Record camera 2** in [Recordings](./recordings.mdx).
+
+## Troubleshooting
+
+- **Second camera missing from the list**: two CSI cameras need a board with two camera ports. On a Raspberry Pi, reboot after installing UAVcast-Pro: the installer enlarges the camera memory pool (CMA) so two cameras can run together.
+- **Camera 2 picture stretched**: Camera 2 is scaled to Camera 1's resolution in switching mode. Use cameras with the same aspect ratio, or turn on **Match Camera 1 Resolution**.
+- **Switch does nothing**: check **Current PWM**. *No signal* means the flight controller isn't reporting RC input on that channel.

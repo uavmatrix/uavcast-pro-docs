@@ -1,0 +1,138 @@
+---
+title: "Fly ArduPilot beyond visual range over 4G with UAVnet"
+sidebar_label: Fly beyond visual range over 4G
+description: "Fly an ArduPilot drone over 4G/LTE with UAVcast-Pro, a cellular modem and a UAVnet (ZeroTier) VPN, with telemetry and live video in your ground station."
+sidebar_position: 2
+---
+
+# Fly beyond visual range over 4G with UAVnet
+
+This guide takes a drone from the bench to a flight over the cellular network: telemetry and live video in QGroundControl or Mission Planner, wherever both ends have coverage. It uses UAVnet, UAVmatrix's hosted ZeroTier network, so neither side needs a public IP or port forwarding.
+
+**Time:** about an hour. **You need:**
+
+- A Raspberry Pi 4 or 5 (or another [supported board](../reference/supported-hardware.mdx)) with UAVcast-Pro [installed](../get-started/installation.mdx) and the [license activated](../get-started/license-activation.mdx).
+- An ArduPilot flight controller, a USB data cable or TELEM wiring.
+- A USB 4G/LTE modem and a data SIM. Disable the SIM PIN in a phone first, it saves trouble.
+- A camera (CSI or USB), if you want video.
+- A laptop with QGroundControl or Mission Planner, and the [ZeroTier client](https://www.zerotier.com/download/).
+
+:::warning Rules for beyond-visual-line-of-sight flight
+Flying beyond visual line of sight (BVLOS) needs an authorization in most countries. UAVcast-Pro gives you the link; the operational approval, the risk assessment and the fail-safes are your responsibility.
+:::
+
+## How it fits together
+
+```text
+Flight controller ──USB/UART── UAVcast-Pro ──4G──► internet ──► laptop
+                                    │                               │
+                                    └──── UAVnet (ZeroTier) VPN ────┘
+                       telemetry: UDP 14550   video: UDP 5600
+```
+
+The drone sends MAVLink and H.264 video to your laptop's VPN address. The VPN makes the laptop reachable over 4G as if both were on the same local network.
+
+## 1. Connect the flight controller
+
+<Steps>
+
+1. Plug the flight controller into the Pi over USB, or wire a TELEM port (TX→RX, RX→TX, GND→GND) and set `SERIALx_PROTOCOL = 2` on that port.
+2. In UAVcast-Pro, open **Flight Controller → Connection**. Choose **USB** or **UART / Serial** under **Link type**, and leave **Port** and **Baud rate** on **Automatic**.
+3. Wait for the status **Connected** and a vehicle in **Vehicle**. If it stays at **No heartbeat**, see [No MAVLink heartbeat](../troubleshooting/no-mavlink-heartbeat.mdx).
+
+</Steps>
+
+## 2. Set up the modem
+
+<Steps>
+
+1. Plug in the modem and open **Modem**.
+2. Set **Enable cellular Modem?** to **Yes** and pick the **Modem type**: **HiLink** for modems that act as a USB network adapter (for example Huawei E3372h), **Traditional (PPP)** for the rest.
+3. For a Traditional modem, leave **Access Point Name (Optional)** empty. UAVcast-Pro finds the APN for your SIM and remembers it.
+4. Under **Modem Information**, wait for an operator and an IPv4 address.
+5. Go to **Networks** and choose **Modem Priority (Outdoor Mode)**, so traffic leaves over the modem even when Wi-Fi is around.
+
+</Steps>
+
+Details: [Cellular modem](../uavcast-pro/connectivity/cellular-modem.mdx). If the modem connects but nothing loads: [Modem connected, no internet](../troubleshooting/modem-no-internet.mdx).
+
+## 3. Create a UAVnet network
+
+<Steps>
+
+1. In UAVcast-Pro, open **Virtual Private Network** and click **Open UAVNet Controller**, or go to [uavnet.uavmatrix.com](https://uavnet.uavmatrix.com). Sign in with your UAVnet account (email and password), or create one on the sign-in page.
+2. Create a network and copy its **Network ID** (16 characters).
+
+</Steps>
+
+<Screenshot id="uavcast-pro/private-network--service-dropdown" alt="VPN card with Enable VPN set to Yes and the Services dropdown open, listing ZeroTier and Tailscale" caption="The Services dropdown on Virtual Private Network. Choose ZeroTier for UAVnet." />
+
+## 4. Put the drone on the network
+
+<Steps>
+
+1. On the **Virtual Private Network** page, set **Enable VPN** to **Yes** and **Services** to **ZeroTier**.
+2. Paste the **Network ID** and press **Join Network**.
+3. In UAVnet, authorize the new member if it is not authorized yet. Under **Connected Networks** in UAVcast-Pro, the network's status changes from **ACCESS_DENIED** to `OK`.
+4. Note the drone's IP address shown for the network under **Connected Networks**.
+
+</Steps>
+
+## 5. Put the laptop on the network
+
+<Steps>
+
+1. Install ZeroTier on the laptop and join the same Network ID: on Windows from the tray icon (**Join New Network**), on Linux with `sudo zerotier-cli join <network-id>`.
+2. Authorize the laptop in UAVnet.
+3. Note the laptop's ZeroTier address. On Windows, `ipconfig` shows it on the ZeroTier adapter.
+4. Test: `ping <drone ZeroTier IP>` from the laptop. You can now open the drone's web interface at `http://<drone ZeroTier IP>/`.
+
+</Steps>
+
+## 6. Send telemetry and video to the laptop
+
+<Steps>
+
+1. In UAVcast-Pro, open **Ground Control Stations** and press **Add Destination**.
+2. **Name**: for example *Field laptop*. **Destination IP or Host**: the laptop's **ZeroTier** address.
+3. Keep **Telemetry Port** `14550` and **Video Port** `5600`.
+4. Switch on **Enable Telemetry** and **Enable Video**. Both are off on a new destination.
+5. On the laptop, allow incoming UDP 14550 and 5600 in the firewall (commands in [No video, check 3](../troubleshooting/no-video-in-gcs.mdx#check-3)).
+
+</Steps>
+
+## 7. Start the camera
+
+<Steps>
+
+1. Open **Camera → Camera settings**, set **Enable Camera?** to **Yes** and choose the camera in **Select Camera**.
+2. For LTE, start with **Resolution** 1280×720, **Select FPS** 15–20 and **Bitrate:** around 1000–1500 kbps.
+3. Settings save as you change them. Press **Start** if the camera isn't running yet.
+
+</Steps>
+
+## 8. Open the ground station
+
+- **QGroundControl** connects to UDP 14550 by itself. For video, set **Source** to **UDP h.264 Video Stream** on port 5600 in the video settings.
+- **Mission Planner**: choose **UDP**, press **Connect**, accept port 14550. Video shows in the HUD.
+
+## 9. Test on 4G before you fly
+
+<Steps>
+
+1. Turn off the Pi's Wi-Fi, or take the drone away from it, so the only path is the modem.
+2. Check the dashboard: **Cellular** connected, **VPN** connected, **Ground station** *Sending*, **Video** running.
+3. Watch the link for 10 minutes on the ground, ideally at the take-off site. Look for video freezes and telemetry gaps.
+4. On **Flight Controller → Connection**, check **GCS Failsafe Information**. If it shows **Warning - Failsafe Disabled**, enable the GCS failsafe on the flight controller (`FS_GCS_ENABL` on Plane, `FS_GCS_ENABLE` on Copter) and choose its action, so the drone acts on its own when the link drops.
+
+</Steps>
+
+:::tip Record every flight
+Turn on **Record automatically when armed** under **Camera → Recordings → Settings**. You get the video and a telemetry log of every flight for later review: [Record flights and review them](./recording-flight-review.mdx).
+:::
+
+## Next steps
+
+- [Stream to multiple ground stations](./multiple-ground-stations.mdx)
+- [Add RTK corrections from an NTRIP caster](./rtk-ntrip-caster.mdx)
+- Managing several drones? [Onboard a fleet with Fleet Manager](./fleet-onboarding.mdx)

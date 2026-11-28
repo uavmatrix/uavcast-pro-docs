@@ -1,0 +1,20 @@
+{
+  "name": "fleet-manager-screenshots",
+  "private": true,
+  "type": "module",
+  "description": "Seeded local Fleet Manager + manifest-driven Playwright capture for the docs screenshots.",
+  "scripts": {
+    "all": "bash run.sh",
+    "seed": "tsx seed.ts",
+    "simulate": "tsx simulate.ts",
+    "capture": "tsx capture.ts"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@msgpack/msgpack": "3.1.3",
+    "mqtt": "5.16.0",
+    "playwright": "1.49.1",
+    "sharp": "0.33.5",
+    "tsx": "4.19.2"
+  }
+}

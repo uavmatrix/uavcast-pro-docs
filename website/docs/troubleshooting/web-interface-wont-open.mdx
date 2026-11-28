@@ -1,0 +1,80 @@
+---
+title: "UAVcast-Pro web interface won't open after install"
+sidebar_label: Web interface won’t open
+description: "Can't open UAVcast-Pro at http://device-ip after installing? Find the right address, check the uavcast-web service, the server port and port 80."
+sidebar_position: 9
+---
+
+# Web interface won't open
+
+The installer finished, but `http://<device-ip>/` times out, refuses the connection or shows another program's page.
+
+<SymptomTable rows={[
+  {symptom: 'Timeout, or the page never loads', cause: 'Wrong address, or your computer is on another network', start: '#check-1'},
+  {symptom: 'Connection refused', cause: 'The web service is not running', start: '#check-2'},
+  {symptom: 'Another web page, for example nginx or Apache', cause: 'Something else uses port 80', start: '#check-3'},
+  {symptom: 'Worked before, stopped after a settings change', cause: 'The server port was changed', start: '#check-4'},
+  {symptom: 'Loads, but every page jumps to Application', cause: 'No active license yet', start: '#check-5'},
+]} />
+
+## Check 1: Use the right address {/* #check-1 */}
+
+The web interface runs on **port 80** by default, so the address is just `http://<device-ip>/`.
+
+<Steps>
+
+1. Find the device IP. The installer prints it at the end. On the device you can also run `hostname -I`.
+2. On a Raspberry Pi with the default hostname, try `http://raspberrypi.local/`.
+3. Use `http://`, not `https://`. The web interface does not serve HTTPS.
+4. Make sure your computer is on the same network as the device, or on the same VPN. Over 4G you must use the drone's VPN address.
+
+</Steps>
+
+## Check 2: Is the web service running? {/* #check-2 */}
+
+On the device, run:
+
+```bash
+sudo systemctl status uavcast-web
+```
+
+It should say **active (running)**. If not, start it and read why it stopped:
+
+```bash
+sudo systemctl restart uavcast-web
+journalctl -u uavcast-web --since "1 hour ago"
+```
+
+The web interface needs the background services too. Check them the same way: `uavcast-factory`, `mavlink-manager`, `uavcast-camera` and `redis-server`. The full list is in [Services and files](../reference/services-and-files.mdx).
+
+## Check 3: Port 80 already in use {/* #check-3 */}
+
+If another web server is installed on the device, it may hold port 80. Find out who listens:
+
+```bash
+sudo ss -ltnp | grep ':80 '
+```
+
+Stop and disable the other server (`sudo systemctl disable --now nginx`, for example), then restart `uavcast-web`.
+
+## Check 4: The server port was changed {/* #check-4 */}
+
+**Application → Settings → Server Port** moves the web interface to another port, and the address becomes `http://<device-ip>:<port>/`. If you don't remember the port, read it on the device:
+
+```bash
+grep SERVER_PORT /etc/systemd/system/uavcast-web.service
+```
+
+## Check 5: Every page goes to Application {/* #check-5 */}
+
+That is expected until a license is active on the device. Activate it under **Application → License Manager**. If that fails, see [License won't activate](./license-activation-failed.mdx).
+
+## Check 6: The installer did not finish {/* #check-6 */}
+
+If `uavcast-web` doesn't exist (`Unit uavcast-web.service could not be found`), the installation stopped early. See [Installation fails](./installation-fails.mdx).
+
+## Still no luck?
+
+Send the output of `systemctl status uavcast-web` and `journalctl -u uavcast-web --since yesterday`, plus `/opt/uavcast-pro/installer.log`, to **support@uavmatrix.com**.
+
+Related: [Install UAVcast-Pro](../get-started/installation.mdx) · [Application settings](../uavcast-pro/application-settings.mdx)

@@ -1,0 +1,34 @@
+---
+title: "UAVcast-Pro and Fleet Manager guides"
+description: "Step-by-step guides for UAVcast-Pro: fly ArduPilot over 4G, VPN remote access, multiple ground stations, RTK over NTRIP, two cameras and fleet onboarding."
+sidebar_position: 1
+---
+
+# Guides
+
+End-to-end walkthroughs that combine several features to get a real job done. Each guide lists what you need up front and ends with a check that it works.
+
+## Connectivity
+
+<CardGrid>
+  <Card href="/guides/bvlos-4g-zerotier/" title="Fly beyond visual range over 4G" description="Modem, UAVnet (ZeroTier) VPN, telemetry and video to QGroundControl or Mission Planner." />
+  <Card href="/guides/remote-access-tailscale/" title="Remote access with Tailscale" description="Reach the drone on your tailnet over LTE, without port forwarding." />
+  <Card href="/guides/multiple-ground-stations/" title="Stream to multiple ground stations" description="Pilot, payload operator and read-only observers on one drone." />
+</CardGrid>
+
+## Positioning and video
+
+<CardGrid>
+  <Card href="/guides/rtk-ntrip-caster/" title="RTK over 4G with an NTRIP caster" description="RTCM3 corrections from a caster to the flight controller for RTK Fixed." />
+  <Card href="/guides/dual-camera-rc-switching/" title="Two cameras: RC switching or dual stream" description="Switch cameras from the transmitter, or stream both at once." />
+  <Card href="/uavcast-pro/ground-stations/" title="Receive video in your ground station" description="Mission Planner, QGroundControl, GStreamer on Windows, Linux and macOS, Android, VLC and RTSP." />
+  <Card href="/guides/recording-flight-review/" title="Record flights and review them" description="Video and telemetry on the drone, replayed on one timeline." />
+</CardGrid>
+
+## Fleets
+
+<CardGrid>
+  <Card href="/guides/fleet-onboarding/" title="Onboard a fleet with Fleet Manager" description="Licenses, naming, pairing, the organization VPN and stream bindings for 20+ drones." />
+</CardGrid>
+
+Something not working? Start at [Troubleshooting](../troubleshooting/index.mdx).

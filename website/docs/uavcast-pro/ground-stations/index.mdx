@@ -1,0 +1,102 @@
+---
+title: "Send drone telemetry and video to your ground station"
+description: "Add ground station destinations in UAVcast-Pro to stream MAVLink telemetry (UDP 14550) and H.264 video (UDP 5600) to Mission Planner, QGroundControl or several PCs."
+sidebar_position: 1
+sidebar_label: "Destinations"
+---
+
+# Ground control stations
+
+A destination tells UAVcast-Pro where to send telemetry and video. Each one is an IP address plus a telemetry port and a video port. UAVcast-Pro sends to every enabled destination at the same time over UDP, so Mission Planner on one laptop and QGroundControl on a tablet can both receive the drone. Open **Ground Control Stations** in the sidebar.
+
+<Screenshot id="uavcast-pro/ground-control" alt="Ground Control Station page with two destination cards and the Add Destination button" caption="Two destination cards: a disabled, empty one and an enabled destination with telemetry and video on." />
+
+## Add a destination
+
+<Steps>
+
+1. Select **Add Destination**. A new card appears. (A fresh install already has one empty card.)
+2. Enter a **Name**, for example `Pilot laptop`.
+3. Enter the ground station computer's IPv4 address in **Destination IP or Host** and press Enter. A green check means it's saved.
+4. Check **Telemetry Port** (default `14550`) and **Video Port** (default `5600`). Use the ports your ground station listens on.
+5. Turn on **Enable Telemetry** and, if you want video, **Enable Video**.
+
+</Steps>
+
+Every field saves when you press Enter or leave it. There is no Save button. Telemetry routing picks up the change within a few seconds.
+
+:::warning Use an IPv4 address, not a hostname
+Despite the label **Destination IP or Host**, UAVcast-Pro only accepts an IPv4 address such as `192.168.1.20` or a VPN address such as `10.147.17.5`. Hostnames are rejected with *Enter a valid IPv4 address, for example 192.168.1.10.*
+:::
+
+## Which IP address to use
+
+| Where the ground station is | Use |
+|---|---|
+| Same Wi-Fi or Ethernet network as the drone | The ground station's LAN address, for example `192.168.1.20`. |
+| Anywhere, over 4G/LTE | The ground station's **VPN** address (ZeroTier, Tailscale or Fleet Manager). See [VPN](../connectivity/vpn.mdx). |
+| Several computers | One destination per computer. |
+
+## Destination settings
+
+| Setting | Default | Values | Notes |
+|---|---|---|---|
+| **Enable Endpoint** | On | On, off | Master switch. Off stops telemetry, video and audio to this destination but keeps its settings. |
+| **Name** | empty | up to 49 characters | Shown on the card and in the dashboard. |
+| **Destination IP or Host** | empty | IPv4 address | Required before you can turn on telemetry or video. |
+| **Telemetry Port** | `14550` | 1–65535 | UDP port the ground station listens on for MAVLink. |
+| **Video Port** | `5600` | 1–65535 | UDP port for H.264 RTP video (camera 1). |
+| **Video Port (Camera 2)** | empty = Video Port + 1 | 1–65535 | Only shown when [dual stream](../camera/multi-camera.mdx) is on. |
+| **Enable Video** | Off | On, off | Sends the camera stream to this destination. |
+| **Enable Telemetry** | Off | On, off | Sends MAVLink to this destination and accepts commands back from it. |
+| **Read Only** | Off | On, off | Needs **Enable Telemetry**. The ground station receives telemetry, but commands from it (arm and disarm, mode changes, starting a mission upload or download, parameter downloads, RC override and manual control) are blocked. Parameter writes (`PARAM_SET`) are not blocked. |
+
+Audio, when you turn on **Send audio to ground stations** on the Camera page, goes to every destination that receives video, on **Video Port + 2** (for example `5602`). See [Audio](../camera/audio.mdx).
+
+## Set up the receiving side
+
+Pick the program you use on the ground. Each page has the exact settings, the firewall step and fixes for the usual errors.
+
+| Ground station | Telemetry | Video | Page |
+|---|---|---|---|
+| Mission Planner (Windows) | UDP 14550 | GStreamer source on 5600 | [Mission Planner](./mission-planner.mdx) |
+| QGroundControl (Windows, macOS, Linux) | UDP 14550, connects by itself | UDP h.264 on 5600 | [QGroundControl](./qgroundcontrol.mdx) |
+| Android tablet or phone | QGroundControl, UDP 14550 | UDP h.264 on 5600 | [Android](./android.mdx) |
+| GStreamer on Windows | – | `gst-launch-1.0` on 5600 | [GStreamer on Windows](./gstreamer-windows.mdx) |
+| GStreamer on Linux | – | `gst-launch-1.0` on 5600 | [GStreamer on Linux](./gstreamer-linux.mdx) |
+| GStreamer on macOS | – | `gst-launch-1.0` on 5600 | [GStreamer on macOS](./gstreamer-macos.mdx) |
+| VLC, or pulling RTSP from the drone | – | SDP file, or RTSP on 8554 | [VLC and RTSP](./vlc-and-rtsp.mdx) |
+
+### What the drone sends
+
+| Stream | Format | Port on the ground station |
+|---|---|---|
+| Telemetry | MAVLink over UDP | **Telemetry Port** (default `14550`) |
+| Camera 1 video | H.264 in RTP, payload type 96, over UDP | **Video Port** (default `5600`) |
+| Camera 2 video (dual stream) | H.264 in RTP, payload type 96, over UDP | **Video Port (Camera 2)** (default Video Port + 1, `5601`) |
+| Audio (optional) | Opus in RTP, payload type 97, 48 kHz, over UDP | Video Port + 2 (`5602`) |
+
+The drone pushes every stream to the destination. Nothing needs to connect to the drone, but the ground station's firewall must let the UDP packets in.
+
+## Several ground stations
+
+Add one destination per computer. If two ground stations run on the **same** computer (for example QGroundControl and a logging tool), give them different telemetry ports, such as `14550` and `14551`, and set each application to its port.
+
+Use **Read Only** for observers, payload operators or a second screen: they see everything but can't command the vehicle.
+
+## Destinations from Fleet Manager
+
+When the drone is paired with Fleet Manager and you create a stream binding there, Fleet Manager adds the destination for you. These cards show a cloud icon (*Managed by Fleet Manager*). Change them in Fleet Manager rather than here. See [Pair with Fleet Manager](../fleet-pairing.mdx).
+
+## Check that data is flowing
+
+- The [Dashboard](../dashboard.mdx) **Ground station** row reads *Sending · 16 packets/s* or *Sending to 2 · … packets/s*.
+- **Flight Controller → Connection → Connection check** lists each destination with its packet rate.
+- *1 set up · waiting for flight controller* means the destination is fine but no telemetry comes from the flight controller yet.
+
+Read-only users see this page but can't change it.
+
+## Troubleshooting
+
+- [No telemetry in the ground station](../../troubleshooting/no-telemetry-in-gcs.mdx)
+- [No video in QGroundControl or Mission Planner](../../troubleshooting/no-video-in-gcs.mdx)

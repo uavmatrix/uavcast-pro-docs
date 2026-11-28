@@ -1,0 +1,58 @@
+---
+title: Fleet Manager support - FleetBot and support tickets
+sidebar_label: Support
+description: "Get help inside Fleet Manager: ask the FleetBot assistant, open a support ticket with a screenshot, follow its status and check system status."
+sidebar_position: 15
+---
+
+# Support and FleetBot
+
+Help is one click away on every Fleet Manager page: the round support button at the bottom right opens a panel with two tabs, **FleetBot** and **Ticket**.
+
+## Ask FleetBot
+
+**FleetBot** is an AI assistant that knows Fleet Manager's pages and features. Ask it things like "How do I connect a second ground station?" and it answers with links to the right page.
+
+<Screenshot id="fleet-manager/support-bubble--fleetbot" alt="Support panel on the FleetBot tab with a question and an answer linking to the Network page" caption="Support panel, FleetBot tab, answering how to add a stream binding with a link to Network → Stream Bindings." />
+
+- Type your question in **Ask FleetBot...** and send it.
+- A conversation holds up to 20 messages, each up to 2,000 characters. If you reach the limit, start a new conversation.
+- FleetBot can be wrong, especially on numbers. Where it disagrees with these docs, the docs win.
+
+:::note What FleetBot sees
+FleetBot receives only what you type in the chat, not your drones' data. Messages are sent to Anthropic's Claude AI model to generate the answer. Don't paste auth keys, passwords or license keys.
+:::
+
+## Open a support ticket
+
+<Steps>
+
+1. Open the support panel and choose the **Ticket** tab.
+2. Choose a **Category**: **Bug Report**, **Feature Request**, **General Inquiry** or **Question**.
+3. Enter a **Subject** (5 to 200 characters) and a **Message** (20 to 5,000 characters). Say which drone, what you did and what you expected.
+4. Optional: add a screenshot. **Capture** grabs the screen through your browser (you pick the window), **Upload** attaches an image file up to 5 MB.
+5. Select **Submit Ticket**.
+
+</Steps>
+
+<Screenshot id="fleet-manager/support-bubble--ticket" alt="Support panel on the Ticket tab with category, subject, message and screenshot fields" caption="Ticket tab filled in as a Bug Report about a drone stuck on PAIRING, with Capture and Upload for an optional screenshot." />
+
+You get a ticket number such as `SUP-7KQ2XA`. Fleet Manager also records the page you were on and your browser, so support can reproduce the problem.
+
+:::tip Include logs for drone problems
+For problems on the drone side, attach the UAVcast-Pro log bundle (see [Collect logs](../troubleshooting/collect-logs.mdx)) or the **Download logs** file from the drone's **Logs** tab.
+:::
+
+## Follow your tickets
+
+**Settings → Support** lists your tickets with their status: **Open**, **In Progress**, **Resolved** or **Closed**. Open one to see the details and the attached screenshot. Select **Close Ticket** when your issue is solved. You can also create a ticket there with **Create Support Ticket**.
+
+## Hide the support button
+
+Select the hide icon (**Hide support bubble**) in the panel header, or switch **Support Chat Bubble** off in **Settings → Support**. Turn it back on in the same place. You can always open tickets from **Settings → Support**.
+
+## Other ways to get help
+
+- **System status:** **System → Status** shows active and past incidents. If many drones go offline at once, check it first. See [Status indicators and notifications](./alerts-and-status.mdx#status-page).
+- **Email:** support@uavmatrix.com.
+- **Community:** the [UAVmatrix Discord](https://discord.gg/xwqMTXh).

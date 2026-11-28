@@ -1,0 +1,94 @@
+---
+title: "UAVcast-Pro hardware requirements (Pi, FC, cameras, modems)"
+description: "Which Raspberry Pi or Linux computer, flight controller, camera and 4G/LTE modem work with UAVcast-Pro, plus wiring, power and storage requirements."
+sidebar_position: 3
+sidebar_label: "Hardware requirements"
+---
+
+# Hardware requirements
+
+UAVcast-Pro runs on a 64-bit Linux companion computer connected to an ArduPilot flight controller. Add a camera for video and a 4G/LTE modem for flights beyond Wi-Fi range. A Raspberry Pi 4 or 5 with a Pi camera and a USB modem is the most common setup.
+
+## Companion computer
+
+UAVcast-Pro needs a **64-bit** operating system on an **arm64** or **amd64 (x86-64)** CPU. 32-bit systems (`armv7l`, `i686`) are not supported.
+
+| Board | Status | Notes |
+|---|---|---|
+| Raspberry Pi 5 | Supported | No hardware H.264 encoder. Video is encoded in software, so watch the **System load** indicator on the Camera page with high resolutions or two streams. |
+| Raspberry Pi 4 | Supported, recommended | Good balance of CPU, power draw and price. 2 GB RAM or more. |
+| Raspberry Pi 3 / 3B+ | Supported | Fine for telemetry and one 720p stream. Installation takes about 30 minutes. |
+| Raspberry Pi Zero 2 W | Supported | Smallest and lightest. Installation takes about 30 minutes; keep video modest. |
+| Raspberry Pi Compute Module 3+/4 | Supported | Same as the matching Pi model. |
+| NVIDIA Jetson, Orange Pi, Banana Pi | Not supported | The arm64 installer only installs on a Raspberry Pi and stops on other arm64 boards. |
+| x86-64 PC (Intel NUC, mini PC, laptop) | Supported | Uses the amd64 build. USB serial adapters show up as `/dev/ttyUSB*` or `/dev/ttyACM*`. |
+
+Run `uname -m` on the board to check the architecture. You want `aarch64` or `x86_64`.
+
+### Storage
+
+- **Minimum 500 MB free** on the root disk, or the installer stops. An 8 GB or larger card is the practical minimum; use 32 GB or more if you record video on the drone.
+- Use a good A1/A2-rated microSD card, or boot from SSD. Recordings can also go to a USB drive or SSD (see [Recordings](../uavcast-pro/camera/recordings.mdx)).
+
+:::note The license is tied to the storage device
+UAVcast-Pro identifies a device by its CPU serial number plus the serial number of the boot disk (SD card or SSD). Moving to a new SD card counts as a new device. Unregister the old one first. See [Move your license to new hardware](./license-activation.mdx#move-to-new-hardware).
+:::
+
+### Power
+
+The Raspberry Pi needs a stable **5.1 V** supply that can carry the Pi plus everything on its USB ports. A 4G modem can draw well over 500 mA when it transmits, and a USB camera adds more.
+
+- Power the Pi from a dedicated 5 V BEC or regulator sized for the whole load. A flight controller's TELEM or USB port cannot power the Pi.
+- If the modem browns out the Pi, power it from a powered USB hub or a separate 5 V supply.
+- Check the **Power supply** row on the [Dashboard](../uavcast-pro/dashboard.mdx). *Voltage too low - use a stronger power supply* means the Pi is under-voltage right now. *Slowed down (heat or power)* means the CPU is throttling.
+
+## Flight controller
+
+UAVcast-Pro supports **ArduPilot** flight controllers (Copter, Plane, Rover, Sub) that speak MAVLink 2: Pixhawk and Cube families, Matek, Holybro, CUAV, mRo and most other ArduPilot boards.
+
+Flight modes, arming and the other controls in UAVcast-Pro use ArduPilot's definitions. There is no PX4-specific support.
+
+Connect it in one of two ways:
+
+| Link | Wiring | When to use |
+|---|---|---|
+| **USB** | USB cable from the flight controller's USB port to the Pi. | Easiest. No baud rate to set. Use a short, good-quality data cable. |
+| **UART / Serial** | TELEM port TX → Pi RX, RX → Pi TX, GND → GND. Or a USB-serial (FTDI) cable. | When the USB port is used for something else, or for a cleaner install. Set `SERIALx_PROTOCOL = 2` (MAVLink2) on the flight controller. |
+
+On a Raspberry Pi the GPIO UART is `/dev/serial0` (GPIO 14 TX, GPIO 15 RX). The installer frees it for the flight controller: it disables the serial login console and, on Pi 3, 4 and Zero 2 W, moves Bluetooth off the UART. Never connect the flight controller's 5 V pin to the Pi when both have their own supply.
+
+| Flight controller TELEM port | Raspberry Pi GPIO header |
+|---|---|
+| TX | GPIO 15 (RXD), pin 10 |
+| RX | GPIO 14 (TXD), pin 8 |
+| GND | GND, for example pin 6 |
+
+TX always goes to RX. Leave the TELEM port's 5 V pin unconnected.
+
+UAVcast-Pro finds the port and baud rate automatically. See [Connect the flight controller](../uavcast-pro/flight-controller/index.mdx).
+
+## Cameras
+
+| Camera | Notes |
+|---|---|
+| Raspberry Pi camera modules (v1, v2, v3, HQ, Global Shutter) and other libcamera CSI cameras | Best latency. Raspberry Pi 5 and Compute Modules can run two CSI cameras. |
+| USB (UVC) webcams such as Logitech C920 or C615 | Plug and play. Picked up as `/dev/video*`. |
+| HDMI sources (GoPro, camera gimbals) | Through an HDMI-to-CSI bridge (shows up as a CSI camera) or a USB HDMI capture stick (shows up as a USB camera). |
+| IP cameras and anything else GStreamer can read | Through a [custom pipeline](../uavcast-pro/camera/custom-pipeline.mdx). |
+
+Two cameras can run at the same time, either switched from an RC channel or streamed together. See [Two cameras and RC switching](../uavcast-pro/camera/multi-camera.mdx). For audio, any USB microphone or a webcam with a built-in mic works. See [Audio](../uavcast-pro/camera/audio.mdx).
+
+## 4G/LTE modems
+
+UAVcast-Pro supports two kinds of USB modem:
+
+| Type | How it works | Examples |
+|---|---|---|
+| **HiLink** | The modem is a small router. It shows up as a network card (usually `eth1` or `usb0`) and connects by itself. Nothing to configure in UAVcast-Pro. | Huawei E3372**h** (HiLink firmware), E8372, most "LTE USB dongle with web UI" sticks |
+| **Traditional (PPP)** | Managed by ModemManager and NetworkManager. UAVcast-Pro connects it, finds the APN and reconnects after drops. | Huawei E3372**s** (stick firmware), Quectel EC25 / EG25 / EM06 and Sierra Wireless modules in a USB adapter |
+
+Any modem on the [ModemManager supported devices list](https://www.freedesktop.org/wiki/Software/ModemManager/SupportedDevices/) should work as a Traditional modem. Use a SIM with a data plan for your region, and check whether your operator blocks inbound traffic (a VPN works around this). See [Cellular modem](../uavcast-pro/connectivity/cellular-modem.mdx).
+
+## Ground station computer
+
+Any computer that runs Mission Planner, QGroundControl or another MAVLink ground station. It receives telemetry on UDP 14550 and video on UDP 5600 by default. For video in Mission Planner you need GStreamer installed; QGroundControl has it built in.

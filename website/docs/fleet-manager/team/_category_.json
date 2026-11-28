@@ -1,0 +1,7 @@
+{
+  "label": "Team & roles",
+  "position": 5,
+  "collapsible": true,
+  "collapsed": true,
+  "link": { "type": "doc", "id": "fleet-manager/team/index" }
+}

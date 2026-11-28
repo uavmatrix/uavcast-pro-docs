@@ -1,0 +1,7 @@
+{
+  "label": "Fleet & UAVs",
+  "position": 7,
+  "collapsible": true,
+  "collapsed": true,
+  "link": { "type": "doc", "id": "fleet-manager/fleet/index" }
+}

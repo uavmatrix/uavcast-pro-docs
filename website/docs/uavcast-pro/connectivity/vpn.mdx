@@ -1,0 +1,137 @@
+---
+title: "Reach your drone over 4G with ZeroTier or Tailscale VPN"
+description: "Put your drone and ground station on one private network with ZeroTier (UAVnet) or Tailscale in UAVcast-Pro, so telemetry and video work over 4G/LTE without port forwarding."
+sidebar_position: 2
+sidebar_label: "VPN (ZeroTier, Tailscale)"
+---
+
+# VPN: ZeroTier and Tailscale
+
+Over 4G/LTE your drone gets an address from the mobile operator that your ground station can't reach. A VPN fixes that: the drone and the ground station join the same private network and get fixed addresses on it, wherever they are and whatever network they use. UAVcast-Pro has ZeroTier and Tailscale built in. Open **Virtual Private Network** in the sidebar.
+
+Every UAVcast-Pro license includes a **UAVnet** account at [uavnet.uavmatrix.com](https://uavnet.uavmatrix.com), a hosted ZeroTier controller. That's the quickest way to start.
+
+<Screenshot id="uavcast-pro/private-network" alt="Virtual Private Network page with VPN enabled, Tailscale selected, the Fleet Manager tab, and VPN Information showing Not Connected" caption="Virtual Private Network with Tailscale selected on a drone that is not paired or logged in yet." />
+
+## Which one should I use?
+
+| | ZeroTier (UAVnet) | Tailscale | Fleet Manager VPN |
+|---|---|---|---|
+| Account | Included with your license | Your own Tailscale account | Your Fleet Manager organization |
+| Set up on the drone | Paste a network ID | Log in with a browser link or an auth key | One click after pairing |
+| Best for | One operator, a few drones | Teams already on Tailscale | Fleets managed in Fleet Manager |
+
+The drone can be on one VPN at a time through this page.
+
+## ZeroTier with UAVnet
+
+### 1. Create the network
+
+<Steps>
+
+1. Sign in to [uavnet.uavmatrix.com](https://uavnet.uavmatrix.com) with the UAVnet account from your order confirmation email (address, email and temporary password). Change the temporary password after you sign in.
+2. Create a network and copy its 16-character **Network ID**.
+
+</Steps>
+
+### 2. Join the drone
+
+<Steps>
+
+1. In UAVcast-Pro, go to **Virtual Private Network**.
+2. Set **Enable VPN** to **Yes**.
+3. In **Services**, choose **ZeroTier**.
+4. Paste the ID into **Network ID** and select **Join Network**.
+5. In UAVnet, authorize the drone if it's listed as unauthorized. The **ZeroTier Network** panel then shows **Connected** and the **Device IP**.
+
+</Steps>
+
+**Open UAVNet Controller** opens your network in UAVnet. **ACCESS_DENIED** means the member isn't authorized yet.
+
+### 3. Join the ground station
+
+<Steps>
+
+1. Install [ZeroTier One](https://www.zerotier.com/download/) on the ground station computer.
+2. Join the same network ID: on Windows and macOS from the ZeroTier tray or menu-bar icon (**Join New Network**); on Linux with `sudo zerotier-cli join <network-id>`.
+3. Authorize it in UAVnet and note the IP address it gets.
+
+</Steps>
+
+### 4. Point the drone at the ground station
+
+On [Ground Control Stations](../ground-stations/index.mdx), set **Destination IP or Host** to the ground station's **ZeroTier** IP. Telemetry and video now go through the VPN.
+
+:::tip Switching between Wi-Fi and 4G
+ZeroTier follows the best available network. You can start on Wi-Fi at the field and the link moves to the modem when Wi-Fi goes out of range, without changing any address.
+:::
+
+## Tailscale
+
+UAVcast-Pro installs Tailscale. Choose how the drone logs in on one of the three tabs.
+
+<Tabs groupId="tailscale">
+<TabItem value="web" label="Web Login" default>
+
+<Steps>
+
+1. Set **Enable VPN** to **Yes** and choose **Tailscale** in **Services**.
+2. On **Web Login**, select **Generate Login URL**, then **Authenticate this device**.
+3. Log in to Tailscale in the new tab and approve the device.
+4. Back in UAVcast-Pro the status changes to **Connected** and shows the **IPv4 Address**, **Host Name** and **Tailnet**.
+
+</Steps>
+
+</TabItem>
+<TabItem value="key" label="Auth Key">
+
+<Steps>
+
+1. In the [Tailscale admin console](https://login.tailscale.com/admin/settings/keys), generate an auth key. Make it pre-approved; make it reusable if you set up several drones.
+2. In UAVcast-Pro, choose **Tailscale**, open **Auth Key**, paste the key (`tskey-auth-…`) and optionally set **Hostname (Optional)**.
+3. Select **Connect with Auth Key**.
+
+</Steps>
+
+Use this for drones without a browser at hand, or for setting up many drones the same way.
+
+</TabItem>
+<TabItem value="fleet" label="Fleet Manager">
+
+If the drone is [paired with Fleet Manager](../fleet-pairing.mdx) and your organization has the VPN enabled, select **Connect to Fleet Manager VPN**. Connecting can take up to 30 seconds. The status then shows **Connected to Fleet Manager**.
+
+Not paired yet? The tab says **Not Paired with Fleet Manager** and links to **Go to Fleet Manager Pairing**.
+
+</TabItem>
+</Tabs>
+
+Install Tailscale on the ground station, log in to the same tailnet, and use its Tailscale IP (`100.x.y.z`) as the destination on Ground Control Stations.
+
+When connected, **Interface Down** takes the Tailscale interface down without logging out, **Interface Up** brings it back, and **Logout** removes the device from the tailnet.
+
+:::warning The Fleet Manager VPN replaces your own Tailscale login
+The Fleet Manager VPN runs on Tailscale with Fleet Manager's own login server. Connecting to it logs the drone out of your own tailnet. If your SSH session runs over that tailnet, it drops. Do this from the local network.
+:::
+
+## Settings reference
+
+| Setting | Default | Values | Notes |
+|---|---|---|---|
+| **Enable VPN** | **No** | **Yes**, **No** | |
+| **Services** | **ZeroTier** | **ZeroTier**, **Tailscale** | Disabled until VPN is enabled. |
+| **Network ID** (ZeroTier) | empty | 16-character ZeroTier network ID | |
+| **Auth Key** (Tailscale) | empty | `tskey-auth-…` | |
+| **Hostname (Optional)** (Tailscale) | system hostname | text | Name shown in the Tailscale admin console. |
+
+## Troubleshooting
+
+| Symptom | Check |
+|---|---|
+| ZeroTier shows **ACCESS_DENIED** | Authorize the member in UAVnet. |
+| Connected, but no telemetry at the ground station | The destination still uses the LAN IP. Use the ground station's VPN IP, and allow UDP 14550 and 5600 in its firewall. |
+| *No VPN Information Available* | VPN is disabled or the service isn't running. Check **Enable VPN** and the **Action Logs**. |
+| Tailscale web login shows *No Authentication URL* | Use the **Auth Key** tab instead. |
+
+The interfaces appear on the [Networks](./networks.mdx) page as `zt…` (ZeroTier) or `tailscale0`, marked **VPN**.
+
+Still stuck? See [VPN connected but the drone can't be reached](../../troubleshooting/vpn-cant-reach-drone.mdx).
