@@ -5,6 +5,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Translate, {translate} from '@docusaurus/Translate';
 import {useDocResolver} from '@site/src/hooks/useDocResolver';
 import {useLocales} from '@site/src/hooks/useLocales';
+import {INSTALL_ANCHOR, INSTALL_DOC} from '@site/src/data/install';
 import {track} from '@site/src/analytics';
 
 type Item = {label: string; to?: string; href?: string};
@@ -46,7 +47,9 @@ export default function Footer() {
     r('Fleet Manager', ['/fleet-manager/'], 'fleet-manager'),
     {label: translate({id: 'footer.store', message: 'UAVmatrix store'}), href: `${cf.storeUrl}/products`},
   ].filter(Boolean) as Item[];
+  const installDoc = resolve(INSTALL_DOC, {areaFallback: 'get-started', homeOk: false});
   const resources = [
+    installDoc ? {label: translate({id: 'footer.install', message: 'Install UAVcast-Pro'}), to: `${installDoc}#${INSTALL_ANCHOR}`} : null,
     r(translate({id: 'footer.quickStart', message: 'Quick start'}), ['/get-started/quick-start/', '/get-started/overview/'], 'get-started'),
     r(translate({id: 'footer.guides', message: 'Guides'}), ['/guides/'], 'guides'),
     r(translate({id: 'footer.troubleshooting', message: 'Troubleshooting'}), ['/troubleshooting/'], 'troubleshooting'),

@@ -3,9 +3,12 @@ title: "Install UAVcast-Pro on Raspberry Pi, Debian or Ubuntu"
 description: "Install UAVcast-Pro with one command on a 64-bit Raspberry Pi OS, Debian or Ubuntu system (arm64 or amd64), then open the web interface and create an admin user."
 sidebar_position: 4
 sidebar_label: "Installation"
+keywords: [install, how to install, install link, install command, installation command, installer, one-line install, curl install, install script, download UAVcast-Pro]
 ---
 
 # Install UAVcast-Pro
+
+<InstallCommand />
 
 UAVcast-Pro installs with one command on any 64-bit, Debian-based Linux system: Raspberry Pi OS, Debian or Ubuntu, on arm64 or amd64. The installer downloads the latest release, installs its dependencies and services, and prints the address of the web interface when it's done. It takes about 10 minutes, or about 30 minutes on a Raspberry Pi Zero 2 W, 2 or 3.
 
@@ -55,9 +58,9 @@ sudo apt update && sudo apt full-upgrade -y
 
 ## Step 2: Run the installer
 
-```bash title="On the drone"
-curl -fsSL https://install.uavmatrix.com | sudo bash
-```
+On the drone:
+
+<InstallCommand variant="step" />
 
 The installer:
 

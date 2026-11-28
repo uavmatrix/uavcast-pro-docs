@@ -9,6 +9,7 @@ import {AREAS, AREA_HOME} from '@site/src/data/navigation';
 import {useDocResolver} from '@site/src/hooks/useDocResolver';
 import {useLocales} from '@site/src/hooks/useLocales';
 import {useTopNav} from '@site/src/theme/Navbar/Content';
+import {InstallCommandBox, useInstallLinks} from '@site/src/components/InstallCommand';
 
 export default function NavbarMobilePrimaryMenu() {
   const mobileSidebar = useNavbarMobileSidebar();
@@ -17,6 +18,7 @@ export default function NavbarMobilePrimaryMenu() {
   const locales = useLocales();
   const {siteConfig} = useDocusaurusContext();
   const close = () => mobileSidebar.toggle();
+  const install = useInstallLinks();
   const areas = AREAS.map((a) => ({...a, href: resolve(AREA_HOME[a.key], {areaFallback: a.key})})).filter((a) => a.href);
   return (
     <div className="uvm-drawer">
@@ -41,6 +43,14 @@ export default function NavbarMobilePrimaryMenu() {
             </li>
           ))}
       </ul>
+      <div className="uvm-drawer__label">{translate({id: 'drawer.install', message: 'Install UAVcast-Pro'})}</div>
+      <div className="uvm-drawer__install">
+        <InstallCommandBox compact />
+        <Link className="menu__link uvm-drawer__area" to={install.command} onClick={close}>
+          <Icon name="term" size={14} />
+          {translate({id: 'drawer.installGuide', message: 'Installation guide'})}
+        </Link>
+      </div>
       <div className="uvm-drawer__label">{translate({id: 'nav.language', message: 'Language'})}</div>
       <div className="uvm-drawer__langs">
         {locales.map((l) =>

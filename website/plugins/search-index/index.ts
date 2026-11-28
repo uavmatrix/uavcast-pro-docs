@@ -31,6 +31,8 @@ export type SearchDoc = {
   a: string;
   /** 1 = page, 2/3 = heading level */
   l: number;
+  /** page keywords from front matter (`keywords`), page entries only */
+  k?: string;
 };
 
 const SKIP = /^\/(search|404)\/?$|\/tags\//;
@@ -65,6 +67,7 @@ function extract(html: string, route: string, baseUrl: string): SearchDoc[] {
   const trail = crumbs.slice(1, -1).join(' › ');
   const description =
     root.querySelector('meta[name="description"]')?.getAttribute('content') ?? '';
+  const keywords = clean(root.querySelector('meta[name="keywords"]')?.getAttribute('content') ?? '');
 
   // Remove UI-only chrome from the content before reading text.
   md.querySelectorAll(
@@ -72,7 +75,7 @@ function extract(html: string, route: string, baseUrl: string): SearchDoc[] {
   ).forEach((n) => n.remove());
 
   const docs: SearchDoc[] = [];
-  let cur: SearchDoc = {u: route, t: title, p: title, b: trail, c: description, a: area, l: 1};
+  let cur: SearchDoc = {u: route, t: title, p: title, b: trail, c: description, a: area, l: 1, ...(keywords ? {k: keywords} : {})};
   const push = () => {
     cur.c = clean(cur.c).slice(0, MAX_TEXT);
     if (cur.l === 1 || cur.c || cur.t) docs.push(cur);

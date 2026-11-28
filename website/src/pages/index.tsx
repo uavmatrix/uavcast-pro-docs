@@ -12,6 +12,7 @@ import {DataPath, FleetMini, GoalArt, UavcastMini} from '@site/src/components/Ho
 import {AREA_BY_KEY, AREA_HOME} from '@site/src/data/navigation';
 import {FEATURES, GOALS, POPULAR, PRODUCT_LINKS, RECENT, START_HERE, SUGGESTED_QUERIES, TROUBLESHOOTING, type HomeLink} from '@site/src/data/home';
 import {useDocResolver} from '@site/src/hooks/useDocResolver';
+import {InstallHero} from '@site/src/components/InstallCommand';
 
 function useResolved<T extends {to: readonly string[]}>(items: T[]) {
   const {resolve} = useDocResolver();
@@ -60,6 +61,7 @@ function Hero() {
               </button>
             ))}
           </div>
+          <InstallHero />
         </div>
         <DataPath version={version} />
       </div>

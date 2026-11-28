@@ -4,7 +4,8 @@
  */
 import MiniSearch, {type SearchResult} from 'minisearch';
 
-export type SearchDoc = {u: string; t: string; p: string; b: string; c: string; a: string; l: number};
+/** k = front-matter keywords (page entries only), boosted so e.g. "install link" finds the installation page first. */
+export type SearchDoc = {u: string; t: string; p: string; b: string; c: string; a: string; l: number; k?: string};
 export type Hit = SearchDoc & {id: number; score: number; terms: string[]};
 
 const CJK = /[぀-ヿ㐀-䶿一-鿿가-힯]/;
@@ -61,12 +62,12 @@ export function loadEngine(url: string): Promise<Engine> {
     })
     .then((docs) => {
       const ms = new MiniSearch<SearchDoc & {id: number}>({
-        fields: ['t', 'p', 'b', 'c'],
+        fields: ['t', 'p', 'b', 'c', 'k'],
         storeFields: ['u', 't', 'p', 'b', 'c', 'a', 'l'],
         tokenize,
         processTerm,
         searchOptions: {
-          boost: {t: 4, p: 1.6, b: 0.6, c: 1},
+          boost: {t: 4, p: 1.6, b: 0.6, c: 1, k: 6},
           prefix: (term, i, terms) => i === terms.length - 1 || term.length > 3,
           fuzzy: (term) => (term.length > 4 ? 0.18 : false),
           combineWith: 'AND',

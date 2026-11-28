@@ -14,6 +14,7 @@ import Menu from '@site/src/components/Menu';
 import {PRODUCTS, TOP_NAV} from '@site/src/data/navigation';
 import {useDocResolver} from '@site/src/hooks/useDocResolver';
 import {useLocales} from '@site/src/hooks/useLocales';
+import {useInstallLinks} from '@site/src/components/InstallCommand';
 
 export function Brand({onClick}: {onClick?: () => void}) {
   const home = useBaseUrl('/');
@@ -161,6 +162,7 @@ export default function NavbarContent() {
   const {siteConfig} = useDocusaurusContext();
   const area = useCurrentArea();
   const fleetUrl = siteConfig.customFields?.fleetManagerUrl as string;
+  const install = useInstallLinks();
 
   return (
     <div className="navbar__inner uvm-bar">
@@ -189,6 +191,13 @@ export default function NavbarContent() {
         ))}
       </nav>
       <div className="uvm-spacer" />
+      <Link
+        to={install.command}
+        className="uvm-navinstall uvm-hide-md"
+        title={translate({id: 'nav.installTitle', message: 'Install UAVcast-Pro: the one-line install command'})}>
+        <Icon name="term" size={14} />
+        {translate({id: 'nav.install', message: 'Install'})}
+      </Link>
       <SearchBar />
       <LocaleMenu />
       <ThemeToggle />
