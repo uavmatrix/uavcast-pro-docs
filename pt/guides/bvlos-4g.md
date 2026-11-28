@@ -1,0 +1,112 @@
+# Voe além do alcance visual pela 4G
+
+> Voe um drone pela rede 4G/LTE com o UAVcast-Pro, um modem celular e a VPN do Fleet Manager, com telemetria e vídeo ao vivo no QGroundControl ou no Mission Planner.
+
+Este guia leva um drone da bancada até um voo pela rede celular: telemetria e vídeo ao vivo no QGroundControl ou no Mission Planner, sempre que as duas pontas tiverem cobertura. Ele usa a VPN que acompanha o [Fleet Manager](https://docs.uavmatrix.com/pt/fleet-manager/), incluída na sua licença do UAVcast-Pro, então nenhum dos lados precisa de IP público ou de redirecionamento de portas.
+
+**Tempo:** cerca de uma hora. **Você precisa de:**
+
+- Um computador companheiro (Raspberry Pi 4 ou 5, ou outra [placa compatível](https://docs.uavmatrix.com/pt/reference/supported-hardware/)) com o UAVcast-Pro [instalado](https://docs.uavmatrix.com/pt/get-started/installation/) e a [licença ativada](https://docs.uavmatrix.com/pt/get-started/license-activation/).
+- Um controlador de voo MAVLink (ArduPilot ou PX4), um cabo de dados USB ou a fiação TELEM.
+- Um modem USB 4G/LTE e um chip de dados. Desative o PIN do chip em um celular antes, isso evita dor de cabeça.
+- Uma câmera, se quiser vídeo.
+- Um notebook com QGroundControl ou Mission Planner, e o [cliente Tailscale](https://tailscale.com/download).
+- Uma [organização no Fleet Manager](https://docs.uavmatrix.com/pt/fleet-manager/set-up-organization/) na qual você seja **Owner** ou **Admin**.
+
+> **Regras para voo além da linha de visada**
+>
+> Voar além da linha de visada (BVLOS) exige autorização na maioria dos países. O UAVcast-Pro fornece o link; a aprovação operacional, a avaliação de riscos e os mecanismos de segurança (failsafes) são sua responsabilidade.
+
+## Como tudo se encaixa
+
+```text
+Flight controller ──USB/UART── UAVcast-Pro ──4G──► internet ──► laptop
+                                    │                               │
+                                    └──── Fleet Manager VPN ────────┘
+                  telemetry and video on the ports of the stream binding
+```
+
+O drone envia MAVLink e vídeo H.264 para o endereço de VPN do seu notebook. A VPN torna o notebook acessível pela 4G como se os dois estivessem na mesma rede local.
+
+> **Prefere executar sua própria VPN?**
+>
+> Você pode usar sua própria rede ZeroTier ou seu tailnet do Tailscale em vez do Fleet Manager: veja [VPN](https://docs.uavmatrix.com/pt/uavcast-pro/connectivity/vpn/) e [Acesso remoto com Tailscale](https://docs.uavmatrix.com/pt/guides/remote-access-tailscale/). Os passos 1, 2 e 7 a 9 abaixo permanecem os mesmos.
+
+## 1. Conecte o controlador de voo
+
+1. Conecte o controlador de voo ao computador companheiro pela USB, ou ligue uma porta TELEM (TX→RX, RX→TX, GND→GND) e ative o MAVLink nessa porta (`SERIALx_PROTOCOL = 2` no ArduPilot, `MAV_x_CONFIG` no PX4).
+2. No UAVcast-Pro, abra **Controlador de Voo → Conexão**. Escolha **USB** ou **UART / Serial** em **Link type**, e deixe **Port** e **Baud rate** em **Automatic**.
+3. Espere pelo status **Conectado** e por um veículo em **Vehicle**. Se ele continuar em **No heartbeat**, veja [Sem heartbeat MAVLink](https://docs.uavmatrix.com/pt/troubleshooting/no-mavlink-heartbeat/).
+
+## 2. Configure o modem
+
+1. Conecte o modem e abra **Modem**.
+2. Defina **Ativar Modem Celular?** como **Sim** e escolha o **Tipo de modem**: **HiLink** para modems que funcionam como adaptador de rede USB (por exemplo, Huawei E3372h), **Tradicional (PPP)** para os demais.
+3. Em um modem Tradicional, deixe **Nome do Ponto de Acesso (Opcional)** vazio. O UAVcast-Pro encontra o APN do seu chip e o memoriza.
+4. Em **Informações do Modem**, aguarde uma operadora e um endereço IPv4.
+5. Acesse **Redes** e escolha **Prioridade Modem (Modo Externo)**, para que o tráfego saia pelo modem mesmo quando houver Wi-Fi por perto.
+
+Detalhes: [Modem celular](https://docs.uavmatrix.com/pt/uavcast-pro/connectivity/cellular-modem/). Se o modem conectar mas nada carregar: [Modem conectado, sem internet](https://docs.uavmatrix.com/pt/troubleshooting/modem-no-internet/).
+
+## 3. Ative a VPN no Fleet Manager
+
+No Fleet Manager, abra **Network**. Se aparecer **Enable VPN Network**, selecione. Isso cria a rede privada da sua organização. Veja [Rede e VPN](https://docs.uavmatrix.com/pt/fleet-manager/network/).
+
+## 4. Pareie o drone e coloque-o na VPN
+
+1. No UAVcast-Pro, acesse **Gerenciamento → Fleet Management** e selecione **Connect to Fleet Manager**. Anote o código de 8 dígitos.
+2. No Fleet Manager, acesse **Fleet → Pair Device**, digite o código e confirme o dispositivo.
+3. Na etapa **VPN Connection**, mantenha **Enable VPN for this UAV** marcado e selecione **Complete Pairing**.
+4. O drone aparece em **Network → Connected Devices** com o tipo **UAV** e um endereço `100.x.y.z`.
+
+Passo a passo completo: [Adicione seu primeiro drone ao Fleet Manager](https://docs.uavmatrix.com/pt/fleet-manager/pair-uav/).
+
+## 5. Coloque o notebook na VPN
+
+1. Instale o Tailscale no notebook. Você não precisa de uma conta Tailscale: o Fleet Manager executa seu próprio servidor VPN.
+2. No Fleet Manager, em **Network → Devices**, copie o **GCS Connection Command** em **Connect a Device** e execute-o no notebook como administrador (`sudo` no macOS e no Linux).
+3. O notebook aparece em **Connected Devices**. Na coluna **Type**, selecione **Configure**, escolha **Ground Control Station (GCS)** e selecione **Complete Setup**.
+4. Teste: `ping <IP VPN do drone>` a partir do notebook. Agora você pode abrir a interface web do drone em `http://<IP VPN do drone>/`.
+
+Detalhes e capturas de tela: [Conecte uma estação de controle terrestre](https://docs.uavmatrix.com/pt/fleet-manager/connect-gcs/).
+
+## 6. Envie telemetria e vídeo para o notebook
+
+1. No Fleet Manager, acesse **Network → Stream Bindings** e selecione **Add Binding**.
+2. Escolha o drone e o notebook, depois selecione **Create Binding**. O Fleet Manager envia o destino ao drone; ele aparece na página **Ground Control Stations** do drone com um ícone de nuvem.
+3. Leia as portas de vídeo e telemetria do binding na coluna **Ports**. Para o primeiro drone em um notebook, são os padrões, `5600` e `14550`.
+4. No notebook, libere UDP de entrada nessas portas no firewall (comandos em [Sem vídeo, verificação 3](https://docs.uavmatrix.com/pt/troubleshooting/no-video-in-gcs/#check-3)).
+
+## 7. Inicie a câmera
+
+1. Abra **Câmera → Configurações da câmera**, defina **Ativar Câmera?** como **Sim** e escolha a câmera em **Selecionar Câmera**.
+2. Para LTE, comece com **Resolução** 1280×720, **Selecionar FPS** 15–20 e **Taxa de Bits:** em torno de 1000–1500 kbps.
+3. As configurações são salvas à medida que você as altera. Clique em **Iniciar** se a câmera ainda não estiver em execução.
+
+## 8. Abra a estação de controle terrestre
+
+- **QGroundControl** conecta-se à UDP 14550 sozinho. Para vídeo, defina **Source** como **UDP h.264 Video Stream** na porta de vídeo do binding, nas configurações de vídeo.
+- **Mission Planner**: escolha **UDP**, clique em **Connect**, digite a porta de telemetria do binding. Para vídeo, defina a fonte GStreamer conforme descrito na página do [Mission Planner](https://docs.uavmatrix.com/pt/uavcast-pro/ground-stations/mission-planner/).
+
+## 9. Teste na 4G antes de voar
+
+1. Desligue o Wi-Fi do computador companheiro, ou afaste o drone dele, para que o único caminho seja o modem.
+2. Verifique o painel: **Celular** conectado, **VPN** conectada, **Estação de controle terrestre** *Enviando*, **Vídeo** em execução.
+3. Observe o link por 10 minutos no solo, de preferência no local de decolagem. Procure travamentos de vídeo e falhas na telemetria.
+4. Em **Controlador de Voo → Conexão**, verifique **Informações de Failsafe GCS**. Se mostrar **Warning - Failsafe Disabled**, ative o failsafe GCS no controlador de voo (ArduPilot: `FS_GCS_ENABL` no Plane, `FS_GCS_ENABLE` no Copter; PX4: `NAV_DLL_ACT`) e escolha a ação, para que o drone reaja sozinho quando o link cair.
+
+> **Grave todos os voos**
+>
+> Ative **Gravar automaticamente ao armar** em **Câmera → Gravações → Configurações**. Você obtém o vídeo e um registro de telemetria de cada voo para revisão posterior: [Grave voos e revise-os](https://docs.uavmatrix.com/pt/guides/recording-flight-review/).
+
+> **O UAVnet está sendo desativado**
+>
+> O UAVnet, o controlador ZeroTier hospedado da UAVmatrix, está sendo descontinuado em favor do Fleet Manager. Se seus drones usam uma rede UAVnet hoje, mova-os para a VPN do Fleet Manager conforme descrito acima.
+
+## Próximos passos
+
+- [Transmita para várias estações de controle terrestre](https://docs.uavmatrix.com/pt/guides/multiple-ground-stations/)
+- [Adicione correções RTK de um caster NTRIP](https://docs.uavmatrix.com/pt/guides/rtk-ntrip-caster/)
+- Gerencia vários drones? [Integre uma frota com o Fleet Manager](https://docs.uavmatrix.com/pt/guides/fleet-onboarding/)
+
+Source: https://docs.uavmatrix.com/pt/guides/bvlos-4g/

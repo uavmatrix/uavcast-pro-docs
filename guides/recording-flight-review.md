@@ -1,0 +1,67 @@
+# Record flights and review them
+
+> Record camera video and telemetry on the drone automatically when armed, store it on USB or SSD, and replay video, map and flight data on one timeline.
+
+Since v6.5.1, UAVcast-Pro records on the drone itself: camera video plus a telemetry log, with one click on the flight map or automatically every time you arm. Recording reuses the stream that is already encoded, so it costs no extra CPU and never interrupts the live video to the ground station. Afterwards, the flight review player shows the video, the map track, the cockpit view and the flight data on one timeline.
+
+## 1. Choose where recordings go
+
+1. Plug in a USB drive or SSD if you want to record to it. Recordings fill storage fast, and a USB SSD is more robust than an SD card.
+2. Open **Camera → Recordings** and the **Settings** tab.
+3. Under **Storage location**, pick the disk, or **Internal storage**. Press **Look for disks again** if the drive was plugged in after the page opened. **Or another folder** lets you enter a path and confirm with **Use this folder**.
+4. Set **Keep free** (default 2 GB). Recording never fills the disk beyond this.
+
+![Recordings Settings tab with storage location, keep free, delete oldest recordings, delete recordings older than and record automatically when armed](https://docs.uavmatrix.com/img/screenshots/uavcast-pro/camera--recordings-settings.webp)
+
+*Camera → Recordings → Settings with Internal storage selected and Record automatically when armed on.*
+
+## 2. Decide when to record
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Record automatically when armed** | On | Starts when the motors arm and stops when they disarm. If the link drops in flight, recording carries on. |
+| **Record camera 1** / **Record camera 2** | On | Camera 2 only records when dual stream is on. |
+| **Delete oldest recordings when space runs low** | On | Works like a dashcam: recording never stops for lack of space. When off, recording stops instead. |
+| **Delete recordings older than** | 0 days | 0 keeps recordings until the space is needed. |
+| **File length** | 1 min | Recordings are saved in pieces of 1–30 minutes. Shorter pieces lose less after a power cut. |
+| **Record telemetry** | **While armed** | **Always while connected** also logs on the ground, starting a new file at every arm, disarm and hour. **Off** records video only. |
+
+## 3. Record by hand
+
+On the **Flight Map**, the **Recording** buttons start and stop each camera (**Record camera 1**, **Stop recording camera 1**) and the telemetry log. Read-only users can watch but can't start recordings.
+
+## 4. Find a flight
+
+Open **Camera → Recordings → Library**. Every flight is listed with its video, a thumbnail and its telemetry. A recording in progress shows a **Rec** badge.
+
+![Recordings library with a storage bar and two recorded flights, each with CAM 1 and Telemetry badges and a Play button](https://docs.uavmatrix.com/img/screenshots/uavcast-pro/camera--recordings.webp)
+
+*Camera → Recordings → Library with two recorded flights, each with camera video and telemetry.*
+
+From the library you can:
+
+- **Play** a flight in the flight review player,
+- **Download** video clips as MP4,
+- **Delete** a recording: **Delete video only**, or **Delete video and telemetry**.
+
+## 5. Review the flight
+
+The flight review player plays the video next to the map track, the cockpit view and the flight data (**Altitude**, **Speed**, **Battery**, **Satellites**, **Mode**) on one timeline.
+
+![Flight review player with the video area, the map, the cockpit view and a timeline with playback controls](https://docs.uavmatrix.com/img/screenshots/uavcast-pro/camera--flight-review.webp)
+
+*Flight review player: video, map and cockpit view above one timeline.*
+
+- The timeline marks arm, disarm and flight-mode changes, so you can jump to the moment that matters.
+- Use **Back 10 seconds** and **Forward 10 seconds**, and **Playback speed** from 0.5× to 4×.
+- With two cameras, **Change video layout** switches between **Picture in picture** and **Side by side**; **Show this camera large** swaps them.
+- If a recording has no telemetry, the player says *No telemetry log for this recording. Telemetry is logged while the drone is armed.*
+
+## Good to know
+
+- Recordings are stored on the drone. Download what you need to keep before **Delete oldest recordings when space runs low** removes it.
+- The dashboard's **Storage** card and the **Recording storage** summary show free space.
+- Recording continues with **Enable Live Preview?** switched off.
+- If the recording service stops responding, the page says *The recording service is not responding.* Restart the camera service from **Camera → Camera settings** and [collect logs](https://docs.uavmatrix.com/troubleshooting/collect-logs/) if it happens again.
+
+Source: https://docs.uavmatrix.com/guides/recording-flight-review/

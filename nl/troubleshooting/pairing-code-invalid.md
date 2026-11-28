@@ -1,0 +1,60 @@
+# Koppelcode ongeldig of verlopen
+
+> Invalid pairing code, This pairing code has expired en License is not owned by any member of this organization oplossen bij het koppelen van een UAV aan Fleet Manager.
+
+U hebt de code uit UAVcast-Pro ingevoerd in de **Pair Device**-wizard van Fleet Manager, en die is geweigerd.
+
+Koppelen werkt in deze richting: **UAVcast-Pro toont de code, u typt die in Fleet Manager in**. De code heeft 8 cijfers en is 5 minuten geldig.
+
+![Fleet Manager-wizard Pair UAV met de foutmelding This pairing code has expired](https://docs.uavmatrix.com/nl/img/screenshots/fleet-manager/pair-device--code-expired.webp)
+
+*Fleet Manager weigert een code: de fout verschijnt als melding op de stap Pairing Code, hier This pairing code has expired.*
+
+| Fout in Fleet Manager | Oorzaak | Oplossing |
+| --- | --- | --- |
+| **Pairing code must be 8 digits** / **Please enter a valid 8-digit code** | Te weinig cijfers, of letters | [Controle 1](https://docs.uavmatrix.com/nl/troubleshooting/pairing-code-invalid/#check-1) |
+| **Invalid pairing code** | Een typfout, of een code die nooit heeft bestaan | [Controle 1](https://docs.uavmatrix.com/nl/troubleshooting/pairing-code-invalid/#check-1) |
+| **This pairing code has expired** | Er zijn meer dan 5 minuten verstreken | [Controle 2](https://docs.uavmatrix.com/nl/troubleshooting/pairing-code-invalid/#check-2) |
+| **This pairing code has already been used** | De code is al één keer gebruikt | [Controle 2](https://docs.uavmatrix.com/nl/troubleshooting/pairing-code-invalid/#check-2) |
+| **License is not owned by any member of this organization** | De licentie van de drone hoort bij een account buiten de organisatie | [Controle 3](https://docs.uavmatrix.com/nl/troubleshooting/pairing-code-invalid/#check-3) |
+| **Invalid license key** / **License has expired** / **License has been refunded** | De licentie van de drone is niet geldig in de store | [Controle 4](https://docs.uavmatrix.com/nl/troubleshooting/pairing-code-invalid/#check-4) |
+| **This UAV is already paired to an organization** | De UAV is al gekoppeld aan een organisatie | [Controle 5](https://docs.uavmatrix.com/nl/troubleshooting/pairing-code-invalid/#check-5) |
+| **Too many attempts. Please wait a minute and try again.** | Limiet na herhaalde pogingen | Wacht een minuut |
+
+## Controle 1: Typ de huidige code
+
+1. Ga in UAVcast-Pro naar **Fleet Management** en druk op **Connect to Fleet Manager**.
+2. Kopieer de 8 cijfers onder **Pairing Code**.
+3. Ga in Fleet Manager naar **Fleet → Pair Device**, kies de organisatie en voer de code in onder **Enter Pairing Code**.
+
+## Controle 2: Haal een nieuwe code op
+
+Een code is 5 minuten geldig en werkt één keer. Wanneer **Expires in** nul bereikt, druk dan in UAVcast-Pro opnieuw op **Connect to Fleet Manager** voor een nieuwe code. Als UAVcast-Pro helemaal geen code kan ophalen, toont het *Unable to connect to Fleet Manager. Please check your internet connection.*: los dan eerst de internetverbinding van de drone op.
+
+## Controle 3: Licentie van iemand buiten de organisatie
+
+Fleet Manager accepteert alleen een drone waarvan de UAVcast-Pro-licentie is gekocht door een lid van de organisatie waarin u koppelt. De match wordt gemaakt op het e-mailadres van het store-account dat de licentie bezit.
+
+Los het op een van deze manieren op:
+
+- Nodig het account dat de licentie heeft gekocht uit voor de organisatie (**Team**), en koppel daarna opnieuw.
+- Koppel in een organisatie waarin de licentiehouder lid is.
+- Als de licentie is gekocht met een ander e-mailadres van u, vraag **[support@uavmatrix.com](mailto:support@uavmatrix.com)** dan dat adres toe te voegen als licentie-e-mail aan uw Fleet Manager-gebruiker.
+
+Zie [Licenties in Fleet Manager](https://docs.uavmatrix.com/nl/fleet-manager/licenses/).
+
+## Controle 4: Licentie niet geldig
+
+Open op de drone **Applicatie → Licentie Beheer** en controleer de **Licentiestatus**. Een verlopen of terugbetaalde licentie moet worden verlengd op [uavmatrix.com](https://uavmatrix.com/). Als UAVcast-Pro zelf geen actieve licentie heeft, kan het geen code aanvragen (*No valid license found. Please activate your license first.*): zie [Licentie activeert niet](https://docs.uavmatrix.com/nl/troubleshooting/license-activation-failed/).
+
+## Controle 5: Al elders gekoppeld
+
+Een UAV hoort bij één organisatie. Om hem te verplaatsen, verwijdert u hem eerst uit de oude organisatie. Opnieuw koppelen aan dezelfde organisatie is toegestaan en behoudt de geschiedenis van de UAV. Zie [Een UAV verwijderen of overdragen](https://docs.uavmatrix.com/nl/fleet-manager/fleet/remove-or-transfer/).
+
+## Nog geweigerd?
+
+Stuur de exacte foutmelding, de hostnaam van de UAV en de naam van de organisatie naar **[support@uavmatrix.com](mailto:support@uavmatrix.com)**.
+
+Gerelateerd: [Fleet Manager-koppeling in UAVcast-Pro](https://docs.uavmatrix.com/nl/uavcast-pro/fleet-pairing/) · [Uw eerste UAV koppelen](https://docs.uavmatrix.com/nl/fleet-manager/pair-uav/)
+
+Source: https://docs.uavmatrix.com/nl/troubleshooting/pairing-code-invalid/

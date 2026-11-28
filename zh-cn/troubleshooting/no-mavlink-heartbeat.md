@@ -1,0 +1,78 @@
+# 飞行控制器没有 MAVLink 心跳
+
+> UAVcast-Pro 显示 No heartbeat 或 Waiting for device？请检查 USB 线缆、TELEM 接线、SERIAL 协议和波特率，然后使用自动检测。
+
+**飞行控制器 → 连接** 页面显示 **No heartbeat**、**Waiting for device**、**Detecting baud rate** 或 **Searching**，并且仪表盘中的 **飞行控制器** 行始终不会变为绿色。UAVcast-Pro 尚未收到飞行控制器的信号。
+
+该页面提供实时的 **Connection check**，每秒测试一次各个步骤，并说明其发现的第一个问题。请先阅读它：通常比本页更快。
+
+![Connection check 卡片，包含四行：飞行控制器已插入、可读取的飞行控制器数据、飞行控制器有响应并发送到地面站](https://docs.uavmatrix.com/zh-cn/img/screenshots/uavcast-pro/flight-controller--connection-check.webp)
+
+*链路正常时的 Connection check：四个步骤全部通过。链路故障时，第一个失败的步骤会被标记并说明原因。*
+
+| 您会看到 | 可能原因 | 从此处开始 |
+| --- | --- | --- |
+| 显示 Waiting for device，或 Flight controller plugged in: Not detected | 没有数据线，或主板未通电 | [检查 1](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-mavlink-heartbeat/#check-1) |
+| 线路上有信号，但没有可读数据 | 波特率错误、TX/RX 接反，或端口未设置为 MAVLink | [检查 2](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-mavlink-heartbeat/#check-2) |
+| 可读数据显示较高的 % damaged | 线缆松动或过长、缺少地线，或存在电气噪声 | [检查 3](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-mavlink-heartbeat/#check-3) |
+| 端口显示被其他程序占用 | 其他程序占用了串口 | [检查 4](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-mavlink-heartbeat/#check-4) |
+| 状态为 Off 或 Stopped | 链路已关闭 | [检查 5](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-mavlink-heartbeat/#check-5) |
+
+## 检查 1：是否能检测到飞行控制器？
+
+**通过 USB：**
+
+1. 确保飞行控制器已通电，并且其 USB 线缆连接到伴随计算机。
+2. 尝试更换另一根 USB 线缆。许多 USB 线缆只能充电，不能传输数据。如果主板亮起，但 **Flight controller plugged in** 显示 **Not detected**，通常是线缆的问题。
+3. 在 **Link type** 下选择 **USB**，并将 **端口** 保持为 **Automatic**。Automatic 会查找飞行控制器，并在设备编号变化时跟随它。
+
+**通过 TELEM 端口（UART / Serial）：**
+
+1. 在 **Link type** 下选择 **UART / Serial**。
+2. 检查接线：飞行控制器的 **TX → RX**、**RX → TX**，以及 **GND → GND**（均连接到伴随计算机）。缺少地线是常见原因。
+3. 切勿通过 TELEM 端口为 Raspberry Pi 供电，请单独为其供电。
+
+> **Raspberry Pi 串口**
+>
+> 安装程序会启用 Pi 的 UART，并从 `cmdline.txt` 中移除串口控制台。在 Pi 3、4 或 Zero 2 W 上，它还会禁用蓝牙，以释放完整的 UART。如果您在安装 UAVcast-Pro 之后重新安装了操作系统，请再次运行安装程序。
+
+## 检查 2：匹配飞行控制器上的端口设置
+
+在 TELEM 端口上，飞行控制器必须以 UAVcast-Pro 监听的速率运行 MAVLink。USB 连接不使用波特率。
+
+1. 通过 USB 将飞行控制器连接到 Mission Planner 或 QGroundControl。
+2. 打开完整参数列表，找到您接线所用的串口：TELEM1 对应 `SERIAL1`，TELEM2 对应 `SERIAL2`。
+3. 将 `SERIALx_PROTOCOL` 设置为 `2`（MAVLink2）。写入参数并重启飞行控制器。
+4. 记下 `SERIALx_BAUD`。在 UAVcast-Pro 中，将 **波特率** 保持为 **Automatic**，或选择相同的数值。
+
+使用 **Automatic** 时，UAVcast-Pro 会依次尝试 57600、115200、921600、1500000、460800、230400 和 500000 波特率，并记住有效的速率。搜索期间，状态会显示 *Trying … baud (n of 7)*。
+
+> **让 UAVcast-Pro 为您搜索**
+>
+> 按下 **Auto-detect**。它会暂停链路，监听每个端口和每种波特率，然后保存找到的结果。这一过程最多可能需要一分钟。如果提示 **No flight controller found**，请打开 **Show what was tried**，查看它测试过的每个端口和速率。
+
+## 检查 3：数据损坏
+
+如果 **Readable flight controller data** 显示 *damaged* 百分比，说明字节已到达，但数据已损坏。这通常是由于线缆松动或过长、缺少地线，或来自电机和电源线的噪声。
+
+- 重新插紧连接器，并缩短线缆。
+- 将信号线远离电调和电池线。
+- 尝试较低的 `SERIALx_BAUD`，例如 57600 或 115200。
+
+## 检查 4：端口被占用
+
+**端口** 列表会标记被其他程序占用的端口（*in use by …*）。请停止该程序，例如您自行启动的 MAVProxy 或第二个路由器，或选择另一个端口。
+
+## 检查 5：链路是否已开启？
+
+页面顶部的 **Link enabled** 必须为开启状态。如果状态显示 **Link stopped**，请点击 **连接**。设置会立即生效，无需重启。
+
+## 仍然没有心跳？
+
+选中 **Mavlink Manager** 后，[下载日志](https://docs.uavmatrix.com/zh-cn/troubleshooting/collect-logs/)。随附的 `diagnostics.txt` 列出了串口设备、占用它们的程序，以及内核中的 USB 和电源事件，这些信息正是支持团队排查链路问题所需的。
+
+一旦飞行控制器显示 **Connected**，但地面站仍在等待，请前往 [地面站没有遥测数据](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-telemetry-in-gcs/)。
+
+相关链接：[飞行控制器连接](https://docs.uavmatrix.com/zh-cn/uavcast-pro/flight-controller/) · [硬件要求](https://docs.uavmatrix.com/zh-cn/get-started/hardware-requirements/)
+
+Source: https://docs.uavmatrix.com/zh-cn/troubleshooting/no-mavlink-heartbeat/

@@ -1,0 +1,167 @@
+# Changelog
+
+> What changed in each UAVcast-Pro v6 release, from the Rust rewrite in v6.0.0 to recording, flight review, audio, RTK over NTRIP and Fleet Manager.
+
+All UAVcast-Pro v6 releases, newest first. Update from **Application → Update Application**, or run the installer again.
+
+## v6.5.2 (21 Nov 2026)
+
+- Fixed: enabling the camera could show **"Insufficient permissions"**.
+- Fixed: the camera stopped when the **live preview** was switched off while recording was on. Video to the ground station now keeps running, and preview and recording come back by themselves when the video server is available again.
+- Fixed: the camera service could hang after an automatic video restart until the service was restarted.
+
+## v6.5.1 (16 Nov 2026)
+
+**New**
+
+- **Camera recording**: record camera 1 and camera 2 with one click from the flight map, or automatically while the drone is armed. Recording uses the stream that is already encoded, so it costs no extra CPU and never interrupts the live video to the ground station.
+- **Storage management**: record to the internal disk or a USB drive or SSD, keep a free-space reserve, and remove the oldest recordings automatically before the disk fills up (or stop recording instead).
+- **Camera → Recordings** page: every flight with its video and telemetry, thumbnails, a live badge while recording, MP4 downloads, and delete (video only, or video and telemetry).
+- **Flight review player**: a flight's video together with the map track, the cockpit view and the flight data on one timeline, with arm/disarm and flight-mode markers, 0.5×–4× speed and two-camera layouts.
+- **Record telemetry** setting: while armed (default), always while connected, or off.
+- **ARM / DISARM** button on the flight map, always behind a confirmation. The flight controller's own safety checks still decide.
+- **Messages** list on the flight map: every flight controller message, with the current pre-arm problems shown separately. Messages that arrive in bursts are no longer lost.
+- **Automatic APN**: leave the APN empty and UAVcast-Pro finds the right one for your SIM and remembers it.
+
+**Improved**
+
+- **Clear mission** now deletes the mission from the flight controller and waits for its confirmation; before, it only hid it on the map.
+- **AGL** altitude now shows the height above the take-off point (it showed the height above sea level).
+- **Cockpit view** redesigned so no text overlaps at any panel size; the side panel has a visible handle to resize it.
+- **Camera window** redesigned: keeps the camera's own shape (no black bars), with controls that appear on hover.
+- **Lower video latency on Raspberry Pi 5**: about half the CPU, no frame buffering, and full frame rate on CSI cameras.
+- The live preview recovers by itself if the video server restarts.
+- **Read-only users** can watch everything but can no longer control the drone or recordings.
+- Modem auto-connect fixed on Ubuntu and other netplan systems; a plugged-in modem now connects automatically by default.
+- More robust modem connections, including modems that connected without getting an internet address.
+- The modem page shows its information as soon as it opens.
+- The installed version is shown in the sidebar.
+
+## v6.5.0 (9 Nov 2026)
+
+- New **camera audio**: sound from a USB microphone or a USB camera's built-in microphone, encoded as Opus. The camera's own microphone is picked automatically when it has one.
+- Audio is carried in the **live preview** (unmute the player to hear it) and can be sent to every ground station as a separate RTP/Opus stream on **Video Port + 2** for GStreamer or VLC receivers.
+- New **audio indicator** on the Camera page: live level meter, the active device, and a plain-language reason if audio could not start. A failing microphone never interrupts video.
+- Selecting a camera that cannot deliver the configured resolution no longer stops video: the stream falls back to the largest supported size and the log says which resolution to pick.
+- A fatal video error now restarts the pipeline automatically.
+- **Faster NTRIP/RTK recovery**: after a brief internet drop, corrections resume within seconds instead of up to about 18 minutes. A silent caster connection is detected within 15 s and reconnected.
+- **Telemetry toggle now fully controls access**: the telemetry router no longer accepts TCP connections on port 5760, so a ground station with telemetry disabled gets no data. If you connected over TCP 5760, add your PC as a ground station and connect over UDP.
+- Turning off **Enable Endpoint** on a ground station now also stops its video and audio, not just telemetry.
+- The flight map's Light and Dark layers no longer show "API key required".
+- Altitude labels renamed to aviation terms: **REL → AGL** and **MSL → AMSL**.
+- Fixed service actions (live preview toggle, camera start/stop) failing in development installs.
+
+## v6.4.3 (2 Oct 2026)
+
+- **Flight controller connection rebuilt for reliability**: the link reconnects by itself after a flight controller reboot, a USB glitch or a late power-up.
+- New **automatic port and baud rate** (the default, also after upgrading): UAVcast-Pro finds the flight controller, remembers what worked and follows it if the device name changes.
+- New **Auto-detect** button and live **Connection check** on the Flight Controller page, showing step by step whether the device is found, data is arriving and telemetry reaches each ground station, with a plain-language fix for the first problem found.
+- Telemetry and video **start at power-on without waiting for internet** and begin streaming as soon as the connection is up, however long the modem takes.
+- Redesigned **dashboard status card** with an overall health summary, GPS fix type, battery, cellular signal, ground station traffic and a power supply (undervoltage) warning.
+- **Log downloads** now include a `diagnostics.txt` snapshot (settings, serial ports, power and USB events).
+- Controller type selection removed (ArduPilot only); connection settings apply instantly without a restart.
+
+## v6.4.2 (26 Jul 2026)
+
+- More reliable installs on low-power boards (Pi Zero 2 W), with a realistic time estimate.
+- Complete, persistent logging across all services, bundled into the downloadable log archive, and clearer flight controller connection logging.
+- Fixed: a missing or invalid destination IP address could break the flight controller connection. Such addresses are now rejected in the UI and skipped by the telemetry router.
+
+## v6.4.1 (9 Jul 2026)
+
+- New **dual camera streaming**: stream two cameras at the same time, each with its own resolution, FPS and bitrate.
+- New **CPU load indicator** on the Camera page, which warns when software H.264 encoding nears the limit.
+- The **flight map** shows a video window per active stream, which you can hide as tabs at the bottom of the map.
+- The installer resolves the renamed camera packages (`rpicam-apps` → `rpicam-apps-core`) and GStreamer plugins, fixing installs on newer Raspberry Pi OS and Debian.
+- CSI streaming falls back to a GStreamer x264 pipeline when rpicam-apps lacks H.264 support (Raspberry Pi OS Lite / Debian trixie on Pi 5).
+- Multi-camera and dual stream start reliably on every supported OS, with automatic recovery if the stream stalls.
+- Unsupported resolutions no longer stop the camera from starting (including **Match Camera 1 Resolution**): capture falls back and the output is scaled.
+
+## v6.4.0 (20 May 2026)
+
+- New **Data Streams** page: custom telemetry dashboards with charts, gauges, sparklines and numeric tiles bound to any MAVLink value or `NAMED_VALUE_FLOAT` signal. Multiple boards, drag-and-resize layout, history kept across page reloads.
+- New **Telemetry Injectors** (Flight Controller → Injectors): feed external sensor data into the MAVLink stream over HTTP, UDP or serial as `NAMED_VALUE_FLOAT` / `NAMED_VALUE_INT`. Listeners start at boot without the web interface open.
+- New **NTRIP / RTK** tab: connect to an NTRIP caster, browse its mountpoints and stream RTCM corrections to the flight controller, including TLS casters.
+- Thanks to Bobby Russell for the feature request and feedback from his high-altitude balloon flights, which inspired Data Streams and injectors.
+
+## v6.3.2 (13 Apr 2026)
+
+- Dependency updates for security and performance (Vite, Axios, backend and frontend libraries, Rust crates).
+
+## v6.3.1 (20 Mar 2026)
+
+- Fixed the installer on Raspberry Pi Compute Module.
+- More baud rate options for serial telemetry.
+- Better error handling and feedback.
+- Dependency updates.
+
+## v6.3.0 (19 Feb 2026)
+
+- New **Fleet Management**: connect UAVcast-Pro devices to Fleet Manager to monitor and manage the whole fleet from one place.
+- Consistent look across UAVcast-Pro, Fleet Manager and the store.
+- Live preview for custom pipelines with RTSP streams on the Camera page.
+
+## v6.2.3 (12 Jan 2026)
+
+- Multiple CSI cameras each appear as a separate device (for example "Raspberry Pi Camera 0 - imx219" and "Raspberry Pi Camera 1 - imx708").
+- CSI camera resolutions and maximum FPS are detected from the connected sensor.
+
+## v6.2.2 (5 Jan 2026)
+
+- Sidebar categories.
+- Fixed restoring the application from a database backup.
+- Improved flight map icons.
+- Link to the changelog in the update card.
+- Fixed recordings being saved in the wrong folder.
+- The installer adds `rpicam-apps` on Ubuntu and Debian on Raspberry Pi for CSI cameras, and raises CMA memory (128 MB → 512 MB) in `config.txt` for multi-camera setups.
+- Fixed manual camera switching after disabling RC channel switching.
+- Fixed MAVLink data not loading on the Radio and Inspector tabs without a page reload.
+
+## v6.2.1 (29 Dec 2025)
+
+- Chinese (Traditional) language.
+- Improved license validation; some users could not unregister old devices.
+
+## v6.2.0 (20 Dec 2025)
+
+- **arm64 and amd64 support**: UAVcast-Pro is no longer limited to Raspberry Pi and runs on NVIDIA Jetson, x86/x64 computers and other arm64/amd64 devices.
+
+## v6.1.0 (7 Dec 2025)
+
+- **Dual camera support** with instant switching from the UI or an RC channel (channels 1–18).
+
+## v6.0.5
+
+- Fixed the telemetry port not being saved when it differed from 14550.
+- Fixed endpoint name conflicts with several destinations on the same IP and different ports.
+
+## v6.0.4
+
+- Support for all ArduPilot vehicle types, including VTOL.
+- More stable MAVLink connection handling.
+
+## v6.0.3
+
+- New **Flight Analytics** page with MAVLink data in graphs.
+- MAVLink recording to a file for analysis.
+- Tighter permissions for read-only users.
+
+## v6.0.2
+
+- MAVLink system ID and MAVLink version are detected from the flight controller.
+
+## v6.0.1
+
+- More reliable installer on low-resource devices such as Raspberry Pi Zero 2 W.
+- Improved UART setup on Pi Zero 2 W.
+
+## v6.0.0
+
+- Major release: the backend was rewritten in Rust for performance and lower resource use, and the package is about 70% smaller.
+- New **Flight Map**, **Mission Planner**, **MAVLink Inspector** and **Radio** pages.
+- New **network priority** setting to choose between Wi-Fi and modem.
+- New **User Management** with roles.
+- New camera handling and live preview based on MediaMTX.
+- v6 uses a new database: settings from v4 and v5 can't be imported.
+
+Source: https://docs.uavmatrix.com/reference/changelog/

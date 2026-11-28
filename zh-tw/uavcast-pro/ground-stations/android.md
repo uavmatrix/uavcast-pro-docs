@@ -1,0 +1,42 @@
+# Android 與平板
+
+> 透過 Wi-Fi，或經由 VPN 使用 4G，在 Android 手機或平板上以 QGroundControl 接收 UAVcast-Pro 遙測與即時影像，並提供 iPad 的瀏覽器方案。
+
+QGroundControl for Android 會像桌機版一樣，在 UDP 14550 接收 UAVcast-Pro 遙測，並在 UDP 5600 接收影像。若透過 4G 連線，請在平板上安裝 Tailscale 或 ZeroTier 應用程式，讓無人機能夠連到平板。
+
+## 在 Android 上設定 QGroundControl
+
+1. 從 [Google Play](https://play.google.com/store/apps/details?id=org.mavlink.qgroundcontrol) 安裝 **QGroundControl**。
+
+2. 將平板連接至無人機傳送資料的網路：
+
+   - **相同 Wi-Fi**：在 **設定 → Wi-Fi →（您的網路）→ 進階**或類似的位置找到平板的 IP。
+   - **透過 4G**：安裝 [ZeroTier One](https://play.google.com/store/apps/details?id=com.zerotier.one) 或 [Tailscale](https://play.google.com/store/apps/details?id=com.tailscale.ipn) 應用程式，加入與無人機相同的網路（請參閱 [VPN](https://docs.uavmatrix.com/zh-tw/uavcast-pro/connectivity/vpn/)），並記下平板的 VPN 位址。
+
+3. 在無人機上，於 [地面控制站](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/) 新增目標，填入平板的 IP，並開啟**啟用遙測**與**啟用視訊**。
+
+4. 開啟 QGroundControl。收到遙測資料時，飛行器就會出現。
+
+5. 設定影像：點擊 **Q** 圖示 → **Application Settings** → **Video**（舊版本位於 **General** 中的 **Video** 區段），將 **Source** 設為 **UDP h.264 Video Stream**，並確認 UDP 位址使用連接埠 `5600`。
+
+完成後，**Fly** 檢視會在地圖上顯示無人機，工具列中會顯示飛行模式與電池，而攝影機畫面會出現在角落的小型影像視窗中。點擊該視窗即可交換影像與地圖。
+
+> **保持 VPN 應用程式連線**
+>
+> Android 可能會在背景停止 VPN 應用程式以節省電量。請將 ZeroTier 或 Tailscale 排除於電池最佳化之外，並在飛行期間保持 VPN 開啟。
+
+影像設定、低延遲模式與常見問題的詳細說明，請參閱 [QGroundControl 頁面](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/qgroundcontrol/)。
+
+## iPad、iPhone 與其他裝置：使用瀏覽器
+
+UAVcast-Pro 網頁介面可在任何現代瀏覽器中執行。在 iPad 或手機上，開啟 `http://<drone-ip>`（4G 時使用 VPN 位址），並使用[飛行地圖](https://docs.uavmatrix.com/zh-tw/uavcast-pro/flight-map/)：即時地圖、駕駛艙 HUD、攝影機影像、解鎖／上鎖與 RTL。其中的影像為即時預覽（WebRTC），因此瀏覽器必須能連線至無人機上的連接埠 8889。
+
+## 常見問題
+
+| 現象 | 解決方式 |
+| --- | --- |
+| 透過 4G 時飛行器始終未出現 | 平板上的 VPN 應用程式已關閉，或目標使用了 Wi-Fi IP。請使用平板的 VPN 位址。 |
+| 螢幕關閉後即停止運作 | Android 已暫停 VPN 應用程式。請關閉該應用程式的電池最佳化。 |
+| 遙測正常，但沒有影像 | 檢查**啟用視訊**、攝影機，以及 QGroundControl 中的影像來源設定。 |
+
+Source: https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/android/

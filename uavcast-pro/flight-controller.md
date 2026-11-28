@@ -1,0 +1,88 @@
+# Connect the flight controller
+
+> Connect a Pixhawk or any other ArduPilot or PX4 flight controller to UAVcast-Pro over USB or UART, with automatic port and baud detection and a live connection check.
+
+UAVcast-Pro reads MAVLink from your flight controller (ArduPilot, PX4 or any other MAVLink autopilot) over USB or a UART (TELEM port) and forwards it to every ground station you add. With **Port** and **Baud rate** on **Automatic**, the default, it finds the flight controller by itself, remembers what worked and reconnects after a reboot, USB glitch or late power-up. You'll find it under **Flight Controller → Connection**.
+
+![Flight Controller Connection page showing Connected, the Connection check with four passed steps, and the MAVLink Inspector](https://docs.uavmatrix.com/img/screenshots/uavcast-pro/flight-controller.webp)
+
+*Flight Controller → Connection with a USB link to a Pixhawk.*
+
+## Connect over USB
+
+1. Plug the flight controller's USB port into the companion computer with a data-capable cable.
+2. Go to **Flight Controller → Connection** and select **USB** under **Link type**.
+3. Leave **Port** on **Automatic**. USB connections don't use a baud rate.
+4. If the status panel says **Link stopped**, select **Connect**.
+
+Within a few seconds the status reads **CONNECTED** with the vehicle type and system ID, for example *Connected to Quadrotor (system 1) on ArduPilot fmuv2 (ttyACM0)*.
+
+## Connect over a TELEM port (UART)
+
+1. Wire the TELEM port: flight controller **TX → RX** on the companion computer, **RX → TX**, and **GND → GND**. Don't connect 5 V if both boards have their own supply.
+2. On the flight controller, set the port to MAVLink 2: for TELEM2 that's `SERIAL2_PROTOCOL = 2`. Note `SERIAL2_BAUD`.
+3. In UAVcast-Pro, select **UART / Serial** under **Link type**.
+4. Leave **Port** and **Baud rate** on **Automatic**, or pick the port (on a Raspberry Pi the GPIO UART is marked **recommended**) and the baud rate that matches `SERIALx_BAUD`.
+5. Select **Connect** if the link is stopped.
+
+Changes apply immediately. You don't need to restart anything.
+
+> **Automatic baud rate**
+>
+> In automatic mode UAVcast-Pro tries 57600, 115200, 921600, 1500000, 460800, 230400 and 500000 baud, starting with the last rate that worked. If heartbeats stop for 20 seconds while data still arrives (for example after you change `SERIALx_BAUD`), it searches again.
+
+## Settings reference
+
+| Setting | Default | Values | Notes |
+| --- | --- | --- | --- |
+| **Link enabled** | On | On, off | Off releases the serial port and stops telemetry to all ground stations. |
+| **Link type** | **USB** | **USB**, **UART / Serial** | Decides which ports **Automatic** searches. |
+| **Port** | **Automatic** | **Automatic**, a detected port, **Custom path…** | Automatic prefers the stable `/dev/serial/by-id/…` path and follows the device if its number changes. Custom path takes any device such as `/dev/ttyAMA0`. Ports used by another program show *in use by …*. |
+| **Baud rate** | **Automatic** | **Automatic** or a fixed rate | Ignored for USB. Must match `SERIALx_BAUD` when fixed. |
+
+## Read the status panel
+
+| State | Meaning |
+| --- | --- |
+| **Connected** | Heartbeats are arriving. **Connected for**, **Last heartbeat** and **Auto-reconnects** show the link's health. |
+| **Waiting for device** | The port doesn't exist. The flight controller is unplugged, unpowered or still booting. |
+| **Detecting baud rate** | Trying baud rates (*Trying 115200 baud (2 of 7)*). |
+| **No heartbeat** | The port is open but no valid MAVLink arrives: wrong baud rate, TX/RX swapped, or the port isn't set to MAVLink. |
+| **Reconnecting** | The link dropped and is coming back by itself. |
+| **Searching** | **Auto-detect** is scanning every port and speed. This can take up to a minute. |
+| **Off** / **Stopped** | The link is turned off or stopped. Select **Connect**. |
+
+### Connection check
+
+The **Connection check** card, updated every second, follows the data from the wire to the ground station. The first row that isn't green is the problem:
+
+1. **Flight controller plugged in** (USB) or **Serial port available** (UART). *Not detected* usually means a charge-only USB cable or no power.
+2. **Signal on the wire**: bytes arrive on the port.
+3. **Readable flight controller data**: bytes decode as MAVLink. *% damaged* points to a loose or long wire, a missing ground or noise from power cables.
+4. **Flight controller responding**: heartbeats from the vehicle.
+5. **Sending to ground station**: packets per second to each enabled destination, or *No ground station set up*.
+
+### Auto-detect
+
+**Auto-detect** pauses the link, listens on every serial port at every baud rate, saves the port and speed it finds and starts the link with them. Use it when you don't know which port or baud rate the flight controller uses. **Show what was tried** lists every attempt.
+
+## Mavlink Inspector panel
+
+The right-hand column shows the live vehicle state: connection, **GCS Failsafe Information**, **Vehicle Information** (type, controller, flight mode, armed), **Battery Status**, **GPS Information** and flight data. If the panel shows **Warning - Failsafe Disabled**, the flight controller has no GCS failsafe. Enable it (`FS_GCS_ENABLE` on ArduPilot) before flying over a cellular link.
+
+## Security: no open telemetry port
+
+UAVcast-Pro doesn't accept incoming telemetry connections. The TCP server on port 5760 that mavlink-router normally opens is turned off, so only ground stations you add on [Ground Control Stations](https://docs.uavmatrix.com/uavcast-pro/ground-stations/) get telemetry, and only while **Enable Telemetry** is on.
+
+> **Coming from an older version**
+>
+> Earlier versions defaulted to `/dev/ttyACM0` at 57600 baud and accepted TCP connections on port 5760. Since v6.4.3 every device moves to **Automatic** once, with the old port and baud tried first. Since v6.5.0, TCP 5760 is closed: add your PC as a ground station and connect over UDP instead.
+
+## Related
+
+- [NTRIP / RTK corrections](https://docs.uavmatrix.com/uavcast-pro/flight-controller/ntrip-rtk/)
+- [Injectors: send your own sensor data into MAVLink](https://docs.uavmatrix.com/uavcast-pro/flight-controller/injectors/)
+- [Ground control stations](https://docs.uavmatrix.com/uavcast-pro/ground-stations/)
+- [Troubleshooting: no MAVLink heartbeat](https://docs.uavmatrix.com/troubleshooting/no-mavlink-heartbeat/)
+
+Source: https://docs.uavmatrix.com/uavcast-pro/flight-controller/

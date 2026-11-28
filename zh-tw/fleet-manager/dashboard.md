@@ -1,0 +1,46 @@
+# 儀表板
+
+> 一目瞭然地查看 Fleet Manager 儀表板：無人機總數與在線數、團隊人數、無人機狀態清單、入門檢查清單與最近活動記錄。
+
+**Dashboard** 是您登入後看到的第一個頁面。它回答三個問題：目前有多少架無人機在線、是哪些無人機，以及您的團隊最近做了哪些變更。
+
+![Fleet Manager 儀表板，包含四張統計卡片、UAV Status 清單與 Recent Activity](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/dashboard.webp)
+
+*儀表板：四張統計卡片、UAV Status（每架無人機的電池與 GPS），以及團隊的 Recent Activity。*
+
+## 統計卡片
+
+| 卡片 | 顯示內容 |
+| --- | --- |
+| **Total UAVs** | 配對到您目前開啟之組織的無人機（*In this organization*）。 |
+| **Online** | 此組織中目前已連線、且 20 秒內有回應的無人機（*Currently connected*）。 |
+| **Organizations** | 您所屬的組織數。 |
+| **Team Members** | 您目前開啟之組織的成員數。 |
+
+在側邊欄切換組織，即可查看其他組織的數字。
+
+## UAV Status
+
+最近回報的無人機清單，包含其狀態、電量與最後回報時間。選擇無人機即可開啟其 [UAV page](https://docs.uavmatrix.com/zh-tw/fleet-manager/fleet/uav-details/)，或選擇 **View All** 前往 [Fleet](https://docs.uavmatrix.com/zh-tw/fleet-manager/fleet/)。
+
+## Getting Started
+
+新組織會看到兩步驟的檢查清單，直到兩個步驟都完成為止：
+
+1. **Create or Join an Organization**（**Go to Team**）
+2. **Pair a UAV (UAVcast)**（**Pair Device**），當組織至少有一架無人機時即完成
+
+第二步請依照[新增您的第一架無人機](https://docs.uavmatrix.com/zh-tw/fleet-manager/pair-uav/)操作。
+
+## Recent Activity
+
+組織中最近 10 筆事件，並附上執行者。Fleet Manager 會記錄的事件包括（但不限於）：
+
+- 無人機已配對、重新配對與移除
+- 串流綁定已建立與移除，地面站已指派
+- 成員已邀請、移除與角色變更，擁有權已轉移
+- VPN 已啟用或停用
+
+即使無人機或成員已被移除，活動記錄仍會保留，因此您仍可查看是誰做了什麼。
+
+Source: https://docs.uavmatrix.com/zh-tw/fleet-manager/dashboard/

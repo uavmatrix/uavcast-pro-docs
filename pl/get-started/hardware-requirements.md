@@ -1,0 +1,97 @@
+# Wymagania sprzętowe
+
+> Które Raspberry Pi lub komputer z Linuksem, kontroler lotu, kamera i modem 4G/LTE działają z UAVcast-Pro, a także wymagania dotyczące okablowania, zasilania i pamięci masowej.
+
+UAVcast-Pro działa na 64-bitowym komputerze pokładowym z Linuksem, podłączonym do dowolnego kontrolera lotu obsługującego MAVLink (ArduPilot lub PX4). Dodaj kamerę, aby przesyłać wideo, oraz modem 4G/LTE do lotów poza zasięgiem Wi-Fi. Najczęstszy zestaw to Raspberry Pi 4 lub 5 z kamerą Pi i modemem USB.
+
+## Komputer pokładowy
+
+UAVcast-Pro instaluje się na dowolnej **64-bitowej** płytce lub komputerze PC z Linuksem, z procesorem **arm64** lub **amd64 (x86-64)**, działającym pod Raspberry Pi OS, Debianem lub Ubuntu. Systemy 32-bitowe (`armv7l`, `i686`) nie są obsługiwane.
+
+| Płytka | Status | Uwagi |
+| --- | --- | --- |
+| Raspberry Pi 5 | Obsługiwana | Brak sprzętowego kodera H.264. Wideo jest kodowane programowo, więc przy wysokich rozdzielczościach lub dwóch strumieniach obserwuj wskaźnik **Obciążenie systemu** na stronie Kamera. |
+| Raspberry Pi 4 | Obsługiwana, zalecana | Dobry balans między mocą procesora, poborem prądu i ceną. 2 GB RAM lub więcej. |
+| Raspberry Pi 3 / 3B+ | Obsługiwana | Wystarczy do telemetrii i jednego strumienia 720p. Instalacja trwa około 30 minut. |
+| Raspberry Pi Zero 2 W | Obsługiwana | Najmniejsza i najlżejsza. Instalacja trwa około 30 minut; wideo utrzymuj w umiarkowanych parametrach. |
+| Raspberry Pi Compute Module 3+/4 | Obsługiwany | Tak samo jak odpowiadający model Pi. |
+| NVIDIA Jetson, Orange Pi, Banana Pi i inne płytki arm64 | Obsługiwane | Użyj 64-bitowego obrazu Ubuntu lub Debiana od producenta. UAVcast-Pro rozpoznaje te płytki i podpowiada ich porty szeregowe dla kontrolera lotu. Użyj kamery USB (kamery CSI Raspberry Pi wymagają Pi). |
+| PC x86-64 (Intel NUC, mini PC, laptop) | Obsługiwany | Używa wersji amd64. Adaptery USB-szeregowe pojawiają się jako `/dev/ttyUSB*` lub `/dev/ttyACM*`. |
+
+Uruchom `uname -m` na płytce, aby sprawdzić architekturę. Powinno wyświetlić `aarch64` lub `x86_64`.
+
+> **Płytki arm64 inne niż Raspberry Pi**
+>
+> Jetson, Orange Pi, Banana Pi i inne płytki arm64, które nie są Raspberry Pi, wymagają UAVcast-Pro 6.5.3 lub nowszego. Starsze instalatory zatrzymują się na nich z komunikatem *Device is not a Raspberry Pi*.
+
+### Pamięć masowa
+
+- **Minimum 500 MB wolnego miejsca** na dysku systemowym, inaczej instalator się zatrzyma. Praktyczne minimum to karta 8 GB lub większa; jeśli nagrywasz wideo na dronie, użyj 32 GB lub większej.
+- Użyj dobrej karty microSD z oznaczeniem A1/A2 lub uruchom system z dysku SSD. Nagrania mogą też trafiać na dysk USB lub SSD (zobacz [Nagrania](https://docs.uavmatrix.com/pl/uavcast-pro/camera/recordings/)).
+
+> **Licencja jest powiązana z urządzeniem pamięci masowej**
+>
+> UAVcast-Pro identyfikuje urządzenie po numerze seryjnym procesora oraz numerze seryjnym dysku rozruchowego (karty SD lub SSD). Przeniesienie na nową kartę SD liczy się jako nowe urządzenie. Najpierw wyrejestruj stare. Zobacz [Przenieś licencję na nowy sprzęt](https://docs.uavmatrix.com/pl/get-started/license-activation/#move-to-new-hardware).
+
+### Zasilanie
+
+Raspberry Pi potrzebuje stabilnego zasilania **5.1 V**, które udźwignie Pi i wszystko podłączone do jego portów USB. Modem 4G może pobierać znacznie ponad 500 mA podczas nadawania, a kamera USB dokłada kolejne obciążenie.
+
+- Zasilaj Pi z dedykowanej przetwornicy BEC lub regulatora 5 V, dobranego do całego obciążenia. Port TELEM ani port USB kontrolera lotu nie mogą zasilać Pi.
+- Jeśli modem powoduje spadki napięcia w Pi, zasilaj go z aktywnego huba USB lub osobnego zasilacza 5 V.
+- Sprawdź wiersz **Power supply** na [Panelu Głównym](https://docs.uavmatrix.com/pl/uavcast-pro/dashboard/). *Voltage too low - use a stronger power supply* oznacza, że Pi ma w tej chwili zbyt niskie napięcie. *Slowed down (heat or power)* oznacza, że procesor ogranicza wydajność (throttling).
+
+## Kontroler lotu
+
+UAVcast-Pro działa z **dowolnym kontrolerem lotu obsługującym MAVLink**: ArduPilot (Copter, Plane, Rover, Sub) i PX4, na płytkach z rodzin Pixhawk i Cube, Matek, Holybro, CUAV, mRo oraz większości innych. Zalecany jest MAVLink 2.
+
+Nazwy trybów lotu oraz przyciski trybów (na Mapie Lotu i w Fleet Manager) używają nazw trybów ArduPilot dla Copter, Plane, Rover i Sub. Przy kontrolerze PX4 telemetria, wideo, przekazywanie do stacji naziemnych, mapa i HUD działają tak samo; tryby lotu PX4 zmieniaj w swojej stacji naziemnej.
+
+Połącz go na jeden z dwóch sposobów:
+
+| Łącze | Okablowanie | Kiedy używać |
+| --- | --- | --- |
+| **USB** | Kabel USB od portu USB kontrolera lotu do komputera pokładowego. | Najprościej. Nie trzeba ustawiać prędkości bodów. Użyj krótkiego kabla danych dobrej jakości. |
+| **UART / Serial** | Port TELEM: TX → RX komputera, RX → TX komputera, GND → GND. Albo kabel USB-szeregowy (FTDI). | Gdy port USB jest używany do czegoś innego lub dla czystszej instalacji. Włącz MAVLink na tym porcie: `SERIALx_PROTOCOL = 2` (MAVLink2) w ArduPilot, `MAV_x_CONFIG` w PX4. |
+
+**Tylko Raspberry Pi:** UART GPIO to `/dev/serial0` (GPIO 14 TX, GPIO 15 RX). Instalator zwalnia go dla kontrolera lotu: wyłącza konsolę logowania szeregowego i na Pi 3, 4 oraz Zero 2 W przenosi Bluetooth z UART. Nigdy nie łącz pinu 5 V kontrolera lotu z Pi, gdy oba mają własne zasilanie.
+
+Na innych płytkach użyj UART danej płytki (na przykład `ttyTHS*` w Jetson, `ttyS*` w Orange Pi) lub adaptera USB-szeregowego.
+
+| Port TELEM kontrolera lotu | Złącze GPIO Raspberry Pi |
+| --- | --- |
+| TX | GPIO 15 (RXD), pin 10 |
+| RX | GPIO 14 (TXD), pin 8 |
+| GND | GND, na przykład pin 6 |
+
+TX zawsze idzie do RX. Pin 5 V portu TELEM pozostaw niepodłączony.
+
+UAVcast-Pro sam znajduje port i prędkość bodów. Zobacz [Podłącz kontroler lotu](https://docs.uavmatrix.com/pl/uavcast-pro/flight-controller/).
+
+## Kamery
+
+| Kamera | Uwagi |
+| --- | --- |
+| Moduły kamer Raspberry Pi (v1, v2, v3, HQ, Global Shutter) i inne kamery CSI obsługiwane przez libcamera | Najmniejsze opóźnienie. Raspberry Pi 5 i Compute Modules mogą obsłużyć dwie kamery CSI. |
+| Kamery internetowe USB (UVC), na przykład Logitech C920 lub C615 | Działają od razu po podłączeniu. Widoczne jako `/dev/video*`. |
+| Źródła HDMI (GoPro, gimbale kamer) | Przez most HDMI-na-CSI (widoczny jako kamera CSI) lub kartę przechwytującą HDMI-USB (widoczna jako kamera USB). |
+| Kamery IP i wszystko, co GStreamer potrafi odczytać | Przez [niestandardowy pipeline](https://docs.uavmatrix.com/pl/uavcast-pro/camera/custom-pipeline/). |
+
+Dwie kamery mogą działać jednocześnie, przełączane kanałem RC albo strumieniowane razem. Zobacz [Dwie kamery i przełączanie RC](https://docs.uavmatrix.com/pl/uavcast-pro/camera/multi-camera/). Do dźwięku nadaje się dowolny mikrofon USB lub kamerka internetowa z wbudowanym mikrofonem. Zobacz [Dźwięk](https://docs.uavmatrix.com/pl/uavcast-pro/camera/audio/).
+
+## Modemy 4G/LTE
+
+UAVcast-Pro obsługuje dwa rodzaje modemów USB:
+
+| Typ | Jak działa | Przykłady |
+| --- | --- | --- |
+| **HiLink** | Modem jest małym routerem. Pojawia się jako karta sieciowa (zwykle `eth1` lub `usb0`) i łączy się samodzielnie. Nie trzeba niczego konfigurować w UAVcast-Pro. | Huawei E3372**h** (firmware HiLink), E8372, większość sticków LTE z interfejsem web |
+| **Traditional (PPP)** | Zarządzany przez ModemManager i NetworkManager. UAVcast-Pro łączy go, znajduje APN i ponownie łączy po zerwaniach. | Huawei E3372**s** (firmware stick), Quectel EC25 / EG25 / EM06 oraz moduły Sierra Wireless w adapterze USB |
+
+Każdy modem z [listy urządzeń obsługiwanych przez ModemManager](https://www.freedesktop.org/wiki/Software/ModemManager/SupportedDevices/) powinien działać jako modem Traditional. Użyj karty SIM z pakietem danych dla swojego regionu i sprawdź, czy operator nie blokuje ruchu przychodzącego (VPN to obchodzi). Zobacz [Modem komórkowy](https://docs.uavmatrix.com/pl/uavcast-pro/connectivity/cellular-modem/).
+
+## Komputer stacji naziemnej
+
+Dowolny komputer, na którym działa Mission Planner, QGroundControl lub inna stacja naziemna MAVLink. Domyślnie odbiera telemetrię na UDP 14550, a wideo na UDP 5600. Aby odbierać wideo w Mission Planner, musisz mieć zainstalowany GStreamer; QGroundControl ma go wbudowanego.
+
+Source: https://docs.uavmatrix.com/pl/get-started/hardware-requirements/

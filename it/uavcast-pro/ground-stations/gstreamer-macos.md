@@ -1,0 +1,71 @@
+# GStreamer su macOS
+
+> Installa GStreamer su Mac con Homebrew o il pacchetto ufficiale e riproduci il video H.264 del drone UAVcast-Pro e l'audio Opus con gst-launch-1.0, più la richiesta del firewall di macOS.
+
+GStreamer riproduce il flusso video di UAVcast-Pro in una finestra dal Terminale. Usalo per testare il percorso video, guardare una seconda telecamera accanto a QGroundControl o sentire l'audio. Funziona su Mac con Apple silicon e Intel.
+
+## Prima di iniziare
+
+Sul drone, aggiungi una destinazione in [Stazioni di Controllo a Terra](https://docs.uavmatrix.com/it/uavcast-pro/ground-stations/) con l'indirizzo IP di questo Mac (**Impostazioni di Sistema → Rete**; usa l'indirizzo VPN via 4G) e **Attiva Video** attivo.
+
+## Installa GStreamer
+
+**Homebrew**
+
+```bash
+brew install gstreamer
+```
+
+La formula Homebrew include i set di plugin base, good, bad, ugly e libav, quindi `avdec_h264` è presente.
+
+**Pacchetto ufficiale**
+
+1. Scarica il pacchetto **runtime** per macOS da [gstreamer.freedesktop.org/download](https://gstreamer.freedesktop.org/download/) e installalo.
+
+2. Aggiungilo al tuo PATH nel Terminale:
+
+   ```bash
+   echo 'export PATH="/Library/Frameworks/GStreamer.framework/Versions/1.0/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+
+Verifica l'installazione con `gst-launch-1.0 --version` e il decoder H.264 con `gst-inspect-1.0 avdec_h264` (stampa i dettagli dell'elemento; *No such element or plugin* significa che manca).
+
+## Riproduci il video
+
+```bash
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+La prima volta, macOS chiede se `gst-launch-1.0` può accettare connessioni di rete in entrata. Seleziona **Consenti**. Una finestra si apre quando arriva il primo keyframe; premi **Ctrl+C** nel Terminale per fermarti.
+
+> **Cosa dovresti vedere**
+>
+> 1. Il terminale stampa `Setting pipeline to PLAYING ...` e attende il video.
+> 2. Quando arrivano i primi pacchetti, `-v` stampa righe contenenti `caps = application/x-rtp`.
+> 3. Si apre una finestra video con l'immagine della telecamera.
+>
+> Se si ferma al passaggio 1, nessun video raggiunge questo computer: vedi la tabella di risoluzione dei problemi qui sotto.
+
+- **Camera 2** in [doppio flusso](https://docs.uavmatrix.com/it/uavcast-pro/camera/multi-camera/): eseguilo di nuovo con `port=5601`.
+- **Latenza più bassa** su un buon collegamento: sostituisci `rtpjitterbuffer` con `rtpjitterbuffer latency=0`.
+- Se non compare alcuna finestra anche se arrivano pacchetti, sostituisci `autovideosink` con `osxvideosink`.
+
+## Ascolta l'audio
+
+```bash
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp, media=(string)audio, clock-rate=(int)48000, encoding-name=(string)OPUS, payload=(int)97" ! rtpjitterbuffer ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+L'audio richiede che **Audio** e **Invia audio alle stazioni di terra** siano attivi nella pagina **Telecamera** del drone.
+
+## Risoluzione dei problemi
+
+| Messaggio o sintomo | Soluzione |
+| --- | --- |
+| *command not found: gst-launch-1.0* | Homebrew: esegui `brew doctor`. Pacchetto ufficiale: aggiungi la cartella `bin` del framework al PATH come mostrato sopra. |
+| *no element "avdec_h264"* | Il plugin libav manca. Reinstalla con Homebrew, oppure installa il pacchetto runtime ufficiale completo. |
+| Si avvia, ma non compare nessuna finestra | Non arriva nulla. Controlla l'IP di destinazione, **Attiva Video**, e che tu abbia consentito le connessioni in entrata (**Impostazioni di Sistema → Rete → Firewall → Opzioni**). |
+| Errore di bind all'avvio | QGroundControl o un altro GStreamer usa già la porta. Chiudilo. |
+
+Source: https://docs.uavmatrix.com/it/uavcast-pro/ground-stations/gstreamer-macos/

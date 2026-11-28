@@ -1,0 +1,78 @@
+# Application settings, logs and backups
+
+> Change the UAVcast-Pro web port and language, download logs for support with debug mode, and back up, restore or reset the settings database from the Application page.
+
+The **Application** page holds everything about UAVcast-Pro itself: the license, updates, interface settings, log downloads and the settings database. It's only visible to admins, and it's the one page that works before the device is licensed. Open **Management → Application**.
+
+![Application page with License Manager and Update Application on the left, and Settings, Logging and Database cards on the right](https://docs.uavmatrix.com/img/screenshots/uavcast-pro/application.webp)
+
+*Management → Application.*
+
+| Card | Covered in |
+| --- | --- |
+| **License Manager** | [Licensing & activation](https://docs.uavmatrix.com/get-started/license-activation/) |
+| **Update Application** | [Update UAVcast-Pro](https://docs.uavmatrix.com/get-started/updating/) |
+| **Settings**, **Logging**, **Database** | This page |
+
+## Settings
+
+| Setting | Default | Values | Notes |
+| --- | --- | --- | --- |
+| **Take a Tour** |  |  | Restarts the guided tour of the interface. |
+| **Dark Theme** | On | On, off | Saved per browser. Also in the theme toggle in the top bar. |
+| **Server Port** | `80` | 1–65535 | Port of the web interface. See below. |
+| **Language** | Browser language, else English | English, Español, 简体中文, 繁體中文, Italiano, Nederlands, Polski, Português, Русский, Türkçe | Also in the user menu at the bottom of the sidebar. |
+
+### Change the web interface port
+
+1. Enter the new port in **Server Port**.
+2. Select **Submit and restart server**. A dialog shows the **New URL**, for example `http://192.168.1.50:8080`.
+3. Wait a few seconds and open the new URL.
+
+Bookmarks and links to the old address stop working. A changed port shows the warning *The server port has been changed from the default port 80.* From UAVcast-Pro 6.5.3 the port is kept when you update; earlier versions reset it to 80.
+
+## Logging
+
+UAVcast-Pro logs every service separately. Download them when something goes wrong and send them to support.
+
+1. Turn on **Debug Mode** for more detail. Reproduce the problem.
+2. In **Select logs to download**, keep **All Logs** or pick one service.
+3. In **Select time range**, choose a window that covers the problem (**Last 10 minutes** to **All Time**).
+4. Select **Download**. You get a zip file.
+5. Email it to [support@uavmatrix.com](mailto:support@uavmatrix.com) with a short description of what happened. Turn **Debug Mode** off again afterwards.
+
+The download includes a `diagnostics.txt` snapshot (settings, serial ports, power and USB events) that speeds up support.
+
+| Log | Covers |
+| --- | --- |
+| **Mavlink Manager**, **Mavlink Publisher** | Flight controller link, routing to ground stations |
+| **Camera Server**, **Camera Detector** | Video pipeline, camera detection |
+| **Modem Manager**, **Modem Detector** | Modem connection, APN attempts |
+| **VPN Manager** | ZeroTier and Tailscale |
+| **NTRIP Client** | RTK corrections |
+| **DNS Manager** | Dynamic DNS updates |
+| **License Manager** | Activation and the 4-hourly license check |
+| **Application Updater**, **Application Installer** | Updates and installs |
+| **Backend API Server** | The internal API |
+
+**Prune All Logs** deletes all log files. It can't be undone; do it before reproducing a problem if you want a clean log. On the drone, logs are in `/opt/uavcast-pro/logs`.
+
+Every page also has an **Action Logs** console that shows the live log of that page's service.
+
+## Database
+
+All settings (ground stations, flight controller, camera, modem, VPN, NTRIP, users, dashboards, injectors, license data) live in one SQLite database, `/opt/uavcast-pro/uavcast.db`.
+
+| Action | What it does |
+| --- | --- |
+| **Backup Database** | Downloads the database as `uavcast_backup.db`. |
+| **Restore Database** | Uploads a `.db` backup and replaces the current settings, users included. |
+| **Reset Database** | Resets ground stations, flight controller, camera, VPN and Dynamic DNS settings to their defaults. Users, license, modem, NTRIP, recording settings, dashboards, injectors and Fleet Manager pairing are kept. Can't be undone. |
+
+Use backups to keep a known-good configuration before changes, or to set up a second drone the same way. Reboot after a restore so every service starts with the restored settings.
+
+> **Restoring on different hardware**
+>
+> The license data in the database is tied to the device it came from. After restoring a backup on another Pi or SD card, activate the license on the new device. Restore also brings over the users and passwords from the backup.
+
+Source: https://docs.uavmatrix.com/uavcast-pro/application-settings/

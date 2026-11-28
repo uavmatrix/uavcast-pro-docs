@@ -1,0 +1,61 @@
+# Acesso remoto com Tailscale
+
+> Alcance seu drone pela LTE com o Tailscale e o UAVcast-Pro, sem redirecionamento de portas: entre por URL ou chave de autenticação, adicione o notebook como GCS e desative a expiração da chave.
+
+O Tailscale é uma VPN baseada em WireGuard. Se a sua equipe já o utiliza, é a forma mais rápida de alcançar um drone pela 4G: o drone e o seu notebook entram na mesma tailnet e se comunicam pelos endereços `100.x.y.z`.
+
+Não tem uma tailnet? A VPN do Fleet Manager, incluída na sua licença, faz o mesmo sem uma conta Tailscale: veja [Voe além do alcance visual pela 4G](https://docs.uavmatrix.com/pt/guides/bvlos-4g/) e [Integre uma frota](https://docs.uavmatrix.com/pt/guides/fleet-onboarding/).
+
+**Você precisa de:** UAVcast-Pro com internet no drone (Wi-Fi ou modem), uma conta Tailscale e o cliente Tailscale no seu notebook.
+
+## 1. Faça login do drone no Tailscale
+
+1. No UAVcast-Pro, abra **Rede Privada Virtual**.
+
+2. Defina **Ativar VPN** como **Sim** e **Serviços** como **Tailscale**.
+
+3. Escolha como fazer login:
+
+   - **Login Web**: clique em **Gerar URL de login**, depois em **Autenticar este dispositivo** e faça login com sua conta Tailscale na página que abrir.
+   - **Chave de Autenticação**: crie uma chave de autenticação no console de administração do Tailscale, cole-a em **Chave de Autenticação**, opcionalmente defina **Nome do Host (Opcional)** e clique em **Conectar com Chave de Autenticação**. Use este método ao configurar drones para outra pessoa, ou muitos de uma vez.
+
+4. Aguarde **Conectado**. Anote o **Endereço IPv4** (100.x.y.z).
+
+![Página Rede Privada Virtual com Ativar VPN como Sim, Serviços como Tailscale, as abas Fleet Manager, Login Web e Chave de Autenticação, e Informações da VPN mostrando Não Conectado](https://docs.uavmatrix.com/pt/img/screenshots/uavcast-pro/private-network.webp)
+
+*Rede Privada Virtual com Serviços definido como Tailscale, antes de o drone fazer login (Não Conectado). Após o login, Informações da VPN mostra os detalhes da conexão.*
+
+> **Desative a expiração da chave para os drones**
+>
+> As chaves de dispositivo do Tailscale expiram, e um drone com a chave expirada sai da tailnet até que alguém faça login novamente. O campo **Expira** mostra quando. No console de administração do Tailscale, desative a expiração da chave para os drones que você implantar.
+
+## 2. Coloque o notebook na mesma tailnet
+
+Instale o Tailscale no notebook e faça login com a mesma conta ou tailnet. Execute `tailscale status`: o drone deve estar na lista. Depois:
+
+```bash
+ping <drone tailscale ip>
+```
+
+Abra a interface web do drone em `http://<drone tailscale ip>/`.
+
+## 3. Envie telemetria e vídeo para o notebook
+
+1. No UAVcast-Pro, acesse **Estações de Controle Terrestre** e clique em **Adicionar Destino**.
+2. Em **IP ou Host de Destino**, digite o endereço IPv4 Tailscale do **notebook** (execute `tailscale ip -4` no notebook).
+3. Ative **Ativar Telemetria** e **Ativar Vídeo**.
+4. Libere o UDP de entrada 14550 e 5600 no firewall do notebook. O Windows costuma tratar o adaptador do Tailscale como rede pública.
+
+Abra o QGroundControl ou o Mission Planner. A telemetria chega pela UDP 14550 e o vídeo pela UDP 5600.
+
+## 4. Verifique a qualidade da conexão
+
+O campo **Relay** na página **Rede Privada Virtual** mostra se o tráfego passa por um relay do Tailscale. Um caminho com relay funciona, mas adiciona atraso. Algumas operadoras celulares não permitem conexões diretas, então teste com a operadora que você usa para voar.
+
+## Solução de problemas
+
+- Não consegue dar ping no drone: [VPN conectada, mas não é possível alcançar o drone](https://docs.uavmatrix.com/pt/troubleshooting/vpn-cant-reach-drone/)
+- Ping funciona, sem telemetria: [Sem telemetria na estação de controle terrestre](https://docs.uavmatrix.com/pt/troubleshooting/no-telemetry-in-gcs/)
+- Se o drone for pareado depois com o Fleet Manager e você escolher **Replace existing VPN with Fleet Manager network**, ele sai da sua tailnet e entra na rede da organização.
+
+Source: https://docs.uavmatrix.com/pt/guides/remote-access-tailscale/

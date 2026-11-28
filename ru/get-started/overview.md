@@ -1,0 +1,49 @@
+# Что такое UAVcast-Pro?
+
+> UAVcast-Pro превращает Raspberry Pi или Linux-компаньон на борту в канал 4G/LTE для телеметрии MAVLink и видео H.264. Узнайте, как это работает вместе с Fleet Manager.
+
+UAVcast-Pro — это программа для бортового компаньона на вашем дроне, обычно Raspberry Pi. Она читает MAVLink с любого полётного контроллера MAVLink (ArduPilot или PX4), передаёт видеопоток H.264 с одной или двух камер и отправляет оба на вашу наземную станцию управления по Wi-Fi, Ethernet или через 4G/LTE-модем. Вы настраиваете систему и контролируете её через веб-интерфейс, который работает на дроне.
+
+UAVmatrix Fleet Manager — это облачная панель управления, которая работает вместе с ним. Сопрягите дрон с UAVcast-Pro с Fleet Manager, и вы сможете видеть весь парк на одной карте, открывать удалённый терминал, планировать миссии и направлять видео и телеметрию на наземные станции без проброса портов. Fleet Manager входит в каждую лицензию UAVcast-Pro.
+
+## Как связаны компоненты
+
+```text
+ Flight controller ──USB/UART──►  Companion computer running UAVcast-Pro
+ (ArduPilot, PX4)                  │  MAVLink router, camera server, modem,
+ Camera(s) ──CSI/USB────────────►  │  VPN, NTRIP client, recorder, web UI
+                                   │
+                                   ├── UDP 14550 (telemetry) ─┐
+                                   ├── UDP 5600  (video)    ──┼─► Mission Planner / QGroundControl
+                                   │                          │   over LAN, VPN or 4G
+                                   └── MQTT/TLS 8883 ─────────┴─► Fleet Manager (optional)
+```
+
+- **На дроне**: UAVcast-Pro монопольно использует последовательный порт полётного контроллера и передаёт MAVLink на каждую добавленную вами наземную станцию. Сервер камеры кодирует H.264 и отправляет RTP по UDP на те же наземные станции. Входящие подключения телеметрии никто не принимает, пока вы сами их не добавите.
+- **Между дроном и землёй**: в локальной сети достаточно собственного IP-адреса наземной станции. По 4G у дрона нет публичного адреса, поэтому обе стороны подключаются к одному VPN. [VPN Fleet Manager](https://docs.uavmatrix.com/ru/uavcast-pro/connectivity/vpn/), входящий в каждую лицензию, делает это за вас; UAVcast-Pro также может подключаться к вашей собственной сети Tailscale или ZeroTier.
+- **В облаке**: после сопряжения дрон поддерживает исходящее подключение MQTT к Fleet Manager с аутентификацией по сертификату. См. [Сопряжение дрона с Fleet Manager](https://docs.uavmatrix.com/ru/uavcast-pro/fleet-pairing/).
+
+## Возможности
+
+| Область | Что делает | Страница |
+| --- | --- | --- |
+| Телеметрия | Автоматически определяет порт полётного контроллера и скорость (бод), направляет MAVLink на любое количество наземных станций, а также на необязательные пункты назначения только для чтения | [Полётный контроллер](https://docs.uavmatrix.com/ru/uavcast-pro/flight-controller/), [Наземные станции](https://docs.uavmatrix.com/ru/uavcast-pro/ground-stations/) |
+| Видео | Камеры CSI и USB для Raspberry Pi, две камеры с переключением по RC или двойным потоком, звук, пользовательские пайплайны GStreamer | [Камера и видео](https://docs.uavmatrix.com/ru/uavcast-pro/camera/) |
+| Запись | Записывает видео и телеметрию каждого полёта на дроне, с плеером для разбора полёта | [Записи](https://docs.uavmatrix.com/ru/uavcast-pro/camera/recordings/) |
+| Карта полёта | Карта в реальном времени, кабинный HUD, взведение и разоружение, RTL и Loiter, планировщик миссий, инспектор MAVLink, анализ журналов | [Карта Полёта](https://docs.uavmatrix.com/ru/uavcast-pro/flight-map/) |
+| Связь | 4G/LTE-модемы с автоматическим APN, VPN Fleet Manager или собственная сеть Tailscale или ZeroTier, динамический DNS, приоритет Wi-Fi или модема | [Связь](https://docs.uavmatrix.com/ru/uavcast-pro/connectivity/) |
+| RTK | Клиент NTRIP, который отправляет поправки RTCM3 на полётный контроллер | [NTRIP / RTK](https://docs.uavmatrix.com/ru/uavcast-pro/flight-controller/ntrip-rtk/) |
+| Пользовательские данные | Передавайте данные датчиков и скриптов в MAVLink и отображайте их графиками | [Инжекторы](https://docs.uavmatrix.com/ru/uavcast-pro/flight-controller/injectors/), [Потоки данных](https://docs.uavmatrix.com/ru/uavcast-pro/data-streams/) |
+
+## Что понадобится
+
+- 64-битный Linux-компьютер на борту (arm64 или amd64). Чаще всего выбирают Raspberry Pi 3, 4, 5 и Zero 2 W; подходят и мини-ПК x86, а также NVIDIA Jetson, Orange Pi и другие платы arm64, которые поддерживаются начиная с UAVcast-Pro 6.5.3. См. [Требования к оборудованию](https://docs.uavmatrix.com/ru/get-started/hardware-requirements/).
+- Полётный контроллер MAVLink: ArduPilot или PX4. Кнопки полётных режимов используют названия режимов ArduPilot.
+- Лицензия UAVcast-Pro из [магазина UAVmatrix](https://uavmatrix.com/products/). См. [Лицензирование и активация](https://docs.uavmatrix.com/ru/get-started/license-activation/).
+- Для полётов за пределами зоны Wi-Fi: 4G/LTE-модем и SIM-карта с передачей данных.
+
+## Дальнейшие шаги
+
+[Быстрый стартОт чистого Raspberry Pi до телеметрии и видео в Mission Planner или QGroundControl.](https://docs.uavmatrix.com/ru/get-started/quick-start/)[Установка UAVcast-ProОдна команда в Raspberry Pi OS, Debian или Ubuntu (arm64 и amd64).](https://docs.uavmatrix.com/ru/get-started/installation/)[Активация лицензииАктивация на устройстве, проверка слотов устройств и перенос лицензии на новое оборудование.](https://docs.uavmatrix.com/ru/get-started/license-activation/)
+
+Source: https://docs.uavmatrix.com/ru/get-started/overview/

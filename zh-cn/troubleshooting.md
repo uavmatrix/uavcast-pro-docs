@@ -1,0 +1,41 @@
+# 故障排除
+
+> 解决无视频、无 MAVLink 心跳、调制解调器和 VPN 问题、许可证错误以及 Fleet Manager 配对问题。从您看到的症状开始，按照检查步骤操作。
+
+请从症状入手。下方每个页面都按照现场中常见的发生顺序列出可能的原因，并提供带编号的检查步骤，其中使用的是 UAVcast-Pro 和 Fleet Manager 界面中的准确标签。
+
+> **先检查仪表盘**
+>
+> 请打开 UAVcast-Pro 中的 **仪表盘**。状态卡片会用一行概括无人机的状况（**所有系统正常**，或问题与警告的数量），并分别为 **飞行控制器**、**地面站**、**蜂窝网络**、**VPN**、**RTK 修正数据**、**视频** 和 **电源供应** 各设一行。第一行红色的内容通常就是您应当开始排查的地方。
+
+![UAVcast-Pro 仪表盘，状态卡片显示 2 个问题：GPS 无定位和 VPN 未连接](https://docs.uavmatrix.com/zh-cn/img/screenshots/uavcast-pro/dashboard.webp)
+
+*仪表盘 → 状态卡片。出现问题的行会变为红色，并计入问题徽标，此处为 GPS（无定位）和 VPN（未连接）。*
+
+## 根据症状查找
+
+| 您看到的情况 | 可能原因 | 前往 |
+| --- | --- | --- |
+| 遥测正常，但 QGroundControl 或 Mission Planner 中的视频区域为黑屏 | 该地面站的 **启用视频** 已关闭、IP 错误或防火墙阻止 | [地面站中无视频](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-video-in-gcs/) |
+| 视频冻结、出现灰色条纹或延迟数秒 | 码率对链路来说过高，或关键帧间隔过长 | [视频卡顿或延迟](https://docs.uavmatrix.com/zh-cn/troubleshooting/choppy-or-delayed-video/) |
+| 飞控页面显示 **无心跳**、**等待设备** 或 **检测波特率** | 线缆、接线、端口或波特率 | [没有 MAVLink 心跳](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-mavlink-heartbeat/) |
+| UAVcast-Pro 显示飞控为 **已连接**，但地面站一直在等待连接 | 遥测未发送到地面站，或地面站未在监听 | [地面站中无遥测](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-telemetry-in-gcs/) |
+| **Select Camera** 中显示 **无可用摄像头** | CSI 摄像头驱动栈缺失、排线问题，或 USB 摄像头未被识别 | [未检测到摄像头](https://docs.uavmatrix.com/zh-cn/troubleshooting/camera-not-detected/) |
+| **许可证密钥无效**、**Maximum activations reached** 或 **许可证激活失败** | 密钥错误、没有可用的设备名额，或没有互联网连接 | [许可证无法激活](https://docs.uavmatrix.com/zh-cn/troubleshooting/license-activation-failed/) |
+| 调制解调器显示信号和运营商，但无法加载任何内容 | APN、网络优先级或 SIM 卡数据 | [已连接调制解调器但无互联网](https://docs.uavmatrix.com/zh-cn/troubleshooting/modem-no-internet/) |
+| 安装后，浏览器无法访问 `http://<device-ip>/` | 地址错误、服务未运行，或端口已更改 | [Web 界面无法打开](https://docs.uavmatrix.com/zh-cn/troubleshooting/web-interface-wont-open/) |
+| 安装程序因错误而停止 | 32 位操作系统、没有互联网连接，或磁盘空间不足 | [安装失败](https://docs.uavmatrix.com/zh-cn/troubleshooting/installation-fails/) |
+| ZeroTier 或 Tailscale 显示已连接，但无法 ping 通或访问无人机 | 成员未获授权、网络错误，或地面站不在 VPN 中 | [VPN 已连接但无法访问无人机](https://docs.uavmatrix.com/zh-cn/troubleshooting/vpn-cant-reach-drone/) |
+| NTRIP 状态不是 **Streaming corrections**，或修正数据始终无法达到 **RTK Fixed** | 基站（Caster）设置、GGA，或接收机不支持 RTK | [RTK 修正数据未到达](https://docs.uavmatrix.com/zh-cn/troubleshooting/rtk-corrections-not-arriving/) |
+| **电压过低，请使用更强的电源** 或 **降速（过热或供电）** | 电源或线缆供电不足，或过热 | [欠压与降频](https://docs.uavmatrix.com/zh-cn/troubleshooting/undervoltage-and-throttling/) |
+| Fleet Manager 中无人机显示 **Offline** | 无人机无互联网连接、MQTT 端口被阻止，或需要重新配对 | [Fleet Manager 中无人机离线](https://docs.uavmatrix.com/zh-cn/troubleshooting/drone-offline-fleet-manager/) |
+| **Invalid pairing code**、**This pairing code has expired** 或 **License is not owned by any member of this organization** | 配对码输入错误或已过期，或许可证归组织以外的人员所有 | [配对码无效或已过期](https://docs.uavmatrix.com/zh-cn/troubleshooting/pairing-code-invalid/) |
+
+## 仍未解决？
+
+1. [收集日志文件](https://docs.uavmatrix.com/zh-cn/troubleshooting/collect-logs/)。下载内容包含您的设置和硬件的 `diagnostics.txt` 快照，因此支持团队无需再向您索取这些信息。
+2. 请将日志连同您的 UAVcast-Pro 版本、所用硬件以及您已尝试的操作一并发送至 **[support@uavmatrix.com](mailto:support@uavmatrix.com)**。您也可以在 [UAVmatrix Discord](https://discord.gg/xwqMTXh) 中提问。
+
+简短解答请参阅[常见问题](https://docs.uavmatrix.com/zh-cn/troubleshooting/faq/)。
+
+Source: https://docs.uavmatrix.com/zh-cn/troubleshooting/

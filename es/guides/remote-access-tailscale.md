@@ -1,0 +1,61 @@
+# Acceso remoto con Tailscale
+
+> Accede a tu dron por LTE con Tailscale y UAVcast-Pro, sin reenvío de puertos: inicia sesión con URL o clave de autenticación, añade la laptop como GCS y desactiva la caducidad de claves.
+
+Tailscale es una VPN basada en WireGuard. Si tu equipo ya lo usa, es la forma más rápida de acceder a un dron por 4G: el dron y tu laptop se unen a la misma tailnet y se comunican por sus direcciones `100.x.y.z`.
+
+¿No tienes una tailnet? La VPN de Fleet Manager, incluida con tu licencia, hace lo mismo sin una cuenta de Tailscale: consulta [Volar más allá del alcance visual por 4G](https://docs.uavmatrix.com/es/guides/bvlos-4g/) e [Incorpora una flota](https://docs.uavmatrix.com/es/guides/fleet-onboarding/).
+
+**Necesitas:** UAVcast-Pro con internet en el dron (Wi-Fi o módem), una cuenta de Tailscale y el cliente de Tailscale en tu laptop.
+
+## 1. Inicia sesión del dron en Tailscale
+
+1. En UAVcast-Pro, abre **Red Privada Virtual**.
+
+2. Establece **Activar VPN** en **Sí** y **Servicios** en **Tailscale**.
+
+3. Elige cómo iniciar sesión:
+
+   - **Inicio de Sesión Web**: presiona **Generar URL de inicio de sesión**, luego **Autenticar este dispositivo** e inicia sesión con tu cuenta de Tailscale en la página que se abre.
+   - **Clave de Autenticación**: crea una clave de autenticación en la consola de administración de Tailscale, pégala en **Clave de Autenticación**, opcionalmente establece **Nombre de Host (Opcional)** y presiona **Conectar con Clave de Autenticación**. Úsala cuando configures drones para otra persona, o muchos a la vez.
+
+4. Espera a que aparezca **Conectado**. Anota la **Dirección IPv4** (100.x.y.z).
+
+![Página de Red Privada Virtual con Activar VPN en Sí, Servicios en Tailscale, las pestañas Fleet Manager, Inicio de Sesión Web y Clave de Autenticación, y VPN Information mostrando No Conectado](https://docs.uavmatrix.com/es/img/screenshots/uavcast-pro/private-network.webp)
+
+*Red Privada Virtual con Servicios en Tailscale, antes de iniciar sesión del dron (No Conectado). Tras el inicio de sesión, VPN Information muestra los detalles de la conexión.*
+
+> **Desactiva la caducidad de claves para los drones**
+>
+> Las claves de dispositivo de Tailscale caducan, y un dron con una clave caducada se desconecta de la tailnet hasta que alguien vuelva a iniciar sesión. El campo **Expira** muestra cuándo. En la consola de administración de Tailscale, desactiva la caducidad de claves para los drones que despliegues.
+
+## 2. Conecta la laptop a la misma tailnet
+
+Instala Tailscale en la laptop e inicia sesión con la misma cuenta o tailnet. Ejecuta `tailscale status`: el dron debe aparecer en la lista. Luego:
+
+```bash
+ping <drone tailscale ip>
+```
+
+Abre la interfaz web del dron en `http://<drone tailscale ip>/`.
+
+## 3. Envía telemetría y video a la laptop
+
+1. En UAVcast-Pro, ve a **Control en Tierra** y presiona **Agregar Destino**.
+2. En **IP o Host de Destino**, ingresa la dirección IPv4 de Tailscale de la **laptop** (ejecuta `tailscale ip -4` en la laptop).
+3. Activa **Habilitar Telemetría** y **Habilitar Video**.
+4. Permite UDP entrante en los puertos 14550 y 5600 en el cortafuegos de la laptop. Windows suele tratar el adaptador de Tailscale como una red pública.
+
+Abre QGroundControl o Mission Planner. La telemetría llega por UDP 14550 y el video por UDP 5600.
+
+## 4. Comprueba la calidad de la conexión
+
+El campo **Relé** de la página de **Red Privada Virtual** indica si el tráfico pasa por un relé de Tailscale. Una ruta con relé funciona, pero añade retardo. Algunas operadoras celulares no permiten conexiones directas, así que prueba con la operadora con la que vueles.
+
+## Solución de problemas
+
+- No puedes hacer ping al dron: [VPN conectada pero no se puede llegar al dron](https://docs.uavmatrix.com/es/troubleshooting/vpn-cant-reach-drone/)
+- El ping funciona, pero no hay telemetría: [Sin telemetría en la estación de control en tierra](https://docs.uavmatrix.com/es/troubleshooting/no-telemetry-in-gcs/)
+- Si más adelante el dron se empareja con Fleet Manager y eliges **Replace existing VPN with Fleet Manager network**, sale de tu tailnet y se une a la red de la organización.
+
+Source: https://docs.uavmatrix.com/es/guides/remote-access-tailscale/

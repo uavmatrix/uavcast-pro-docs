@@ -1,0 +1,48 @@
+# Tabblad Missieplanner
+
+> Plan een waypointmissie in het tabblad Missieplanner van UAVcast-Pro, stel het hoogtereferentiekader en de straal in, sla deze op als .waypoints-bestand en upload deze naar de ArduPilot-vluchtcontroller.
+
+Het tabblad Missieplanner laat u een eenvoudige waypointmissie in de browser plannen en via UAVcast-Pro naar de vluchtcontroller uploaden, vanaf elke plek waar de webinterface bereikbaar is. Missies worden opgeslagen in hetzelfde `.waypoints`-formaat (QGC WPL 110) dat Mission Planner en QGroundControl gebruiken, zodat u ze tussen tools kunt verplaatsen. Open **Vliegkaart → Missieplanner**.
+
+![Tabblad Missieplanner met een satellietkaart, een lege waypointtabel en de knoppen Opslaan, Laden, Uploaden, Lezen en Wissen](https://docs.uavmatrix.com/nl/img/screenshots/uavcast-pro/flight-map--mission-planner.webp)
+
+*Vliegkaart → Missieplanner voordat er waypoints zijn toegevoegd. Klik op de kaart om er een toe te voegen.*
+
+## Een missie plannen
+
+1. Klik op de kaart waar het eerste waypoint moet komen. De eerste keer vraagt **Standaardwaarden Instellen** om **Standaard Hoogte (meters)**, **Waypoint Straal (meters)** en **Hoogte Referentiekader**. Selecteer **Doorgaan**.
+2. Klik door om waypoints toe te voegen. Sleep een markering om deze te verplaatsen.
+3. Pas elk waypoint aan in de tabel: **Hoogte (m)**, **Frame** en **Straal (m)**. Verwijder een waypoint in de kolom **Actie**.
+4. Controleer **Waypoints** en **Afstand** voor de totale route.
+
+| Standaard | Waarde | Opties |
+| --- | --- | --- |
+| **Standaard Hoogte (meters)** | `100` | willekeurig |
+| **Waypoint Straal (meters)** | `30` | willekeurig |
+| **Hoogte Referentiekader** | **Relatief** | **Relatief** (boven thuispunt), **Absoluut** (boven gemiddeld zeeniveau), **Terrein** (boven de grond, vereist terreingegevens op de vluchtcontroller) |
+
+In de tabel zijn de referentiekaders verkort tot **Rel**, **Abs** en **Ter**. Waypoints worden verzonden als `MAV_CMD_NAV_WAYPOINT`.
+
+## Uploaden naar de vluchtcontroller
+
+1. Selecteer onder **Vluchtcontroller** de knop **Uploaden**.
+2. Bevestig **Missie Uploaden**. Het dialoogvenster waarschuwt dat de missie op de vluchtcontroller hierdoor wordt vervangen.
+3. U ziet *Missie geüpload naar vluchtcontroller*.
+
+- **Lezen** downloadt de missie die op de vluchtcontroller staat naar de planner.
+- **Wissen** verwijdert de waypoints uit de planner.
+
+Om de missie te vliegen, gebruikt u **Starten** op het tabblad **Acties** van de Vliegkaart, of schakelt u naar AUTO via uw zender of grondstation.
+
+## Bestanden opslaan en laden
+
+Onder **Bestanden**:
+
+- **Opslaan** downloadt de missie als `mission.waypoints`.
+- **Laden** opent een `.waypoints`- of `.txt`-bestand in QGC WPL-formaat, bijvoorbeeld een bestand dat in Mission Planner is opgeslagen.
+
+## Beperkingen
+
+Deze planner ondersteunt alleen gewone waypoints. **Laden** behoudt de positie, hoogte, het referentiekader en de straal van elke rij, maar maakt van elke rij een gewoon waypoint: opstijg-, land-, loiter- en DO-commando's (cameratrigger, servo) blijven niet behouden, en een commando zonder positie wordt een waypoint op 0, 0. Voor opstijg- en landcommando's, DO-commando's, survey-grids, geofences en rally points plant en uploadt u rechtstreeks in Mission Planner of QGroundControl.
+
+Source: https://docs.uavmatrix.com/nl/uavcast-pro/flight-map/mission-planner/

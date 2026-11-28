@@ -1,0 +1,85 @@
+# Ports and protocols
+
+> Every port UAVcast-Pro and Fleet Manager use: MAVLink UDP 14550, video UDP 5600, camera 2 and audio, web, preview, RTSP, NTRIP and MQTT 8883.
+
+Use this page to set up firewalls on the ground station, on the drone's network and in company networks. Defaults are shown; where a port can be changed, the setting is named.
+
+## Ground station: incoming traffic
+
+UAVcast-Pro **sends** telemetry and video to each ground station. The ground station only needs to accept incoming UDP; nothing has to listen on the drone for this.
+
+| Port (default) | Protocol | What | Setting |
+| --- | --- | --- | --- |
+| **14550** | UDP | MAVLink telemetry, both directions once the GCS answers | **Ground Control Stations → Telemetry Port** |
+| **5600** | UDP | Video: H.264 in RTP, payload type 96 | **Video Port** |
+| **Video Port + 1** (5601) | UDP | Camera 2 video when **Dual stream** is on | **Video Port (Camera 2)** (empty = Video Port + 1) |
+| **Video Port + 2** (5602) | UDP | Audio: Opus in RTP, payload type 97, when **Send audio to ground stations** is on | Follows **Video Port** |
+
+> **TCP 5760 is closed**
+>
+> Since v6.5.0 the telemetry router does not listen on TCP 5760. Ground stations connect over UDP to the destinations you add.
+
+**With Fleet Manager stream bindings**, the first drone bound to a ground station uses 5600/14550, and each additional drone gets its own block of ports: a video port with room for camera 2 and audio after it, and a telemetry port. Read the ports on each binding.
+
+## Drone: services you connect to
+
+| Port | Protocol | What | Notes |
+| --- | --- | --- | --- |
+| **80** | TCP (HTTP) | Web interface | Change in **Application → Settings → Server Port** (80 or higher). |
+| **8889** | TCP (HTTP) | Live preview in the browser (WebRTC) | Used by **Camera → Live Preview** and the Flight Map video windows. |
+| 8189 | UDP | WebRTC media for the live preview | Media server default. |
+| **9996** | TCP (HTTP) | Playback of recordings | Used by the recordings library and flight review player. |
+| **8554** | TCP (RTSP) | RTSP copy of the camera stream (`/camera`, `/camera2`) | Available while the live preview or recording is on. |
+| 8888 | TCP (HTTP) | HLS copy of the camera stream | Not used by the web interface. |
+| HTTP injector | TCP (HTTP) | `http://<drone>/api/inject/<token>` | Served on the web interface port. See [Injectors](https://docs.uavmatrix.com/uavcast-pro/flight-controller/injectors/). |
+| UDP injector | UDP | Your choice (14600 is a safe default) | Set per injector in **Flight Controller → Injectors**. |
+
+Over a VPN, these ports must be reachable on the drone's VPN address. No port forwarding is needed on the cellular side.
+
+## Drone: outgoing traffic
+
+The drone opens these connections itself. Networks that only allow web traffic will block some of them.
+
+| Destination | Port | Protocol | What |
+| --- | --- | --- | --- |
+| Ground stations | 14550, 5600 (+1, +2) | UDP | Telemetry, video, audio |
+| `uavmatrix.com` | 443 | HTTPS | License activation and periodic checks |
+| `install.uavmatrix.com` | 443 | HTTPS | Installer and updates |
+| `fleet-manager.uavmatrix.com` | 443 | HTTPS | Fleet Manager pairing |
+| Fleet Manager broker | **8883** | MQTT over TLS (client certificates) | Fleet Manager status, telemetry and commands |
+| `vpn-connect.uavmatrix.com` | 443 | HTTPS | Fleet Manager VPN login server |
+| Your NTRIP caster | 2101 (or as set) | TCP, optional TLS | RTCM corrections |
+| ZeroTier / Tailscale | ZeroTier 9993, Tailscale 41641 (and 443 fallback) | UDP | VPN tunnels |
+| Your DNS provider | 443 | HTTPS | Dynamic DNS updates |
+
+## Inside the drone (local only)
+
+These ports are used between UAVcast-Pro's own services and don't need firewall rules:
+
+| Port | What |
+| --- | --- |
+| 6379 | Redis, internal message bus |
+| 12550, 12551 | Telemetry router to the UAVcast-Pro app and to the NTRIP client |
+| 8090 | Injector HTTP listener (reached through `/api/inject/…` on port 80) |
+| 9997 | Media server API |
+| 5000 | UAVcast-Pro background service API, used by the web interface |
+
+## Firewall rules for the ground station
+
+**Windows**
+
+```powershell
+New-NetFirewallRule -DisplayName "MAVLink Telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+New-NetFirewallRule -DisplayName "UAV Video" -Direction Inbound -Protocol UDP -LocalPort 5600-5602 -Action Allow
+```
+
+**Linux (UFW)**
+
+```bash
+sudo ufw allow 14550/udp comment 'MAVLink Telemetry'
+sudo ufw allow 5600:5602/udp comment 'UAV Video and audio'
+```
+
+Add more ports if you use other telemetry or video ports, or several drones through Fleet Manager stream bindings.
+
+Source: https://docs.uavmatrix.com/reference/ports-and-protocols/

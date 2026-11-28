@@ -1,0 +1,70 @@
+# Удалённое управление
+
+> Смена полётных режимов, взведение и разоружение, запуск миссий и предполётной калибровки с помощью панели управления UAV в Fleet Manager с проверками безопасности.
+
+**UAV Control Panel** (панель управления UAV) отправляет команды полётному контроллеру через UAVcast-Pro по зашифрованному соединению Fleet Manager. Она работает через любое интернет-соединение дрона, включая 4G, и не требует VPN.
+
+Откройте её кнопкой **Operations** на карточке [Fleet](https://docs.uavmatrix.com/ru/fleet-manager/fleet/) или кнопкой **Controls** во всплывающем окне дрона на [карте флота](https://docs.uavmatrix.com/ru/fleet-manager/map/). На карте в панели также есть вкладки **Terminal** и **Logs**.
+
+![Панель управления UAV с колонками Flight Mode, Mission и Actions для взведённого квадрокоптера](https://docs.uavmatrix.com/ru/img/screenshots/fleet-manager/control-panel.webp)
+
+*Панель управления UAV для взведённого квадрокоптера в режиме LOITER: Flight Mode с кнопками RTL, Circle и Loiter, Mission с выбранной съёмочной миссией из 18 точек и Actions с Arm и Disarm.*
+
+Отправлять команды могут только **Owner** и **Admin**. См. [Роли и права доступа](https://docs.uavmatrix.com/ru/fleet-manager/team/roles-and-permissions/).
+
+> **Команды Fleet Manager управляют реальными аппаратами**
+>
+> Команда из Fleet Manager действует на летательный аппарат так же, как если бы её отправила наземная станция. Во время каждого полёта держите пилота с наземной станцией или пультом RC в контроле, соблюдайте местные правила для дистанционных полётов и полётов BVLOS и рассматривайте Fleet Manager как инструмент контроля и диспетчеризации, а не как единственную линию связи.
+
+## Заголовок
+
+В заголовке отображаются статус дрона, флаги **ARMED** и **FAILSAFE**, значок **GCS Failsafe**, выбор цвета на карте (**Change map color** с кнопкой **Reset to auto**) и ссылка **Details** на [страницу UAV](https://docs.uavmatrix.com/ru/fleet-manager/fleet/uav-details/).
+
+Если failsafe наземной станции в полётном контроллере отключён, панель выводит предупреждение: **GCS Failsafe not enabled. Without GCS failsafe, the vehicle will not return to launch if it loses connection to the ground station.** Настройте failsafe в вашем наземном ПО (параметр ArduPilot `FS_GCS_ENABLE`), прежде чем летать за пределами прямой видимости.
+
+## Flight Mode
+
+Выберите режим в выпадающем списке или используйте быстрые кнопки **RTL**, **Circle** и **Loiter** (на роверах — **Hold**). Каждая смена режима требует подтверждения, и чем опаснее режим, тем строже проверка:
+
+| Подтверждение | Режимы |
+| --- | --- |
+| Простое **Change to *MODE*?** | STABILIZE, ALT_HOLD, LOITER, POSHOLD, BRAKE, FLOWHOLD, HOLD, FBWA, FBWB, CRUISE, QHOVER, QLOITER, QSTABILIZE |
+| Подтверждение с описанием того, что делает режим | AUTO, GUIDED, RTL, SMART_RTL, CIRCLE, FOLLOW, ZIGZAG, QRTL, TAKEOFF, AVOID_ADSB, ACRO, MANUAL |
+| Введите название режима для подтверждения | LAND, SPORT, AUTOTUNE, FLIP, DRIFT, THROW, QLAND, QACRO, AUTOROTATE |
+
+![Диалог подтверждения смены режима с запросом ввести LAND для подтверждения](https://docs.uavmatrix.com/ru/img/screenshots/fleet-manager/control-panel--mode-confirm.webp)
+
+*Подтверждение для LAND — режима, который нужно ввести вручную для подтверждения.*
+
+Списки режимов взяты из ArduPilot (Copter, Plane, Rover и Sub). На полётном контроллере PX4 меняйте режимы с помощью наземной станции.
+
+## Mission
+
+Запускает [миссии](https://docs.uavmatrix.com/ru/fleet-manager/missions/), сохранённые в вашей организации:
+
+- **Select mission** выбирает сохранённую миссию. Счётчик показывает текущую и общую маршрутную точку, например `3/18`, или **None**.
+- **Start** сначала считывает миссию на дроне и сравнивает её с выбранной. Если они отличаются, **Mission Not Loaded on Drone** предлагает **Upload & Start**.
+- **Stop**, **Read** (считать миссию с дрона) и **Clear**.
+
+Каждое действие требует подтверждения.
+
+## Actions
+
+- **Arm** и **Disarm**. В диалоге взведения написано: **This will arm the UAV. Ensure all personnel are clear of the propellers before arming.** Отмечайте **Force arm (bypass pre-arm checks)** только на стенде: этот пункт пропускает проверки, которые предотвращают небезопасный взлёт.
+- **Select action... → Preflight Calibration** калибрует гироскоп и выравнивает акселерометр. Держите аппарат неподвижно на ровной поверхности, затем нажмите **Start Calibration**.
+
+![Диалог подтверждения взведения с предупреждением о винтах и флажком Force arm](https://docs.uavmatrix.com/ru/img/screenshots/fleet-manager/control-panel--arm-confirm.webp)
+
+*Диалог взведения с предупреждением о винтах; флажок Force arm (bypass pre-arm checks) не отмечен.*
+
+Для взведения, разоружения и предполётной калибровки на дроне нужна версия UAVcast-Pro **6.3.0_rc13** или новее. На старых версиях панель показывает **UAVcast Upgrade Required**. См. [Обновление](https://docs.uavmatrix.com/ru/get-started/updating/).
+
+## Если команда не выполняется
+
+- Дрон должен быть в сети. Команды для офлайн-дрона не выполняются.
+- Fleet Manager ждёт подтверждения от дрона для каждой команды. Если полётный контроллер отказывается выполнить команду, например взведение при невыполненных предполётных проверках, ошибка появляется на панели и в сообщениях статуса дрона.
+- Сообщения полётного контроллера (сбои предполётных проверок, смена режимов) показываются во всплывающем окне дрона на карте и на вкладке [Logs](https://docs.uavmatrix.com/ru/fleet-manager/fleet/uav-details/#logs).
+
+Для экранов телефона см. [Облегчённый вид](https://docs.uavmatrix.com/ru/fleet-manager/lite-view/).
+
+Source: https://docs.uavmatrix.com/ru/fleet-manager/fleet/remote-control/

@@ -1,0 +1,73 @@
+# UAV details
+
+> A drone's page in Fleet Manager shows live telemetry and companion computer health, an SSH terminal and MAVLink log, and reboot or remove.
+
+Each drone has its own page. Open it with **Details** on the [Fleet](https://docs.uavmatrix.com/fleet-manager/fleet/) card, from the dashboard, or with **View UAV** at the end of pairing.
+
+The header shows the name, a live status badge, **Re-pair required** if needed, the organization, the device **ID** and **Last seen**. Owners and Admins also get **Rename** and **Remove**.
+
+The page has four tabs: **Overview**, **Terminal**, **Logs** and **Actions**.
+
+## Overview
+
+Live data, pushed to the browser as it arrives.
+
+![UAV details Overview tab with UAVcast Application card and MAVLink / Flight Controller card](https://docs.uavmatrix.com/img/screenshots/fleet-manager/drone-detail.webp)
+
+*Overview tab of an armed VTOL in AUTO: UAVcast Application card with CPU Temp, CPU, Memory and Disk, and the MAVLink / Flight Controller card with battery, GPS, altitude and heading.*
+
+**UAVcast Application** describes the companion computer: connection state (**Connected**, **Waiting for data...** or **Connecting...**), **Hostname**, **Uptime**, **CPU Temp**, **CPU**, **Memory** and **Disk** usage, the UAVcast-Pro services and their state, and the drone's network addresses (LAN and VPN). It also has the buttons to [open UAVcast-Pro remotely](https://docs.uavmatrix.com/fleet-manager/fleet/remote-uavcast/): **Open via Proxy** and, when the drone is on the VPN, **Open via VPN**.
+
+**MAVLink / Flight Controller** shows what the flight controller reports: **ARMED** or **DISARMED**, **FAILSAFE** and **GCS FAILSAFE** flags, **Battery**, **GPS** (satellites and fix), **Altitude** and **Heading**.
+
+> **Watch CPU Temp on hot days**
+>
+> A Raspberry Pi that runs hot slows down, and video is the first thing to suffer. If **CPU Temp** climbs during a flight, see [Undervoltage and throttling](https://docs.uavmatrix.com/troubleshooting/undervoltage-and-throttling/).
+
+### Connected Ground Stations
+
+Below the cards, **Connected Ground Stations** lists the ground stations that receive this drone's streams, with **Video** and **Telemetry** switches and **Pause** / **Resume**. **Add GCS** (Owners and Admins) binds another ground station to this drone. It creates the same stream binding as **Network → Stream Bindings**, with the next free ports on that ground station, and sends the new destination to the drone. See [Stream bindings](https://docs.uavmatrix.com/fleet-manager/network/stream-bindings/).
+
+## Terminal
+
+A browser SSH session to the companion computer, over Fleet Manager's encrypted connection. No port forwarding and no VPN needed. Owners and Admins only. The drone must be online.
+
+Select **Connect** to open a shell. Quick-command buttons run common checks for you: `df -h`, `free -h`, `top -bn1`, `ip a`, `ip r`, `uptime`, `dmesg` and `ps aux`. **Disconnect** closes the session.
+
+![Terminal tab with an SSH session showing df -h output and quick command buttons](https://docs.uavmatrix.com/img/screenshots/fleet-manager/drone-detail--terminal.webp)
+
+*Terminal tab connected to a field drone, after running the df -h quick command.*
+
+> **This is a live shell on the aircraft**
+>
+> The terminal is a real shell on the companion computer. Restarting services or the network while the drone is in the air can cut telemetry and video. Use it on the ground unless you know what a command does.
+
+## Logs
+
+A live view of the telemetry and heartbeat messages the drone sends to Fleet Manager, with **Telemetry** and **Heartbeat** filters, **Auto-scroll**, **Pause** and clear. **Download logs** saves what is on screen to a text file (`mavlink-log-<id>-<time>.txt`), which is useful to email to support with your ticket number (tickets only take an image).
+
+This is a live log, not a flight log archive. Fleet Manager stores telemetry for [flight history](https://docs.uavmatrix.com/fleet-manager/map/flight-history/), but doesn't store or export DataFlash or `.tlog` files. Those stay on the flight controller and in your ground station software.
+
+![Logs tab with a scrolling list of telemetry and heartbeat entries and the Telemetry, Heartbeat and Auto-scroll switches](https://docs.uavmatrix.com/img/screenshots/fleet-manager/drone-detail--logs.webp)
+
+*Logs tab streaming TELEMETRY and HEARTBEAT entries, with Telemetry, Heartbeat and Auto-scroll on.*
+
+## Actions
+
+**System Actions** has **Reboot** (Restart the companion computer) and **Shutdown** (Power off the companion computer). Both need the drone to be online. To confirm, you type the action's name.
+
+These act on the companion computer only, not on the flight controller. A shutdown can't be undone remotely: someone has to power-cycle the drone.
+
+![Actions tab with System Actions card and Reboot and Shutdown buttons](https://docs.uavmatrix.com/img/screenshots/fleet-manager/drone-detail--actions.webp)
+
+*Actions tab with the Confirm Reboot dialog open, asking to type reboot to confirm.*
+
+## Rename
+
+Select **Rename**, enter the new name in **Edit UAV** and save. The name syncs to UAVcast-Pro when the drone is online.
+
+## Remove
+
+**Remove** deletes the drone from the organization and unpairs it. See [Remove or transfer a drone](https://docs.uavmatrix.com/fleet-manager/fleet/remove-or-transfer/).
+
+Source: https://docs.uavmatrix.com/fleet-manager/fleet/uav-details/

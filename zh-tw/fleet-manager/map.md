@@ -1,0 +1,89 @@
+# 即時地圖
+
+> 在同一張即時地圖上追蹤車隊中的每架無人機，包含狀態環、航向線、5 分鐘航跡、跟隨模式與 OpenAIP 空域圖層。
+
+**Fleet Map**（側邊欄 **Overview → Fleet Map**）會在同一張地圖上顯示所選組織中的每架無人機，並隨遙測資料抵達即時更新。它專為控制室設計：讓它保持開啟，您就能一眼看出哪些飛行器正在飛行、它們的航向，以及哪些需要注意。
+
+![車隊地圖，顯示多個彩色無人機標記、航向線與區域上方的飛行航跡](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/map.webp)
+
+*採用 Dark 樣式的 Fleet Map，範圍為鹿特丹港：每架無人機以各自的顏色、航向線與航跡呈現，灰色的離線標記則標示距上次看到的時間。*
+
+## 讀取標記
+
+| 標記上的圖示 | 含義 |
+| --- | --- |
+| 無人機專屬顏色，無環 | 上線且狀態良好。 |
+| 灰色標記、灰色虛線環與時鐘徽章 | **離線**：20 秒內未收到任何資料。 |
+| 橘色環加上 **!** 徽章 | **NO MAVLINK**：UAVcast-Pro 已上線，但 10 秒內未收到飛行控制器的遙測資料。請檢查飛行控制器連線。 |
+| 紅色虛線環 | **GPS lost**：無衛星或無定位。 |
+| 黃色虛線環 | **GPS weak**：衛星少於 6 顆，或僅有 2D 定位。 |
+| **H** 標記 | 無人機的原點（home）位置，於解鎖時設定。將游標移至其上可查看其高度（AMSL）。 |
+
+標記本身不會顯示解鎖或上鎖狀態。請開啟彈出視窗，或使用[控制面板](https://docs.uavmatrix.com/zh-tw/fleet-manager/fleet/remote-control/)查看 **Armed**。
+
+標記旁的標籤格式為 `Name • FLIGHTMODE`，適用時會加上 **NO MAVLINK**、**NO GPS** 或 **WEAK GPS**；離線無人機則顯示 `Name • OFFLINE • 5 mins ago`。
+
+### 航向線與航跡
+
+- **航向線**是無人機專屬顏色的虛線，指向機頭方向。無人機離線時會隱藏。
+- **飛行航跡**顯示最近 **5 分鐘**的飛行路徑，為無人機專屬顏色的虛線（離線時為灰色）。每移動約 11 公尺會新增一個點。
+
+## 無人機彈出視窗
+
+選取標記即可開啟其彈出視窗：名稱、組織與狀態，接著是 **Battery**、**Altitude**、**Mode**、**Armed**、**GPS**（衛星數與定位類型：No Fix、2D、3D、DGPS 或 RTK）、**Signal**，離線時另有 **Last seen**。彈出視窗也會顯示飛行控制器的最新狀態訊息，通常這是查看起飛前檢查失敗原因最快的方式。
+
+**Signal** 是 Fleet Manager 與無人機之間的往返時間，每 10 秒量測一次：低於 100 ms 為 excellent，低於 300 ms 為 good，低於 600 ms 為 fair，超過此值或連續三次未回應則為 poor。
+
+![地圖上的無人機彈出視窗，包含電池、高度、模式、解鎖、GPS 與訊號列，以及 Follow、History 與 Controls 按鈕](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/map--popup.webp)
+
+*已解鎖且處於 AUTO 模式的測繪無人機彈出視窗：Battery 71%、Altitude 85.5 m、GPS 20 sats（3D）、Signal 61 ms（Excellent），以及 Follow、History 與 Controls。*
+
+三個按鈕：
+
+- **Follow** 會讓無人機保持在視野中。詳見下文。
+- **History** 會開啟此無人機的[飛行歷史紀錄](https://docs.uavmatrix.com/zh-tw/fleet-manager/map/flight-history/)。
+- **Controls** 會開啟 [UAV 控制面板](https://docs.uavmatrix.com/zh-tw/fleet-manager/fleet/remote-control/)。
+
+## 跟隨無人機
+
+在彈出視窗中選取 **Follow**。地圖會放大（至少到縮放等級 14）並以無人機為中心，之後只有在無人機接近螢幕邊緣時才會平移，因此地圖不會晃動。畫面上會出現 **Following *name*** 橫幅；選取其 **X** 或 **Unfollow** 即可停止跟隨。開啟 **History** 也會停止跟隨。
+
+![地圖跟隨單一無人機，頂端顯示 Following 橫幅](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/map--follow.webp)
+
+*跟隨模式：固定翼飛機正在測繪一條走廊，頂端為 Following 橫幅，後方為其航跡。*
+
+## 無 GPS 的無人機
+
+上線但尚無位置的無人機，會列在地圖上的 **drones without GPS** 方框中。選取其中一架即可開啟其控制面板。計數器 **n drones on map** 會顯示已繪製在地圖上的數量。
+
+## 地圖設定
+
+選取右上角的齒輪按鈕即可開啟 **Map Settings**。您的選擇會儲存在此瀏覽器中。
+
+| 區段 | 選項 | 預設值 |
+| --- | --- | --- |
+| **Overlays** | **Airspace Layers**：禁航空域、機場、直升機場 | 關閉 |
+| **Drone Filter** | **All Drones**、**Online Only** 或 **Offline Only** | All Drones |
+| **Marker Options** | **Heading Line** | 開啟 |
+|  | **Marker Tooltip**：標記上的名稱標籤 | 開啟 |
+|  | **Always Visible**：永久顯示標籤，而非僅在游標懸停時顯示 | 開啟 |
+|  | **Flight Trail**：近期飛行路徑（最近 5 分鐘） | 開啟 |
+| **Map Style** | **Satellite**、**Light** 或 **Dark** | Dark |
+
+![地圖設定面板，包含圖層、無人機篩選器、標記選項與地圖樣式](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/map--settings.webp)
+
+*地圖設定面板：已開啟 Airspace Layers，Drone Filter 設為 Online Only，Map Style 設為 Satellite。*
+
+> **忙碌的地圖**
+>
+> 在同一區域有 20 架以上的無人機時，請關閉 **Always Visible**，讓標籤僅在游標懸停時顯示，並使用 **Online Only** 隱藏停放中的飛行器。
+
+## 空域圖層
+
+**Airspace Layers** 會在地圖上方繪製 OpenAIP 提供的禁航空域、機場與直升機場。圖層從縮放等級 7 起顯示。它是單一的合併圖層，無法分別切換各類別。
+
+> **不能取代官方空域檢查**
+>
+> 空域圖層僅供情境感知使用。每次飛行前，請查閱 NOTAM 以及您所在國家的無人機地圖或 UTM 服務。
+
+Source: https://docs.uavmatrix.com/zh-tw/fleet-manager/map/

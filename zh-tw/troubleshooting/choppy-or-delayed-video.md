@@ -1,0 +1,72 @@
+# 4G 下視訊卡頓、延遲或灰色色塊
+
+> 透過將位元率、解析度、FPS 與串流恢復速率調整為符合連線狀況，修正 UAVcast-Pro 經由 LTE 或 VPN 傳輸時的卡頓、灰色色塊與延遲。
+
+畫面有送達，但會卡頓、凍結、在螢幕上塗出灰色色塊，或落後數秒。幾乎都是因為串流要求的頻寬超過連線所能承載，或編碼器發送關鍵影格（keyframe）的頻率過低，導致遺失封包後無法恢復。
+
+| 您會看到的畫面 | 可能原因 | 從此開始 |
+| --- | --- | --- |
+| 灰色或綠色殘影，約一兩秒後消失 | 封包遺失，且關鍵影格不足以恢復畫面 | [檢查 2](https://docs.uavmatrix.com/zh-tw/troubleshooting/choppy-or-delayed-video/#check-2) |
+| Wi-Fi 下順暢，但 LTE 下卡頓或凍結 | 位元率超過行動網路上行連線所能承載的量 | [檢查 1](https://docs.uavmatrix.com/zh-tw/troubleshooting/choppy-or-delayed-video/#check-1) |
+| 即使在區域網路中也會卡頓 | 無人機的 CPU 達到上限，或地面站無法足夠快速地解碼 | [檢查 3](https://docs.uavmatrix.com/zh-tw/troubleshooting/choppy-or-delayed-video/#check-3) |
+| 視訊落後無人機數秒 | 您正在看瀏覽器預覽，或地面站有緩衝 | [檢查 4](https://docs.uavmatrix.com/zh-tw/troubleshooting/choppy-or-delayed-video/#check-4) |
+
+## 檢查 1：降低位元率與解析度
+
+行動網路的上行速度遠低於下行速度，且會隨無人機在基地台之間移動而改變。請從較低的設定開始，再逐步調高。
+
+1. 前往 **攝影機 → 攝影機設定**。
+2. 將**解析度**設為 1280×720 或更低。
+3. 將**選擇幀率**設為 15 或 20。
+4. 將**位元率：**滑桿移至約 1000–1500 kbps。`0` 代表自動。
+5. 設定會在您變更時自動儲存，攝影機會隨即套用。
+6. 飛行或驅車行駛您關注的路線。若畫面表現穩定，再一次調高一個數值。
+
+![攝影機設定卡片，包含解析度、選擇幀率、位元率與串流恢復速率](https://docs.uavmatrix.com/zh-tw/img/screenshots/uavcast-pro/camera--settings.webp)
+
+*攝影機 → 攝影機設定：解析度、選擇幀率、位元率與串流恢復速率是需要依上行連線調整的數值。*
+
+> **連線能承載多少頻寬？**
+>
+> **儀表板 → 網路流量**會顯示各網路介面的即時傳送速率（TX）。若無論您設定多少位元率，數據機介面都停在同一上限，該上限即為您的上行頻寬。
+
+## 檢查 2：設定較快的串流恢復速率
+
+灰色覆蓋層來自遺失的封包。解碼器只能在下一個關鍵影格時修復畫面。**串流恢復速率**決定關鍵影格發送的頻率。
+
+1. 在**攝影機 → 攝影機設定**中找到**串流恢復速率**。
+2. 將滑桿從**自動**向**超快**移動：關鍵影格之間的影格數越少，畫面修復得越快，但會占用更多頻寬。向**頻寬節省**移動則可節省頻寬，但恢復較慢。滑桿下方的提示（例如 *VPN/WiFi Friendly*）說明每個位置適合的情境。
+3. 儲存並比較結果。若連線非常慢，請將較快的恢復速率與較低的位元率搭配使用（見檢查 1）。
+
+在**自動**模式下，UAVcast-Pro 每秒發送一個關鍵影格（若 FPS 為自動，則每 30 個影格發送一次；否則每 *FPS* 個影格發送一次）。
+
+## 檢查 3：檢查 CPU 負載
+
+UAVcast-Pro 以軟體方式編碼 H.264。在 Raspberry Pi Zero 2 W 上，或同時串流兩台攝影機時，CPU 可能會不堪負荷。
+
+1. 開啟**攝影機 → 攝影機設定**，查看**系統負載**卡片。
+2. 若顯示 **CPU 接近上限，請降低解析度或位元率。**，請依照指示操作。
+3. 開啟**雙路視訊串流**時，請降低其中一路的解析度或位元率，或關閉第二路串流。
+4. 檢查**儀表板**中**Power supply**下的 **Slowed down (heat or power)**。CPU 降速時，編碼速度會變慢。請參閱[欠壓與降速](https://docs.uavmatrix.com/zh-tw/troubleshooting/undervoltage-and-throttling/)。
+
+## 檢查 4：確認您正在觀看哪一路串流
+
+瀏覽器中的**即時預覽**，以及**飛行地圖**上的視訊視窗，都會經過內建的媒體伺服器，因此會增加延遲。它們僅供設定時使用，不適合飛行時使用。傳送至地面站的串流會直接透過 UDP 傳輸，延遲低得多。
+
+若地面站本身出現延遲：
+
+- 在 QGroundControl 中，請確認視訊設定中已開啟低延遲模式。
+- 在 GStreamer 管線中，於視訊 sink 上使用 `sync=false`，如[測試指令](https://docs.uavmatrix.com/zh-tw/troubleshooting/no-video-in-gcs/#check-5)所示。
+- 透過 VPN 連線時，請確認 ZeroTier 或 Tailscale 是直接連到無人機，而非經由中繼。Tailscale 會在**Virtual Private Network**（虛擬專用網路）頁面的 **Relay** 下方顯示目前使用的中繼。
+
+## 檢查 5：檢查行動網路訊號
+
+前往**數據機**，查看**數據機資訊**下的**訊號品質**與**技術**。訊號微弱，或從 LTE 退回到 3G，都會中斷上行連線。請將數據機遠離飛行控制器、ESC 與電源線，或改用具有外接天線的數據機。
+
+## 仍然卡頓？
+
+請[下載日誌](https://docs.uavmatrix.com/zh-tw/troubleshooting/collect-logs/)（**攝影機伺服器**，最近 30 分鐘），並將日誌連同您的攝影機型號、解析度、FPS、位元率，以及您飛行所使用的連線類型，寄送至 **[support@uavmatrix.com](mailto:support@uavmatrix.com)**。
+
+相關頁面：[攝影機設定](https://docs.uavmatrix.com/zh-tw/uavcast-pro/camera/) · [行動數據機](https://docs.uavmatrix.com/zh-tw/uavcast-pro/connectivity/cellular-modem/)
+
+Source: https://docs.uavmatrix.com/zh-tw/troubleshooting/choppy-or-delayed-video/

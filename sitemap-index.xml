@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap><loc>https://docs.uavmatrix.com/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://docs.uavmatrix.com/es/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://docs.uavmatrix.com/it/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://docs.uavmatrix.com/nl/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://docs.uavmatrix.com/pl/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://docs.uavmatrix.com/pt/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://docs.uavmatrix.com/ru/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://docs.uavmatrix.com/tr/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://docs.uavmatrix.com/zh-cn/sitemap.xml</loc></sitemap>
+  <sitemap><loc>https://docs.uavmatrix.com/zh-tw/sitemap.xml</loc></sitemap>
+</sitemapindex>

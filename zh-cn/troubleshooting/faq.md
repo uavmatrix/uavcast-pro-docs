@@ -1,0 +1,105 @@
+# 常见问题
+
+> 关于 UAVcast-Pro 硬件、LTE 调制解调器、地面站、端口、离线使用、许可证、更新、录制以及 Fleet Manager 配对的简短解答。
+
+## 硬件与设置
+
+### 我需要 LTE 调制解调器吗？
+
+不需要。UAVcast-Pro 可以通过任何 IP 连接工作：4G/LTE、Wi-Fi 或以太网。调制解调器可以让您在 Wi-Fi 覆盖范围之外飞行。许多操作人员先在 Wi-Fi 上进行测试，飞行前再切换到调制解调器，方法是在 **网络 → 网络优先级 → 调制解调器优先（户外模式）** 中进行选择。
+
+### 哪些计算机可以运行 UAVcast-Pro？
+
+任何运行 Raspberry Pi OS、Debian 或 Ubuntu 的 64 位 Linux 主板或 PC（arm64 或 amd64）均可使用，例如 Raspberry Pi Zero 2 W、3、4 和 5、NVIDIA Jetson、Orange Pi 以及 x86 迷你 PC。如果用于视频，Raspberry Pi 4 或 5 是较为理想的选择。请参阅[支持的硬件](https://docs.uavmatrix.com/zh-cn/reference/supported-hardware/)。
+
+### 支持哪些飞控？
+
+任何通过 USB 或 TELEM 端口使用 MAVLink 协议的飞控都可以，包括 Pixhawk 和 Cube 系列主板、Matek 及类似主板上的 ArduPilot（Copter、Plane、Rover、VTOL 及其他飞行器类型）和 PX4。遥测、视频以及向地面站的路由功能都适用于这些飞控。飞行地图和 Fleet Manager 中的飞行模式按钮使用 ArduPilot 的模式名称；使用 PX4 时，请通过地面站切换模式。
+
+### 可以通过飞控的 USB 端口连接吗？
+
+可以，这是最简单的方式：插上即可，并将 **端口** 保持为 **自动**。请使用支持数据传输的短线缆。如果未能找到飞控，请参阅[没有 MAVLink 心跳](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-mavlink-heartbeat/)。
+
+## 地面站与网络
+
+### 哪些地面站可以使用？
+
+任何支持通过 UDP 接收 MAVLink 的软件都可以使用，包括 QGroundControl、Mission Planner 和 MAVProxy。视频为通过 RTP/UDP 传输的 H.264，QGroundControl 和 Mission Planner 可以直接播放。GStreamer 和 VLC 也可以使用：请参阅[地面站与视频](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/)。
+
+### 多个地面站可以同时观看吗？
+
+可以。在 **地面控制站** 下为每台计算机添加一个目标地址，每个目标地址都有各自的视频和遥测开关。对于只需观看的地面站，请启用 **只读**。请参阅[向多个地面站传输](https://docs.uavmatrix.com/zh-cn/guides/multiple-ground-stations/)。
+
+### UAVcast-Pro 使用哪些端口？
+
+默认情况下，遥测数据发送到每个地面站的 UDP **14550** 端口，视频发送到 UDP **5600** 端口；第二个摄像头使用视频端口 + 1，音频使用视频端口 + 2。Web 界面位于端口 **80**。完整列表请参阅[端口与协议](https://docs.uavmatrix.com/zh-cn/reference/ports-and-protocols/)。
+
+### 我需要在路由器上设置端口转发吗？
+
+不需要。通过 4G 连接时，请让无人机和地面站位于同一 VPN 中：Fleet Manager VPN（已包含在您的许可证中），或您自己的 Tailscale 或 ZeroTier 网络。无人机会将遥测和视频发送到地面站的 VPN 地址。请参阅[通过 4G 进行超视距飞行](https://docs.uavmatrix.com/zh-cn/guides/bvlos-4g/)。
+
+### 仍然可以通过 TCP 5760 连接吗？
+
+不可以。自 v6.5.0 起，TCP 5760 已关闭，因此只有您添加的地面站才能接收数据。请将您的计算机添加为目标地址，并使用 UDP。
+
+### 没有互联网时可以使用吗？
+
+可以。飞控链路、遥测和视频在开机时即可启动，无需等待互联网，因此本地 Wi-Fi 网络或无线电链路可以正常工作。激活许可证需要一次互联网连接。之后，即使因连接丢失而导致许可证检查失败，设备也不会被禁用。
+
+## 许可证与账户
+
+> 激活无人机需要 UAVcast-Pro 许可证。请在 UAVmatrix 商店购买。
+>
+> [购买 UAVcast-Pro](https://uavmatrix.com/zh/checkout) · [查看套餐和价格](https://uavmatrix.com/zh/products)
+
+### 我的许可证无法激活，怎么办？
+
+请参阅[许可证无法激活](https://docs.uavmatrix.com/zh-cn/troubleshooting/license-activation-failed/)。常见原因包括密钥输入错误、没有可用的设备名额，或设备没有互联网连接。
+
+### 许可证到期后会发生什么？
+
+UAVcast-Pro 会被锁定：Web 界面只能打开 **应用程序**，遥测、视频及其他服务都会停止，直到您续费。请在到期日之前于商店中续费，然后在无人机上验证密钥。请参阅[许可证到期时](https://docs.uavmatrix.com/zh-cn/get-started/license-activation/#when-a-license-expires)。
+
+### Fleet Manager 是否包含在我的许可证中？
+
+是的。Fleet Manager（包括其 VPN）已包含在您的 UAVcast-Pro 许可证中，无需额外付费。
+
+### 更换 SD 卡后，我需要新的许可证吗？
+
+不需要，但设备会被视为新设备并占用一个名额。请在 **应用程序 → 许可证管理器 → 已激活设备** 中注销旧条目。
+
+### Fleet Manager 是一个单独的产品吗？
+
+Fleet Manager 是 UAVmatrix 的 Web 仪表盘，用于在 [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com/) 管理多架无人机。它包含在您的 UAVcast-Pro 许可证中。您需要使用 uavmatrix.com 账户登录，并且每架配对的无人机都需要由您组织中的某位成员拥有有效的 UAVcast-Pro 许可证。请参阅 [Fleet Manager](https://docs.uavmatrix.com/zh-cn/fleet-manager/)。
+
+### 如何将无人机与 Fleet Manager 配对？
+
+在 UAVcast-Pro 中打开 **Fleet Management**，然后点击 **Connect to Fleet Manager**。请在 5 分钟内，于 Fleet Manager 的 **Fleet → Pair Device** 中输入屏幕上显示的 8 位代码。请参阅[配对您的第一架 UAV](https://docs.uavmatrix.com/zh-cn/fleet-manager/pair-uav/)；如果配对失败，请参阅[配对码无效或已过期](https://docs.uavmatrix.com/zh-cn/troubleshooting/pairing-code-invalid/)。
+
+## 更新与数据
+
+### 如何更新 UAVcast-Pro？
+
+前往 **应用程序 → 更新应用**，在 **选择要更新的版本** 中选择一个版本，然后点击 **立即更新**。如果卡片显示 **等待重启**，请点击 **立即重启**。您也可以重新运行安装程序。
+
+### 我可以导入 v4 或 v5 的设置吗？
+
+不可以。v6 使用了新的数据库，因此全新安装后需要重新设置。在 v6 内部，可以使用 **应用程序 → 数据库 → 备份数据库** 和 **恢复数据库**，在不同安装之间迁移设置。
+
+### UAVcast-Pro 可以录制视频吗？
+
+可以，自 v6.5.1 起支持。它可以从飞行地图录制摄像头 1 和 2，也可以在无人机解锁时自动录制，并同时记录遥测日志。请参阅[录制飞行并回看](https://docs.uavmatrix.com/zh-cn/guides/recording-flight-review/)。
+
+### UAVcast-Pro 的文件保存在哪里？
+
+文件位于 `/opt/uavcast-pro` 下：数据库 `uavcast.db`、`logs/`、`recordings/` 和 `missions/`。请参阅[服务与文件](https://docs.uavmatrix.com/zh-cn/reference/services-and-files/)。
+
+### 我忘记了管理员密码。
+
+Web 界面中没有密码重置功能。其他管理员可以在 **用户** 中删除您的用户，然后重新创建。如果您是唯一的管理员，则无法自助恢复：请联系 **[support@uavmatrix.com](mailto:support@uavmatrix.com)**，并提供[忘记管理员密码](https://docs.uavmatrix.com/zh-cn/uavcast-pro/users/#forgot-the-admin-password)中列出的详细信息。
+
+### 在哪里获取帮助？
+
+请按照[为支持人员收集日志](https://docs.uavmatrix.com/zh-cn/troubleshooting/collect-logs/)中的说明收集日志，然后发送电子邮件至 **[support@uavmatrix.com](mailto:support@uavmatrix.com)**，或在 [UAVmatrix Discord](https://discord.gg/xwqMTXh) 中提问。
+
+Source: https://docs.uavmatrix.com/zh-cn/troubleshooting/faq/

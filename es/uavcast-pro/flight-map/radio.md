@@ -1,0 +1,21 @@
+# Pestaña Radio
+
+> Consulta los valores PWM en vivo de los canales RC y el RSSI de tu controlador de vuelo en la pestaña Radio de UAVcast-Pro, para verificar los interruptores del transmisor y el cambio de cámara RC.
+
+La pestaña Radio muestra la entrada RC que recibe el controlador de vuelo desde tu transmisor: el valor PWM de cada canal y el RSSI (intensidad de señal). Úsala para comprobar las asignaciones de interruptores, por ejemplo el canal que usas para el [cambio de cámara RC](https://docs.uavmatrix.com/es/uavcast-pro/camera/multi-camera/), sin conectar una estación de control en tierra. Abre **Mapa de Vuelo → Radio**.
+
+![Pestaña Radio con la insignia RSSI, los cuatro canales principales y los canales auxiliares, todos en 0](https://docs.uavmatrix.com/es/img/screenshots/uavcast-pro/flight-map--radio.webp)
+
+*Mapa de Vuelo → Radio en una unidad de banco sin receptor RC, por lo que todos los canales muestran 0.*
+
+## Lo que ves
+
+- **RSSI**: la intensidad de señal del receptor desde el controlador de vuelo, calificada como **Sin señal**, **Débil**, **Regular**, **Buena** o **Excelente**. Requiere que el RSSI esté configurado en el controlador de vuelo (`RSSI_TYPE` en ArduPilot).
+- **Controles Principales**: **Canal 1 - Roll**, **Canal 2 - Pitch**, **Canal 3 - Throttle** y **Canal 4 - Yaw**, en el diseño de Mission Planner.
+- **Canales Auxiliares**: los canales restantes.
+
+Los valores PWM normalmente van de 1000 (mín.) a 2000 (máx.). Un canal que nunca se mueve significa que no está asignado en el transmisor, o que el receptor no lo envía.
+
+Los valores provienen del mensaje `RC_CHANNELS` del controlador de vuelo, así que solo se actualizan mientras el enlace con el controlador de vuelo esté **Conectado**.
+
+Source: https://docs.uavmatrix.com/es/uavcast-pro/flight-map/radio/

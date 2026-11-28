@@ -1,0 +1,46 @@
+# Niedonapięcie i throttling
+
+> UAVcast-Pro ostrzega Voltage too low lub Slowed down? Dobierz zasilanie dla Pi, modemu i kamery, popraw cienkie kable i chłodzenie oraz zatrzymaj resety.
+
+Wiersz **Power supply** na panelu pokazuje ostrzeżenie, modem się rozłącza, łącze z kontrolerem lotu się resetuje albo Pi restartuje się w locie. W dronie zbyt słabe zasilanie powoduje więcej dziwnych usterek niż jakiekolwiek ustawienie programowe.
+
+![Karta statusu na panelu z wierszem Power supply w sekcji System, pokazującym Stable](https://docs.uavmatrix.com/pl/img/screenshots/uavcast-pro/dashboard--status-card.webp)
+
+*Panel Główny → karta statusu. Wiersz Power supply znajduje się w sekcji System; tutaj pokazuje Stable. Ostrzeżenia zastępują ten tekst, jak wymieniono poniżej.*
+
+| Wiersz Power supply | Znaczenie |
+| --- | --- |
+| **Stable** | Brak niedonapięcia i throttlingu od startu |
+| **Voltage too low - use a stronger power supply** | Napięcie zasilania jest obecnie poniżej tego, czego potrzebuje Pi |
+| **Voltage dropped since start-up** | Wystąpiło wcześniej, na przykład przy połączeniu modemu lub rozkręcaniu silników |
+| **Slowed down (heat or power)** | Procesor działa wolniej, aby chronić się przed ciepłem lub niskim napięciem |
+
+Odczyty pochodzą z firmware Raspberry Pi, więc są dostępne tylko na Raspberry Pi.
+
+## Sprawdzenie 1: Dobierz zasilanie do wszystkiego, co jest podłączone
+
+Pi zasila modem i kamerę USB przez swoje porty USB. Modem 4G pobiera szczytowy prąd, gdy się łączy i gdy sygnał jest słaby.
+
+1. Użyj BEC lub regulatora 5 V o wydajności wyraźnie większej niż łączny prąd Pi, modemu, kamery i wszystkiego innego na tej samej linii. Oficjalne specyfikacje zasilaczy Raspberry Pi podają, czego potrzebuje każdy model.
+2. Nigdy nie zasilaj Pi z portu TELEM ani USB kontrolera lotu.
+3. Jeśli modem pobiera więcej, niż Pi może przepuścić, zasil modem bezpośrednio z regulatora, przez zasilany hub USB lub kabel USB z osobnym zasilaniem.
+
+## Sprawdzenie 2: Kable i złącza
+
+Cienkie lub długie kable tracą napięcie pod obciążeniem. Użyj krótkich, grubych przewodów zasilających i dobrego kabla USB do modemu. Kabel, który nadaje się do ładowarki telefonu, może nadal powodować niedonapięcie przy szczytowym prądzie.
+
+## Sprawdzenie 3: Ciepło
+
+**Temperature** w **Informacje o Systemie** pokazuje temperaturę procesora. Pi, który koduje wideo w zamkniętej ramie drona w słońcu, mocno się nagrzewa. Dodaj radiator lub mały wentylator i zapewnij obudowie przepływ powietrza. Pi 5 przy ciągłym kodowaniu potrzebuje aktywnego chłodzenia.
+
+## Sprawdzenie 4: Sprawdź po naprawie
+
+**Voltage dropped since start-up** utrzymuje się do następnego startu. Zrestartuj urządzenie, wykonaj typową misję na stanowisku (modem połączony, kamera strumieniuje) i sprawdź, czy wiersz pozostaje **Stable**.
+
+## Nadal widzisz ostrzeżenia?
+
+Pobranie logów zawiera zdarzenia zasilania i USB z jądra w pliku `diagnostics.txt`. [Pobierz logi](https://docs.uavmatrix.com/pl/troubleshooting/collect-logs/) i wyślij je na **[support@uavmatrix.com](mailto:support@uavmatrix.com)** wraz ze zdjęciem okablowania zasilania.
+
+Powiązane: [Wymagania sprzętowe](https://docs.uavmatrix.com/pl/get-started/hardware-requirements/) · [Panel Główny](https://docs.uavmatrix.com/pl/uavcast-pro/dashboard/)
+
+Source: https://docs.uavmatrix.com/pl/troubleshooting/undervoltage-and-throttling/

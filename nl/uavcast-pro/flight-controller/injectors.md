@@ -1,0 +1,104 @@
+# Injectors
+
+> Gebruik UAVcast-Pro-injectors om sensormetingen van scripts, Arduino's of het LTE-modem via HTTP, UDP of serieel naar de MAVLink-stream te sturen, zodat QGC en Mission Planner ze zien.
+
+Een injector voert data van buiten UAVcast-Pro, zoals een Python-script, een Arduino of een sensor op het netwerk, als berichten `NAMED_VALUE_FLOAT` (of `NAMED_VALUE_INT`) in de MAVLink-stream. Elk verbonden grondstation ontvangt de waarden als normale telemetrie: Mission Planner toont ze op het tabblad **Status** en QGroundControl in de MAVLink Inspector. Ze verschijnen ook automatisch in [Datastromen](https://docs.uavmatrix.com/nl/uavcast-pro/data-streams/)-dashboards. Open **Vluchtcontroller → Injectors**.
+
+Typische toepassingen: straling-, gas- of weersensoren op de companion computer, LTE-signaalwaarden (RSRP, SINR) voor linkbewaking, of waarden die uw eigen scripts berekenen.
+
+## Kies een transport
+
+| Type | Hoe data binnenkomt | Geschikt voor |
+| --- | --- | --- |
+| **HTTP** | POST JSON naar een unieke URL met een geheim token | Eenvoudigst. Alles wat een HTTP-verzoek kan doen. |
+| **UDP** | Pakketten naar een poort op de drone, als `NAME=VALUE`-regels of JSON | Laagste overhead, vertrouwde lokale netwerken. Geen authenticatie. |
+| **Serial** | Regels gelezen van een `/dev/tty*`-apparaat | Bedrade sensoren, zoals een Arduino via USB. |
+
+Het type kan niet worden gewijzigd nadat u de injector hebt gemaakt.
+
+## Een injector maken
+
+1. Ga naar **Vluchtcontroller → Injectors** en selecteer **Injector toevoegen**.
+2. Voer een **Naam** in (alleen zichtbaar in de UI) en kies het **Invoertype**.
+3. Laat **MAVLink sysid** op `1` staan, zodat de waarden bij hetzelfde voertuig horen als de vluchtcontroller, en **MAVLink compid** op `194` (gebruikerspayload), tenzij u iets anders nodig hebt.
+4. Optioneel: stel een **Naam-voorvoegsel** in, bijvoorbeeld `BAL_`, zodat `RAD1` als `BAL_RAD1` wordt verstuurd.
+5. Vul voor UDP of Serial de listener-instellingen in. Selecteer daarna **Maken**.
+6. Selecteer **Testsignaal versturen** op de kaart van de injector om een waarde te versturen en die in uw grondstation te controleren.
+
+![Tabblad Injectors met Nog geen injectors, typische toepassingen, de transporten HTTP, UDP en Serial en de knop Injector toevoegen](https://docs.uavmatrix.com/nl/img/screenshots/uavcast-pro/flight-controller--injectors.webp)
+
+*Vluchtcontroller → Injectors vóór de eerste injector: typische toepassingen en de drie transporten.*
+
+## Data verzenden
+
+**HTTP**
+
+Nadat u een HTTP-injector hebt gemaakt, toont de kaart het **HTTP-eindpunt**. De URL heeft de vorm `http://<drone-ip>/api/inject/<token>` en gaat via de gewone poort van de webinterface. **URL kopiëren** kopieert de URL.
+
+```bash
+curl -X POST http://192.168.1.50/api/inject/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"name":"RAD1","value":0.077}'
+```
+
+```bash
+curl -X POST http://192.168.1.50/api/inject/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"samples":[{"name":"TEMP","value":21.4},{"name":"HUM","value":48}]}'
+```
+
+Het antwoord telt wat er is gebeurd: `{"accepted":2,"rateLimited":0,"rejected":0}`. Het token is de enige bescherming. Als het uitlekt, selecteert u **Token vernieuwen** en werkt u uw client bij.
+
+**UDP**
+
+De injector luistert standaard op **Poort** `14600` en **Bind-adres** `0.0.0.0` (alle interfaces). Gebruik `127.0.0.1` als de verzender op de drone zelf draait.
+
+```bash
+echo "RAD1=0.077" | nc -u -w1 192.168.1.50 14600
+```
+
+```python
+import json, socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.sendto(json.dumps({"name": "RAD1", "value": 0.077}).encode(), ("192.168.1.50", 14600))
+```
+
+**Serieel**
+
+De injector leest regels met een newline als afsluiting van het **Apparaatpad** (standaard `/dev/ttyUSB0`) met de **Baudrate** (standaard `115200`). Elke regel is één sample: `NAME=VALUE` voor het Key=Value-protocol, of een JSON-object. Het maakt zelf opnieuw verbinding als het apparaat wordt losgekoppeld.
+
+```cpp
+void setup() { Serial.begin(115200); }
+void loop() {
+  Serial.print("LIGHT=");
+  Serial.println(analogRead(A0));
+  delay(200);
+}
+```
+
+> **MAVLink-namen zijn 10 tekens lang**
+>
+> `NAMED_VALUE_FLOAT`-namen zijn beperkt tot 10 tekens, inclusief het voorvoegsel. Houd het voorvoegsel kort (maximaal 8 tekens) en de namen compact.
+
+## Overzicht van instellingen
+
+| Instelling | Standaard | Waarden | Opmerkingen |
+| --- | --- | --- | --- |
+| **Naam** | leeg | tekst | Label alleen in de UI. |
+| **Invoertype** | **HTTP** | **HTTP**, **UDP**, **Serial** | Vastgelegd na het maken. |
+| **Ingeschakeld** | Aan | Aan, uit | Uit bewaart de configuratie, maar stopt de listener. |
+| **MAVLink sysid** | `1` | 1–255 | Zelfde als de vluchtcontroller; de waarden worden zo bij dat voertuig gegroepeerd. |
+| **MAVLink compid** | `194` | 0–255 | 194 is gebruikelijk voor sensoren in de gebruikerspayload. |
+| **Naam-voorvoegsel** | leeg | maximaal 8 ASCII-tekens | Wordt voor elke signaalnaam toegevoegd. |
+| **Snelheidslimiet (Hz per signaal)** | `10` | samples per seconde | Extra samples worden weggegooid en geteld als **Snelheidsbeperkt**. Beschermt de verbinding tegen een hol lopende verzender. |
+| **Protocol** (UDP, Serial) | **Key=Value (per regel)** | **Key=Value (per regel)**, **JSON** (`{name, value}`) |  |
+| **Poort** (UDP) | `14600` | 1–65535 |  |
+| **Bind-adres** (UDP) | `0.0.0.0` | IP-adres | `127.0.0.1` accepteert alleen lokale verzenders. |
+| **Apparaatpad** (Serial) | `/dev/ttyUSB0` | apparaatpad | Voer `ls /dev/tty*` uit om het te vinden. |
+| **Baudrate** (Serial) | `115200` |  | Moet overeenkomen met de verzender. |
+
+Elke kaart toont de tellers **Geaccepteerd**, **Snelheidsbeperkt** en **Afgewezen**, zodat u ziet of er data binnenkomt en of die geldig is.
+
+Injectors draaien binnen de UAVcast-Pro-diensten en starten bij het opstarten, zodat waarden blijven stromen zonder dat de webinterface open is.
+
+Source: https://docs.uavmatrix.com/nl/uavcast-pro/flight-controller/injectors/

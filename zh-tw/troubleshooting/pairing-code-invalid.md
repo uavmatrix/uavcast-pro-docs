@@ -1,0 +1,60 @@
+# 配對碼無效或已過期
+
+> 修正將無人機與 Fleet Manager 配對時出現的 "Invalid pairing code"、"This pairing code has expired" 與 "License is not owned by any member of this organization" 等問題。
+
+您已在 Fleet Manager 的 **Pair Device**（配對裝置）精靈中輸入 UAVcast-Pro 的配對碼，但遭到拒絕。
+
+配對的方向是：**UAVcast-Pro 顯示配對碼，您再將它輸入 Fleet Manager**。配對碼為 8 位數字，有效期為 5 分鐘。
+
+![Fleet Manager 的配對 UAV 精靈，顯示錯誤提示 This pairing code has expired](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/pair-device--code-expired.webp)
+
+*Fleet Manager 拒絕配對碼：錯誤會以提示訊息的形式出現在配對碼步驟，此處為 This pairing code has expired。*
+
+| Fleet Manager 中的錯誤 | 原因 | 修正方式 |
+| --- | --- | --- |
+| **Pairing code must be 8 digits** / **Please enter a valid 8-digit code** | 位數不足，或包含字母 | [檢查 1](https://docs.uavmatrix.com/zh-tw/troubleshooting/pairing-code-invalid/#check-1) |
+| **Invalid pairing code** | 輸入錯誤，或此配對碼從未存在 | [檢查 1](https://docs.uavmatrix.com/zh-tw/troubleshooting/pairing-code-invalid/#check-1) |
+| **This pairing code has expired** | 已超過 5 分鐘 | [檢查 2](https://docs.uavmatrix.com/zh-tw/troubleshooting/pairing-code-invalid/#check-2) |
+| **This pairing code has already been used** | 此配對碼已使用過一次 | [檢查 2](https://docs.uavmatrix.com/zh-tw/troubleshooting/pairing-code-invalid/#check-2) |
+| **License is not owned by any member of this organization** | 無人機的授權屬於此組織以外的帳號 | [檢查 3](https://docs.uavmatrix.com/zh-tw/troubleshooting/pairing-code-invalid/#check-3) |
+| **Invalid license key** / **License has expired** / **License has been refunded** | 無人機的授權在商店中無效 | [檢查 4](https://docs.uavmatrix.com/zh-tw/troubleshooting/pairing-code-invalid/#check-4) |
+| **This UAV is already paired to an organization** | 已與其他組織配對 | [檢查 5](https://docs.uavmatrix.com/zh-tw/troubleshooting/pairing-code-invalid/#check-5) |
+| **Too many attempts. Please wait a minute and try again.** | 重複嘗試後觸發速率限制 | 等待一分鐘 |
+
+## 檢查 1：輸入目前的配對碼
+
+1. 在 UAVcast-Pro 中前往 **Fleet Management**，然後按下 **Connect to Fleet Manager**。
+2. 複製 **Pairing Code** 下方顯示的 8 位數字。
+3. 在 Fleet Manager 中前往 **Fleet → Pair Device**，選擇組織，然後在 **Enter Pairing Code** 下輸入配對碼。
+
+## 檢查 2：取得新的配對碼
+
+配對碼有效期為 5 分鐘，且只能使用一次。當 **Expires in** 倒數至零時，請在 UAVcast-Pro 中再次按下 **Connect to Fleet Manager**，以取得新的配對碼。若 UAVcast-Pro 完全無法取得配對碼，它會顯示 *Unable to connect to Fleet Manager. Please check your internet connection.*：請先修復無人機的網際網路連線。
+
+## 檢查 3：授權屬於組織以外的人
+
+Fleet Manager 只接受其 UAVcast-Pro 授權是由您所配對組織的成員購買的無人機。比對依據是擁有該授權之商店帳號的電子郵件地址。
+
+可透過以下任一方式修正：
+
+- 邀請購買授權的帳號加入組織（**Team**），然後重新配對。
+- 配對至授權擁有者為成員的組織。
+- 若授權是以您的另一個電子郵件地址購買，請聯絡 **[support@uavmatrix.com](mailto:support@uavmatrix.com)**，要求將該地址新增為您 Fleet Manager 使用者的授權電子郵件。
+
+請參閱 [Fleet Manager 許可證、席位與許可證電子郵件](https://docs.uavmatrix.com/zh-tw/fleet-manager/licenses/)。
+
+## 檢查 4：授權無效
+
+在無人機上開啟**應用程式 → 許可證管理器**，並查看**許可證狀態**。已過期或已退款的授權必須在 [uavmatrix.com](https://uavmatrix.com/) 續約。若 UAVcast-Pro 本身沒有啟用中的授權，它將無法請求配對碼（*No valid license found. Please activate your license first.*）：請參閱 [UAVcast-Pro 授權無法啟用](https://docs.uavmatrix.com/zh-tw/troubleshooting/license-activation-failed/)。
+
+## 檢查 5：已在其他地方配對
+
+一架無人機只能屬於一個組織。若要移轉，請先將它從舊組織中移除。重新配對到同一個組織是允許的，並會保留該無人機的歷史紀錄。請參閱[在 Fleet Manager 中重新配對、移除或轉移無人機](https://docs.uavmatrix.com/zh-tw/fleet-manager/fleet/remove-or-transfer/)。
+
+## 仍然被拒絕？
+
+請將確切的錯誤文字、無人機主機名稱與組織名稱寄送至 **[support@uavmatrix.com](mailto:support@uavmatrix.com)**。
+
+相關頁面：[UAVcast-Pro 中的 Fleet Manager 配對](https://docs.uavmatrix.com/zh-tw/uavcast-pro/fleet-pairing/) · [將第一架無人機新增到 Fleet Manager](https://docs.uavmatrix.com/zh-tw/fleet-manager/pair-uav/)
+
+Source: https://docs.uavmatrix.com/zh-tw/troubleshooting/pairing-code-invalid/

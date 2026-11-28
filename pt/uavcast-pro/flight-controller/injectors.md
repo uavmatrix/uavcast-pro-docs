@@ -1,0 +1,104 @@
+# Injetores
+
+> Use os injetores do UAVcast-Pro para enviar leituras de sensores de scripts, Arduinos ou do modem LTE para o fluxo MAVLink via HTTP, UDP ou serial, para que o QGC e o Mission Planner as vejam.
+
+Um injetor alimenta o fluxo MAVLink com dados vindos de fora do UAVcast-Pro, como um script Python, um Arduino ou um sensor na rede, na forma de mensagens `NAMED_VALUE_FLOAT` (ou `NAMED_VALUE_INT`). Cada estação de controle terrestre conectada recebe os valores como telemetria normal: o Mission Planner os mostra na aba **Status** e o QGroundControl no Inspetor MAVLink. Eles também aparecem automaticamente nos painéis de [Fluxos de Dados](https://docs.uavmatrix.com/pt/uavcast-pro/data-streams/). Abra **Controlador de Voo → Injetores**.
+
+Usos típicos: sensores de radiação, gás ou clima no computador companheiro, valores do sinal LTE (RSRP, SINR) para monitorar o link, ou valores calculados pelos seus próprios scripts.
+
+## Escolha um transporte
+
+| Tipo | Como os dados chegam | Melhor para |
+| --- | --- | --- |
+| **HTTP** | POST de JSON para uma URL exclusiva com um token secreto | Mais fácil. Qualquer coisa que consiga fazer uma requisição HTTP. |
+| **UDP** | Pacotes para uma porta do drone, como linhas `NAME=VALUE` ou JSON | Menor sobrecarga, redes locais confiáveis. Sem autenticação. |
+| **Serial** | Linhas lidas de um dispositivo `/dev/tty*` | Sensores com fiação direta, como um Arduino via USB. |
+
+O tipo não pode ser alterado depois que você cria o injetor.
+
+## Crie um injetor
+
+1. Acesse **Controlador de Voo → Injetores** e selecione **Adicionar injetor**.
+2. Digite um **Nome** (exibido apenas na interface) e escolha o **Tipo de entrada**.
+3. Mantenha **MAVLink sysid** `1` para que os valores pertençam ao mesmo veículo do controlador de voo, e **MAVLink compid** `194` (carga útil do usuário), a menos que precise de outro valor.
+4. Opcional: defina um **Prefixo do nome**, por exemplo `BAL_`, para que `RAD1` seja enviado como `BAL_RAD1`.
+5. Para UDP ou Serial, preencha as configurações do ouvinte. Em seguida, selecione **Criar**.
+6. Selecione **Enviar sinal de teste** no cartão do injetor para enviar um valor e verificá-lo na sua estação de controle terrestre.
+
+![Aba Injetores sem nenhum injetor ainda, usos típicos, os transportes HTTP, UDP e Serial e o botão Adicionar injetor](https://docs.uavmatrix.com/pt/img/screenshots/uavcast-pro/flight-controller--injectors.webp)
+
+*Controlador de Voo → Injetores antes do primeiro injetor: usos típicos e os três transportes.*
+
+## Envie dados
+
+**HTTP**
+
+Depois de criar um injetor HTTP, o cartão mostra o **Endpoint HTTP**. A URL tem o formato `http://<drone-ip>/api/inject/<token>` e passa pela porta normal da interface web. **Copiar URL** copia o endereço.
+
+```bash
+curl -X POST http://192.168.1.50/api/inject/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"name":"RAD1","value":0.077}'
+```
+
+```bash
+curl -X POST http://192.168.1.50/api/inject/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"samples":[{"name":"TEMP","value":21.4},{"name":"HUM","value":48}]}'
+```
+
+A resposta contabiliza o que aconteceu: `{"accepted":2,"rateLimited":0,"rejected":0}`. O token é a única proteção. Se ele vazar, selecione **Gerar novo token** e atualize seu cliente.
+
+**UDP**
+
+Por padrão, o injetor escuta na **Porta** `14600` e no **Endereço de escuta** `0.0.0.0` (todas as interfaces). Use `127.0.0.1` se o remetente rodar no próprio drone.
+
+```bash
+echo "RAD1=0.077" | nc -u -w1 192.168.1.50 14600
+```
+
+```python
+import json, socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.sendto(json.dumps({"name": "RAD1", "value": 0.077}).encode(), ("192.168.1.50", 14600))
+```
+
+**Serial**
+
+O injetor lê linhas terminadas em quebra de linha do **Caminho do dispositivo** (padrão `/dev/ttyUSB0`) na **Baud rate** (padrão `115200`). Cada linha é uma amostra: `NAME=VALUE` para o protocolo Key=Value, ou um objeto JSON. Ele se reconecta sozinho se o dispositivo for desconectado.
+
+```cpp
+void setup() { Serial.begin(115200); }
+void loop() {
+  Serial.print("LIGHT=");
+  Serial.println(analogRead(A0));
+  delay(200);
+}
+```
+
+> **Nomes MAVLink têm 10 caracteres**
+>
+> Os nomes de `NAMED_VALUE_FLOAT` são limitados a 10 caracteres, incluindo o prefixo. Mantenha o prefixo curto (até 8 caracteres) e os nomes compactos.
+
+## Referência de configurações
+
+| Configuração | Padrão | Valores | Observações |
+| --- | --- | --- | --- |
+| **Name** | vazio | texto | Rótulo apenas na interface. |
+| **Input type** | **HTTP** | **HTTP**, **UDP**, **Serial** | Fixo após a criação. |
+| **Enabled** | Ligado | Ligado, desligado | Desligado mantém a configuração, mas interrompe o ouvinte. |
+| **MAVLink sysid** | `1` | 1–255 | Igual ao do controlador de voo: agrupa os valores com esse veículo. |
+| **MAVLink compid** | `194` | 0–255 | 194 é comum em sensores de carga útil do usuário. |
+| **Name prefix** | vazio | até 8 caracteres ASCII | Adicionado antes de cada nome de sinal. |
+| **Rate limit (Hz per signal)** | `10` | amostras por segundo | Amostras extras são descartadas e contabilizadas como **Limitadas por taxa**. Protege o link contra um remetente descontrolado. |
+| **Protocol** (UDP, Serial) | **Key=Value (por linha)** | **Key=Value (por linha)**, **JSON** (`{name, value}`) |  |
+| **Port** (UDP) | `14600` | 1–65535 |  |
+| **Bind address** (UDP) | `0.0.0.0` | endereço IP | `127.0.0.1` aceita apenas remetentes locais. |
+| **Device path** (Serial) | `/dev/ttyUSB0` | caminho do dispositivo | Execute `ls /dev/tty*` para encontrá-lo. |
+| **Baud rate** (Serial) | `115200` |  | Deve corresponder ao remetente. |
+
+Cada cartão mostra os contadores **Aceitas**, **Limitadas por taxa** e **Rejeitadas**, para que você veja se os dados chegam e se são válidos.
+
+Os injetores rodam dentro dos serviços do UAVcast-Pro e iniciam com o sistema, então os valores continuam fluindo mesmo sem a interface web aberta.
+
+Source: https://docs.uavmatrix.com/pt/uavcast-pro/flight-controller/injectors/

@@ -1,0 +1,85 @@
+# Portlar ve protokoller
+
+> UAVcast-Pro ve Fleet Manager'ın kullandığı her port: UDP 14550 üzerinden MAVLink, UDP 5600 üzerinden video, kamera 2 ve ses, web, önizleme, RTSP, NTRIP ve MQTT 8883.
+
+Yer kontrol istasyonunda, drone'un ağında ve şirket ağlarında güvenlik duvarlarını ayarlamak için bu sayfayı kullanın. Varsayılanlar gösterilmiştir; portun değiştirilebildiği yerlerde ilgili ayar adı belirtilmiştir.
+
+## Yer kontrol istasyonu: gelen trafik
+
+UAVcast-Pro, telemetriyi ve videoyu her yer kontrol istasyonuna **gönderir**. Yer kontrol istasyonunun yalnızca gelen UDP trafiğini kabul etmesi gerekir; bunun için drone tarafında dinleyen bir servis olması gerekmez.
+
+| Port (varsayılan) | Protokol | Ne | Ayar |
+| --- | --- | --- | --- |
+| **14550** | UDP | MAVLink telemetrisi; GCS yanıt verdikten sonra iki yönlü | **Yer Kontrol İstasyonları → Telemetri Portu** |
+| **5600** | UDP | Video: RTP içinde H.264, yük türü 96 | **Video Portu** |
+| **Video Portu + 1** (5601) | UDP | **Çift akış** açıkken kamera 2 videosu | **Video Portu (Kamera 2)** (boşsa Video Portu + 1) |
+| **Video Portu + 2** (5602) | UDP | Ses: RTP içinde Opus, yük türü 97, **Sesi yer kontrol istasyonlarına gönder** açıkken | **Video Portu** ayarını izler |
+
+> **TCP 5760 kapalıdır**
+>
+> v6.5.0 sürümünden itibaren telemetri yönlendiricisi TCP 5760 portunu dinlemez. Yer kontrol istasyonları, eklediğiniz hedeflere UDP üzerinden bağlanır.
+
+**Fleet Manager akış bağlamalarında** bir yer kontrol istasyonuna bağlanan ilk drone 5600/14550 portlarını kullanır; her ek drone ise kendi port bloğunu alır: arkasında kamera 2 ve ses için yer bulunan bir video portu ve bir telemetri portu. Portları her bağlamada ayrıca kontrol edin.
+
+## Drone: bağlandığınız servisler
+
+| Port | Protokol | Ne | Notlar |
+| --- | --- | --- | --- |
+| **80** | TCP (HTTP) | Web arayüzü | **Uygulama → Ayarlar → Sunucu Portu** ayarında değiştirin (80 veya daha yüksek). |
+| **8889** | TCP (HTTP) | Tarayıcıda canlı önizleme (WebRTC) | **Kamera → Canlı Önizleme** ve Uçuş Haritası video pencereleri tarafından kullanılır. |
+| 8189 | UDP | Canlı önizleme için WebRTC medyası | Medya sunucusunun varsayılanı. |
+| **9996** | TCP (HTTP) | Kayıtların oynatılması | Kayıt kitaplığı ve uçuş incelemesi oynatıcısı tarafından kullanılır. |
+| **8554** | TCP (RTSP) | Kamera akışının RTSP kopyası (`/camera`, `/camera2`) | Canlı önizleme veya kayıt açıkken kullanılabilir. |
+| 8888 | TCP (HTTP) | Kamera akışının HLS kopyası | Web arayüzü tarafından kullanılmaz. |
+| HTTP enjektörü | TCP (HTTP) | `http://<drone>/api/inject/<token>` | Web arayüzü portunda sunulur. Bkz. [Enjektörler](https://docs.uavmatrix.com/tr/uavcast-pro/flight-controller/injectors/). |
+| UDP enjektörü | UDP | Sizin seçiminiz (14600 güvenli bir varsayılandır) | **Uçuş Kontrolcüsü → Enjektörler** üzerinden enjektör başına ayarlanır. |
+
+Bir VPN üzerinden bu portlara, drone'un VPN adresinden erişilebilmelidir. Hücresel tarafta port yönlendirme gerekmez.
+
+## Drone: giden trafik
+
+Drone bu bağlantıları kendisi açar. Yalnızca web trafiğine izin veren ağlar, bunların bazılarını engelleyecektir.
+
+| Hedef | Port | Protokol | Ne |
+| --- | --- | --- | --- |
+| Yer kontrol istasyonları | 14550, 5600 (+1, +2) | UDP | Telemetri, video, ses |
+| `uavmatrix.com` | 443 | HTTPS | Lisans etkinleştirme ve periyodik kontroller |
+| `install.uavmatrix.com` | 443 | HTTPS | Yükleyici ve güncellemeler |
+| `fleet-manager.uavmatrix.com` | 443 | HTTPS | Fleet Manager eşleştirme |
+| Fleet Manager broker | **8883** | TLS üzerinden MQTT (istemci sertifikaları) | Fleet Manager durumu, telemetri ve komutlar |
+| `vpn-connect.uavmatrix.com` | 443 | HTTPS | Fleet Manager VPN giriş sunucusu |
+| NTRIP caster'ınız | 2101 (veya ayarlandığı gibi) | TCP, isteğe bağlı TLS | RTCM düzeltmeleri |
+| ZeroTier / Tailscale | ZeroTier 9993, Tailscale 41641 (ve 443 yedeği) | UDP | VPN tünelleri |
+| DNS sağlayıcınız | 443 | HTTPS | Dinamik DNS güncellemeleri |
+
+## Drone'un içinde (yalnızca yerel)
+
+Bu portlar UAVcast-Pro'nun kendi servisleri arasında kullanılır ve güvenlik duvarı kuralı gerektirmez:
+
+| Port | Ne |
+| --- | --- |
+| 6379 | Redis, dahili mesaj veri yolu |
+| 12550, 12551 | Telemetri yönlendiricisi: UAVcast-Pro uygulamasına ve NTRIP istemcisine |
+| 8090 | Enjektör HTTP dinleyicisi (80 numaralı port üzerinden `/api/inject/…` ile erişilir) |
+| 9997 | Medya sunucusu API'si |
+| 5000 | Web arayüzünün kullandığı UAVcast-Pro arka plan servisi API'si |
+
+## Yer kontrol istasyonu için güvenlik duvarı kuralları
+
+**Windows**
+
+```powershell
+New-NetFirewallRule -DisplayName "MAVLink Telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+New-NetFirewallRule -DisplayName "UAV Video" -Direction Inbound -Protocol UDP -LocalPort 5600-5602 -Action Allow
+```
+
+**Linux (UFW)**
+
+```bash
+sudo ufw allow 14550/udp comment 'MAVLink Telemetry'
+sudo ufw allow 5600:5602/udp comment 'UAV Video and audio'
+```
+
+Başka telemetri veya video portları kullanıyorsanız ya da Fleet Manager akış bağlamaları üzerinden birden fazla drone kullanıyorsanız daha fazla port ekleyin.
+
+Source: https://docs.uavmatrix.com/tr/reference/ports-and-protocols/

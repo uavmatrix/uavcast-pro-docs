@@ -1,0 +1,88 @@
+# Collega una stazione di controllo a terra
+
+> Collega un laptop con QGroundControl o Mission Planner alla VPN della tua organizzazione con un comando Tailscale e inizia a ricevere video e telemetria dei droni.
+
+Una stazione di controllo a terra (GCS) è il laptop o il PC su cui il pilota usa QGroundControl, Mission Planner o software simili. Per ricevere video e telemetria di un drone tramite Fleet Manager, la stazione di controllo a terra entra nella VPN privata della tua organizzazione. Dopodiché decidi quali droni trasmettono verso di essa tramite le [associazioni dei flussi](https://docs.uavmatrix.com/it/fleet-manager/network/stream-bindings/).
+
+L'operazione richiede circa cinque minuti per ogni stazione di controllo a terra.
+
+## Prima di iniziare
+
+- **Ruolo Owner o Admin.** I Viewer possono vedere la pagina **Network**, ma non la chiave di autenticazione né il comando di connessione, e non possono attivare la VPN né configurare i dispositivi. Vedono *Ask an Owner or Admin of this organization to connect a new device to the VPN.*
+- **VPN attiva** per l'organizzazione. Se **Network** mostra **Enable VPN Network**, selezionalo prima. Vedi [Rete e VPN](https://docs.uavmatrix.com/it/fleet-manager/network/).
+- **Diritti di amministratore sul computer** della stazione di controllo a terra, per installare Tailscale ed eseguire un comando.
+- Almeno un drone [accoppiato](https://docs.uavmatrix.com/it/fleet-manager/pair-uav/) e collegato alla VPN.
+
+> **Fleet Manager gestisce un proprio server VPN**
+>
+> La rete dell'organizzazione usa il client Tailscale, ma il server di controllo è quello di Fleet Manager, non un account tailscale.com. Non devi registrarti su Tailscale. Se il computer è già su un'altra rete Tailscale, il comando qui sotto lo sposta sulla rete della tua organizzazione.
+
+## Collega la stazione di controllo a terra alla VPN
+
+1. **Installa Tailscale** sulla stazione di controllo a terra da [tailscale.com/download](https://tailscale.com/download) (Windows, macOS o Linux).
+
+2. **Copia il comando di connessione.** In Fleet Manager apri **Network**, resta nella scheda **Devices** e trova **Connect a Device**. In **GCS Connection Command** copia il comando. Ha questo aspetto:
+
+   ```bash
+   tailscale up --authkey=<your-org-key> --login-server=https://vpn-connect.uavmatrix.com
+   ```
+
+   ![Scheda Connect a Device con l'avviso GCS Computer Only e il comando tailscale up](https://docs.uavmatrix.com/it/img/screenshots/fleet-manager/network--connect-device.webp)
+
+   *Network → Devices → Connect a Device, con l'avviso GCS Computer Only e il pulsante di copia accanto al comando (chiave di autenticazione oscurata).*
+
+   > **Solo per la stazione di controllo a terra**
+   >
+   > Non incollare questo comando in UAVcast-Pro e non eseguirlo sul drone. I droni entrano nella VPN durante l'accoppiamento, oppure con **Push to Drone** nella stessa pagina.
+
+3. **Esegui il comando come amministratore.**
+
+   - Windows: apri **Terminal** o **PowerShell** con **Esegui come amministratore** e incolla il comando.
+   - macOS e Linux: incollalo in un terminale, preceduto da `sudo`.
+
+   Quando il comando termina senza errori, il computer è sulla rete. `tailscale status` elenca i droni e gli altri dispositivi che può vedere.
+
+4. **Trova il computer in Connected Devices.** Tornando in Fleet Manager, il computer compare in **Connected Devices** con il suo hostname e un indirizzo `100.x.y.z`. Seleziona **Sync** se non appare entro pochi secondi. Un nuovo dispositivo ha il tipo **Unknown** e un banner indica quanti dispositivi richiedono una configurazione.
+
+5. **Contrassegnalo come stazione di controllo a terra.** Nella colonna **Type** seleziona **Configure**. Scegli **Ground Control Station (GCS)**, seleziona **Continue**, poi **Complete Setup**.
+
+   ![Procedura guidata di configurazione del dispositivo che chiede di che tipo di dispositivo si tratta, con Ground Control Station selezionato](https://docs.uavmatrix.com/it/img/screenshots/fleet-manager/network--setup-wizard.webp)
+
+   *Finestra Configure con la domanda What type of device is this? e Ground Control Station (GCS) selezionato per il laptop ops-laptop-03.*
+
+Il computer ora ha il badge **GCS** e compare nell'elenco **Ground Station** quando aggiungi un'associazione di flusso.
+
+> **Assegna alle stazioni di controllo a terra il nome della persona o della postazione**
+>
+> Usa **Rename** nel menu azioni del dispositivo (il pulsante **⋯**) per dargli un nome come "Laptop sul campo – Squadra Nord". Gli elenchi delle associazioni sono molto più leggibili in una flotta grande.
+
+## Inizia a ricevere da un drone
+
+1. Vai su **Network → Stream Bindings** e seleziona **Add Binding**.
+
+2. Scegli il **Drone** e la **Ground Station**, poi seleziona **Create Binding**. Il drone deve essere online.
+
+3. Leggi le porte nella colonna **Ports**, ad esempio `5600 / 14550`.
+
+4. Nel software di controllo a terra, ascolta su quelle porte:
+
+   - **QGroundControl:** la telemetria su UDP 14550 si connette automaticamente. Per il video, apri **Application Settings → Video** (sotto **General** nelle versioni precedenti), imposta **Source** su **UDP h.264 Video Stream** e la porta UDP sulla porta video dell'associazione (**UDP URL** `0.0.0.0:<porta>` nelle versioni attuali). Per altri droni, aggiungi un collegamento UDP sulla porta di telemetria di ogni associazione in **Application Settings → Comm Links**.
+   - **Mission Planner:** scegli **UDP** nel menu a tendina della connessione, seleziona **Connect** e inserisci la porta di telemetria.
+
+Maggiori dettagli, incluso come gestire più droni su una stessa stazione di controllo a terra: [Associazioni dei flussi](https://docs.uavmatrix.com/it/fleet-manager/network/stream-bindings/) e [Trasmissione verso più stazioni di controllo a terra](https://docs.uavmatrix.com/it/guides/multiple-ground-stations/).
+
+## La chiave di autenticazione
+
+Il comando contiene una chiave riutilizzabile per la rete della tua organizzazione. È valida per 90 giorni e può essere usata su un numero illimitato di stazioni di controllo a terra. Owner e Admin possono selezionare il pulsante di aggiornamento in **Connect a Device** per creare una nuova chiave. Le stazioni di controllo a terra già collegate restano connesse. Se la scheda mostra **No valid auth key available. Generate a new key to connect devices.**, la chiave è scaduta: creane una nuova.
+
+## Rimuovi una stazione di controllo a terra
+
+In **Network → Devices** apri il menu azioni del dispositivo e seleziona **Remove Device**. Questo lo rimuove dalla VPN ed elimina le sue associazioni di flusso. Per ricollegarlo in seguito, esegui di nuovo il comando di connessione.
+
+## Risoluzione dei problemi
+
+- **Il comando fallisce o va in timeout:** verifica che il computer riesca a raggiungere `https://vpn-connect.uavmatrix.com` e che la chiave non sia scaduta.
+- **Stazione di controllo a terra connessa ma senza telemetria o video:** verifica che esista un'associazione, che **Video** e **Telemetry** siano attivi e che il software della stazione ascolti sulle porte dell'associazione. Il firewall di Windows spesso blocca l'UDP in ingresso per una nuova app. Vedi [Nessuna telemetria nella stazione di controllo a terra](https://docs.uavmatrix.com/it/troubleshooting/no-telemetry-in-gcs/) e [Nessun video nella stazione di controllo a terra](https://docs.uavmatrix.com/it/troubleshooting/no-video-in-gcs/).
+- **Impossibile raggiungere il drone tramite VPN:** vedi [VPN connessa ma impossibile raggiungere il drone](https://docs.uavmatrix.com/it/troubleshooting/vpn-cant-reach-drone/).
+
+Source: https://docs.uavmatrix.com/it/fleet-manager/connect-gcs/

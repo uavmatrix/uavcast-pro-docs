@@ -1,0 +1,73 @@
+# Fleet Manager ile bir drone filosunu sisteme alma
+
+> Lisansları planlayın, ardından 20+ UAVcast-Pro drone'unu adlandırıp eşleştirerek UAVmatrix Fleet Manager'a bağlayın; ekip rolleri, organizasyon VPN'i ve stream binding'ler ile.
+
+Bu kılavuz, örneğin 20 drone'luk bir filoyu tek seferde [UAVmatrix Fleet Manager](https://docs.uavmatrix.com/tr/fleet-manager/) sistemine almayı anlatır: lisanslar, adlandırma, eşleştirme, organizasyon VPN'i ve yer kontrol istasyonlarının drone'lara bağlanması. Her drone'un zaten uçuş kontrolcüsü bağlı ve internet erişimi olan bir UAVcast-Pro çalıştırdığı varsayılır.
+
+## 1. Lisansları planlayın
+
+Bir drone'un eşleştirilip eşleştirilemeyeceğini iki kural belirler:
+
+- **Her drone'un cihazında etkin bir UAVcast-Pro lisansı olmalıdır.** Tek bir lisans birden fazla drone'u kapsayabilir: **İzin Verilen Cihazlar** sayısı slot sayısıdır. 20 drone için, bir veya daha fazla lisansta toplam 20 slota ihtiyacınız vardır.
+- **Lisans, eşleştireceğiniz organizasyonun bir üyesine ait olmalıdır.** Fleet Manager, lisansı satın alan mağaza hesabının e-posta adresini üyelerin e-posta adresleriyle eşleştirir. Satın alma işlemi lisansları başka bir hesapla yaptıysa, o hesabı organizasyona davet edin veya satın alma e-postasını kullanıcınıza eklemesi için destek ekibinden yardım isteyin.
+
+Eşleştirme gününden önce bunu kontrol edin: lisansı organizasyon dışındaki birine ait olan bir drone, **License is not owned by any member of this organization** hatasıyla reddedilir.
+
+## 2. Organizasyonu ve ekibi kurun
+
+1. [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com/) adresinde uavmatrix.com hesabınızla oturum açın ve organizasyonu oluşturun. Bkz. [Bir organizasyon kurma](https://docs.uavmatrix.com/tr/fleet-manager/set-up-organization/).
+2. **Team** altında ekibinizi davet edin. Owner ve Admin'ler drone eşleştirebilir, kontrol edebilir ve kaldırabilir; Viewer'lar yalnızca izleyebilir. Bkz. [Roller ve izinler](https://docs.uavmatrix.com/tr/fleet-manager/team/roles-and-permissions/).
+3. Çok sayıda drone'unuz varsa eşleştirme işini iki veya üç Admin arasında paylaştırın. Her kullanıcı dakikada 5 eşleştirme tamamlayabilir; bu sınır kaba kuvvet tahminini engeller ve ayrıca bir kişinin 20 drone'u arka arkaya eşleştirmesini yavaşlatır.
+
+## 3. Eşleştirmeden önce her drone'a ad verin
+
+Bir drone'un UAVcast-Pro'da sahip olduğu ad, Fleet Manager'daki adı olur. Bir adlandırma düzeni belirleyin; örneğin `SURVEY-01` … `SURVEY-20` ve gövdeleri de buna uygun etiketleyin.
+
+Her drone'da UAVcast-Pro → **Fleet Management** bölümünü açın ve **Device Name** alanını doldurun. Ad verilmezse drone, ana bilgisayar adıyla görünür. Daha sonra Fleet Manager'da adını değiştirebilirsiniz.
+
+## 4. Her drone'u eşleştirin
+
+Her drone için tekrarlayın. Yan yana iki tarayıcı penceresiyle (drone'un UAVcast-Pro'su ve Fleet Manager), her biri yaklaşık bir dakika sürer.
+
+1. UAVcast-Pro'da **Fleet Management** bölümünü açın ve **Connect to Fleet Manager** düğmesine basın. 8 haneli bir **Pairing Code** görünür. 5 dakika sonra geçerliliğini yitirir.
+2. Fleet Manager'da **Fleet → Pair Device** bölümüne gidin.
+3. **Select Organization**, ardından **Enter Pairing Code** seçin.
+4. **Confirm Device**: adı, ana bilgisayar adını, mimariyi ve UAVcast sürümünü kontrol edin; böylece eşleştirdiğinizi düşündüğünüz drone'u gerçekten eşleştirirsiniz.
+5. **VPN Connection**: yer kontrol istasyonlarının drone'a organizasyonun VPN'i üzerinden ulaşmasını istiyorsanız **Enable VPN for this UAV** seçeneğini işaretleyin. Drone zaten Tailscale kullanıyorsa, **Replace existing VPN with Fleet Manager network** seçeneği onu organizasyonun ağına taşır.
+6. **Complete Pairing** seçin. UAVcast-Pro'da **Fleet Connection** durumu **Connected** olur.
+
+![Fleet Manager eşleştirme sihirbazı, Confirm Device adımında UAV adı, ana bilgisayar adı, mimari ve UAVcast sürümünü gösteriyor](https://docs.uavmatrix.com/tr/img/screenshots/fleet-manager/pair-device--confirm.webp)
+
+*Fleet → Pair Device, Confirm Device adımı.*
+
+Hatalar ve anlamları: [Eşleştirme kodu geçersiz veya süresi dolmuş](https://docs.uavmatrix.com/tr/troubleshooting/pairing-code-invalid/). Sihirbazın tamamı [İlk UAV'nizi eşleştirin](https://docs.uavmatrix.com/tr/fleet-manager/pair-uav/) sayfasında anlatılır.
+
+## 5. Filoyu kontrol edin
+
+**Fleet** bölümünü açın. Her drone çevrimiçi olarak listelenmelidir. **Fleet Map** üzerinde her drone, uçuş kontrolcüsü konumu aldığında GPS konumunda görünür. **Offline** görünen bir drone 20 saniyedir bildirim göndermemiştir: bkz. [Fleet Manager'da drone çevrimdışı](https://docs.uavmatrix.com/tr/troubleshooting/drone-offline-fleet-manager/).
+
+## 6. Yer kontrol istasyonlarını bağlayın
+
+1. **Network** bölümüne gidin; organizasyonun VPN'i henüz açık değilse **Enable VPN Network** düğmesine basın.
+2. **Connect a Device** düğmesine basın, **Ground Control Station (GCS)** seçeneğini belirleyin ve **GCS Connection Command** komutunu kopyalayın. Tailscale kurulu olan **yer kontrol istasyonu dizüstü bilgisayarında** bir terminalde çalıştırın. UAVcast-Pro'ya yapıştırmayın.
+3. Dizüstü bilgisayar bağlandığında **Ground Stations** altında görünür.
+4. **Stream Bindings** altında **Add Stream Binding** düğmesine basın ve her drone'u onu alması gereken yer kontrol istasyonuna bağlayın. Fleet Manager hedefi drone'a gönderdiği için drone çevrimiçi olmalıdır.
+5. Her bağlama, o yer kontrol istasyonunda kendi port bloğunu alır: ilk drone varsayılan 5600 (video) ve 14550 (telemetri) portlarını kullanır, her ek drone bir sonraki boş bloğu alır. Yer kontrol istasyonu yazılımını her bağlamada gösterilen portlarla ayarlayın.
+
+![Birden çok drone'u otomatik atanmış portlarla tek bir yer kontrol istasyonuna bağlayan stream binding'ler içeren Fleet Manager Network sayfası](https://docs.uavmatrix.com/tr/img/screenshots/fleet-manager/network--stream-bindings.webp)
+
+*Network → Stream Bindings: her bağlama yer kontrol istasyonunu ve video ile telemetri portlarını gösterir.*
+
+Ayrıntılar: [Bir yer kontrol istasyonu bağlama](https://docs.uavmatrix.com/tr/fleet-manager/connect-gcs/) ve [Stream bindings](https://docs.uavmatrix.com/tr/fleet-manager/network/stream-bindings/).
+
+> **Çift akış ve ses**
+>
+> Her bağlama, yer kontrol istasyonunda kendi port bloğunu alır; bu blokta drone'un ikinci kamerası ve sesi için video portundan sonra yer ayrılır. Böylece birkaç drone aynı yer kontrol istasyonunu paylaşabilir.
+
+## 7. Günlük kullanım
+
+- **Re-pair required**: Fleet Manager bu rozeti gösterdiğinde drone'u UAVcast-Pro'dan bir kez yeniden eşleştirin. Adını ve geçmişini korur. Bkz. [Bir UAV'yi kaldırma veya devretme](https://docs.uavmatrix.com/tr/fleet-manager/fleet/remove-or-transfer/).
+- **Bir drone'un SD kartını veya kartını değiştirmek** tek başına hiçbir slotu serbest bırakmaz: aynı lisansı kullanan herhangi bir drone'da **Uygulama → Lisans Yöneticisi → Aktif Cihazlar** altından eski cihazın kaydını **Kaydı Sil** ile kaldırın, ardından yenisini eşleştirin.
+- **Drone üzerinde uzaktan çalışma**: Fleet Manager'daki UAV ayrıntıları sayfasında bir terminal, günlükler ve yeniden başlatma gibi eylemler bulunur. Bkz. [UAV ayrıntıları](https://docs.uavmatrix.com/tr/fleet-manager/fleet/uav-details/).
+
+Source: https://docs.uavmatrix.com/tr/guides/fleet-onboarding/

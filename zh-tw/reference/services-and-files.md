@@ -1,0 +1,77 @@
+# 服務、檔案與安裝程式選項
+
+> UAVcast-Pro 安裝的 systemd 服務、資料庫、日誌與錄製內容的存放位置、版本安裝程式選項，以及常用的 SSH 指令。
+
+適用於透過 SSH 在裝置上作業的情況：說明組成 UAVcast-Pro 的服務、檔案的存放位置，以及如何安裝特定版本。
+
+## 服務
+
+UAVcast-Pro 以一組 systemd 服務的形式執行。每個服務在失敗時都會自動重新啟動。
+
+| 服務 | 功能 |
+| --- | --- |
+| `uavcast-web` | 網頁介面（Node.js）。除非您變更了 **伺服器連接埠**，否則監聽連接埠 80。 |
+| `uavcast-factory` | 背景 API：授權、數據機、VPN、網路、日誌、錄製儲存空間，以及 Fleet Manager 連線。 |
+| `mavlink-manager` | 飛行控制器連線，以及傳送至地面站的遙測路由器。啟動時不等待網際網路。 |
+| `uavcast-camera` | 攝影機擷取、H.264 編碼與 UDP 視訊串流。啟動時不等待網際網路。 |
+| `mediamtx` | 媒體伺服器，供瀏覽器預覽、RTSP 與錄製使用。 |
+| `uavcast-ntrip` | 用於 RTK 校正的 NTRIP 用戶端。 |
+| `uavcast-dns` | 動態DNS 更新程式。 |
+| `redis-server` | 內部訊息匯流排，其他服務皆依賴此服務。 |
+| `zerotier-one`、`tailscaled` | VPN 用戶端，由 UAVcast-Pro 安裝程式安裝。 |
+
+常用指令：
+
+```bash
+sudo systemctl status uavcast-web            # is it running?
+sudo systemctl restart uavcast-camera        # restart one service
+journalctl -u mavlink-manager -f             # follow a service's log live
+journalctl -u uavcast-web --since yesterday  # read recent history
+```
+
+## 檔案與資料夾
+
+所有檔案皆位於 `/opt/uavcast-pro` 之下。
+
+| 路徑 | 內容 |
+| --- | --- |
+| `/opt/uavcast-pro/uavcast.db` | 設定資料庫（SQLite）。可從 **應用程式 → 資料庫 → 備份資料庫** 進行備份。 |
+| `/opt/uavcast-pro/logs/` | 服務日誌，會自動輪替。可從 **應用程式 → 日誌** 下載。 |
+| `/opt/uavcast-pro/recordings/` | 內部儲存空間中的攝影機錄製與遙測記錄（除非 **儲存位置** 指向 USB 隨身碟或其他資料夾）。 |
+| `/opt/uavcast-pro/missions/` | 已儲存的任務。 |
+| `/opt/uavcast-pro/installer.log` | 最近一次安裝的記錄。 |
+| `/etc/systemd/system/uavcast-web.service` | 網頁介面服務，包含 `SERVER_PORT`。 |
+
+## 安裝程式選項
+
+安裝程式只需一道指令。隨時可以再次執行，以修復或更新安裝。
+
+```bash
+# Install or update to the latest version
+curl -fsSL https://install.uavmatrix.com | sudo bash
+
+# List the versions available for this device's architecture
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l
+
+# Install a specific version
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.2
+```
+
+| 選項 | 說明 |
+| --- | --- |
+| `-l` | 列出此架構（arm64 或 amd64）可用的版本。 |
+| `-b <version>` | 安裝指定版本，而非最新版本。 |
+
+安裝程式會偵測架構與作業系統，安裝系統套件、ZeroTier、Tailscale 與攝影機套件，設定 Raspberry Pi 的 UART，建立服務並啟動網頁介面。其記錄檔位於 `/opt/uavcast-pro/installer.log`。
+
+您也可以從網頁介面更新：前往 **應用程式 → 更新應用**，在 **選擇要更新的版本** 中選擇版本，然後點擊 **立即更新**。
+
+## 整合點
+
+UAVcast-Pro 沒有公開的 REST API。若要與其整合，可使用：
+
+- **MAVLink over UDP**：傳送至每一個地面站目標位址（預設連接埠 14550），適用於任何支援 MAVLink 的軟體。
+- **視訊**：透過 RTP/UDP（連接埠 5600）或無人機端的 RTSP（連接埠 8554）。請參閱 [VLC 與 RTSP](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/vlc-and-rtsp/)。
+- **注入器**：透過 HTTP、UDP 或序列埠，將您自有的感測器數值推送至 MAVLink 串流。請參閱 [注入器](https://docs.uavmatrix.com/zh-tw/uavcast-pro/flight-controller/injectors/)。
+
+Source: https://docs.uavmatrix.com/zh-tw/reference/services-and-files/

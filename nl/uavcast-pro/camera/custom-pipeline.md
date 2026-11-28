@@ -1,0 +1,55 @@
+# Aangepaste GStreamer-pipeline
+
+> Gebruik een aangepaste GStreamer-pipeline in UAVcast-Pro om een RTSP IP-camera, een thermische camera, H.265 of een testpatroon te streamen, met voorbeelden en het gedrag van voorvertoning en bestemmingen.
+
+Wanneer de ingebouwde cameraondersteuning uw camera niet dekt, geeft u UAVcast-Pro uw eigen GStreamer-pipeline. Typische gevallen zijn een RTSP IP- of gimbalcamera, een thermische camera, H.265, of verzenden naar een vast adres. UAVcast-Pro draait de pipeline als de cameraservice, herstart deze als hij faalt, en kan nog steeds de live voorvertoning en de recorder voeden.
+
+## Een aangepaste pipeline instellen
+
+1. Ga naar **Camera → Camera-instellingen**.
+2. Klik op het **CAM 1**-slot en kies **Aangepaste pipeline invoeren**.
+3. Typ de pipeline in **Aangepaste Pipeline**, zonder het voorvoegsel `gst-launch-1.0`. (Als u hem mét het voorvoegsel plakt, verwijdert UAVcast-Pro dit.)
+4. Selecteer **Start** (of **Herstarten**) en controleer het **Actielogboek** op fouten.
+
+> **Een aangepaste pipeline negeert uw lijst met grondstations**
+>
+> De pipeline bepaalt waar de video naartoe gaat. **Videopoort** en **Video Inschakelen** bij [Grondcontrolestations](https://docs.uavmatrix.com/nl/uavcast-pro/ground-stations/) hebben geen effect: zet het adres en de poort van het grondstation in de `udpsink` van de pipeline.
+
+Test de pipeline via SSH met `gst-launch-1.0 -v <pipeline>` voordat u hem plakt. De foutmeldingen zijn daar duidelijker.
+
+## Voorbeelden
+
+```text
+videotestsrc ! x264enc ! video/x-h264, stream-format=byte-stream ! rtph264pay ! udpsink host=192.168.0.100 port=5600
+```
+
+```text
+rtspsrc location=rtsp://192.168.144.25:8554/main.264 latency=0 ! rtph264depay ! h264parse ! rtph264pay config-interval=1 pt=96 ! udpsink host=10.147.17.20 port=5600 sync=false
+```
+
+```text
+v4l2src device=/dev/video0 ! video/x-raw,width=1280,height=720,framerate=30/1 ! videoconvert ! x264enc tune=zerolatency speed-preset=superfast bitrate=1500 key-int-max=30 ! h264parse config-interval=1 ! rtph264pay pt=96 ! udpsink host=10.147.17.20 port=5600 sync=false
+```
+
+```text
+videotestsrc ! x264enc tune=zerolatency ! rtph264pay pt=96 ! multiudpsink clients=10.147.17.20:5600,10.147.17.21:5600
+```
+
+Vervang de IP-adressen door de adressen van uw grondstations (VPN-adressen via 4G).
+
+## Live voorvertoning en opname
+
+Met **Live Voorvertoning inschakelen?** aangevinkt, voegt UAVcast-Pro een tak toe aan uw pipeline die de gecodeerde video naar de ingebouwde mediaserver stuurt, zodat de voorvertoning, het videovenster van de Vliegkaart en de opname blijven werken. Het zoekt zelf de juiste plek:
+
+- Als uw pipeline `tee name=t` heeft, voegt het een tak toe vanaf die tee.
+- Anders splitst het de stream vlak vóór `rtph264pay` of `rtph265pay`.
+- Voor een RTSP-bron zonder herkende parser laat het de pipeline ongewijzigd, en is er geen voorvertoning.
+
+Voor het meest voorspelbare resultaat eindigt u uw gecodeerde stream met `h264parse` en een `tee name=t`, en zet u uw eigen `udpsink` op een tak van die tee.
+
+## Beperkingen
+
+- Dubbele stream, RC-kanaalwisseling en instellingen per camera gelden niet voor een aangepaste pipeline. De pipeline is de volledige videoconfiguratie.
+- Resolutie, FPS, bitrate en spiegelinstellingen zijn verborgen, omdat de pipeline ze instelt.
+
+Source: https://docs.uavmatrix.com/nl/uavcast-pro/camera/custom-pipeline/

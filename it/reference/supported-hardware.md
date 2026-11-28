@@ -1,0 +1,63 @@
+# Hardware supportato
+
+> Schede, sistemi operativi, controllori di volo, telecamere, modem LTE e ricevitori RTK compatibili con UAVcast-Pro v6: Raspberry Pi, Jetson e altre schede arm64, e PC x86.
+
+UAVcast-Pro v6 gira su qualsiasi computer Linux a 64 bit con Raspberry Pi OS, Debian o Ubuntu, su **arm64** o **amd64** (schede arm64 diverse da Raspberry Pi a partire da UAVcast-Pro 6.5.3). Le tabelle seguenti elencano ciò che viene rilevato e testato. Per alimentatori, cablaggio e consigli d'acquisto, vedi [Requisiti hardware](https://docs.uavmatrix.com/it/get-started/hardware-requirements/).
+
+## Computer di bordo
+
+| Scheda | Architettura | Porta seriale per TELEM | Note |
+| --- | --- | --- | --- |
+| Raspberry Pi 5 | arm64 | UART GPIO (`uart0`) | Prestazioni video migliori. Richiede raffreddamento attivo per la codifica continua. |
+| Raspberry Pi 4 | arm64 | UART GPIO | Scelta consigliata e versatile. |
+| Raspberry Pi 3 | arm64 | UART GPIO | Va bene per la telemetria e una telecamera a impostazioni moderate. |
+| Raspberry Pi Zero 2 W | arm64 | UART GPIO | Funziona, ma l'installazione è lenta e il video è limitato. Una telecamera, a bassa risoluzione. |
+| Raspberry Pi Compute Module | arm64 | Dipende dalla scheda carrier | Supporto dell'installer corretto nella v6.3.1. |
+| NVIDIA Jetson (Nano, Orin Nano, Xavier NX, AGX, TX2) | arm64 | `ttyTHS*` sull'header a 40 pin | Telecamere USB. Le telecamere CSI di Jetson non sono gestite dal server delle telecamere; richiedono una **Pipeline Personalizzata** scritta a mano. |
+| Orange Pi (Zero, Zero 2, 3, 4, 5, Plus) | arm64 | `ttyS*`, dipende dal modello | Telecamere USB. L'UART potrebbe dover essere abilitato nel device tree. |
+| Banana Pi e altre schede arm64 | arm64 | Dipende dal modello | Telecamere USB. |
+| PC mini x86, Intel NUC, laptop | amd64 | Adattatore USB-seriale | Telecamere USB. |
+
+> **Schede arm64 diverse da Raspberry Pi**
+>
+> Jetson, Orange Pi, Banana Pi e le altre schede arm64 che non sono un Raspberry Pi richiedono UAVcast-Pro 6.5.3 o successivo. Gli installer più vecchi si fermano su queste schede con *Device is not a Raspberry Pi*.
+
+**Solo Raspberry Pi:** le telecamere CSI (rpicam/libcamera) richiedono un Raspberry Pi e, su un Pi, l'installer abilita l'UART, rimuove la console seriale e, su Pi 3/4/Zero 2 W, disattiva il Bluetooth in modo che l'UART completa sia libera.
+
+## Sistemi operativi
+
+| Sistema operativo | Stato |
+| --- | --- |
+| Raspberry Pi OS (64 bit) | Consigliato su Raspberry Pi. Necessario per le telecamere CSI. |
+| Debian (64 bit) | Supportato. |
+| Ubuntu (64 bit), incluso Ubuntu per Raspberry Pi | Supportato. Le telecamere CSI su un Pi non funzionano su Ubuntu, perché lo stack delle telecamere Raspberry Pi non è pacchettizzato; le telecamere USB sì. |
+| Qualsiasi sistema a 32 bit | **Non supportato.** L'installer si ferma con *No installation candidate*. |
+
+## Controllori di volo
+
+UAVcast-Pro v6 funziona con qualsiasi controllore di volo compatibile con MAVLink, via USB o porta TELEM: ArduPilot (Copter, Plane, Rover, VTOL e altri tipi di veicolo) e PX4, su schede della famiglia Pixhawk e Cube, Matek, Holybro, CUAV e altre. I nomi delle modalità di volo e i pulsanti di modalità nella Mappa di Volo e in Fleet Manager seguono ArduPilot; con PX4, cambia le modalità dalla tua stazione di terra.
+
+## Telecamere
+
+| Tipo | Esempi | Note |
+| --- | --- | --- |
+| CSI di Raspberry Pi | Camera Module 2 e 3, HQ Camera, altri sensori libcamera (imx219, imx708 …) | Raspberry Pi OS o Debian. Due telecamere CSI su schede con due connettori (Pi 5, Compute Module). |
+| USB (UVC) | Logitech C920, C615 e la maggior parte delle webcam UVC | Qualsiasi sistema operativo. |
+| Altre sorgenti | Telecamere IP, cattura HDMI | Tramite una **Pipeline Personalizzata**. |
+
+Fino a due telecamere, commutate o trasmesse contemporaneamente. Audio da un microfono USB o dal microfono integrato di una telecamera.
+
+## Modem LTE / 4G
+
+| Tipo | Come funziona | Esempi |
+| --- | --- | --- |
+| **HiLink** | Il modem è un piccolo router e appare come scheda di rete (driver `cdc_ether`, `huawei_cdc_ncm`, `rndis_host`) | Huawei E3372h, E8372h |
+| **Tradizionale (PPP)** | Gestito da ModemManager; UAVcast-Pro lo collega, sceglie l'APN e si riconnette | Huawei E3372s, moduli Quectel e Sierra Wireless su vettori USB |
+
+I modem tradizionali devono essere supportati da ModemManager: vedi l'[elenco dei dispositivi supportati da ModemManager](https://www.freedesktop.org/wiki/Software/ModemManager/SupportedDevices/). Scegli un modello le cui bande corrispondano al tuo operatore.
+
+## Ricevitori GPS RTK
+
+Le correzioni NTRIP richiedono un ricevitore compatibile con RTK (a fase della portante) sul controllore di volo, ad esempio moduli basati su u-blox ZED-F9P, CubePilot Here3+ o Septentrio Mosaic. I moduli di navigazione standard come M8N, M9N o M10 non possono usare le correzioni RTK.
+
+Source: https://docs.uavmatrix.com/it/reference/supported-hardware/

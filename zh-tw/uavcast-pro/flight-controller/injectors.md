@@ -1,0 +1,104 @@
+# 注入器
+
+> 使用 UAVcast-Pro 注入器，透過 HTTP、UDP 或序列埠，將腳本、Arduino 或 LTE 數據機的感測器讀數送入 MAVLink 串流，讓 QGC 與 Mission Planner 能夠看到這些數值。
+
+注入器會將來自 UAVcast-Pro 外部的資料（例如 Python 腳本、Arduino 或網路上的感測器）以 `NAMED_VALUE_FLOAT`（或 `NAMED_VALUE_INT`）訊息的形式送入 MAVLink 串流。每個已連接的地面站都會以一般遙測的形式接收這些數值：Mission Planner 會在 **Status** 分頁中顯示，QGroundControl 則會在 MAVLink 檢查器中顯示。這些數值也會自動出現在[資料流](https://docs.uavmatrix.com/zh-tw/uavcast-pro/data-streams/)儀表板中。請開啟 **Flight Controller → Injectors**（飛行控制器 → 注入器）。
+
+常見用途：伴隨電腦上的輻射、氣體或氣象感測器，用於連線監測的 LTE 訊號值（RSRP、SINR），或您自己的腳本計算出的數值。
+
+## 選擇傳輸方式
+
+| 類型 | 資料如何送達 | 最適合 |
+| --- | --- | --- |
+| **HTTP** | 以 POST 方式將 JSON 傳送到含有唯一金鑰的 URL | 最簡單。任何能發出 HTTP 請求的程式都可以使用。 |
+| **UDP** | 以 `NAME=VALUE` 行或 JSON 形式，將封包送至無人機上的某個連接埠 | 負擔最低，適用於受信任的本地網路。無驗證機制。 |
+| **Serial**（序列） | 從 `/dev/tty*` 裝置讀取的行 | 有線連接的感測器，例如透過 USB 連接的 Arduino。 |
+
+建立注入器後即無法變更類型。
+
+## 建立注入器
+
+1. 前往 **Flight Controller → Injectors**（飛行控制器 → 注入器），然後選擇 **Add injector**（新增注入器）。
+2. 輸入 **Name**（名稱，僅在介面中顯示），並選擇 **Input type**（輸入類型）。
+3. 保持 **MAVLink sysid** 為 `1`，讓這些數值與飛行控制器屬於同一架飛行器；除非需要其他設定，否則請保持 **MAVLink compid** 為 `194`（使用者酬載）。
+4. 可選：設定 **Name prefix**（名稱前綴），例如 `BAL_`，使 `RAD1` 以 `BAL_RAD1` 的形式送出。
+5. 若使用 UDP 或 Serial，請填寫監聽器設定。然後選擇 **Create**（建立）。
+6. 在注入器的卡片上選擇 **Send test signal**（傳送測試訊號），送出一個數值，並在地面站中確認。
+
+![注入器分頁，顯示 No injectors yet、常見用途、HTTP、UDP 與 Serial 傳輸方式，以及 Add injector 按鈕](https://docs.uavmatrix.com/zh-tw/img/screenshots/uavcast-pro/flight-controller--injectors.webp)
+
+*建立第一個注入器之前的飛行控制器 → 注入器：常見用途與三種傳輸方式。*
+
+## 傳送資料
+
+**HTTP**
+
+建立 HTTP 注入器後，其卡片會顯示 **HTTP endpoint**（HTTP 端點）。URL 的格式為 `http://<drone-ip>/api/inject/<token>`，並透過一般的網頁介面連接埠傳送。選擇 **Copy URL**（複製 URL）即可複製。
+
+```bash
+curl -X POST http://192.168.1.50/api/inject/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"name":"RAD1","value":0.077}'
+```
+
+```bash
+curl -X POST http://192.168.1.50/api/inject/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"samples":[{"name":"TEMP","value":21.4},{"name":"HUM","value":48}]}'
+```
+
+回應會統計處理結果：`{"accepted":2,"rateLimited":0,"rejected":0}`。金鑰是唯一的保護機制。若金鑰外洩，請選擇 **Rotate token**（輪替金鑰）並更新您的用戶端。
+
+**UDP**
+
+注入器預設會在 **Port**（連接埠）`14600` 與 **Bind address**（繫結位址）`0.0.0.0`（所有介面）上監聽。若傳送端在無人機本機上執行，請使用 `127.0.0.1`。
+
+```bash
+echo "RAD1=0.077" | nc -u -w1 192.168.1.50 14600
+```
+
+```python
+import json, socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.sendto(json.dumps({"name": "RAD1", "value": 0.077}).encode(), ("192.168.1.50", 14600))
+```
+
+**序列**
+
+注入器會以 **Baud rate**（鮑率，預設 `115200`）從 **Device path**（裝置路徑，預設 `/dev/ttyUSB0`）讀取以換行字元結尾的行。每一行即為一筆取樣：Key=Value 協定使用 `NAME=VALUE`，或 JSON 物件。若裝置被拔除，它會自動重新連線。
+
+```cpp
+void setup() { Serial.begin(115200); }
+void loop() {
+  Serial.print("LIGHT=");
+  Serial.println(analogRead(A0));
+  delay(200);
+}
+```
+
+> **MAVLink 名稱最多 10 個字元**
+>
+> `NAMED_VALUE_FLOAT` 名稱（含前綴）的長度上限為 10 個字元。請將前綴保持簡短（最多 8 個字元），並讓名稱精簡。
+
+## 設定參考
+
+| 設定 | 預設值 | 可用值 | 說明 |
+| --- | --- | --- | --- |
+| **Name**（名稱） | 空白 | 文字 | 僅作為介面中的標籤。 |
+| **Input type**（輸入類型） | **HTTP** | **HTTP**、**UDP**、**Serial** | 建立後即固定。 |
+| **Enabled**（啟用） | 開啟 | 開啟、關閉 | 關閉時會保留設定，但停止監聽程式。 |
+| **MAVLink sysid** | `1` | 1–255 | 與飛行控制器相同時，這些數值會與該飛行器歸為一組。 |
+| **MAVLink compid** | `194` | 0–255 | 194 常用於使用者酬載感測器。 |
+| **Name prefix**（名稱前綴） | 空白 | 最多 8 個 ASCII 字元 | 會加在每個訊號名稱的前面。 |
+| **Rate limit (Hz per signal)**（速率限制，每個訊號的 Hz） | `10` | 每秒取樣數 | 超出的取樣會被捨棄，並計入 **Rate-limited**（速率受限）。可保護連線免於失控的傳送端影響。 |
+| **Protocol**（協定，UDP、Serial） | **Key=Value (line-delimited)**（Key=Value，逐行） | **Key=Value (line-delimited)**、**JSON**（`{name, value}`） |  |
+| **Port**（連接埠，UDP） | `14600` | 1–65535 |  |
+| **Bind address**（繫結位址，UDP） | `0.0.0.0` | IP 位址 | `127.0.0.1` 只接受本機的傳送端。 |
+| **Device path**（裝置路徑，Serial） | `/dev/ttyUSB0` | 裝置路徑 | 執行 `ls /dev/tty*` 即可找到。 |
+| **Baud rate**（鮑率，Serial） | `115200` |  | 必須與傳送端相符。 |
+
+每張卡片都會顯示 **Accepted**（已接受）、**Rate-limited**（速率受限）與 **Rejected**（已拒絕）計數，讓您得知資料是否送達，以及資料是否有效。
+
+注入器會在 UAVcast-Pro 服務內執行，並隨開機啟動，因此即使未開啟網頁介面，數值仍會持續送出。
+
+Source: https://docs.uavmatrix.com/zh-tw/uavcast-pro/flight-controller/injectors/

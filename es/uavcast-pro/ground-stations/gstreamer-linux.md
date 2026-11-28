@@ -1,0 +1,84 @@
+# GStreamer en Linux
+
+> Instala GStreamer en Ubuntu, Debian o Fedora y reproduce el video H.264 y el audio Opus del dron UAVcast-Pro con gst-launch-1.0, incluyendo una segunda cámara, baja latencia y ufw.
+
+GStreamer reproduce el stream de video de UAVcast-Pro en una ventana con un solo comando. Úsalo para probar la ruta del video, ver una segunda cámara o escuchar el audio. Funciona en cualquier escritorio Linux, incluida una Raspberry Pi usada como estación de control en tierra.
+
+## Antes de empezar
+
+En el dron, añade un destino en [Control en Tierra](https://docs.uavmatrix.com/es/uavcast-pro/ground-stations/) con la IP de esta computadora (`ip -4 addr`; usa la dirección VPN por 4G) y activa **Habilitar Video**.
+
+## Instalar GStreamer
+
+**Ubuntu / Debian / Raspberry Pi OS**
+
+```bash
+sudo apt update
+sudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav
+```
+
+`gstreamer1.0-libav` proporciona el decodificador H.264 (`avdec_h264`). Sin él, el comando de abajo falla.
+
+**Fedora**
+
+```bash
+sudo dnf install gstreamer1 gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugin-libav
+```
+
+Los repositorios de Fedora dejan fuera la mayor parte del soporte H.264 por razones de patentes, así que `avdec_h264` puede seguir faltando después de esto. Si la comprobación de abajo falla, activa [RPM Fusion](https://rpmfusion.org/) y sigue su guía de multimedia para obtener las bibliotecas completas de códecs.
+
+Comprueba que el decodificador H.264 esté instalado:
+
+```bash
+gst-inspect-1.0 avdec_h264
+```
+
+Muestra los detalles del elemento. *No such element or plugin* significa que falta el decodificador.
+
+## Reproducir el video
+
+```bash
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+Se abre una ventana cuando llega el primer fotograma clave. Presiona **Ctrl+C** para detener.
+
+> **Lo que deberías ver**
+>
+> 1. La terminal imprime `Setting pipeline to PLAYING ...` y espera el video.
+> 2. Cuando llegan los primeros paquetes, `-v` imprime líneas que contienen `caps = application/x-rtp`.
+> 3. Se abre una ventana de video con la imagen de la cámara.
+>
+> Si se detiene después del paso 1, ningún video llega a esta computadora: consulta la tabla de resolución de problemas de abajo.
+
+- **Cámara 2** en [doble stream](https://docs.uavmatrix.com/es/uavcast-pro/camera/multi-camera/): ejecútalo de nuevo con `port=5601`.
+- **Latencia más baja** en un buen enlace: reemplaza `rtpjitterbuffer` por `rtpjitterbuffer latency=0`. Mantén el valor predeterminado en 4G.
+
+## Escuchar el audio
+
+Con **Enviar audio a estaciones de control en tierra** activado, el audio llega al puerto de video + 2:
+
+```bash
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp, media=(string)audio, clock-rate=(int)48000, encoding-name=(string)OPUS, payload=(int)97" ! rtpjitterbuffer ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+## Firewall
+
+La mayoría de las distribuciones de escritorio no bloquean el UDP entrante. Si `ufw` está activo:
+
+```bash
+sudo ufw allow 5600:5602/udp
+sudo ufw allow 14550/udp
+```
+
+## Resolución de problemas
+
+| Mensaje o síntoma | Solución |
+| --- | --- |
+| *no element "avdec_h264"* | Instala `gstreamer1.0-libav`. |
+| *no element "rtph264depay"* | Instala `gstreamer1.0-plugins-good`. |
+| Se ejecuta, pero no hay ventana | No llega nada. Revisa la IP de destino en el dron, **Habilitar Video** y el firewall. `sudo tcpdump -ni any udp port 5600` muestra si los paquetes llegan a la computadora. |
+| Error de bind al iniciar | Otro programa (QGroundControl u otro GStreamer) escucha en el puerto. Ciérralo. |
+| La ventana se abre, pero la imagen se ve gris y con manchas | Pérdida de paquetes. Reduce el bitrate en el dron y configura **Tasa de Recuperación del Stream** en 15–30 fotogramas. |
+
+Source: https://docs.uavmatrix.com/es/uavcast-pro/ground-stations/gstreamer-linux/

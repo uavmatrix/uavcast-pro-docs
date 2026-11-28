@@ -1,0 +1,73 @@
+# Correcciones NTRIP / RTK
+
+> Transmite correcciones RTCM3 desde un caster NTRIP por 4G/LTE a tu controlador de vuelo para posicionamiento RTK Fixed. Configuración de caster, punto de montaje, VRS y GGA.
+
+UAVcast-Pro tiene un cliente NTRIP integrado. Se conecta a un caster NTRIP v1 o v2 a través del enlace a internet del dron, recibe correcciones RTCM3 y las pasa al controlador de vuelo como el mensaje MAVLink `GPS_RTCM_DATA`, igual que la función "Inject GPS" de Mission Planner, pero desde el propio dron. No necesitas una estación de control ni una estación base en el sitio. Ábrelo en **Controlador de Vuelo → NTRIP / RTK**.
+
+## Antes de empezar
+
+- Un GPS compatible con RTK en el controlador de vuelo: un receptor multifrecuencia de fase portadora, como u-blox F9P, Holybro H-RTK, CUAV C-RTK, Here3+ o Septentrio Mosaic. Un GPS M8/M10 estándar ignora las correcciones.
+- Una cuenta con un caster NTRIP: una red CORS nacional, un servicio comercial (Trimble, Hexagon, Topcon y otros) o [RTK2go](http://rtk2go.com/). Necesitas el host, el puerto, el punto de montaje y, normalmente, un usuario y una contraseña.
+- Internet en el dron y un controlador de vuelo conectado.
+
+## Configurar el cliente NTRIP
+
+1. Ve a **Controlador de Vuelo → NTRIP / RTK**.
+2. En **Caster**, introduce el **Host del caster** (por ejemplo `ntrip.example.com`) y el **Puerto** (`2101` para la mayoría de los casters).
+3. Introduce el **Usuario** y la **Contraseña** en **Autenticación**. Selecciona **Probar conexión** para verificarlos: *El caster aceptó las credenciales.*
+4. Selecciona **Explorar puntos de montaje**, elige el más cercano de la lista y selecciona **Seleccionar**. O escríbelo en **Punto de montaje**.
+5. Si el punto de montaje es un flujo VRS o de "base más cercana" (la columna **NMEA** dice **Required**), mantén activada **Enviar GGA upstream**.
+6. Activa **Habilitar cliente NTRIP**.
+
+La tarjeta **Estado** cambia a **Transmitiendo correcciones** y muestra **Total recibido**, **Rendimiento**, **Último frame RTCM** y **Tipos de mensaje recientes**. Con cielo despejado, **Fijación RTK del controlador de vuelo** pasa de **Fijación 3D** a **RTK Float** y luego a **RTK Fijo**, normalmente en uno o dos minutos.
+
+![Pestaña NTRIP / RTK con el panel de estado mostrando Deshabilitado y contadores en cero, y la tarjeta de calidad GPS](https://docs.uavmatrix.com/es/img/screenshots/uavcast-pro/flight-controller--ntrip.webp)
+
+*Controlador de Vuelo → NTRIP / RTK antes de configurar un caster: estado Deshabilitado, contadores en cero y sin fijación GPS.*
+
+## Referencia de ajustes
+
+| Ajuste | Predeterminado | Valores | Notas |
+| --- | --- | --- | --- |
+| **Habilitar cliente NTRIP** | Desactivado | Activado, desactivado |  |
+| **Host del caster** | vacío | nombre de host o IP | Obligatorio. |
+| **Puerto** | `2101` | 1–65535 | Algunos casters TLS usan 2102 o 443. |
+| **Punto de montaje** | vacío | nombre del punto de montaje del caster | Obligatorio. Usa **Explorar puntos de montaje** para leer la sourcetable del caster. |
+| **Usar TLS (HTTPS)** | Desactivado | Activado, desactivado | Para casters que requieren TLS. La mayoría de los casters públicos usan TCP sin cifrar. |
+| **Usuario** / **Contraseña** | vacío |  | Déjalos vacíos para casters anónimos. RTK2go requiere una dirección de correo real como usuario y ninguna contraseña. |
+| **Enviar GGA upstream** | Activado | Activado, desactivado | Envía tu posición como NMEA `$GPGGA` para que los casters VRS y de punto más cercano puedan generar correcciones para tu ubicación. |
+| **Intervalo de envío (segundos)** | `10` | segundos | Frecuencia con la que se envía GGA. |
+| **Fuente de posición** | **Posición en vivo del controlador de vuelo** | **Posición en vivo del controlador de vuelo**, **Posición manual fija** |  |
+| **Latitud** / **Longitud** / **Altitud (m)** | `0` |  | Posición manual. También se usa como respaldo hasta que el controlador de vuelo tenga fijación GPS. |
+
+## Leer la tarjeta de calidad GPS
+
+**Calidad GPS** muestra la fijación en vivo del controlador de vuelo, más una medición que no depende de la estimación propia del receptor:
+
+- **Tipo de fijación** y **Satélites**.
+- **Precisión horizontal** y **Precisión vertical**: la estimación propia del receptor.
+- **Estabilidad de posición (1σ)**: cuánto se mueve realmente la posición mientras el dron está quieto, medido en una ventana corta. En vuelo muestra **Moviéndose**.
+- **Última corrección**: tiempo desde el último frame RTCM reenviado. Si esto sigue creciendo, las correcciones se han detenido.
+
+Si ves **Sin estado RTK del receptor**, el controlador de vuelo nunca ha informado el estado RTK. Normalmente, el GPS no es compatible con RTK. Las correcciones se siguen reenviando.
+
+## Sobre un enlace celular
+
+Las correcciones son pequeñas (normalmente de 1 a 5 kbit/s), así que caben sin problema junto a la telemetría y el video. Tras una caída breve de internet, el cliente se reconecta en segundos. Una conexión silenciosa con el caster se detecta en 15 segundos y se reabre.
+
+El [Tablero](https://docs.uavmatrix.com/es/uavcast-pro/dashboard/) muestra el estado del cliente en la fila **RTK corrections**.
+
+## Resolución de problemas
+
+| Síntoma | Qué revisar |
+| --- | --- |
+| Estado **Error**, y **Respuesta del caster** muestra `401` | Usuario o contraseña incorrectos, o la cuenta no tiene permiso en este punto de montaje. |
+| **Conectado**, pero sin frames RTCM | El punto de montaje necesita GGA. Activa **Enviar GGA upstream** y asegúrate de que el controlador de vuelo tenga fijación 3D, o configura una posición manual. |
+| Llega RTCM, pero la fijación se queda en **Fijación 3D** | El GPS no es compatible con RTK, o los sistemas GNSS del punto de montaje no coinciden con tu receptor. Revisa la columna **GNSS** en la sourcetable. |
+| **RTK Float**, nunca **RTK Fijo** | La base está demasiado lejos (busca menos de 20 a 30 km), hay mala visibilidad del cielo o multitrayectoria. Prueba un punto de montaje más cercano. |
+
+El **Registro del servicio NTRIP** en la parte inferior de la página muestra cada conexión, reconexión y respuesta del caster.
+
+Más comprobaciones: [Las correcciones RTK no llegan](https://docs.uavmatrix.com/es/troubleshooting/rtk-corrections-not-arriving/).
+
+Source: https://docs.uavmatrix.com/es/uavcast-pro/flight-controller/ntrip-rtk/

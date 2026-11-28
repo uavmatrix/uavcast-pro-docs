@@ -1,0 +1,55 @@
+# Support en FleetBot
+
+> Krijg hulp binnen Fleet Manager: stel een vraag aan de assistent FleetBot, open een supportticket met een schermafbeelding, volg de status en controleer de systeemstatus.
+
+Op elke pagina van Fleet Manager is hulp één klik verwijderd: de ronde supportknop rechtsonder opent een paneel met twee tabbladen, **FleetBot** en **Ticket**.
+
+## FleetBot vragen
+
+**FleetBot** is een AI-assistent die de pagina's en functies van Fleet Manager kent. Vraag bijvoorbeeld "Hoe sluit ik een tweede grondstation aan?" en hij antwoordt met links naar de juiste pagina.
+
+![Supportpaneel op het tabblad FleetBot met een vraag en een antwoord met een link naar de pagina Network](https://docs.uavmatrix.com/nl/img/screenshots/fleet-manager/support-bubble--fleetbot.webp)
+
+*Supportpaneel, tabblad FleetBot, dat antwoordt op het toevoegen van een streamkoppeling, met een link naar Network → Stream Bindings.*
+
+- Typ uw vraag bij **Ask FleetBot...** en verstuur die.
+- Een gesprek bevat maximaal 20 berichten van elk maximaal 2.000 tekens. Bereikt u de limiet, start dan een nieuw gesprek.
+- FleetBot kan het fout hebben, vooral bij cijfers. Wanneer het niet overeenkomt met deze documentatie, gaat de documentatie voor.
+
+> **Wat FleetBot ziet**
+>
+> FleetBot ontvangt alleen wat u in de chat typt, niet de gegevens van uw drones. Berichten worden naar het Claude AI-model van Anthropic gestuurd om het antwoord te genereren. Plak geen authenticatiesleutels, wachtwoorden of licentiesleutels.
+
+## Een supportticket openen
+
+1. Open het supportpaneel en kies het tabblad **Ticket**.
+2. Kies een **Category**: **Bug Report**, **Feature Request**, **General Inquiry** of **Question**.
+3. Voer een **Subject** in (5 tot 200 tekens) en een **Message** (20 tot 5.000 tekens). Vermeld welke drone, wat u deed en wat u verwachtte.
+4. Optioneel: voeg een schermafbeelding toe. **Capture** legt het scherm vast via uw browser (u kiest het venster), **Upload** voegt een afbeeldingsbestand van maximaal 5 MB toe.
+5. Selecteer **Submit Ticket**.
+
+![Supportpaneel op het tabblad Ticket met velden voor categorie, onderwerp, bericht en schermafbeelding](https://docs.uavmatrix.com/nl/img/screenshots/fleet-manager/support-bubble--ticket.webp)
+
+*Tabblad Ticket ingevuld als Bug Report over een drone die vastzit op PAIRING, met Capture en Upload voor een optionele schermafbeelding.*
+
+U ontvangt een ticketnummer zoals `SUP-7KQ2XA`. Fleet Manager registreert ook de pagina waarop u was en uw browser, zodat support het probleem kan reproduceren.
+
+> **Voeg logboeken toe bij problemen met de drone**
+>
+> Bij problemen aan de drone-kant helpen logboeken het meest. Een ticket accepteert alleen een afbeelding. Stuur daarom het UAVcast-Pro-logboekpakket (een ZIP-bestand, zie [Logboeken verzamelen](https://docs.uavmatrix.com/nl/troubleshooting/collect-logs/)) of het bestand **Download logs** van het tabblad **Logs** van de drone naar **[support@uavmatrix.com](mailto:support@uavmatrix.com)**, met uw ticketnummer (bijvoorbeeld `SUP-7KQ2XA`) in het onderwerp.
+
+## Uw tickets volgen
+
+**Settings → Support** toont uw tickets met hun status: **Open**, **In Progress**, **Resolved** of **Closed**. Open een ticket om de details en de bijgevoegde schermafbeelding te zien. Selecteer **Close Ticket** wanneer uw probleem is opgelost. Daar kunt u ook een ticket aanmaken met **Create Support Ticket**.
+
+## De supportknop verbergen
+
+Selecteer het verbergpictogram (**Hide support bubble**) in de paneelkop, of zet de schakelaar **Support Chat Bubble** uit in **Settings → Support**. Zet hem op dezelfde plek weer aan. U kunt altijd tickets openen via **Settings → Support**.
+
+## Andere manieren om hulp te krijgen
+
+- **Systeemstatus:** **System → Status** toont actieve en eerdere incidenten. Gaan er veel drones tegelijk offline, controleer dit dan eerst. Zie [Statusindicatoren en meldingen](https://docs.uavmatrix.com/nl/fleet-manager/alerts-and-status/#status-page).
+- **E-mail:** [support@uavmatrix.com](mailto:support@uavmatrix.com).
+- **Community:** de [UAVmatrix Discord](https://discord.gg/xwqMTXh).
+
+Source: https://docs.uavmatrix.com/nl/fleet-manager/support/

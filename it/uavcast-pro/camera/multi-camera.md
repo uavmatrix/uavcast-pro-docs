@@ -1,0 +1,68 @@
+# Due telecamere: commutazione RC e doppio flusso
+
+> Collega due telecamere a UAVcast-Pro e passa dall'una all'altra dal trasmettitore RC, oppure trasmetti entrambe contemporaneamente a QGroundControl o Mission Planner su porte UDP separate.
+
+UAVcast-Pro gestisce due telecamere, ad esempio una telecamera FPV frontale e una telecamera rivolta verso il basso o montata su gimbal. Puoi usarle in due modi:
+
+- **Commutazione**: un solo stream, e scegli quale telecamera lo alimenta, dall'interfaccia web o da un canale RC del trasmettitore. Usa la banda e la CPU di un solo stream.
+- **Doppio flusso**: entrambe le telecamere trasmettono contemporaneamente, ciascuna sulla propria porta UDP, con risoluzione, FPS e bitrate propri. Usa il doppio della banda e della CPU.
+
+Combinazioni supportate: CSI + USB, due telecamere USB, oppure due telecamere CSI su schede con due connettori per telecamera (Raspberry Pi 5, schede carrier per Compute Module).
+
+## Aggiungere la seconda telecamera
+
+1. Vai su **Telecamera → Impostazioni telecamera**. Assicurati che **CAM 1** abbia una telecamera.
+2. Seleziona **Aggiungi Telecamera** accanto a CAM 1 e scegli la seconda telecamera. Compare nello slot **CAM 2**.
+3. Clicca uno slot per rendere attiva quella telecamera (*Click to switch to Camera 2*).
+
+In modalità commutazione entrambe le telecamere condividono risoluzione e frame rate della Telecamera 1 (*Resolution and FPS from Camera 1 will be used*). Se la Telecamera 2 non supporta quella dimensione, usa la sua risoluzione nativa ed è scalata, a meno che tu non attivi **Uguale Risoluzione Telecamera 1** per una telecamera che la supporta.
+
+## Passare da una telecamera all'altra con il trasmettitore RC
+
+**Cambio Canale RC** compare quando sono impostate due telecamere e il doppio flusso è disattivato.
+
+1. Sul trasmettitore, assegna un interruttore a due posizioni a un canale libero, ad esempio il canale 7. Verifica in Mission Planner o in **Mappa di Volo → Radio** che il canale passi tra circa 1000 e 2000 µs.
+2. In **Cambio Canale RC**, attiva **Attiva cambio telecamera con canale RC**.
+3. Scegli il **Canale RC**.
+4. Sposta l'interruttore e osserva **PWM attuale**. Sotto 1500 seleziona la Telecamera 1, sopra 1500 seleziona la Telecamera 2.
+
+![Pannello di Controllo Telecamera con CAM 1 compilata e uno slot Aggiungi Telecamera vuoto](https://docs.uavmatrix.com/it/img/screenshots/uavcast-pro/camera--control-panel.webp)
+
+*Gli slot delle telecamere: CAM 1 in uso e Aggiungi Telecamera per la seconda. Cambio Canale RC compare quando entrambi gli slot sono pieni e il doppio flusso è disattivato.*
+
+Mentre il cambio RC è attivo, cliccare su uno slot della telecamera non ha effetto: il trasmettitore ha il controllo. Disattiva il cambio RC per scegliere le telecamere manualmente.
+
+| Impostazione | Predefinito | Valori | Note |
+| --- | --- | --- | --- |
+| **Attiva cambio telecamera con canale RC** | Disattivato | Attivo, disattivato |  |
+| **Canale RC** | Canale 7 | Canale 1–18 | Letto dall'ingresso RC del controllore di volo. |
+| Punto di commutazione | 1500 µs | fisso | PWM < 1500 = Telecamera 1, PWM > 1500 = Telecamera 2. |
+
+## Trasmettere entrambe le telecamere contemporaneamente (doppio flusso)
+
+1. Con due telecamere impostate, attiva **Doppio flusso** nella pagina Telecamera. Il badge mostra **Entrambe attive**.
+2. In **Impostazioni per telecamera**, imposta risoluzione, FPS e bitrate per ciascuna telecamera.
+3. Nelle [Stazioni di Controllo a Terra](https://docs.uavmatrix.com/it/uavcast-pro/ground-stations/), ogni destinazione ora ha **Porta Video (Telecamera 2)**. Lasciala vuota per usare **Porta Video** + 1 (`5601`), oppure inserisci un'altra porta. Con più destinazioni sullo stesso computer, distanzia le loro porte video di 3 (`5600`, `5603` …), così la Telecamera 2 e l'audio non finiscono sulla porta di un'altra destinazione.
+4. Imposta un secondo ricevitore video sulla stazione di controllo a terra per quella porta.
+
+La Telecamera 1 va alla **Porta Video** di ogni stazione di controllo a terra (predefinita `5600`), la Telecamera 2 a **Porta Video (Telecamera 2)** (predefinita `5601`).
+
+QGroundControl mostra un flusso video alla volta. Per guardare la Telecamera 2, avvia un secondo ricevitore, ad esempio una seconda istanza di QGroundControl sulla porta 5601, Mission Planner con una sorgente GStreamer su 5601, oppure GStreamer direttamente:
+
+```bash
+gst-launch-1.0 udpsrc port=5601 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264" ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+> **Controlla CPU e collegamento**
+>
+> Due stream raddoppiano il carico di codifica e la banda. Tieni d'occhio **Carico del sistema** (*CPU is near its limit. Lower a stream's resolution/bitrate, or turn off the second stream.*) e mantieni il bitrate combinato ben al di sotto del tuo collegamento cellulare. Una suddivisione comune è 1280x720 a 1500 kbps per la telecamera principale e 854x480 a 600 kbps per la seconda.
+
+La Mappa di Volo mostra una finestra video per ogni stream attivo. Le registrazioni possono includere entrambe le telecamere: vedi **Registra telecamera 2** in [Registrazioni](https://docs.uavmatrix.com/it/uavcast-pro/camera/recordings/).
+
+## Risoluzione dei problemi
+
+- **Seconda telecamera mancante nell'elenco**: due telecamere CSI richiedono una scheda con due porte per telecamera. Su un Raspberry Pi, riavvia dopo aver installato UAVcast-Pro: l'installer amplia il pool di memoria della telecamera (CMA), così che due telecamere possano funzionare insieme.
+- **Immagine della Telecamera 2 deformata**: in modalità commutazione la Telecamera 2 viene scalata alla risoluzione della Telecamera 1. Usa telecamere con lo stesso rapporto d'aspetto, oppure attiva **Uguale Risoluzione Telecamera 1**.
+- **Il cambio non fa nulla**: controlla **PWM attuale**. *No signal* significa che il controllore di volo non riporta l'ingresso RC su quel canale.
+
+Source: https://docs.uavmatrix.com/it/uavcast-pro/camera/multi-camera/

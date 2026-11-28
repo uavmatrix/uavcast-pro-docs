@@ -1,0 +1,60 @@
+# Atualizar o UAVcast-Pro
+
+> Atualize o UAVcast-Pro pela interface web ou pela linha de comando, instale uma versão anterior e veja o que acontece com suas configurações, a porta do servidor e as gravações.
+
+Atualize o UAVcast-Pro em **Aplicação → Atualizar Aplicação** na interface web, ou executando o instalador novamente via SSH. Ambos os métodos mantêm suas configurações, usuários, licença e gravações. O drone precisa de acesso à internet, e você deve reiniciá-lo ao final da atualização.
+
+> **Nunca atualize antes de um voo**
+>
+> Uma atualização para todos os serviços do UAVcast-Pro, incluindo telemetria e vídeo, e exige reinicialização. Atualize em solo, com a aeronave desarmada.
+
+## Atualizar pela interface web
+
+1. Vá em **Aplicação**. O cartão **Atualizar Aplicação** mostra **Versão Atual** e **Última Versão**. Um banner verde *Nova versão … disponível* aparece quando há uma versão mais recente.
+2. Deixe **Selecione a versão para atualizar** na versão mais recente, ou escolha outra.
+3. Selecione **Atualizar para …** (ou **Atualizar Agora**). **Progresso** mostra as etapas de download e instalação. Isso leva alguns minutos, mais em uma Pi Zero 2 W ou Pi 3.
+4. Quando o banner **Reinicialização Pendente** aparecer, selecione **Reiniciar Agora**. O dispositivo reinicia.
+5. Abra a interface web novamente e verifique **Versão Atual**.
+
+![Cartão Atualizar Aplicação com versão atual e mais recente, um banner de nova versão disponível e o botão de atualização](https://docs.uavmatrix.com/pt/img/screenshots/uavcast-pro/application--update-available.webp)
+
+*Aplicação → Atualizar Aplicação com uma versão mais recente disponível.*
+
+## Atualizar pela linha de comando
+
+Execute o instalador novamente. Ele substitui os arquivos do programa e mantém o banco de dados:
+
+```bash
+curl -fsSL https://install.uavmatrix.com | sudo bash
+sudo reboot
+```
+
+Para instalar uma versão específica, liste as versões (não é necessário root) e depois instale uma delas com `-b`:
+
+```bash
+# List the versions available for this device
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l
+
+# Install a specific version
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.1
+```
+
+## Voltar para uma versão anterior
+
+Escolha a versão anterior em **Selecione a versão para atualizar** e atualize normalmente, ou use `-b` na linha de comando. Configurações feitas em uma versão mais nova podem não existir na versão anterior.
+
+## O que uma atualização mantém e substitui
+
+| Mantido | Substituído |
+| --- | --- |
+| Banco de dados de configurações (`/opt/uavcast-pro/uavcast.db`): estações de controle terrestre, câmera, modem, VPN, usuários, licença | Arquivos do programa em `/opt/uavcast-pro` (`build`, `dist`, `factory`, `install`) |
+| Gravações e registros de telemetria | Arquivos de serviço do systemd |
+| Participação no ZeroTier e no Tailscale | Pacotes de sistema dos quais o UAVcast-Pro depende (atualizados pelo apt) |
+
+A partir do UAVcast-Pro 6.5.3, uma **Porta do Servidor** personalizada definida na página Aplicação é mantida quando você atualiza. Versões anteriores a redefinem para 80: depois de atualizar a partir de uma delas, abra a interface web na porta 80 e salve sua porta novamente.
+
+## Veja o que mudou
+
+Cada versão é listada com suas alterações no [changelog](https://docs.uavmatrix.com/pt/reference/changelog/). Leia-o antes de atualizar um drone que voa operacionalmente.
+
+Source: https://docs.uavmatrix.com/pt/get-started/updating/

@@ -1,0 +1,52 @@
+# Security and privacy
+
+> How Fleet Manager secures drones with per-drone TLS certificates, isolates organizations on private WireGuard VPNs, enforces roles and stores data.
+
+This page is for the people who have to sign off on Fleet Manager: security officers, IT and operations managers.
+
+## Drone connection
+
+- **Per-drone client certificates.** At pairing, Fleet Manager issues each drone its own TLS client certificate. The drone uses it to connect to Fleet Manager's MQTT broker on port **8883**, the broker's only public listener. There is no shared password.
+- **Each drone can only use its own topics.** The certificate's identity is the drone's device ID, and the broker only lets a drone publish and subscribe under its own topics. One compromised drone can't read or command another.
+- **Outbound only.** Drones connect out to Fleet Manager. You don't open inbound ports on the drone or its network.
+- **Short pairing window.** Pairing codes are 8 random digits, valid 5 minutes and usable once. Code checks are rate-limited (10 checks and 5 pairing attempts per user per minute). The drone's certificate and VPN key are only handed out until the drone first connects, and never later than 15 minutes after the code expires.
+- **Certificate upgrades.** When Fleet Manager tightens the certificate scheme, older drones are flagged **Re-pair required** instead of being silently trusted.
+
+## Private VPN per organization
+
+- Each organization gets its own network on Fleet Manager's VPN server (`vpn-connect.uavmatrix.com`), a self-hosted Tailscale-compatible control server. Traffic between devices is end-to-end encrypted with WireGuard. Devices of one organization can't see another organization's devices: the VPN server enforces a separate access rule for each organization. If Fleet Manager can't confirm that isolation, it hides the auth key (*VPN isolation could not be verified, so the auth key is hidden.*) instead of handing out a key.
+- Joining needs an auth key that only Owners and Admins can create. Keys expire after 90 days. Drones receive the key automatically during pairing or **Push to Drone**, and only with an Owner's or Admin's consent.
+- Removing a device in **Network** removes it from the VPN server.
+
+## Access control
+
+- Sign-in goes through your UAVmatrix account. Fleet Manager stores no passwords.
+- Three roles per organization (Owner, Admin, Viewer), enforced on the server for every action. See [Roles and permissions](https://docs.uavmatrix.com/fleet-manager/team/roles-and-permissions/).
+- The SSH terminal and remote access to UAVcast-Pro are limited to Owners and Admins.
+- Invitation links are encrypted, can be used once and expire after 7 days.
+- UAVmatrix can suspend accounts or organizations that break the terms. Suspended users see **Account Suspended** or **Organization Suspended** with the reason and a support contact.
+
+## Data Fleet Manager stores
+
+| Data | Kept |
+| --- | --- |
+| Telemetry (position, altitude, speed, heading, battery, mode, armed state, GPS, service status), once per second | Per the organization's retention setting: 7 days to 1 year (default 1 year). Compressed after 7 days. Deleted when the drone is removed. |
+| Saved flight names and time ranges | Until deleted, or the drone is removed |
+| Commands sent to drones, with who sent them | Until the drone is removed |
+| Activity log (who paired, removed, invited, changed roles) | Kept when drones or members are removed |
+| Missions | Until deleted, or the organization is deleted |
+| Support tickets and their screenshots | Kept for support |
+
+Fleet Manager doesn't store video. Video and MAVLink to ground stations travel over the VPN between your devices, and Fleet Manager doesn't record them.
+
+The terminal and the remote UAVcast-Pro proxy pass through Fleet Manager's encrypted connection to the drone; their content isn't stored.
+
+VPN traffic goes directly between your devices when the networks allow it. When they don't (for example behind strict NAT or a mobile carrier), it falls back to Tailscale's public relay (DERP) servers. The traffic stays end-to-end encrypted with WireGuard either way; UAVmatrix doesn't run a relay.
+
+## Third parties
+
+- **Maps:** map tiles come from Esri; the airspace layer from OpenAIP through Fleet Manager.
+- **FleetBot:** chat messages are sent to Anthropic to generate answers. Nothing else from your organization is sent. See [Support and FleetBot](https://docs.uavmatrix.com/fleet-manager/support/#ask-fleetbot).
+- **Product analytics and error reports:** Fleet Manager uses PostHog for usage analytics, such as which pages are opened and which buttons are used, and to report app errors.
+
+Source: https://docs.uavmatrix.com/fleet-manager/security/

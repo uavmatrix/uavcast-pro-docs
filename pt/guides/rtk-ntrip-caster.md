@@ -1,0 +1,93 @@
+# GPS RTK pela 4G com um caster NTRIP
+
+> Transmita correções RTCM3 de um caster NTRIP pela LTE até o controlador de voo com o UAVcast-Pro para RTK Fixed, sem estação-base no local.
+
+O UAVcast-Pro pode obter correções RTCM3 de um caster NTRIP pelo próprio link de internet do drone e repassá-las ao controlador de voo. Você obtém posicionamento RTK Float ou RTK Fixed sem levar uma estação-base ou um rádio separado. Qualquer caster NTRIP v1 ou v2 padrão funciona.
+
+```text
+NTRIP caster ──RTCM3 over TCP/TLS──► UAVcast-Pro ──MAVLink GPS_RTCM_DATA──► flight controller ──► RTK GPS
+      ▲                                    │
+      └──────── GGA position (VRS) ────────┘
+```
+
+**Você precisa de:**
+
+- Um GPS compatível com RTK no controlador de voo, como um módulo u-blox F9P, Here3+ ou Septentrio Mosaic. Módulos de navegação M8N/M10 comuns não fazem RTK.
+- UAVcast-Pro com o controlador de voo **Conectado** e internet no drone.
+- Uma conta em um caster: uma rede CORS nacional, um serviço comercial (Trimble, Hexagon, Topcon …) ou o caster comunitário gratuito rtk2go.com.
+
+## 1. Informe o caster
+
+1. Abra **Controlador de Voo → NTRIP / RTK**.
+2. Digite o **Host do caster** e a **Porta** (geralmente `2101`).
+3. Ative **Usar TLS (HTTPS)** somente se o seu provedor exigir. Casters comerciais costumam exigir; os públicos raramente.
+4. Digite o **Usuário** e a **Senha**. Para o rtk2go.com, use seu e-mail como usuário e deixe a senha vazia.
+5. Clique em **Testar conexão**. Aguarde a mensagem **O caster aceitou as credenciais.**
+
+## 2. Escolha um mountpoint
+
+1. Clique em **Procurar mountpoints**. O UAVcast-Pro carrega a lista do caster.
+2. Escolha o mountpoint mais próximo de onde você voa. A lista mostra **Formato**, **GNSS**, **País**, **Localização** e se ele exige uma posição (**NMEA**: **Obrigatório**).
+3. Clique em **Selecionar**. O nome aparece em **Mountpoint**.
+
+![Cartão do caster com Ativar cliente NTRIP, campo de host do caster, porta 2101, campo de mountpoint, botão Procurar mountpoints e Usar TLS](https://docs.uavmatrix.com/pt/img/screenshots/uavcast-pro/flight-controller--ntrip-caster.webp)
+
+*O cartão do Caster. Procurar mountpoints, ao lado do campo Mountpoint, abre a lista de mountpoints.*
+
+## 3. Envie sua posição (casters VRS e de mountpoint mais próximo)
+
+Casters VRS e de mountpoint mais próximo constroem correções para a sua localização, então precisam da sua posição como uma sentença NMEA GGA.
+
+1. Deixe **Enviar GGA upstream** ativado (o padrão) com **Intervalo de envio (segundos)** em 10.
+2. Mantenha **Fonte da posição** em **Posição ao vivo do controlador de voo**.
+3. Digite também **Latitude**, **Longitude** e **Altitude (m)** na posição manual. O UAVcast-Pro a usa até que o controlador de voo tenha uma fixação de GPS.
+
+Para uma estação-base fixa única, o GGA não causa problemas, mas você pode desativá-lo.
+
+## 4. Inicie a transmissão
+
+Ative **Ativar cliente NTRIP**. Em poucos segundos, o painel de estado deve mostrar:
+
+1. **Estado**: **Transmitindo correções**, com **Resposta do caster** como `ICY 200 OK`.
+2. **Mensagens RTCM encaminhadas** aumentando e **Último quadro RTCM** em *agora mesmo*.
+3. **Tipos de mensagem recentes** com suas constelações, por exemplo 1005, 1077, 1087, 1097.
+4. O selo de fixação RTK passando de **Fixação 3D** para **RTK Float** e depois **RTK Fixed**, com céu aberto.
+
+![Aba NTRIP / RTK com o painel de estado mostrando Desativado e contadores zerados, e o cartão de qualidade GPS mostrando sem fixação](https://docs.uavmatrix.com/pt/img/screenshots/uavcast-pro/flight-controller--ntrip.webp)
+
+*O painel de estado e o cartão de qualidade GPS, mostrados aqui antes de configurar um caster (Desativado, sem fixação de GPS). Quando as correções começarem a chegar, estes são os campos a observar.*
+
+O cartão **Qualidade GPS** acrescenta a precisão reportada pelo receptor e uma **Estabilidade de posição (1σ)** medida, que não depende da estimativa do próprio receptor. O painel mostra o estado em **Correções RTK** e o tipo de fixação em **GPS**.
+
+## Predefinições
+
+```text
+Caster host   rtk2go.com
+Port          2101
+TLS           off
+Username      you@example.com
+Password      (empty)
+Mountpoint    nearest one from Browse mountpoints
+```
+
+```text
+Caster host   provider host name
+Port          2101 (sometimes 2102 or 443)
+TLS           as the provider says
+Username      provider account
+Password      provider password
+Mountpoint    the provider's VRS mountpoint
+GGA upstream  on, 10 s, live position from flight controller
+```
+
+## Bom saber
+
+- As correções trafegam pelo mesmo link MAVLink da telemetria, então o link com o controlador de voo precisa estar ativo.
+- Após uma queda breve da internet, as correções são retomadas em segundos. Se o caster ficar em silêncio, o UAVcast-Pro se reconecta sozinho.
+- A precisão diminui conforme aumenta a distância da estação-base. Escolha o mountpoint mais próximo ou use um serviço VRS.
+
+## Solução de problemas
+
+Preso em **Conectando**, uma resposta `401`, nenhum dado RTCM ou nenhuma fixação RTK: [Correções RTK não chegam](https://docs.uavmatrix.com/pt/troubleshooting/rtk-corrections-not-arriving/). Todas as configurações desta página são descritas em [NTRIP / RTK](https://docs.uavmatrix.com/pt/uavcast-pro/flight-controller/ntrip-rtk/).
+
+Source: https://docs.uavmatrix.com/pt/guides/rtk-ntrip-caster/

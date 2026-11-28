@@ -1,0 +1,46 @@
+# Reti
+
+> Visualizza ogni interfaccia di rete del drone e scegli se il Wi-Fi o il modem 4G/LTE trasporta il traffico, così il collegamento resta sul cellulare quando voli fuori portata Wi-Fi.
+
+La pagina Reti mostra ogni interfaccia di rete del drone (Ethernet, Wi-Fi, modem, VPN) e quale è la route predefinita. È anche il punto in cui scegli se il Wi-Fi o il modem cellulare è preferito quando entrambi sono connessi. Apri **Reti** nella barra laterale.
+
+![Pagina Reti con schede di riepilogo, Priorità Rete impostata su Automatico e la tabella delle interfacce con eth0 e wlan0](https://docs.uavmatrix.com/it/img/screenshots/uavcast-pro/networks.webp)
+
+*Reti con Automatico (Predefinito di Sistema) attivo e Wi-Fi come route predefinita.*
+
+## Scegliere la priorità di rete
+
+Quando Wi-Fi e modem sono entrambi connessi, Linux invia il traffico attraverso quello con la metrica di route più bassa. **Priorità Rete** imposta queste metriche per te:
+
+| Opzione | Usala quando | Effetto |
+| --- | --- | --- |
+| **Priorità WiFi (Modalità Interna)** | In laboratorio o a casa, per risparmiare dati mobili. | Metrica Wi-Fi 100, metrica modem 600. |
+| **Priorità Modem (Modalità Esterna)** | Prima di ogni volo tramite cellulare. | Metrica modem 100, metrica Wi-Fi 600. |
+| **Automatico (Predefinito di Sistema)** | Non vuoi che UAVcast-Pro modifichi nulla. | Le metriche di NetworkManager. |
+
+> **Passa a Priorità Modem prima del decollo**
+>
+> Se il drone decolla con la priorità Wi-Fi, il collegamento resta sul Wi-Fi finché il Wi-Fi non si perde, e poi deve passare al modem in volo. Questo causa un vuoto nella telemetria e nel video. Seleziona **Priorità Modem (Modalità Esterna)** a terra.
+
+La modifica si applica alle connessioni attive senza riavviarle (*Applicazione delle modifiche...*).
+
+> **Quali connessioni vengono modificate**
+>
+> La metrica Wi-Fi viene impostata sulla connessione NetworkManager chiamata `preconfigured`, cioè il nome che Raspberry Pi Imager assegna al Wi-Fi che inserisci durante la scrittura della scheda. Il Wi-Fi configurato in altri modi mantiene la propria metrica, ed Ethernet non viene mai modificata.
+
+## Informazioni sulle interfacce
+
+Le schede di riepilogo mostrano **Interfacce Attive**, **Gateway Predefinito** (e l'interfaccia su cui passa) e **Interfacce Totali**. **Interfacce di Rete** elenca ogni interfaccia con **Nome**, **Indirizzo IP**, **Gateway**, **Stato** (**Attivo**, **Inattivo**, **VPN**), **Velocità**, **Tipo** e quale è **Predefinito**.
+
+Nomi comuni delle interfacce:
+
+| Nome | Cos'è |
+| --- | --- |
+| `eth0`, `end0` | Ethernet cablata |
+| `wlan0` | Wi-Fi |
+| `ppp0`, `wwan0` | Modem tradizionale |
+| `usb0`, `eth1` | Modem HiLink |
+| `zt…` | ZeroTier |
+| `tailscale0` | Tailscale |
+
+Source: https://docs.uavmatrix.com/it/uavcast-pro/connectivity/networks/

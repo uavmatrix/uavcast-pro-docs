@@ -1,0 +1,64 @@
+# 许可证与席位
+
+> UAVcast-Pro 许可证和设备槽位如何决定您可以在 Fleet Manager 中配对哪些无人机，以及如何使用用其他邮箱购买的许可证。
+
+Fleet Manager 已包含在您的 UAVcast-Pro 许可证中。它没有独立的订阅、席位或套餐。您可以配对的无人机数量，由您在 [UAVmatrix 商店](https://uavmatrix.com/) 购买的 UAVcast-Pro 许可证决定：
+
+- **无人机：** 每架已配对的无人机都运行着已激活许可证的 UAVcast-Pro。每次激活会占用该许可证在商店中的一个 **Device Slots**（"2 of 5 device slots used"）。需要更多无人机？请购买更多许可证或设备槽位。**Fleet → Need more devices? → View Plans** 会带您前往商店。
+- **团队成员：** 免费。Fleet Manager 不限制您可以邀请的人数，成员也无需拥有自己的许可证。
+
+> Fleet Manager 已包含在 UAVcast-Pro 许可证中。每架配对的无人机都需要一个许可证。
+>
+> [购买 UAVcast-Pro](https://uavmatrix.com/zh/checkout) · [查看套餐和价格](https://uavmatrix.com/zh/products)
+
+## 配对时 Fleet Manager 的检查内容
+
+输入配对码时，Fleet Manager 会查找在该无人机上激活的许可证，并检查以下内容：
+
+1. 许可证存在且有效，未过期且未退款；并且
+2. 其**所有者邮箱**（购买该许可证的商店账户）属于您正在配对到的组织的**成员**（任意角色）。
+
+两项条件都满足时，无人机即可配对。每次重新配对时，Fleet Manager 都会再次检查。
+
+| 配对向导中的消息 | 含义 |
+| --- | --- |
+| **License is not owned by any member of this organization** | 该许可证属于一个邮箱不是此处成员的商店账户。 |
+| **License has expired** | 许可证的到期日已过。 |
+| **License has been refunded** | 该许可证已退款。 |
+| **Invalid license key** | 商店不认识无人机上的这个许可证。请在 UAVcast-Pro 中检查激活情况。 |
+
+在 UAVcast-Pro 请求配对码时，还会更早地检查一次许可证。如果 UAVcast-Pro 显示的是 **Invalid or inactive license** 而非配对码，则说明许可证已过期、已退款，或未关联到商店账户。
+
+关于无人机本身的激活问题，请参见 [激活您的许可证](https://docs.uavmatrix.com/zh-cn/get-started/license-activation/) 和 [许可证无法激活](https://docs.uavmatrix.com/zh-cn/troubleshooting/license-activation-failed/)。
+
+## 谁应拥有许可证
+
+Fleet Manager 通过邮箱进行匹配，因此请提前规划由谁购买：
+
+- **最简单的方式：** 组织的 Owner 使用其登录 Fleet Manager 的邮箱购买所有许可证。
+- **多名购买者：** 任何成员的许可证都会计入，包括 Viewer。负责采购的同事可以是 Viewer。
+- **客户拥有的无人机：** 如果客户购买了许可证，请将客户的商店邮箱邀请加入您的组织（Viewer 即可）。
+
+## 使用其他邮箱购买的许可证
+
+一种常见情况：许可证是用 `purchasing@company.com` 购买的，但飞手以 `anna@company.com` 登录 Fleet Manager。此时配对会失败，并显示 **License is not owned by any member of this organization**。
+
+您有两种解决方法：
+
+1. **邀请购买邮箱**加入组织。该账户需要登录一次以接受邀请。
+2. **向 UAVmatrix 支持团队申请为您的账户添加许可证邮箱。** 支持团队可以为某个 Fleet Manager 用户添加一个或多个额外邮箱。之后，这些邮箱所拥有的许可证在配对时将计入该用户名下，适用于该用户所属的每个组织。
+
+申请方式：从支持气泡中提交工单（类别 **General Inquiry**），或从您登录时使用的地址发送邮件至 [support@uavmatrix.com](mailto:support@uavmatrix.com)，并列出购买许可证时使用的其他邮箱。参见 [支持](https://docs.uavmatrix.com/zh-cn/fleet-manager/support/)。
+
+需要注意：
+
+- 邮箱匹配时不区分大小写。
+- 每个额外邮箱只能属于一个 Fleet Manager 用户。
+- 只有 UAVmatrix 支持团队可以添加或删除这些邮箱，它们不会显示在您自己的设置中。
+- 许可证仍保留在原始的商店账户中。此操作只改变您配对时 Fleet Manager 认定的所有者。
+
+## 在无人机之间转移许可证
+
+许可证是在 UAVcast-Pro 中按设备激活的，而不是在 Fleet Manager 中激活。要转移许可证，请先在 UAVcast-Pro 或商店中释放设备槽位，然后在新无人机上激活，再[配对新无人机](https://docs.uavmatrix.com/zh-cn/fleet-manager/pair-uav/)。参见 [更换伴随计算机](https://docs.uavmatrix.com/zh-cn/fleet-manager/fleet/remove-or-transfer/#replace-the-companion-computer)。
+
+Source: https://docs.uavmatrix.com/zh-cn/fleet-manager/licenses/

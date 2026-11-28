@@ -1,0 +1,116 @@
+# 快速入門
+
+> 將 MAVLink 飛行控制器連接到 UAVcast-Pro，並在 Mission Planner 或 QGroundControl 中取得遙測與即時影像，先在本地網路上完成，再切換至 4G/LTE。
+
+本指南將協助您把已安裝 UAVcast-Pro 的無人機，連接到 Mission Planner 或 QGroundControl，取得即時遙測與影像。您會先在本地網路上完成，因為此處出錯的機會較少，之後再切換至 4G/LTE。本地部分約需 10 分鐘。
+
+## 開始之前
+
+- 已安裝 UAVcast-Pro，且裝置已重新開機。請參閱[安裝](https://docs.uavmatrix.com/zh-tw/get-started/installation/)。
+- 您的授權金鑰。請參閱[許可證與啟動](https://docs.uavmatrix.com/zh-tw/get-started/license-activation/)。
+- 飛行控制器已透過 USB 或 TELEM 連接埠連接至伴隨電腦，並已通電。
+- 攝影機（選用）已連接。
+- 一台與無人機位於**同一網路**的筆電，並已安裝 Mission Planner 或 QGroundControl。請記下筆電的 IP 位址（Windows 使用 `ipconfig`，Linux 使用 `ip a`，macOS 則為 **System Settings → Network**）。
+
+## 1. 啟動許可證
+
+> 啟動無人機需要 UAVcast-Pro 許可證。請在 UAVmatrix 商店購買。
+>
+> [購買 UAVcast-Pro](https://uavmatrix.com/zh-TW/checkout) · [查看方案與價格](https://uavmatrix.com/zh-TW/products)
+
+1. 在瀏覽器中開啟 `http://<drone-ip>`。您會進入**應用程式**頁面。
+2. 將金鑰貼入**輸入許可證密鑰**，然後選擇**驗證**。
+
+側邊欄隨即解鎖。接著前往**使用者**，選擇**新增使用者**並建立管理員帳戶，以免網路上的任何人都能開啟網頁介面。
+
+## 2. 連接飛行控制器
+
+1. 前往**飛行控制器 → 連線**。
+2. 在 **Link type** 下，依您的接線選擇 **USB** 或 **UART / Serial**。
+3. 將 **Port** 與 **Baud rate** 保持為 **Automatic**。
+4. 若狀態面板顯示 **Link stopped**，請選擇**連接**。
+5. 等待狀態變為**已連接**。**Mavlink Information** 會填入飛行器類型、飛行模式、GPS 與電池資訊，頂部列會顯示 **FC Connected**。
+
+![飛行控制器連線頁面，顯示透過 USB 已連接、連線檢查的四個步驟皆通過，以及 MAVLink 檢查器](https://docs.uavmatrix.com/zh-tw/img/screenshots/uavcast-pro/flight-controller.webp)
+
+*飛行控制器 → 連線，USB 連線正常。*
+
+卡在 **Waiting for device**、**Detecting baud rate** 或 **No heartbeat**？請選擇 **Auto-detect**，並閱讀 **Connection check** 面板：它會指出第一個出錯的項目。更多資訊請參閱[飛行控制器](https://docs.uavmatrix.com/zh-tw/uavcast-pro/flight-controller/)。
+
+## 3. 將遙測與影像傳送到您的筆電
+
+1. 前往**地面控制站**。已有一張空白的目的地卡片。
+2. 輸入**名稱**，例如 `Laptop`。
+3. 在**目標IP或主機**中輸入筆電的 IPv4 位址，例如 `192.168.1.20`，然後按下 Enter。綠色勾號表示已儲存。
+4. 將**遙測連接埠**保持為 `14550`，**視訊連接埠**保持為 `5600`。
+5. 開啟**啟用遙測**。
+6. 若有攝影機，請開啟**啟用視訊**。
+
+欄位會在您離開時自動儲存，沒有儲存按鈕。
+
+## 4. 啟動攝影機
+
+若無攝影機，請略過此步驟。
+
+1. 前往**攝影機 → 攝影機設定**。
+2. 將**啟用攝影機？**設為**是**。
+3. 點擊**攝影機 1**插槽，並選擇您的攝影機，例如 *Raspberry Pi Camera - imx708 (CSI)* 或您的 USB 網路攝影機。
+4. 在**攝影機設定**下，選擇**解析度**。建議從 `1280x720` 或您的攝影機支援的最接近尺寸開始。
+5. 將**選擇幀率**保持為**自動**，並將**位元率**保持為 `0`（自動）。
+6. 在**串流設定**下，勾選**啟用即時預覽？**，然後選擇**啟動**。**即時預覽**會顯示畫面。
+
+## 5. 開啟您的地面站
+
+**QGroundControl**
+
+QGroundControl 預設會監聽 UDP 14550，因此無人機會在數秒內自動出現。
+
+若要顯示影像：點擊 **Q** 圖示 → **Application Settings** → **Video**（較舊版本則為 **General** 中的 **Video** 區段）。將 **Source** 設為 **UDP h.264 Video Stream**，並保留預設的 UDP 連接埠 `5600`。影像會顯示在 Fly view 中。
+
+**Mission Planner**
+
+在右上角選擇 **UDP**，選擇 **Connect**，並接受連接埠 `14550`。
+
+![Mission Planner 飛行資料檢視透過 UDP 連線：右上角的連線方塊顯示 UDP、連線 UDP14550-1-QUADRO 與 DISCONNECT 按鈕；HUD 顯示 DISARMED、Unhealthy AHRS 與 GPS: No Fix](https://docs.uavmatrix.com/zh-tw/img/screenshots/gcs/mission-planner--connected.webp)
+
+*Mission Planner 透過 UDP 14550 連線：右上角的連線方塊顯示連線與 DISCONNECT。這是未接 GPS 的台架測試，因此 HUD 上顯示 Unhealthy AHRS 與 GPS: No Fix。*
+
+若要顯示影像：在 HUD 上按右鍵 → **Video** → **Set GStreamer Source**，然後貼上：
+
+```text
+udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+```
+
+完整教學（含截圖與疑難排解）：[Mission Planner](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/mission-planner/)、[QGroundControl](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/qgroundcontrol/)、[Android](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/android/)，以及 [Windows](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/gstreamer-windows/)、[Linux](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/gstreamer-linux/) 或 [macOS](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/gstreamer-macos/) 上的 GStreamer 安裝說明。
+
+> **Windows 防火牆**
+>
+> Windows 會封鎖傳入的 UDP，除非應用程式已要求例外。若遙測或影像沒有抵達，請允許 Mission Planner 或 QGroundControl 通過**私人與公用**網路的防火牆，或開放 UDP 14550 與 5600。
+
+您現在已在本地網路上取得遙測與影像。儀表板上的 **Ground station** 列會顯示 *Sending · … packets/s*。
+
+## 6. 透過 4G/LTE 飛行
+
+透過行動網路時，無人機沒有您的筆電可連到的位址，因此兩者都需加入同一個 VPN。每份許可證都包含 Fleet Manager VPN。
+
+1. 插入數據機。在**數據機**頁面中，將**數據機類型**設為 **HiLink** 或 **Traditional (PPP)**。**存取點名稱**請留空：UAVcast-Pro 會自動找到 APN。請參閱[行動數據機](https://docs.uavmatrix.com/zh-tw/uavcast-pro/connectivity/cellular-modem/)。
+2. 登入 [Fleet Manager](https://fleet-manager.uavmatrix.com/)，開啟 **Network**，若尚未啟用，請選擇 **Enable VPN Network**。
+3. 配對無人機：在 UAVcast-Pro 中前往 **Management → Fleet Management → Connect to Fleet Manager**，然後在 Fleet Manager 的 **Fleet → Pair Device** 中輸入配對碼。保持勾選 **Enable VPN for this UAV**。
+4. 將筆電連上 VPN：安裝 Tailscale，並從 Fleet Manager 的 **Network** 頁面執行 **GCS Connection Command**，然後將筆電標示為 **Ground Control Station (GCS)**。
+5. 在 **Network → Stream Bindings** 中，新增從無人機到筆電的綁定。Fleet Manager 會將目的地傳送至無人機，而 **Ports** 欄會顯示應監聽的連接埠。
+6. 在**網路**頁面中，選擇**數據機優先（戶外模式）**，讓 Wi-Fi 中斷時流量改走數據機。
+
+完整教學：[透過 4G 超視距飛行](https://docs.uavmatrix.com/zh-tw/guides/bvlos-4g/)。已有自己的 Tailscale 或 ZeroTier 網路？請改為將無人機與筆電加入該網路，並將筆電的 VPN IP 作為目的地。請參閱 [VPN](https://docs.uavmatrix.com/zh-tw/uavcast-pro/connectivity/vpn/)。
+
+> **使用 4G/LTE 飛行前，請先設定 GCS 故障保護**
+>
+> 行動網路連線可能會中斷。請確認飛行控制器已設定 GCS 故障保護（ArduPilot 為 `FS_GCS_ENABLE`，PX4 為 `NAV_DLL_ACT`）。頂部列會顯示 **GCS Failsafe Enabled** 或 **GCS Failsafe Disabled**。
+
+## 後續步驟
+
+- [雙攝影機、RC 切換與雙路串流](https://docs.uavmatrix.com/zh-tw/uavcast-pro/camera/multi-camera/)
+- [在無人機上錄製每次飛行](https://docs.uavmatrix.com/zh-tw/uavcast-pro/camera/recordings/)
+- [使用 NTRIP 透過 4G 傳送 RTK 校正](https://docs.uavmatrix.com/zh-tw/uavcast-pro/flight-controller/ntrip-rtk/)
+- [將無人機與 Fleet Manager 配對](https://docs.uavmatrix.com/zh-tw/uavcast-pro/fleet-pairing/)
+
+Source: https://docs.uavmatrix.com/zh-tw/get-started/quick-start/

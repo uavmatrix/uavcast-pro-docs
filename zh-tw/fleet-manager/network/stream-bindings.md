@@ -1,0 +1,84 @@
+# 串流綁定
+
+> 透過 VPN 將任一無人機的影像與 MAVLink 傳送到任一地面站，說明 Fleet Manager 如何分配 UDP 連接埠，以及 QGC 與 Mission Planner 的設定方式。
+
+串流綁定會指示無人機透過您組織的 VPN，將其影像與遙測傳送到一個地面站。一架無人機可以串流到多個地面站，一個地面站也可以接收多架無人機。Fleet Manager 會挑選連接埠，確保串流不會互相衝突。
+
+## 開始之前
+
+- [已啟用 VPN](https://docs.uavmatrix.com/zh-tw/fleet-manager/network/#enable-vpn)，且無人機已加入 VPN（在 **Connected Devices** 中類型為 **UAV**）。
+- 地面站已[連線並設定為 **GCS**](https://docs.uavmatrix.com/zh-tw/fleet-manager/connect-gcs/)。
+- **Owner 或 Admin** 角色。
+- 無人機處於**上線**狀態。Fleet Manager 會立即將新的目的地傳送給 UAVcast-Pro，並等待其確認。
+
+## 新增綁定
+
+1. 前往 **Network → Stream Bindings**，然後選取 **Add Binding**。
+2. 在 **Add Stream Binding** 中，選擇 **Drone** 與 **Ground Station**。
+3. 選取 **Create Binding**。
+
+![Add Stream Binding 對話方塊，包含無人機與地面站選擇器，以及自動分配連接埠的說明](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/network--add-binding.webp)
+
+*Add Stream Binding 對話方塊：已選取無人機與地面站，並說明連接埠會自動分配。*
+
+新綁定會出現在表格中，**Video** 與 **Telemetry** 已開啟，並顯示其 **Ports**（影像 / 遙測）。UAVcast-Pro 會在數秒內開始傳送。
+
+若無人機在 15 秒內未確認，Fleet Manager 會取消該綁定，並顯示 **Failed to send configuration to drone - it may be offline**。請確認無人機已上線後再試一次。
+
+## 連接埠分配方式
+
+連接埠以**每個地面站**為單位計算。每個綁定在該地面站上都有自己的一組 UDP 連接埠，因此不同無人機的連接埠不會重疊：
+
+- 一個**影像**連接埠供攝影機 1 使用，其後預留空間給**攝影機 2**（雙路串流）與**音訊**，UAVcast-Pro 會將音訊傳送至影像連接埠之後的連接埠；
+- 一個供 MAVLink 使用的**遙測**連接埠。
+
+地面站上的第一個綁定使用預設值：影像 **5600**、遙測 **14550**。之後的綁定會取得下一組可用的連接埠。
+
+有幾點值得注意：
+
+- **每個地面站都從預設值開始。** 同一架無人機在兩台筆電上可能有不同的連接埠，取決於每台筆電還接收了哪些其他串流。
+- **釋放的連接埠會被重複使用。** 移除綁定後，該組連接埠會釋出，供下一個新增到該筆電的綁定使用。
+- **連接埠不會跟著無人機走。** 移除後再重新新增綁定，可能會得到不同的連接埠。在設定地面站軟體之前，請務必查看 **Ports** 欄位。
+- 連接埠由 Fleet Manager 分配，無法在應用程式中編輯。
+- 在無人機上手動設定的**視訊連接埠（攝影機 2）**，只有從 UAVcast-Pro 6.5.3 起，才會在 Fleet Manager 更新其目標位址時保留。在較早的版本中，下一次更新會將其清除。
+
+## 設定地面站軟體
+
+請使用綁定 **Ports** 欄位中的連接埠。串流會從無人機的 VPN 位址抵達。
+
+**QGroundControl**
+
+- **遙測：** QGroundControl 預設監聽 UDP 14550，因此第一架無人機會自動連線。若要連接更多無人機，請開啟 **Application Settings → Comm Links**，新增類型為 **UDP** 的連線，並填入綁定的遙測連接埠後連線。
+- **影像：** 在 **Application Settings → Video**（舊版位於 **General** 下）中，將 **Source** 設為 **UDP h.264 Video Stream**，並將 UDP 連接埠設為綁定的影像連接埠（在目前版本中為 **UDP URL** `0.0.0.0:<port>`）。QGroundControl 一次只會顯示一個影像；若要觀看多架無人機，請執行第二個實例，或使用其他影片播放器觀看。
+
+**Mission Planner**
+
+- **遙測：** 在右上角的連線下拉選單中選擇 **UDP**，選取 **Connect**，並輸入綁定的遙測連接埠。若要連接多架無人機，請為每個連接埠各連線一次；Mission Planner 會依系統 ID 列出每架載具。
+- **影像：** 在 HUD 上按右鍵，選擇 **Video → Set GStreamer Source**，並輸入監聽綁定影像連接埠的管道。確切的管道設定請參閱 [Mission Planner](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/mission-planner/)。
+
+> **為每架無人機設定獨立的 MAVLink 系統 ID**
+>
+> 當一個地面站接收多架無人機時，每台飛行控制器都需要唯一的 `SYSID_THISMAV`（ArduPilot）或 `MAV_SYS_ID`（PX4）。否則地面站會將它們混淆。
+
+關於在單一地面站操作多架載具的更多資訊，請參閱[串流至多個地面站](https://docs.uavmatrix.com/zh-tw/guides/multiple-ground-stations/)。
+
+## 暫停或移除綁定
+
+- 在表格中關閉 **Video** 或 **Telemetry**，即可停止該串流，而不會失去綁定或其連接埠。請在無人機上線時進行此操作，以便它接收變更。
+- 選取垃圾桶圖示即可移除綁定。連接埠會被釋出，供下一個指向該地面站的綁定使用。
+
+使用搜尋方塊，以及 **Video Status** 篩選器（**All Video**、**Video On**、**Video Off**），即可在大型車隊中找到綁定。
+
+![Stream Bindings 表格，列出無人機、地面站、影像與遙測開關以及連接埠](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/network--stream-bindings.webp)
+
+*Stream Bindings 分頁：每個綁定都列出其無人機、地面站、Video 與 Telemetry 開關，以及連接埠。*
+
+## 無人機頁面上的綁定
+
+每架無人機的 [UAV 頁面](https://docs.uavmatrix.com/zh-tw/fleet-manager/fleet/uav-details/#connected-ground-stations)會在 **Connected Ground Stations** 下列出其地面站，並附有相同的開關與 **Pause** / **Resume**。在該處選取 **Add GCS**，會以與此處 **Add Binding** 相同的方式建立綁定，並使用該地面站上的下一組可用連接埠。
+
+## 沒有串流抵達？
+
+請參閱[地面站沒有遙測](https://docs.uavmatrix.com/zh-tw/troubleshooting/no-telemetry-in-gcs/)與[地面站沒有影像](https://docs.uavmatrix.com/zh-tw/troubleshooting/no-video-in-gcs/)。常見原因包括：筆電上的防火牆阻擋了入站 UDP、地面站軟體監聽了錯誤的連接埠，或綁定中的串流已關閉。
+
+Source: https://docs.uavmatrix.com/zh-tw/fleet-manager/network/stream-bindings/

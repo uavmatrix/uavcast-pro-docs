@@ -1,0 +1,81 @@
+# Camera settings
+
+> Set up a Raspberry Pi camera or USB webcam in UAVcast-Pro and stream low-latency H.264 video over UDP to QGroundControl or Mission Planner. Resolution, FPS and bitrate.
+
+UAVcast-Pro captures video from a Raspberry Pi CSI camera or a USB webcam, encodes it as H.264 and sends it as RTP over UDP to every ground station that has **Enable Video** turned on. Mission Planner and QGroundControl play it directly on port 5600. A copy of the stream feeds the live preview in the web interface and the on-drone recorder. Open **Camera → Camera settings**.
+
+![Camera Control Panel with CAM 1 set to a Raspberry Pi camera, camera settings for resolution, FPS, bitrate and stream recovery, and the Live Preview panel](https://docs.uavmatrix.com/img/screenshots/uavcast-pro/camera.webp)
+
+*Camera → Camera settings with a Raspberry Pi camera as CAM 1 at 1536×864 and 30 FPS, bitrate Auto. Live Preview is off here.*
+
+## Set up the camera
+
+1. Connect the camera and go to **Camera → Camera settings**.
+2. Set **Enable Camera?** to **Yes**.
+3. Click the **CAM 1** slot and pick the camera. CSI cameras show as *Raspberry Pi Camera - imx708 (CSI)* or similar; USB cameras by their name.
+4. Under **Camera Settings**, pick a **Resolution** your camera supports. Unsupported sizes are marked.
+5. Leave **Select FPS** on **Auto** and **Bitrate** at `0` (auto) to start with.
+6. Under **Stream Settings**, tick **Enable Live Preview?** and select **Start**.
+7. On [Ground Control Stations](https://docs.uavmatrix.com/uavcast-pro/ground-stations/), turn on **Enable Video** for each ground station that should get video.
+
+If no camera appears in the list, see the **Action Logs** at the bottom of the page: they show every device the camera detector checked and why it was skipped.
+
+## Settings reference
+
+| Setting | Default | Values | Notes |
+| --- | --- | --- | --- |
+| **Enable Camera?** | **Yes** | **Yes**, **No** | **No** stops video entirely. |
+| **CAM 1** | Raspberry Pi camera | Detected cameras, **Enter Custom Pipeline** | Pick **Enter Custom Pipeline** to write your own GStreamer pipeline. See [Custom pipeline](https://docs.uavmatrix.com/uavcast-pro/camera/custom-pipeline/). |
+| **Resolution** | `640x480` | Sizes the camera reports | If the camera can't deliver the size, UAVcast-Pro falls back to the largest supported size and logs which one it used. |
+| **Select FPS** | **Auto** | **Auto** or the rates the camera supports at this resolution | **Auto** lets the camera choose. |
+| **Bitrate** | `0` (**Auto**) | 0–10000 kbps, in steps of 100 | Set a fixed value for cellular links. |
+| **Stream Recovery Rate** | **Auto** | **Auto** (0), 1, 5, 10, 15, 30, 60, 90, 120 frames | Keyframe interval. Lower values recover faster after packet loss and fix grey smearing over VPN, at the cost of bandwidth. |
+| **Flip Settings** | Off | **Vertical Flip**, **Horizontal Flip** | CSI cameras. |
+| **Rotation** | `0°` | 0°, 90°, 180°, 270° | USB and other non-CSI cameras. |
+| **Enable Live Preview?** | On | On, off | Preview on this page and on the Flight Map. Recording also uses this copy of the stream. |
+
+Settings save as you change them. If a running stream doesn't pick up a change, select **Restart** under **Stream Settings**.
+
+## Pick settings for your link
+
+There's no single right setting: the bitrate must fit inside the slowest part of the link with room left for telemetry. Starting points for one camera:
+
+| Link | Resolution | FPS | Bitrate | Stream Recovery Rate |
+| --- | --- | --- | --- | --- |
+| Local Wi-Fi or Ethernet | 1920x1080 | 30 | 4000–6000 kbps | Auto |
+| Good 4G/LTE | 1280x720 | 30 | 1500–2500 kbps | 30 frames |
+| Weak 4G or long range | 1280x720 or 854x480 | 15–20 | 800–1200 kbps | 15 frames |
+
+If the picture freezes or smears grey after packet loss, lower the bitrate first, then lower **Stream Recovery Rate** so keyframes come more often.
+
+### CPU load
+
+The **System load** indicator shows how hard the encoder works. On a Raspberry Pi 5 every stream is encoded in software (the Pi 5 has no H.264 encoder), so high resolutions or two streams can max out the CPU. When it warns *CPU is near its limit. Lower the resolution or bitrate.*, do that before you fly.
+
+## Live preview
+
+**Live Preview** plays the stream in the browser through the built-in media server (WebRTC on port **8889**). It's a few hundred milliseconds behind the UDP stream your ground station gets, depending on the network. Use the open-in-new-tab button to watch it full screen. Browsers start the preview muted; unmute it in the player if you use [audio](https://docs.uavmatrix.com/uavcast-pro/camera/audio/).
+
+The preview needs the browser to reach port 8889 on the drone directly. It works on the LAN and over a VPN, but not through Fleet Manager's **Open via Proxy**, which only carries the web interface. Use **Open via VPN** for the preview.
+
+## How the stream is sent
+
+| Stream | Transport | Port on the ground station |
+| --- | --- | --- |
+| Camera 1 video | H.264, RTP over UDP | **Video Port** (default `5600`) |
+| Camera 2 video (dual stream) | H.264, RTP over UDP | **Video Port (Camera 2)**, default Video Port + 1 (`5601`) |
+| Audio (optional) | Opus, RTP over UDP | Video Port + 2 (`5602`) |
+| Preview | WebRTC | Browser to drone, port 8889 |
+
+The drone pushes the stream to the ground station. The ground station doesn't need to request it, and nothing on the drone listens for incoming video connections.
+
+## Related
+
+- [Two cameras: RC switching and dual stream](https://docs.uavmatrix.com/uavcast-pro/camera/multi-camera/)
+- [Audio](https://docs.uavmatrix.com/uavcast-pro/camera/audio/)
+- [Recordings and flight review](https://docs.uavmatrix.com/uavcast-pro/camera/recordings/)
+- [Custom GStreamer pipeline](https://docs.uavmatrix.com/uavcast-pro/camera/custom-pipeline/)
+- [Troubleshooting: camera not detected](https://docs.uavmatrix.com/troubleshooting/camera-not-detected/)
+- [Troubleshooting: choppy or delayed video](https://docs.uavmatrix.com/troubleshooting/choppy-or-delayed-video/)
+
+Source: https://docs.uavmatrix.com/uavcast-pro/camera/

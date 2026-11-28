@@ -1,0 +1,167 @@
+# Registro delle modifiche
+
+> Cosa è cambiato in ogni rilascio di UAVcast-Pro v6, dalla riscrittura in Rust della v6.0.0 alla registrazione, alla revisione dei voli, all'audio, all'RTK tramite NTRIP e a Fleet Manager.
+
+Tutti i rilasci di UAVcast-Pro v6, dal più recente. Aggiorna da **Applicazione → Aggiorna Applicazione**, oppure esegui di nuovo l'installer.
+
+## v6.5.2 (21 nov 2026)
+
+- Corretto: attivando la telecamera poteva comparire **"Insufficient permissions"**.
+- Corretto: la telecamera si fermava quando l'**anteprima dal vivo** veniva disattivata mentre la registrazione era attiva. Il video verso la stazione di terra ora continua a funzionare, e anteprima e registrazione riprendono da sole quando il server video torna disponibile.
+- Corretto: il servizio della telecamera poteva bloccarsi dopo un riavvio automatico del video, finché il servizio non veniva riavviato.
+
+## v6.5.1 (16 nov 2026)
+
+**Novità**
+
+- **Registrazione della telecamera**: registra la telecamera 1 e la telecamera 2 con un clic dalla mappa di volo, oppure automaticamente mentre il drone è armato. La registrazione usa il flusso già codificato, quindi non consuma CPU extra e non interrompe mai il video dal vivo verso la stazione di terra.
+- **Gestione dello spazio di archiviazione**: registra sul disco interno, su un'unità USB o su un SSD, mantieni una riserva di spazio libero e rimuovi automaticamente le registrazioni più vecchie prima che il disco si riempia (oppure interrompi la registrazione).
+- **Pagina Telecamera → Registrazioni**: ogni volo con il suo video e la sua telemetria, miniature, un badge live durante la registrazione, download MP4 ed eliminazione (solo video, oppure video e telemetria).
+- **Lettore di revisione del volo**: il video di un volo insieme alla traccia sulla mappa, alla vista di cabina e ai dati di volo su un'unica timeline, con marcatori di armamento/disarmo e di modalità di volo, velocità da 0,5× a 4× e disposizioni a due telecamere.
+- **Impostazione Registra telemetria**: mentre armato (predefinito), sempre quando connesso, oppure disattivato.
+- Pulsante **ARM / DISARM** sulla mappa di volo, sempre con una conferma. Restano decisivi i controlli di sicurezza del controllore di volo.
+- Elenco **Messaggi** sulla mappa di volo: ogni messaggio del controllore di volo, con i problemi di pre-armamento attuali mostrati separatamente. I messaggi che arrivano a raffica non vengono più persi.
+- **APN automatico**: lascia vuoto l'APN e UAVcast-Pro trova quello giusto per la tua SIM e lo ricorda.
+
+**Miglioramenti**
+
+- **Cancella missione** ora elimina la missione dal controllore di volo e attende la sua conferma; prima la nascondeva solo sulla mappa.
+- L'altitudine **AGL** ora mostra l'altezza rispetto al punto di decollo (prima mostrava l'altezza sul livello del mare).
+- Vista di cabina riprogettata in modo che nessun testo si sovrapponga a nessuna dimensione del pannello; il pannello laterale ha una maniglia visibile per ridimensionarlo.
+- Finestra della telecamera riprogettata: mantiene la forma propria della telecamera (senza bande nere), con controlli che compaiono al passaggio del mouse.
+- **Latenza video più bassa sul Raspberry Pi 5**: circa metà della CPU, nessun buffering dei fotogrammi e frame rate pieno sulle telecamere CSI.
+- L'anteprima dal vivo si ripristina da sola se il server video si riavvia.
+- Gli utenti **Read Only** possono vedere tutto ma non possono più controllare il drone o le registrazioni.
+- Corretta la connessione automatica del modem su Ubuntu e altri sistemi netplan; un modem collegato ora si connette automaticamente per impostazione predefinita.
+- Connessioni del modem più robuste, anche per i modem che si connettevano senza ottenere un indirizzo internet.
+- La pagina del modem mostra le sue informazioni non appena si apre.
+- La versione installata è mostrata nella barra laterale.
+
+## v6.5.0 (9 nov 2026)
+
+- Nuovo **audio della telecamera**: suono da un microfono USB o dal microfono integrato di una telecamera USB, codificato in Opus. Il microfono della telecamera viene scelto automaticamente quando ne ha uno.
+- L'audio viene trasportato nell'**anteprima dal vivo** (riattiva il suono del player per sentirlo) e può essere inviato a ogni stazione di terra come flusso RTP/Opus separato sulla **Porta Video + 2**, per i ricevitori GStreamer o VLC.
+- Nuovo **indicatore audio** nella pagina Telecamera: misuratore di livello in tempo reale, dispositivo attivo e un motivo spiegato in linguaggio semplice se l'audio non è potuto partire. Un microfono difettoso non interrompe mai il video.
+- Selezionando una telecamera che non può fornire la risoluzione configurata, il video non si ferma più: il flusso ripiega sulla dimensione supportata più grande e il log indica quale risoluzione scegliere.
+- Un errore video fatale ora riavvia automaticamente la pipeline.
+- **Ripristino NTRIP/RTK più rapido**: dopo una breve interruzione di internet, le correzioni riprendono in pochi secondi invece che fino a circa 18 minuti. Una connessione al caster silenziosa viene rilevata entro 15 s e riconnessa.
+- **L'interruttore della telemetria ora controlla completamente l'accesso**: il router della telemetria non accetta più connessioni TCP sulla porta 5760, quindi una stazione di terra con la telemetria disattivata non riceve dati. Se ti sei connesso via TCP 5760, aggiungi il tuo PC come stazione di terra e connettiti via UDP.
+- Disattivare **Attiva Endpoint** su una stazione di terra ora interrompe anche il suo video e il suo audio, non solo la telemetria.
+- I layer Light e Dark della mappa di volo non mostrano più "API key required".
+- Le etichette dell'altitudine sono state rinominate con termini aeronautici: **REL → AGL** e **MSL → AMSL**.
+- Corrette le azioni sui servizi (interruttore dell'anteprima dal vivo, avvio e arresto della telecamera) che fallivano nelle installazioni di sviluppo.
+
+## v6.4.3 (2 ott 2026)
+
+- **Connessione al controllore di volo ricostruita per affidabilità**: il collegamento si riconnette da solo dopo un riavvio del controllore di volo, un problema sulla USB o un'accensione tardiva.
+- Nuovi **porta e baud rate automatici** (predefiniti, anche dopo un aggiornamento): UAVcast-Pro trova il controllore di volo, ricorda cosa ha funzionato e lo segue se il nome del dispositivo cambia.
+- Nuovo pulsante **Rileva automaticamente** e **Controllo connessione** in tempo reale nella pagina Controllore di Volo, che mostra passo dopo passo se il dispositivo viene trovato, se arrivano i dati e se la telemetria raggiunge ogni stazione di terra, con una soluzione in linguaggio semplice per il primo problema trovato.
+- Telemetria e video **partono all'accensione senza attendere internet** e iniziano a trasmettere appena la connessione è attiva, qualunque sia il tempo impiegato dal modem.
+- Scheda di stato della dashboard riprogettata con un riepilogo generale dello stato, il tipo di fix GPS, la batteria, il segnale cellulare, il traffico verso le stazioni di terra e un avviso di alimentazione (sottotensione).
+- I **download dei log** ora includono uno snapshot `diagnostics.txt` (impostazioni, porte seriali, eventi di alimentazione e USB).
+- Rimossa la selezione del tipo di controllore (solo ArduPilot); le impostazioni di connessione si applicano subito, senza riavvio.
+
+## v6.4.2 (26 lug 2026)
+
+- Installazioni più affidabili su schede a bassa potenza (Pi Zero 2 W), con una stima realistica del tempo.
+- Registrazione completa e persistente in tutti i servizi, inclusa nell'archivio dei log scaricabile, e registrazione più chiara della connessione del controllore di volo.
+- Corretto: un indirizzo IP di destinazione mancante o non valido poteva interrompere la connessione al controllore di volo. Ora tali indirizzi vengono rifiutati nell'interfaccia e ignorati dal router della telemetria.
+
+## v6.4.1 (9 lug 2026)
+
+- Nuovo **streaming a doppia telecamera**: trasmette due telecamere contemporaneamente, ciascuna con la propria risoluzione, FPS e bitrate.
+- Nuovo **indicatore del carico CPU** nella pagina Telecamera, che avvisa quando la codifica H.264 via software si avvicina al limite.
+- La **mappa di volo** mostra una finestra video per ogni flusso attivo, che puoi nascondere come schede in fondo alla mappa.
+- L'installer risolve i pacchetti delle telecamere rinominati (`rpicam-apps` → `rpicam-apps-core`) e i plugin GStreamer, correggendo le installazioni su Raspberry Pi OS e Debian più recenti.
+- Lo streaming CSI ripiega su una pipeline GStreamer x264 quando rpicam-apps non supporta H.264 (Raspberry Pi OS Lite / Debian trixie su Pi 5).
+- Lo streaming multi-telecamera e a doppio flusso parte in modo affidabile su ogni sistema operativo supportato, con ripristino automatico se il flusso si blocca.
+- Le risoluzioni non supportate non impediscono più l'avvio della telecamera (incluso **Uguale Risoluzione Telecamera 1**): la cattura ripiega e l'uscita viene scalata.
+
+## v6.4.0 (20 mag 2026)
+
+- Nuova pagina **Flussi di Dati**: dashboard di telemetria personalizzate con grafici, indicatori, sparkline e riquadri numerici collegati a qualsiasi valore MAVLink o segnale `NAMED_VALUE_FLOAT`. Più schede, layout trascinabile e ridimensionabile, storico mantenuto tra un ricaricamento e l'altro della pagina.
+- Nuovi **iniettori di telemetria** (Controllore di Volo → Iniettori): inseriscono dati di sensori esterni nel flusso MAVLink via HTTP, UDP o seriale come `NAMED_VALUE_FLOAT` / `NAMED_VALUE_INT`. I listener partono all'avvio senza che l'interfaccia web sia aperta.
+- Nuova scheda **NTRIP / RTK**: connettiti a un caster NTRIP, sfoglia i suoi mountpoint e trasmetti le correzioni RTCM al controllore di volo, inclusi i caster TLS.
+- Grazie a Bobby Russell per la richiesta di funzionalità e il feedback dai suoi voli con palloni ad alta quota, che hanno ispirato Flussi di Dati e gli iniettori.
+
+## v6.3.2 (13 apr 2026)
+
+- Aggiornamenti delle dipendenze per sicurezza e prestazioni (Vite, Axios, librerie backend e frontend, crate Rust).
+
+## v6.3.1 (20 mar 2026)
+
+- Corretto l'installer su Raspberry Pi Compute Module.
+- Più opzioni di baud rate per la telemetria seriale.
+- Migliore gestione degli errori e feedback.
+- Aggiornamenti delle dipendenze.
+
+## v6.3.0 (19 feb 2026)
+
+- Nuovo **Fleet Management**: collega i dispositivi UAVcast-Pro a Fleet Manager per monitorare e gestire l'intera flotta da un unico punto.
+- Aspetto uniforme tra UAVcast-Pro, Fleet Manager e lo store.
+- Anteprima dal vivo per le pipeline personalizzate con flussi RTSP nella pagina Telecamera.
+
+## v6.2.3 (12 gen 2026)
+
+- Più telecamere CSI compaiono ciascuna come dispositivo separato (ad esempio "Raspberry Pi Camera 0 - imx219" e "Raspberry Pi Camera 1 - imx708").
+- Le risoluzioni e gli FPS massimi delle telecamere CSI vengono rilevati dal sensore collegato.
+
+## v6.2.2 (5 gen 2026)
+
+- Categorie della barra laterale.
+- Corretto il ripristino dell'applicazione da un backup del database.
+- Migliorate le icone della mappa di volo.
+- Link al registro modifiche nella scheda di aggiornamento.
+- Corretto il salvataggio delle registrazioni nella cartella sbagliata.
+- L'installer aggiunge `rpicam-apps` su Ubuntu e Debian su Raspberry Pi per le telecamere CSI, e aumenta la memoria CMA (da 128 MB a 512 MB) in `config.txt` per le configurazioni multi-telecamera.
+- Corretto il cambio manuale della telecamera dopo aver disattivato il cambio canale RC.
+- Corretto il mancato caricamento dei dati MAVLink nelle schede Radio e Ispettore senza ricaricare la pagina.
+
+## v6.2.1 (29 dic 2025)
+
+- Lingua cinese (tradizionale).
+- Migliorata la validazione della licenza; alcuni utenti non riuscivano a disattivare vecchi dispositivi.
+
+## v6.2.0 (20 dic 2025)
+
+- **Supporto arm64 e amd64**: UAVcast-Pro non è più limitato a Raspberry Pi ed è eseguibile su NVIDIA Jetson, computer x86/x64 e altri dispositivi arm64/amd64.
+
+## v6.1.0 (7 dic 2025)
+
+- **Supporto a doppia telecamera** con cambio istantaneo dall'interfaccia o da un canale RC (canali da 1 a 18).
+
+## v6.0.5
+
+- Corretto il mancato salvataggio della porta di telemetria quando diversa da 14550.
+- Corretti i conflitti di nome degli endpoint con più destinazioni sullo stesso IP e porte diverse.
+
+## v6.0.4
+
+- Supporto per tutti i tipi di veicolo ArduPilot, incluso VTOL.
+- Gestione della connessione MAVLink più stabile.
+
+## v6.0.3
+
+- Nuova pagina **Analitica di Volo** con dati MAVLink in grafici.
+- Registrazione MAVLink su file per l'analisi.
+- Permessi più restrittivi per gli utenti Read Only.
+
+## v6.0.2
+
+- ID di sistema MAVLink e versione MAVLink vengono rilevati dal controllore di volo.
+
+## v6.0.1
+
+- Installer più affidabile su dispositivi con risorse limitate, come Raspberry Pi Zero 2 W.
+- Migliorata la configurazione UART su Pi Zero 2 W.
+
+## v6.0.0
+
+- Rilascio principale: il backend è stato riscritto in Rust per prestazioni e minore uso di risorse, e il pacchetto è circa il 70% più piccolo.
+- Nuove pagine **Mappa di Volo**, **Pianificatore Missione**, **Ispettore MAVLink** e **Radio**.
+- Nuova impostazione di **priorità di rete** per scegliere tra Wi-Fi e modem.
+- Nuova **User Management** con ruoli.
+- Nuova gestione della telecamera e anteprima dal vivo basate su MediaMTX.
+- La v6 usa un nuovo database: le impostazioni delle v4 e v5 non possono essere importate.
+
+Source: https://docs.uavmatrix.com/it/reference/changelog/

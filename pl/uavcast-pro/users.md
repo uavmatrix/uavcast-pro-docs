@@ -1,0 +1,56 @@
+# Użytkownicy i dostęp
+
+> Zabezpiecz interfejs webowy UAVcast-Pro logowaniem administratora, dodawaj użytkowników tylko do odczytu, którzy mogą oglądać telemetrię i wideo, ale nie sterować dronem, oraz zmieniaj lub resetuj hasła.
+
+Świeża instalacja UAVcast-Pro nie ma użytkowników ani logowania: każdy, kto może otworzyć interfejs webowy, ma pełne uprawnienia administratora. Dodaj użytkownika administratora, aby włączyć logowanie. Potem możesz dodać użytkowników **Read Only** dla obserwatorów, klientów lub operatorów ładunku, którzy mają widzieć wszystko, ale niczego nie zmieniać. Otwórz **Zarządzanie → Users**.
+
+![Strona Users z otwartym oknem Add New User, z polami nazwy użytkownika, hasła, potwierdzenia hasła i roli](https://docs.uavmatrix.com/pl/img/screenshots/uavcast-pro/users.webp)
+
+*Zarządzanie → Users z otwartym oknem Add New User.*
+
+## Włącz logowanie
+
+1. Przejdź do **Users** i wybierz **Add User**.
+2. Wpisz **Username** (co najmniej 3 znaki), **Password** (co najmniej 6 znaków) i **Confirm Password**.
+3. Wybierz **Create User**. Pierwszy użytkownik zawsze jest **Admin** (*First user must be an admin*).
+
+Od teraz każdy odwiedzający zobaczy stronę logowania. Logowanie trwa 7 dni w danej przeglądarce albo do momentu wybrania **Logout** w menu użytkownika na dole paska bocznego.
+
+> **Interfejs webowy używa zwykłego HTTP**
+>
+> Logowania i ustawienia są przesyłane bez szyfrowania. To w porządku w Twojej sieci lokalnej LAN lub wewnątrz [VPN](https://docs.uavmatrix.com/pl/uavcast-pro/connectivity/vpn/), ale nigdy nie przekierowuj portu interfejsu webowego do internetu.
+
+## Role
+
+| Może… | **Admin** | **Read Only** |
+| --- | --- | --- |
+| Widzieć strony Panel Główny, Strumienie Danych, Kontroler Lotu, Mapa Lotu, Stacje Naziemne i Kamera | Tak | Tak |
+| Oglądać wideo i telemetrię na żywo, przeglądać tablice i nagrania | Tak | Tak |
+| Zmieniać dowolne ustawienie | Tak | Nie |
+| Uzbrajać, rozbrajać, zmieniać tryb, uruchamiać lub czyścić misje | Tak | Nie |
+| Uruchamiać lub zatrzymywać nagrywanie | Tak | Nie |
+| Otwierać Modem, Sieć Prywatna VPN, Dynamiczny DNS, Sieci, Fleet Management, Users i Aplikacja | Tak | Nie (ukryte) |
+
+Nie możesz utworzyć użytkownika **Read Only**, zanim istnieje administrator (*Create an admin user first before adding read-only users*).
+
+Użytkownicy webowi tylko do odczytu różnią się od przełącznika **Read Only** w miejscu docelowym stacji naziemnej, który blokuje polecenia z programu stacji naziemnej. Zobacz [Stacje naziemne](https://docs.uavmatrix.com/pl/uavcast-pro/ground-stations/).
+
+## Zmiana hasła
+
+Wybierz **Change Password**, wpisz **Current Password** oraz dwukrotnie **New Password**, a następnie wybierz **Update Password**. Hasła są przechowywane jako skróty bcrypt.
+
+## Usuwanie użytkownika
+
+Wybierz **Delete** w wierszu użytkownika i potwierdź.
+
+- Nie możesz usunąć własnego konta, dopóki istnieją inni użytkownicy.
+- Usunięcie **ostatniego** użytkownika ponownie wyłącza logowanie: *After deletion, the application will be open without authentication until a new user is created.*
+
+## Zapomniane hasło administratora
+
+Nie ma linku do resetowania, ponieważ dron nie ma adresu e-mail, a odzyskiwanie hasła nie jest samoobsługowe.
+
+- Jeśli inny administrator nadal może się zalogować, może usunąć Twojego użytkownika w sekcji **Users** i utworzyć go ponownie.
+- Jeśli nikt z rolą administratora nie może się zalogować, skontaktuj się z pomocą techniczną pod adresem **[support@uavmatrix.com](mailto:support@uavmatrix.com)**. Podaj swój klucz licencyjny (lub adres e-mail, na który go kupiono), nazwę hosta lub nazwę urządzenia widoczną w **Aplikacja → Menedżer Licencji → Activated Devices**, wersję UAVcast-Pro oraz informację, czy możesz połączyć się z urządzeniem przez SSH.
+
+Source: https://docs.uavmatrix.com/pl/uavcast-pro/users/

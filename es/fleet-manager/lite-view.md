@@ -1,0 +1,47 @@
+# Vista Lite
+
+> La Vista Lite es la pantalla de control de Fleet Manager para teléfonos: lista de flota, batería, GPS y altitud en vivo, modos de vuelo e inicio, pausa y RTL de misiones.
+
+**Lite Control** es una versión de Fleet Manager adaptada a teléfonos para usar en campo: botones grandes, solo lo esencial y actualizaciones en vivo a través de los datos móviles de tu teléfono.
+
+## Abrir la Vista Lite
+
+En tu teléfono, inicia sesión en Fleet Manager, abre el menú y selecciona **Fleet → Lite View**. También puedes ir directamente a `https://fleet-manager.uavmatrix.com/lite`. Añádela a la pantalla de inicio para acceder con un solo toque.
+
+## Lista de flota
+
+La lista muestra cada dron con su estado y su batería (naranja por debajo del 40 %, rojo por debajo del 20 %), un indicador **Live updates active** y el contador **n online / n total**. Toca un dron para abrir su pantalla de control.
+
+![Vista Lite con la lista de flota en un teléfono con varios drones, estado y batería](https://docs.uavmatrix.com/es/img/screenshots/fleet-manager/lite.webp)
+
+*Vista Lite en un teléfono de 390 × 844: lista de flota con 33 online / 46 total, modo de vuelo y batería por dron.*
+
+## Pantalla del dron
+
+- Banners para **Vehicle Armed** y **Failsafe Active**.
+- Tarjetas de **Battery**, **GPS**, **Altitude** y **Speed**.
+- **Device ID**, **Organization**, **Position** y **View Full Details** (abre la página completa del UAV).
+
+![Pantalla de dron en la Vista Lite con banner de armado, tarjetas de estado y botones de control](https://docs.uavmatrix.com/es/img/screenshots/fleet-manager/lite--drone.webp)
+
+*Vista Lite de un dron armado en AUTO: banner Vehicle Armed, tarjetas de Battery, GPS, Altitude y Speed, y los controles de modo y misión.*
+
+### Estado de seguridad
+
+La Vista Lite muestra **ARMED** (*Motors active - exercise caution*) o **DISARMED** (*Safe to approach*), pero no tiene botón para armar ni desarmar. **For safety, arm/disarm should be performed via your Ground Control Station (QGC, Mission Planner).**
+
+### Modo de vuelo (Owner y Admin)
+
+**Quick Access** muestra los modos que más usas para el tipo de vehículo, y **All Modes** muestra la lista completa. Los modos seguros cambian tras una confirmación simple; los de navegación y los peligrosos piden **Change to *MODE*?** con una verificación más estricta, como en el [panel de control](https://docs.uavmatrix.com/es/fleet-manager/fleet/remote-control/#flight-mode).
+
+### Control de misión (Owner y Admin)
+
+Para una misión que ya está en el dron:
+
+- **Start** / **Resume**, **Pause**, **RTL** y **Stop**, cada uno con confirmación. Los rovers usan HOLD en lugar de LOITER para pausar y detener.
+- **Jump to Waypoint**: elige el número con − y +, y luego **Jump to WP n**. **Currently at waypoint n** muestra el progreso.
+- **Refresh Mission Data** vuelve a cargar la misión desde el dron.
+
+Si el dron no tiene misión, verás **No Mission Loaded**. Sube una desde [Misiones](https://docs.uavmatrix.com/es/fleet-manager/missions/) primero, en una computadora.
+
+Source: https://docs.uavmatrix.com/es/fleet-manager/lite-view/

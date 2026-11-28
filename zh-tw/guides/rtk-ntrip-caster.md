@@ -1,0 +1,93 @@
+# 透過 4G 使用 NTRIP 基準站取得 RTK GPS
+
+> 使用 UAVcast-Pro 透過 LTE 從 NTRIP 基準站將 RTCM3 校正資料串流至飛行控制器，以取得 RTK Fixed，現場無需架設基站。
+
+UAVcast-Pro 可透過無人機自身的網際網路連線，從 NTRIP 基準站拉取 RTCM3 校正資料，並將其傳送給飛行控制器。您無需攜帶基站或獨立的無線電，即可取得 RTK Float 或 RTK Fixed 定位。任何標準的 NTRIP v1 或 v2 基準站都能使用。
+
+```text
+NTRIP caster ──RTCM3 over TCP/TLS──► UAVcast-Pro ──MAVLink GPS_RTCM_DATA──► flight controller ──► RTK GPS
+      ▲                                    │
+      └──────── GGA position (VRS) ────────┘
+```
+
+**您需要：**
+
+- 飛行控制器上具備 RTK 功能的 GPS，例如 u-blox F9P 模組、Here3+ 或 Septentrio Mosaic。一般的 M8N/M10 導航模組無法執行 RTK。
+- 飛行控制器已 **連接** 至 UAVcast-Pro，且無人機具備網際網路連線。
+- 一個基準站帳號：國家 CORS 網路、商業服務（Trimble、Hexagon、Topcon …），或免費的社群基準站 rtk2go.com。
+
+## 1. 輸入基準站
+
+1. 開啟 **飛行控制器 → NTRIP / RTK**。
+2. 輸入 **Caster 主機** 與 **連接埠**（通常為 `2101`）。
+3. 僅在供應商要求時才開啟 **使用 TLS (HTTPS)**。商業基準站通常需要，公共基準站則很少需要。
+4. 輸入 **使用者名稱** 與 **密碼**。若使用 rtk2go.com，請以您的電子郵件地址作為使用者名稱，並將密碼留空。
+5. 按下 **測試連線**。等待 **基準站已接受認證。**
+
+## 2. 選擇掛載點
+
+1. 按下 **瀏覽掛載點**。UAVcast-Pro 會載入基準站的清單。
+2. 選擇最接近您飛行地點的掛載點。清單會顯示 **格式**、**GNSS**、**國家**、**位置**，以及是否需要位置資訊（**NMEA**：**必填**）。
+3. 按下 **選取**。該名稱會填入 **掛載點**。
+
+![Caster 卡片，包含啟用 NTRIP 用戶端、基準站主機、連接埠 2101、掛載點欄位、瀏覽掛載點按鈕與 Use TLS](https://docs.uavmatrix.com/zh-tw/img/screenshots/uavcast-pro/flight-controller--ntrip-caster.webp)
+
+*Caster 卡片。掛載點欄位旁的瀏覽掛載點按鈕會開啟掛載點清單。*
+
+## 3. 傳送您的位置（VRS 與最近掛載點基準站）
+
+VRS 與最近掛載點基準站會為您的位置產生校正資料，因此需要以 NMEA GGA 語句傳送您的位置。
+
+1. 保持 **上行傳送 GGA** 開啟（預設值），並將 **傳送間隔（秒）** 設為 10。
+2. 將 **位置來源** 保持為 **來自飛控的即時位置**。
+3. 同時在 **固定的手動位置** 下輸入 **緯度**、**經度** 與 **高度（公尺）**。在飛行控制器取得 GPS 定位之前，UAVcast-Pro 會使用此手動位置。
+
+對於單一固定基站，GGA 不會造成任何問題，但您也可以將其關閉。
+
+## 4. 開始串流
+
+開啟 **啟用 NTRIP 用戶端**。數秒內，狀態面板應顯示：
+
+1. **狀態**：**正在傳輸校正資料**，並顯示 **Caster 回應**，例如 `ICY 200 OK`。
+2. **已轉發的 RTCM 訊息** 持續增加，且 **最後一個 RTCM 訊框** 顯示 *剛剛*。
+3. **近期訊息類型** 中會出現您的衛星星座，例如 1005、1077、1087、1097。
+4. 在開闊天空下，RTK 定位標記會從 **3D 定位** 轉為 **RTK 浮動**，再轉為 **RTK 固定**。
+
+![NTRIP / RTK 分頁，狀態面板顯示已停用與零計數，GPS 品質卡片顯示無定位](https://docs.uavmatrix.com/zh-tw/img/screenshots/uavcast-pro/flight-controller--ntrip.webp)
+
+*狀態面板與 GPS 品質卡片，此處顯示的是設定基準站之前的狀態（已停用，無 GPS 定位）。校正資料開始傳輸後，即可在此查看關鍵欄位。*
+
+**GPS 品質** 卡片會加入接收器回報的精確度，以及不依賴接收器自身估計值、由實際量測得出的 **Position stability (1σ)**（位置穩定性 (1σ)）。儀表板會在 **RTK corrections** 下顯示狀態，並在 **GPS** 下顯示定位類型。
+
+## 預設設定
+
+```text
+Caster host   rtk2go.com
+Port          2101
+TLS           off
+Username      you@example.com
+Password      (empty)
+Mountpoint    nearest one from Browse mountpoints
+```
+
+```text
+Caster host   provider host name
+Port          2101 (sometimes 2102 or 443)
+TLS           as the provider says
+Username      provider account
+Password      provider password
+Mountpoint    the provider's VRS mountpoint
+GGA upstream  on, 10 s, live position from flight controller
+```
+
+## 使用須知
+
+- 校正資料會與遙測經由相同的 MAVLink 連線傳送，因此飛行控制器的連線必須正常。
+- 網際網路短暫中斷後，校正資料會在數秒內恢復。若基準站停止回應，UAVcast-Pro 會自動重新連線。
+- 精確度會隨與基準站的距離增加而降低。請選擇最近的掛載點，或使用 VRS 服務。
+
+## 疑難排解
+
+若停留在 **連線中**、出現 `401` 回應、沒有 RTCM 資料，或沒有 RTK 定位：請參閱[RTK 校正資料未送達](https://docs.uavmatrix.com/zh-tw/troubleshooting/rtk-corrections-not-arriving/)。本頁所述的所有設定，皆在 [NTRIP / RTK](https://docs.uavmatrix.com/zh-tw/uavcast-pro/flight-controller/ntrip-rtk/) 中說明。
+
+Source: https://docs.uavmatrix.com/zh-tw/guides/rtk-ntrip-caster/

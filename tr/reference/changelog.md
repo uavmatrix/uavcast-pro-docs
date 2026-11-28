@@ -1,0 +1,167 @@
+# Değişiklik günlüğü
+
+> Her UAVcast-Pro v6 sürümünde neler değişti: v6.0.0'daki Rust yeniden yazımından kayıt, uçuş incelemesi, ses, NTRIP üzerinden RTK ve Fleet Manager'a kadar.
+
+Tüm UAVcast-Pro v6 sürümleri, en yenisi en üstte. **Uygulama → Uygulamayı Güncelle** üzerinden güncelleyin veya yükleyiciyi yeniden çalıştırın.
+
+## v6.5.2 (21 Kas 2026)
+
+- Düzeltildi: kamerayı etkinleştirmek **"Insufficient permissions"** mesajını gösterebiliyordu.
+- Düzeltildi: kayıt açıkken **canlı önizleme** kapatıldığında kamera duruyordu. Yer kontrol istasyonuna video akışı artık çalışmaya devam eder; video sunucusu yeniden kullanılabilir olduğunda önizleme ve kayıt kendiliğinden geri gelir.
+- Düzeltildi: kamera servisi, otomatik video yeniden başlatmasından sonra servis yeniden başlatılana kadar takılabiliyordu.
+
+## v6.5.1 (16 Kas 2026)
+
+**Yeni**
+
+- **Kamera kaydı**: uçuş haritasından tek tıklamayla kamera 1 ve kamera 2'yi kaydedin veya drone arm edildiğinde otomatik kaydedin. Kayıt, zaten kodlanmış akışı kullanır; bu yüzden ek CPU harcamaz ve yer kontrol istasyonuna giden canlı videoyu hiçbir zaman kesmez.
+- **Depolama yönetimi**: dahili diske ya da bir USB sürücüye veya SSD'ye kaydedin, boş alan rezervi tutun ve disk dolmadan önce en eski kayıtları otomatik olarak silin (ya da bunun yerine kaydı durdurun).
+- **Kamera → Kayıtlar** sayfası: her uçuşun videosu ve telemetrisi, küçük resimler, kayıt sırasında canlı rozet, MP4 indirmeleri ve silme (yalnızca video veya video ve telemetri).
+- **Uçuş incelemesi oynatıcısı**: bir uçuşun videosu; harita izi, kokpit görünümü ve uçuş verileriyle tek bir zaman çizelgesinde; arm/disarm ve uçuş modu işaretleri, 0,5×–4× hız ve iki kameralı düzenler.
+- **Telemetriyi kaydet** ayarı: arm edildiğinde (varsayılan), her zaman bağlıyken veya kapalı.
+- Uçuş haritasında **ARM / DISARM** düğmesi; her zaman bir onay penceresinin ardında. Uçuş kontrolcüsünün kendi güvenlik kontrolleri yine de karar verir.
+- Uçuş haritasında **Mesajlar** listesi: her uçuş kontrolcüsü mesajı; mevcut uçuş öncesi sorunlar ayrıca gösterilir. Ani yığınlar halinde gelen mesajlar artık kaybolmaz.
+- **Otomatik APN**: APN alanını boş bırakın; UAVcast-Pro SIM'iniz için doğrusunu bulur ve hatırlar.
+
+**İyileştirildi**
+
+- **Görevi temizle** artık görevi uçuş kontrolcüsünden siler ve onayını bekler; önceden yalnızca haritada gizliyordu.
+- **AGL** irtifası artık kalkış noktasının üzerindeki yüksekliği gösterir (deniz seviyesinden yüksekliği gösteriyordu).
+- **Kokpit görünümü** yeniden tasarlandı; herhangi bir panel boyutunda metin üst üste binmez. Yan panelin boyutunu değiştirmek için görünür bir tutamaç var.
+- **Kamera penceresi** yeniden tasarlandı: kameranın kendi şeklini korur (siyah çubuk yok) ve kontroller üzerine gelindiğinde görünür.
+- **Raspberry Pi 5'te daha düşük video gecikmesi**: yaklaşık yarı CPU, kare tamponlaması yok ve CSI kameralarda tam kare hızı.
+- Video sunucusu yeniden başlarsa canlı önizleme kendiliğinden toparlanır.
+- **Salt okunur kullanıcılar** her şeyi izleyebilir ancak artık drone'u veya kayıtları kontrol edemez.
+- Modem otomatik bağlantısı Ubuntu ve diğer netplan sistemlerinde düzeltildi; takılı bir modem artık varsayılan olarak kendiliğinden bağlanır.
+- Modem bağlantıları daha sağlam hale getirildi; internet adresi alamadan bağlanan modemler dahil.
+- Modem sayfası açılır açılmaz bilgilerini gösterir.
+- Kurulu sürüm kenar çubuğunda gösterilir.
+
+## v6.5.0 (9 Kas 2026)
+
+- Yeni **kamera sesi**: bir USB mikrofondan veya bir USB kameranın dahili mikrofonundan gelen ses, Opus olarak kodlanır. Kameranın kendi mikrofonu varsa otomatik seçilir.
+- Ses, **canlı önizlemede** taşınır (duymak için oynatıcının sesini açın) ve her yer kontrol istasyonuna, GStreamer veya VLC alıcıları için **Video Portu + 2** üzerinde ayrı bir RTP/Opus akışı olarak gönderilebilir.
+- Kamera sayfasında yeni **ses göstergesi**: canlı seviye ölçer, etkin aygıt ve ses başlayamadığında sade bir dilde neden. Arızalı bir mikrofon hiçbir zaman videoyu kesmez.
+- Yapılandırılan çözünürlüğü sağlayamayan bir kamera seçildiğinde video artık durmaz: akış en büyük desteklenen boyuta geçer ve günlük hangi çözünürlüğü seçmeniz gerektiğini belirtir.
+- Ciddi bir video hatası artık işlem hattını otomatik olarak yeniden başlatır.
+- **Daha hızlı NTRIP/RTK kurtarma**: kısa bir internet kesintisinden sonra düzeltmeler birkaç saniye içinde devam eder; önceden yaklaşık 18 dakikaya kadar sürebiliyordu. Sessiz bir caster bağlantısı 15 sn içinde algılanır ve yeniden bağlanır.
+- **Telemetri anahtarı artık erişimi tamamen kontrol eder**: telemetri yönlendiricisi artık 5760 numaralı TCP portundaki bağlantıları kabul etmez; bu yüzden telemetrisi kapalı bir yer kontrol istasyonu hiç veri almaz. TCP 5760 üzerinden bağlandıysanız, bilgisayarınızı bir yer kontrol istasyonu olarak ekleyin ve UDP üzerinden bağlanın.
+- Bir yer kontrol istasyonunda **Enable Endpoint** kapatıldığında artık yalnızca telemetri değil, video ve ses de durur.
+- Uçuş haritasının Açık ve Koyu katmanları artık "API key required" mesajını göstermez.
+- İrtifa etiketleri havacılık terimlerine göre yeniden adlandırıldı: **REL → AGL** ve **MSL → AMSL**.
+- Geliştirme kurulumlarında sabit servis işlemleri (canlı önizleme anahtarı, kamera başlat/durdur) başarısız oluyordu; düzeltildi.
+
+## v6.4.3 (2 Eki 2026)
+
+- **Uçuş kontrolcüsü bağlantısı güvenilirlik için yeniden yapıldı**: bağlantı, uçuş kontrolcüsü yeniden başlatıldığında, bir USB aksaklığında veya geç açılmada kendiliğinden yeniden bağlanır.
+- Yeni **otomatik port ve baud hızı** (varsayılan; yükseltmeden sonra da geçerli): UAVcast-Pro uçuş kontrolcüsünü bulur, neyin işe yaradığını hatırlar ve aygıt adı değişirse onu izler.
+- Uçuş Kontrolcüsü sayfasında yeni **Otomatik algıla** düğmesi ve canlı **Bağlantı kontrolü**: aygıtın bulunup bulunmadığını, verinin gelip gelmediğini ve telemetrinin her yer kontrol istasyonuna ulaşıp ulaşmadığını adım adım gösterir; bulunan ilk sorun için sade bir dilde çözüm önerir.
+- Telemetri ve video **cihaz açılışında, internet beklemeden** başlar ve bağlantı kurulur kurulmaz yayına geçer; modemin ne kadar sürdüğü fark etmez.
+- Yeniden tasarlanmış **kontrol paneli durum kartı**: genel sağlık özeti, GPS sabitleme türü, batarya, hücresel sinyal, yer kontrol istasyonu trafiği ve güç kaynağı (düşük voltaj) uyarısı.
+- **Günlük indirmeleri** artık bir `diagnostics.txt` anlık görüntüsü içerir (ayarlar, seri portlar, güç ve USB olayları).
+- Kontrolcü türü seçimi kaldırıldı (yalnızca ArduPilot); bağlantı ayarları yeniden başlatma olmadan hemen uygulanır.
+
+## v6.4.2 (26 Tem 2026)
+
+- Düşük güçlü kartlarda (Pi Zero 2 W) daha güvenilir kurulumlar; gerçekçi bir süre tahminiyle.
+- Tüm servislerde eksiksiz ve kalıcı günlük kaydı; indirilebilir günlük arşivine dahil edilir ve uçuş kontrolcüsü bağlantı günlüğü daha net hale getirildi.
+- Düzeltildi: eksik veya geçersiz bir hedef IP adresi uçuş kontrolcüsü bağlantısını bozabiliyordu. Bu tür adresler artık arayüzde reddedilir ve telemetri yönlendiricisi tarafından atlanır.
+
+## v6.4.1 (9 Tem 2026)
+
+- Yeni **çift kamera akışı**: iki kamerayı aynı anda yayınlayın; her biri kendi çözünürlüğü, FPS ve bit hızıyla.
+- Kamera sayfasında yeni **CPU yük göstergesi**: yazılım H.264 kodlaması sınıra yaklaştığında uyarır.
+- **Uçuş haritası**, etkin her akış için bir video penceresi gösterir; bunları haritanın altında sekme olarak gizleyebilirsiniz.
+- Yükleyici, yeniden adlandırılmış kamera paketlerini (`rpicam-apps` → `rpicam-apps-core`) ve GStreamer eklentilerini çözer; daha yeni Raspberry Pi OS ve Debian'daki kurulum sorunlarını giderir.
+- rpicam-apps H.264 desteğine sahip değilse (Raspberry Pi OS Lite / Debian trixie, Pi 5) CSI yayını bir GStreamer x264 işlem hattına geçer.
+- Çoklu kamera ve çift akış, desteklenen her işletim sisteminde güvenilir şekilde başlar; akış takılırsa otomatik kurtarma yapılır.
+- Desteklenmeyen çözünürlükler artık kameranın başlamasını engellemez (**Match Camera 1 Resolution** dahil): yakalama bir geri dönüş yapar ve çıkış ölçeklenir.
+
+## v6.4.0 (20 May 2026)
+
+- Yeni **Veri Akışları** sayfası: herhangi bir MAVLink değeri veya `NAMED_VALUE_FLOAT` sinyaline bağlı grafikler, göstergeler, mini grafikler ve sayısal karolarla özel telemetri panoları. Birden fazla kart, sürükle-boyutlandır düzeni, sayfa yenilemelerinde korunan geçmiş.
+- Yeni **Telemetri Enjektörleri** (Uçuş Kontrolcüsü → Enjektörler): harici sensör verilerini HTTP, UDP veya seri üzerinden `NAMED_VALUE_FLOAT` / `NAMED_VALUE_INT` olarak MAVLink akışına aktarın. Dinleyiciler, web arayüzü açık olmadan önyüklemede başlar.
+- Yeni **NTRIP / RTK** sekmesi: bir NTRIP caster'a bağlanın, mountpoint'lerine göz atın ve RTCM düzeltmelerini TLS caster'lar dahil uçuş kontrolcüsüne aktarın.
+- Özellik isteği ve yüksek irtifalı balon uçuşlarından gelen geri bildirimler için Bobby Russell'a teşekkürler; Veri Akışları ve enjektörlere ilham verdi.
+
+## v6.3.2 (13 Nis 2026)
+
+- Güvenlik ve performans için bağımlılık güncellemeleri (Vite, Axios, arka uç ve ön uç kütüphaneleri, Rust crate'leri).
+
+## v6.3.1 (20 Mar 2026)
+
+- Raspberry Pi Compute Module üzerinde yükleyici düzeltildi.
+- Seri telemetri için daha fazla baud hızı seçeneği.
+- Daha iyi hata yönetimi ve geri bildirim.
+- Bağımlılık güncellemeleri.
+
+## v6.3.0 (19 Şub 2026)
+
+- Yeni **Fleet Management**: UAVcast-Pro cihazlarını Fleet Manager'a bağlayın; tüm filoyu tek bir yerden izleyin ve yönetin.
+- UAVcast-Pro, Fleet Manager ve mağaza arasında tutarlı görünüm.
+- Kamera sayfasında RTSP akışlı özel işlem hatları için canlı önizleme.
+
+## v6.2.3 (12 Oca 2026)
+
+- Birden fazla CSI kamera, her biri ayrı bir aygıt olarak görünür (örneğin "Raspberry Pi Camera 0 - imx219" ve "Raspberry Pi Camera 1 - imx708").
+- CSI kamera çözünürlükleri ve maksimum FPS, bağlı sensörden algılanır.
+
+## v6.2.2 (5 Oca 2026)
+
+- Kenar çubuğu kategorileri.
+- Uygulamanın bir veritabanı yedeğinden geri yüklenmesi düzeltildi.
+- Uçuş haritası simgeleri iyileştirildi.
+- Güncelleme kartında değişiklik günlüğüne bağlantı.
+- Kayıtların yanlış klasöre kaydedilmesi düzeltildi.
+- Yükleyici, CSI kameralar için Raspberry Pi üzerindeki Ubuntu ve Debian'a `rpicam-apps` ekler ve çoklu kamera kurulumları için `config.txt` içinde CMA belleğini artırır (128 MB → 512 MB).
+- RC kanalı geçişi devre dışı bırakıldıktan sonra manuel kamera değiştirme düzeltildi.
+- Radyo ve Denetçi sekmelerinde sayfa yenilenmeden MAVLink verilerinin yüklenmemesi düzeltildi.
+
+## v6.2.1 (29 Ara 2025)
+
+- Çince (Geleneksel) dil desteği.
+- Geliştirilmiş lisans doğrulaması; bazı kullanıcılar eski aygıtların kaydını silemiyordu.
+
+## v6.2.0 (20 Ara 2025)
+
+- **arm64 ve amd64 desteği**: UAVcast-Pro artık yalnızca Raspberry Pi ile sınırlı değildir; NVIDIA Jetson, x86/x64 bilgisayarlar ve diğer arm64/amd64 cihazlarda çalışır.
+
+## v6.1.0 (7 Ara 2025)
+
+- **Çift kamera desteği**: arayüzden veya bir RC kanalından (kanallar 1–18) anlık geçiş.
+
+## v6.0.5
+
+- 14550 dışında olduğunda telemetri portunun kaydedilmemesi düzeltildi.
+- Aynı IP ve farklı portlara sahip birden fazla hedefte uç nokta adı çakışmaları düzeltildi.
+
+## v6.0.4
+
+- VTOL dahil tüm ArduPilot araç türleri için destek.
+- Daha kararlı MAVLink bağlantı yönetimi.
+
+## v6.0.3
+
+- MAVLink verilerini grafiklerle gösteren yeni **Uçuş Analizi** sayfası.
+- Analiz için MAVLink kaydını bir dosyaya yazma.
+- Salt okunur kullanıcılar için daha sıkı izinler.
+
+## v6.0.2
+
+- MAVLink sistem kimliği ve MAVLink sürümü uçuş kontrolcüsünden algılanır.
+
+## v6.0.1
+
+- Raspberry Pi Zero 2 W gibi düşük kaynaklı cihazlarda daha güvenilir yükleyici.
+- Pi Zero 2 W üzerinde geliştirilmiş UART kurulumu.
+
+## v6.0.0
+
+- Büyük sürüm: arka uç performans ve daha düşük kaynak kullanımı için Rust ile yeniden yazıldı; paket yaklaşık %70 küçüldü.
+- Yeni **Uçuş Haritası**, **Görev Planlayıcı**, **MAVLink Denetçisi** ve **Radyo** sayfaları.
+- Wi-Fi ve modem arasında seçim yapmak için yeni **ağ önceliği** ayarı.
+- Rollerle yeni **Kullanıcı Yönetimi**.
+- MediaMTX tabanlı yeni kamera yönetimi ve canlı önizleme.
+- v6 yeni bir veritabanı kullanır: v4 ve v5 ayarları içe aktarılamaz.
+
+Source: https://docs.uavmatrix.com/tr/reference/changelog/

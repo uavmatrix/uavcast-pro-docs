@@ -1,0 +1,96 @@
+# Mappa di Volo
+
+> Segui il tuo drone in tempo reale sulla Mappa di Volo di UAVcast-Pro con HUD da cockpit, finestre video, armo/disarmo, modalità di volo, RTL, loiter, failsafe GCS e messaggi del controllore di volo.
+
+La Mappa di Volo è una stazione di controllo a terra basata sul browser e integrata in UAVcast-Pro. Mostra il drone sulla mappa con la sua scia, la missione attiva e la posizione home, un HUD da cockpit, il video in diretta e i messaggi del controllore di volo. Puoi armare e disarmare, cambiare la modalità di volo, avviare una missione e attivare RTL o loiter, tutto tramite finestre di conferma. Apri **Mappa di Volo → Vista mappa**.
+
+È pensata per il monitoraggio e per semplici comandi da qualsiasi telefono, tablet o laptop. Per la pianificazione completa delle missioni e il lavoro sui parametri, continua a usare Mission Planner o QGroundControl insieme ad essa.
+
+![Mappa di Volo con la mappa, l'HUD da cockpit a destra e la scheda Stato con le schede di link, batteria, controllore di volo, telemetria, GPS e assetto](https://docs.uavmatrix.com/it/img/screenshots/uavcast-pro/flight-map.webp)
+
+*Mappa di Volo → Vista mappa su un'unità da banco senza fix GPS, quindi la mappa non mostra la posizione del drone.*
+
+## Layout
+
+- **Mappa** (a sinistra): il drone con l'orientamento, la scia, il marcatore home e la missione. **Sats** mostra il numero di satelliti; **Auto-Pan** mantiene il drone al centro. Cambia i livelli con il pulsante dei livelli (**Street Map**, **Satellite** e altri). Se il drone non ha un fix, vedi **No GPS Lock**: *Servono almeno 4 satelliti*.
+- **Barra superiore**: i pulsanti di registrazione (**Telemetria**, **CAM 1**, **CAM 2**), lo spazio libero per le registrazioni, la frequenza di aggiornamento della telemetria (da **1 Hz** a **10 Hz**), la velocità dati attuale e un pulsante che apre la mappa in una finestra separata.
+- **Cockpit** (a destra): un HUD di assetto con i nastri di velocità e altitudine, la modalità di volo attuale, lo stato di armo, la tensione della batteria e l'ultimo messaggio di pre-armo.
+- **Schede laterali**: **Stato**, **Strumenti**, **Azioni**, **Messaggi** e **Registrazioni**. Trascina il bordo del pannello per ridimensionarlo; fai doppio clic sulla maniglia per ripristinarlo.
+- **Finestre video**: una per ogni flusso della telecamera attivo. Trascinale, massimizzale, minimizzale o nascondile; le finestre nascoste si agganciano come schede in fondo alla mappa.
+
+La barra superiore di ogni pagina mostra anche **FC Connesso**, **Armato**/**Disarmato**, il tipo di velivolo, la modalità di volo e **Failsafe GCS attivato** o **Failsafe GCS disattivato**.
+
+## Armare e disarmare
+
+1. Apri la scheda **Azioni**, oppure usa il controllo di armo sotto il cockpit.
+2. Seleziona **Arma**. La finestra avvisa: *Le eliche possono iniziare a girare. Assicurati che nessuno sia vicino al drone e che l'area intorno sia libera.*
+3. Conferma con **Arma**.
+
+I controlli di pre-armo del controllore di volo restano comunque decisivi. Se li rifiuta, vedi *Il drone ha rifiutato l'armo. Controlla il messaggio PreArm sullo schermo.* Il motivo compare sotto il cockpit e in **Messaggi**.
+
+**Disarma** arresta immediatamente i motori. Il controllore di volo lo rifiuta mentre il drone è in volo.
+
+## Cambiare la modalità di volo
+
+Scegli una modalità dal controllo della modalità di volo. L'elenco corrisponde al tipo di velivolo (Copter, Plane, Rover, Sub) ed è raggruppato in **Modalità sicure** (hold di posizione e stabilizzazione), **Navigazione** (modalità autonome) e **Avanzate** (modalità manuali ed emergenza). Le modalità a rischio più elevato sono contrassegnate da un'icona di avviso e chiedono conferma prima dell'invio del comando.
+
+## Scheda Azioni
+
+| Gruppo | Pulsanti | Cosa succede |
+| --- | --- | --- |
+| **Missione** | **Leggi**, **Nascondi**, **Avvia**, **Cancella** | **Leggi** carica la missione dal controllore di volo sulla mappa. **Avvia** la avvia (con conferma). **Cancella** elimina la missione dal controllore di volo e attende la sua conferma. |
+| **Modalità** | **Loiter Unl**, **RTL** | Cambi rapidi di modalità. |
+| **Pre-Volo** | **Calibrazione Pre-Volo**, **Carica Missione**, **Cancella Missione** | La calibrazione esegue la calibrazione a terra del controllore di volo (giroscopio, barometro). Solo a terra. |
+| **Comandi di Emergenza** | **Ritorno al Punto di Decollo**, **Loiter Illimitato** | Dietro una conferma. RTL torna al punto di decollo e atterra o va in loiter secondo le impostazioni del controllore di volo. Loiter Illimitato gira in cerchio sulla posizione attuale. |
+| **Failsafe** | interruttore **Failsafe GCS** | Scrive `FS_GCS_ENABLE` (Copter) e `FS_GCS_ENABL` (Plane) sul controllore di volo. |
+
+> **Attiva il failsafe GCS per i voli con connessione cellulare**
+>
+> Il failsafe GCS si attiva quando il controllore di volo smette di ricevere gli heartbeat MAVLink da una stazione di terra. Via 4G/LTE il collegamento può cadere in qualsiasi momento. Configura cosa fa il failsafe (azione `FS_GCS_ENABLE`, `FS_GCS_TIMEOUT`) nella tua stazione di terra prima di farvi affidamento.
+
+Gli utenti Read Only vedono la scheda Azioni ma non possono usarla (*Gli utenti Read Only non possono controllare il drone*).
+
+## Messaggi
+
+**Messaggi** elenca ogni messaggio di testo del controllore di volo. **Avvisi attivi** mostra i problemi attuali (per esempio i guasti di pre-armo) separatamente dal **Registro messaggi**. Attiva **Solo problemi** per nascondere i messaggi di routine e **Cancella il registro** per ripartire da zero. La scheda mostra un badge con il numero di avvisi attivi.
+
+## Schede Stato e Strumenti
+
+- **Stato**: schede per **LINK** (perdita di pacchetti, connesso), **FLIGHT CONTROLLER** (armato, modalità, velivolo), frequenza dati della telemetria, posizione, **GPS** (fix, satelliti, **ALTITUDE (AGL)**, **ALTITUDE (AMSL)**) e **BATTERY**.
+- **Strumenti**: strumenti circolari per gli stessi dati.
+
+AGL è l'altezza sopra il punto di decollo; AMSL è l'altezza sopra il livello medio del mare.
+
+## Impostazioni mappa
+
+| Impostazione | Cosa fa |
+| --- | --- |
+| **Auto-Pan** | Mantiene il drone al centro della mappa. |
+| **Show Aircraft Heading** | Disegna una linea di orientamento dal drone. |
+| **Trail Length** | Numero di punti mantenuti nella scia della traiettoria di volo. |
+| **Trail Color** | Colore della scia. **Clear Trail Path** la rimuove. |
+| **Show Distance from Home** | Mostra la distanza dal marcatore home. |
+| **Reset to Defaults** | Ripristina tutte le impostazioni della mappa. |
+
+## Finestre separate
+
+- **Finestra della Mappa di Volo**: il pulsante a destra della barra superiore apre solo la mappa in una nuova finestra (`/flightmapwindow`), dimensionata per un secondo monitor.
+- **Finestra HUD**: dal cockpit, apri l'HUD nella sua finestra (`/hud`).
+
+![HUD da cockpit con indicatore di assetto, nastri di velocità e altitudine, orientamento e modalità di volo](https://docs.uavmatrix.com/it/img/screenshots/uavcast-pro/hud.webp)
+
+*Il cockpit HUD su /hud. L'orizzonte qui è capovolto perché il controllore di volo di questa unità da banco è montato a testa in giù.*
+
+## Frequenza di aggiornamento della telemetria
+
+Il selettore di frequenza nella barra superiore (**1 Hz**, **2 Hz**, **5 Hz**, **10 Hz**) imposta la frequenza con cui UAVcast-Pro invia la telemetria al browser. Non cambia ciò che ricevono le stazioni di terra. Usa una frequenza bassa su una connessione lenta all'interfaccia web.
+
+## Correlati
+
+- [Scheda Mission Planner](https://docs.uavmatrix.com/it/uavcast-pro/flight-map/mission-planner/)
+- [Radio (canali RC)](https://docs.uavmatrix.com/it/uavcast-pro/flight-map/radio/)
+- [Ispettore MAVLink](https://docs.uavmatrix.com/it/uavcast-pro/flight-map/inspector/)
+- [Analitica di Volo](https://docs.uavmatrix.com/it/uavcast-pro/flight-map/flight-analytics/)
+- [Registrazioni e revisione dei voli](https://docs.uavmatrix.com/it/uavcast-pro/camera/recordings/)
+
+Source: https://docs.uavmatrix.com/it/uavcast-pro/flight-map/

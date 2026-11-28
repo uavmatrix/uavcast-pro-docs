@@ -1,0 +1,84 @@
+# 流绑定
+
+> 通过 VPN 将任意无人机的视频和 MAVLink 路由到任意地面站，了解 Fleet Manager 如何分配 UDP 端口，以及 QGC 和 Mission Planner 的设置方法。
+
+流绑定会告诉无人机通过贵组织的 VPN 将其视频和遥测数据发送到某一台地面站。一架无人机可以向多台地面站推流，一台地面站也可以接收多架无人机的数据。Fleet Manager 会选择端口，确保数据流永不冲突。
+
+## 开始之前
+
+- 已启用 [VPN](https://docs.uavmatrix.com/zh-cn/fleet-manager/network/#enable-vpn)，且无人机已接入 VPN（在 **Connected Devices** 中类型为 **UAV**）。
+- 地面站已[连接并配置为 **GCS**](https://docs.uavmatrix.com/zh-cn/fleet-manager/connect-gcs/)。
+- **Owner 或 Admin** 角色。
+- 无人机**在线**。Fleet Manager 会立即将新的目标地址发送给 UAVcast-Pro，并等待其确认。
+
+## 添加绑定
+
+1. 前往 **Network → Stream Bindings**，然后选择 **Add Binding**。
+2. 在 **Add Stream Binding** 中，选择 **Drone** 和 **Ground Station**。
+3. 选择 **Create Binding**。
+
+![Add Stream Binding 对话框，包含无人机和地面站选择器，以及关于自动分配端口的说明](https://docs.uavmatrix.com/zh-cn/img/screenshots/fleet-manager/network--add-binding.webp)
+
+*Add Stream Binding 对话框：已选择无人机和地面站，并附有端口会自动分配的说明。*
+
+该绑定会出现在表格中，**Video** 和 **Telemetry** 处于开启状态，并显示其 **Ports**（视频 / 遥测）。UAVcast-Pro 会在数秒内开始发送。
+
+如果无人机在 15 秒内未确认，Fleet Manager 会取消该绑定，并显示 **Failed to send configuration to drone - it may be offline**。请检查无人机是否在线，然后重试。
+
+## 端口如何分配
+
+端口**按地面站**计算。每个绑定在该地面站上都有其自己的一组 UDP 端口，因此无人机之间的端口永不重叠：
+
+- 用于摄像头 1 的**视频**端口，其后预留给**摄像头 2**（双流）和**音频**的端口；UAVcast-Pro 会将它们发送到视频端口之后的下一组端口；
+- 用于 MAVLink 的**遥测**端口。
+
+地面站上的第一个绑定使用默认值：视频 **5600**，遥测 **14550**。之后的绑定会获得下一个空闲的端口组。
+
+需要注意以下几点：
+
+- **每台地面站都从默认值开始。** 同一架无人机在两台笔记本电脑上可能使用不同的端口，取决于每台笔记本电脑还接收了哪些其他数据。
+- **释放的端口会被复用。** 删除绑定会释放其端口组，供该笔记本电脑的下一个新绑定使用。
+- **端口不随无人机变化。** 删除并重新添加绑定可能会得到不同的端口。在设置地面站软件之前，请务必阅读 **Ports** 列。
+- 端口由 Fleet Manager 分配，无法在应用中编辑。
+- 在无人机上手动设置的**视频端口（摄像头 2）**，只有从 UAVcast-Pro 6.5.3 起，才会在 Fleet Manager 更新其目标地址时保留。在更早的版本中，下一次更新会将其清除。
+
+## 设置地面站软件
+
+请使用绑定的 **Ports** 列中显示的端口。数据流来自无人机的 VPN 地址。
+
+**QGroundControl**
+
+- **遥测：** QGroundControl 默认监听 UDP 14550，因此第一架无人机会自动连接。如需连接更多无人机，请打开 **Application Settings → Comm Links**，添加类型为 **UDP** 的链路，并使用该绑定的遥测端口，然后连接。
+- **视频：** 在 **Application Settings → Video**（旧版本中位于 **General** 下）中，将 **Source** 设为 **UDP h.264 Video Stream**，并将 UDP 端口设为该绑定的视频端口（在当前版本中，**UDP URL** 为 `0.0.0.0:<port>`）。QGroundControl 一次只显示一路视频；若要观看多架无人机，请再运行一个实例，或使用视频播放器查看其他无人机。
+
+**Mission Planner**
+
+- **遥测：** 在右上角的连接下拉菜单中选择 **UDP**，点击 **Connect**，然后输入该绑定的遥测端口。若要连接多架无人机，每个端口分别连接一次；Mission Planner 会按系统 ID 列出每架载具。
+- **视频：** 右键单击 HUD，选择 **Video → Set GStreamer Source**，并输入一个监听该绑定视频端口的管道。具体管道请参见 [Mission Planner](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/mission-planner/)。
+
+> **为每架无人机分配独立的 MAVLink 系统 ID**
+>
+> 当一台地面站接收多架无人机时，每个飞控都需要唯一的 `SYSID_THISMAV`（ArduPilot）或 `MAV_SYS_ID`（PX4）。否则地面站会将它们混淆。
+
+关于在一台地面站上管理多架载具的更多信息，请参见[向多台地面站传输数据流](https://docs.uavmatrix.com/zh-cn/guides/multiple-ground-stations/)。
+
+## 暂停或删除绑定
+
+- 在表格中关闭 **Video** 或 **Telemetry** 开关，即可停止该数据流，同时保留绑定及其端口。请在无人机在线时执行此操作，以便其接收到更改。
+- 选择垃圾桶图标即可删除绑定。其端口会被释放，供该地面站的下一个绑定使用。
+
+使用搜索框以及 **Video Status** 过滤器（**All Video**、**Video On**、**Video Off**）可在大型机队中查找绑定。
+
+![Stream Bindings 表格，列出无人机、地面站、视频和遥测开关以及端口](https://docs.uavmatrix.com/zh-cn/img/screenshots/fleet-manager/network--stream-bindings.webp)
+
+*Stream Bindings 选项卡：每个绑定列出其无人机、地面站、Video 和 Telemetry 开关及其端口。*
+
+## UAV 页面上的绑定
+
+每架无人机的 [UAV 页面](https://docs.uavmatrix.com/zh-cn/fleet-manager/fleet/uav-details/#connected-ground-stations)会在 **Connected Ground Stations** 下列出其地面站，并提供相同的开关以及 **Pause** / **Resume**。在该处点击 **Add GCS**，会以与此处 **Add Binding** 相同的方式创建绑定，并使用该地面站上的下一个空闲端口。
+
+## 没有数据流到达？
+
+请参见[地面站中没有遥测数据](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-telemetry-in-gcs/)和[地面站中没有视频](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-video-in-gcs/)。常见原因包括：笔记本电脑上的防火墙阻止了入站 UDP、地面站软件监听了错误的端口，或绑定中已关闭数据流。
+
+Source: https://docs.uavmatrix.com/zh-cn/fleet-manager/network/stream-bindings/

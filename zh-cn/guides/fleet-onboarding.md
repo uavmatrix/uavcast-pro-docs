@@ -1,0 +1,73 @@
+# 使用 Fleet Manager 批量接入无人机机队
+
+> 规划许可证，然后为 20 架以上的 UAVcast-Pro 无人机命名、配对并连接到 UAVmatrix Fleet Manager，同时配置团队角色、组织 VPN 和流绑定。
+
+本指南将介绍如何一次性将一个机队（例如 20 架无人机）接入 [UAVmatrix Fleet Manager](https://docs.uavmatrix.com/zh-cn/fleet-manager/)：包括许可证、命名、配对、组织 VPN，以及将地面控制站与无人机连接起来。本指南假定每架无人机都已运行 UAVcast-Pro，且飞行控制器已连接并可访问互联网。
+
+## 1. 规划许可证
+
+有两条规则决定无人机能否完成配对：
+
+- **每架无人机的设备上都需要有效的 UAVcast-Pro 许可证。** 一个许可证可以覆盖多架无人机：其 **Allowed Devices** 数量即为可用名额。接入 20 架无人机，您总共需要 20 个名额，可来自一个或多个许可证。
+- **许可证必须归您要配对到的组织中的某个成员所有。** Fleet Manager 会将购买许可证的商店账户的邮箱地址与成员的邮箱地址进行匹配。如果许可证是由其他账户购买的，请将该账户邀请到组织中，或请求支持人员将购买所用的邮箱添加到您的用户中。
+
+请在配对当天之前检查这一点：许可证归属于组织外人员的无人机将被拒绝，并显示 **License is not owned by any member of this organization**。
+
+## 2. 设置组织和团队
+
+1. 使用您的 uavmatrix.com 账户登录 [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com/)，并创建组织。请参阅 [设置组织](https://docs.uavmatrix.com/zh-cn/fleet-manager/set-up-organization/)。
+2. 在 **Team** 下邀请您的成员。Owner 和 Admin 可以配对、控制和移除无人机；Viewer 只能查看。请参阅 [角色与权限](https://docs.uavmatrix.com/zh-cn/fleet-manager/team/roles-and-permissions/)。
+3. 如果无人机数量较多，可将配对工作分配给两到三名 Admin。每位用户每分钟最多可完成 5 次配对；此限制可防止暴力猜测，同时也会减缓一个人连续配对 20 架无人机的速度。
+
+## 3. 配对前为每架无人机命名
+
+无人机在 UAVcast-Pro 中的名称，即其在 Fleet Manager 中的名称。请先约定一种命名规则，例如 `SURVEY-01` 至 `SURVEY-20`，并据此为机架贴上标签。
+
+在每架无人机上，打开 UAVcast-Pro → **Fleet Management**，并填写 **Device Name**。如果未命名，无人机将以其主机名显示。您之后可以在 Fleet Manager 中重命名。
+
+## 4. 逐架配对无人机
+
+对每架无人机重复以下步骤。将两个浏览器窗口并排打开（一个为无人机的 UAVcast-Pro，另一个为 Fleet Manager），每架无人机约需一分钟。
+
+1. 在 UAVcast-Pro 中打开 **Fleet Management**，然后按下 **Connect to Fleet Manager**。此时会出现一个 8 位 **Pairing Code**（配对码），该码 5 分钟后失效。
+2. 在 Fleet Manager 中，前往 **Fleet → Pair Device**。
+3. 选择 **Select Organization**，然后选择 **Enter Pairing Code**。
+4. **Confirm Device**：检查名称、主机名、架构和 UAVcast 版本，确保您配对的是预期的无人机。
+5. **VPN Connection**：如果地面控制站需要通过组织的 VPN 访问无人机，请勾选 **Enable VPN for this UAV**。如果该无人机已在使用 Tailscale，选择 **Replace existing VPN with Fleet Manager network** 可将其迁移到组织网络。
+6. 选择 **Complete Pairing**。在 UAVcast-Pro 中，**Fleet Connection** 将变为 **Connected**。
+
+![Fleet Manager 配对向导的确认设备步骤，显示 UAV 名称、主机名、架构和 UAVcast 版本](https://docs.uavmatrix.com/zh-cn/img/screenshots/fleet-manager/pair-device--confirm.webp)
+
+*Fleet → Pair Device，确认设备步骤。*
+
+有关错误及其含义，请参阅 [配对码无效或已过期](https://docs.uavmatrix.com/zh-cn/troubleshooting/pairing-code-invalid/)。完整的向导说明请参阅 [配对您的第一架 UAV](https://docs.uavmatrix.com/zh-cn/fleet-manager/pair-uav/)。
+
+## 5. 检查机队
+
+打开 **Fleet**。每架无人机都应显示为在线。在 **Fleet Map** 上，一旦飞行控制器获得定位，每架无人机都会显示在其 GPS 位置。如果某架无人机显示 **Offline**，说明它已有 20 秒未上报数据：请参阅 [Fleet Manager 中无人机离线](https://docs.uavmatrix.com/zh-cn/troubleshooting/drone-offline-fleet-manager/)。
+
+## 6. 连接地面控制站
+
+1. 前往 **Network**，如果组织 VPN 尚未启用，请按下 **Enable VPN Network**。
+2. 按下 **Connect a Device**，选择 **Ground Control Station (GCS)**，然后复制 **GCS Connection Command**。在已安装 Tailscale 的**地面控制站笔记本电脑**上的终端中运行该命令。请勿将其粘贴到 UAVcast-Pro 中。
+3. 笔记本电脑连接后，会出现在 **Ground Stations** 下。
+4. 在 **Stream Bindings** 下，按下 **Add Stream Binding**，并将每架无人机与应接收其数据的地面控制站关联起来。无人机必须在线，因为 Fleet Manager 会将目标地址推送给它。
+5. 每个绑定会在该地面控制站上获得自己的一组端口：第一架无人机使用默认端口，即 5600（视频）和 14550（遥测），之后的每架无人机将使用下一组可用端口。请使用每个绑定中显示的端口设置地面控制站软件。
+
+![Fleet Manager 网络页面，显示多个流绑定将若干无人机连接到同一地面控制站，并自动分配端口](https://docs.uavmatrix.com/zh-cn/img/screenshots/fleet-manager/network--stream-bindings.webp)
+
+*Network → Stream Bindings：每个绑定会显示其地面控制站以及视频和遥测端口。*
+
+详细信息请参阅 [连接地面控制站](https://docs.uavmatrix.com/zh-cn/fleet-manager/connect-gcs/) 和 [流绑定](https://docs.uavmatrix.com/zh-cn/fleet-manager/network/stream-bindings/)。
+
+> **双路传输与音频**
+>
+> 每个绑定都会在地面控制站上获得自己的一组端口，视频端口之后预留了无人机第二个摄像头和音频的空间，因此多架无人机可以共用一个地面控制站。
+
+## 7. 日常管理
+
+- **需要重新配对**：当 Fleet Manager 显示此标记时，请在 UAVcast-Pro 中为该无人机重新配对一次。它会保留其名称和历史记录。请参阅 [移除或转移 UAV](https://docs.uavmatrix.com/zh-cn/fleet-manager/fleet/remove-or-transfer/)。
+- **更换无人机的 SD 卡或主板本身不会释放名额**：请在使用同一许可证的任意无人机上，于 **Application → License Manager → Activated Devices** 下注销旧设备，然后再配对新设备。
+- **远程操作无人机**：Fleet Manager 中的 UAV 详情页面提供终端、日志以及重启等操作。请参阅 [UAV 详情](https://docs.uavmatrix.com/zh-cn/fleet-manager/fleet/uav-details/)。
+
+Source: https://docs.uavmatrix.com/zh-cn/guides/fleet-onboarding/

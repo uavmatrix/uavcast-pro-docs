@@ -1,0 +1,84 @@
+# Linux 上的 GStreamer
+
+> 在 Ubuntu、Debian 或 Fedora 上安装 GStreamer，并使用 gst-launch-1.0 播放 UAVcast-Pro H.264 无人机视频和 Opus 音频，包括第二台摄像头、低延迟设置和 ufw 配置。
+
+GStreamer 可通过一条命令在窗口中播放 UAVcast-Pro 视频流。可用于测试视频链路、观看第二台摄像头或收听音频。适用于任何桌面 Linux 系统，包括用作地面站的 Raspberry Pi。
+
+## 开始之前
+
+在无人机上，于 [地面控制站](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/) 中添加目标地址，填入本计算机的 IP 地址（使用 `ip -4 addr` 查看；4G 下使用 VPN 地址），并开启 **启用视频**。
+
+## 安装 GStreamer
+
+**Ubuntu / Debian / Raspberry Pi OS**
+
+```bash
+sudo apt update
+sudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav
+```
+
+`gstreamer1.0-libav` 提供 H.264 解码器（`avdec_h264`）。缺少它时，下方的命令会失败。
+
+**Fedora**
+
+```bash
+sudo dnf install gstreamer1 gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugin-libav
+```
+
+出于专利原因，Fedora 官方软件源大多不包含完整的 H.264 支持，因此即使完成安装，`avdec_h264` 仍可能缺失。如果下方的检查失败，请启用 [RPM Fusion](https://rpmfusion.org/)，并按照其多媒体指南获取完整的编解码器库。
+
+检查 H.264 解码器是否已安装：
+
+```bash
+gst-inspect-1.0 avdec_h264
+```
+
+它会打印该元素的详细信息。若出现 *No such element or plugin*，则说明缺少解码器。
+
+## 播放视频
+
+```bash
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+收到第一个关键帧后会打开窗口。按 **Ctrl+C** 停止。
+
+> **应看到的效果**
+>
+> 1. 终端打印 `Setting pipeline to PLAYING ...` 并等待视频。
+> 2. 收到第一个数据包后，`-v` 会打印包含 `caps = application/x-rtp` 的行。
+> 3. 视频窗口中显示摄像头画面。
+>
+> 如果在第 1 步之后停止，说明没有视频到达本计算机：请参阅下方的故障排除表。
+
+- **摄像头 2**（[双路视频流](https://docs.uavmatrix.com/zh-cn/uavcast-pro/camera/multi-camera/)）：使用 `port=5601` 重新运行。
+- **更低延迟**（网络状况良好时）：将 `rtpjitterbuffer` 替换为 `rtpjitterbuffer latency=0`。4G 下请保持默认设置。
+
+## 收听音频
+
+开启 **Camera** 页面中的 **将音频发送到地面站** 后，音频将到达视频端口 + 2：
+
+```bash
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp, media=(string)audio, clock-rate=(int)48000, encoding-name=(string)OPUS, payload=(int)97" ! rtpjitterbuffer ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+## 防火墙
+
+大多数桌面发行版不会阻止传入的 UDP。如果启用了 `ufw`：
+
+```bash
+sudo ufw allow 5600:5602/udp
+sudo ufw allow 14550/udp
+```
+
+## 故障排除
+
+| 消息或现象 | 解决方法 |
+| --- | --- |
+| *no element "avdec_h264"* | 安装 `gstreamer1.0-libav`。 |
+| *no element "rtph264depay"* | 安装 `gstreamer1.0-plugins-good`。 |
+| 运行但没有窗口 | 没有数据到达。请检查无人机上的目标 IP、**启用视频** 以及防火墙。`sudo tcpdump -ni any udp port 5600` 可显示数据包是否到达计算机。 |
+| 启动时出现绑定错误 | 其他程序（QGroundControl 或其他 GStreamer）正在监听该端口。请将其关闭。 |
+| 窗口已打开，但画面出现灰色拖影 | 丢包。请降低无人机上的码率，并将 **流恢复速率** 设置为 15–30 帧。 |
+
+Source: https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/gstreamer-linux/

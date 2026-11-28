@@ -1,0 +1,68 @@
+# 未检测到摄像头
+
+> UAVcast-Pro 显示 No cameras available？请检查 CSI 排线、rpicam-hello、Ubuntu 上的摄像头支持，以及 USB 摄像头的 v4l2-ctl。
+
+在 **摄像头 → 摄像头设置** 中，**Select Camera** 显示 **无可用摄像头**（No cameras available），您需要的摄像头不在列表中，或 **操作日志**（Action Logs）中显示 *No camera detected*。
+
+| 您会看到 | 可能原因 | 从此处开始 |
+| --- | --- | --- |
+| 未找到 Raspberry Pi CSI 摄像头（排线连接） | 排线、连接器或摄像头驱动栈 | [检查 1](https://docs.uavmatrix.com/zh-cn/troubleshooting/camera-not-detected/#check-1) |
+| Ubuntu 上的 CSI 摄像头 | Ubuntu 默认不包含 Raspberry Pi 摄像头驱动栈 | [检查 2](https://docs.uavmatrix.com/zh-cn/troubleshooting/camera-not-detected/#check-2) |
+| 未找到 USB 摄像头 | 未被 Linux 识别，或不是视频采集设备 | [检查 3](https://docs.uavmatrix.com/zh-cn/troubleshooting/camera-not-detected/#check-3) |
+| 摄像头已列出，但视频从未开始 | 不支持的分辨率，或被其他程序占用 | [检查 4](https://docs.uavmatrix.com/zh-cn/troubleshooting/camera-not-detected/#check-4) |
+
+## 检查 1：Raspberry Pi CSI 摄像头
+
+1. 关闭 Pi 电源。将排线两端重新插好，确保触点朝向正确，然后合上连接器卡扣。Pi 5 和 Pi Zero 2 W 需要较窄的 22 针排线。
+
+2. 启动 Pi，并在其上运行以下命令：
+
+   ```bash
+   rpicam-hello --list-cameras
+   ```
+
+   在较旧的 Raspberry Pi OS 镜像上，命令为 `libcamera-hello --list-cameras`。
+
+3. 如果此处未列出摄像头，说明 Linux 无法识别它。在更改 UAVcast-Pro 中的任何设置之前，请先尝试更换排线或摄像头。
+
+4. 如果已列出，请在摄像头页面中重启摄像头（点击 **重启**，或先点击 **停止** 再点击 **启动**），然后重新打开 **Select Camera**。每个 CSI 摄像头都会显示为独立条目，例如 *CSI Camera 0 - imx708 (libcamera)*。
+
+> **两个 CSI 摄像头**
+>
+> 连接两个摄像头时，摄像头驱动需要更多内存。自 v6.2.2 起，安装程序会为多摄像头配置自动提高 `config.txt` 中的 CMA 内存。如果您是后来才添加第二个摄像头，请在安装后重启设备。
+
+## 检查 2：Ubuntu 或 Debian 上的 CSI 摄像头
+
+UAVcast-Pro 使用 `rpicam-vid` 处理 CSI 摄像头。安装程序会在 Raspberry Pi OS 和 Debian 上安装 `rpicam-apps`（或 `rpicam-apps-core`）。在 Ubuntu 上，Raspberry Pi 摄像头驱动栈没有打包，日志会显示 *CSI camera not available: Ubuntu requires building libcamera from source. USB cameras are supported.*
+
+如果需要使用 CSI 摄像头，请使用 64 位 Raspberry Pi OS；如果使用 Ubuntu，请改用 USB 摄像头。
+
+## 检查 3：USB 摄像头
+
+1. 将摄像头直接插入伴随计算机，不要通过无供电的集线器连接。
+
+2. 运行以下命令：
+
+   ```bash
+   v4l2-ctl --list-devices
+   ```
+
+3. 如果未列出摄像头，说明 Linux 没有识别它。请检查 `lsusb`，并尝试更换端口和线缆。
+
+4. 如果已列出，请在摄像头页面点击 **重启**，然后重新打开 **Select Camera**。
+
+大多数 UVC 网络摄像头都可以使用，例如 Logitech C920 和 C615。无法输出编码器可接受格式的摄像头，或不是视频采集设备的设备（某些采集卡），不会出现在列表中。
+
+## 检查 4：已列出，但视频无法启动
+
+- 如果日志显示 *Camera … does not support …x… - streaming at …x… instead*，请在 **分辨率** 中选择摄像头支持的分辨率。
+- 关闭其他正在使用该摄像头的程序。同一时间只能有一个程序打开它。
+- 如果 **启用摄像头？** 显示 **权限不足**，请更新至 v6.5.2 或更高版本，该问题已在此版本中修复。
+
+## 仍未检测到？
+
+在选中 **所有日志** 的情况下[下载日志](https://docs.uavmatrix.com/zh-cn/troubleshooting/collect-logs/)，附上 `rpicam-hello --list-cameras` 或 `v4l2-ctl --list-devices` 的输出，然后将所有内容发送至 **[support@uavmatrix.com](mailto:support@uavmatrix.com)**。
+
+相关内容：[摄像头设置](https://docs.uavmatrix.com/zh-cn/uavcast-pro/camera/) · [支持的硬件](https://docs.uavmatrix.com/zh-cn/reference/supported-hardware/)
+
+Source: https://docs.uavmatrix.com/zh-cn/troubleshooting/camera-not-detected/

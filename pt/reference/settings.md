@@ -1,0 +1,152 @@
+# Referência de configurações
+
+> Todas as configurações do UAVcast-Pro em uma única página, com rótulo exato, padrão e faixa de valores: controlador de voo, NTRIP, estações de controle terrestre, câmera, gravação, modem e VPN.
+
+Todas as configurações da interface web do UAVcast-Pro, agrupadas por página, com o rótulo exatamente como o aplicativo o mostra e o padrão em uma instalação nova. As páginas que alteram configurações ao vivo as aplicam imediatamente, salvo indicação em contrário. As páginas de recursos explicam cada área em detalhes; esta página serve para consulta.
+
+## Controlador de Voo → Conexão
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Link ativado** | Ativado | Liga ou desliga o link com o controlador de voo. |
+| **Tipo de link** | **USB** | **USB** (a porta USB do próprio controlador de voo) ou **UART / Serial** (porta TELEM nos pinos GPIO ou em um cabo USB-serial). |
+| **Porta** | **Automática** | Automática encontra o controlador de voo e o acompanha se o número do dispositivo mudar. **Caminho personalizado…** aceita um dispositivo como `/dev/ttyAMA0`. |
+| **Taxa de transmissão** | **Automática** | Deve corresponder a `SERIALx_BAUD` no controlador de voo. Automática testa 57600, 115200, 921600, 1500000, 460800, 230400 e 500000. Não é usada para USB. |
+
+Botões: **Detectar automaticamente** (verifica todas as portas e velocidades e salva o resultado), **Conectar**, **Reiniciar link** e **Parar**. As alterações são aplicadas imediatamente, sem reinicialização.
+
+## Controlador de Voo → NTRIP / RTK
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Ativar cliente NTRIP** | Desativado |  |
+| **Host do caster** | vazio | Nome do host do caster NTRIP. |
+| **Porta** | `2101` | Alguns casters TLS usam 2102 ou 443. |
+| **Mountpoint** | vazio | Escolha com **Procurar mountpoints**. |
+| **Usar TLS (HTTPS)** | Desativado | Para casters que exigem TLS. |
+| **Nome de usuário** / **Senha** | vazio | rtk2go.com: endereço de e-mail como nome de usuário, sem senha. |
+| **Enviar GGA upstream** | Ativado | Necessário para casters VRS e de mountpoint mais próximo. |
+| **Intervalo de envio (segundos)** | `10` |  |
+| **Fonte de posição** | **Posição ao vivo do controlador de voo** | Ou **Posição manual fixa** (**Latitude**, **Longitude**, **Altitude (m)**), também usada como alternativa antes da primeira fixação de GPS. |
+
+## Controlador de Voo → Injetores
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Tipo de entrada** |  | **HTTP**, **UDP** ou **Serial**. Não pode ser alterado após a criação. |
+| **sysid MAVLink** | `1` | Igual ao do controlador de voo. |
+| **compid MAVLink** | `194` | Carga útil do usuário. |
+| **Prefixo do nome** | vazio | Até 8 caracteres ASCII, adicionados antes de cada nome de sinal. |
+| **Limite de taxa (Hz por sinal)** |  | Número máximo de amostras por segundo, por nome de sinal. |
+| **Protocolo** (UDP, Serial) |  | **Chave=Valor (delimitado por linha)** ou **JSON** (`{name, value}`). |
+| **Porta** / **Endereço de escuta** (UDP) |  | Escolha uma porta não usada, por exemplo 14600. `0.0.0.0` = todas as interfaces, `127.0.0.1` = somente local. |
+| **Caminho do dispositivo** / **Baud rate** (Serial) |  | Por exemplo `/dev/ttyUSB0`; a baud rate deve corresponder à do remetente. |
+
+## Estações de Controle Terrestre
+
+Um cartão por destino.
+
+| Configuração | Padrão em um novo destino | Valores e observações |
+| --- | --- | --- |
+| **Nome** | vazio | Até 50 caracteres. |
+| **IP ou Host de Destino** | vazio | Um endereço IPv4. Obrigatório antes que vídeo ou telemetria possam ser ativados. |
+| **Porta de Telemetria** | `14550` | 1–65535. |
+| **Porta de Vídeo** | `5600` | 1–65535. |
+| **Porta de Vídeo (Câmera 2)** | vazio (= Porta de Vídeo + 1) | Exibida apenas quando **Transmissão dupla** está ativada. |
+| **Ativar Endpoint** | Ativado | Desativado interrompe tudo para este destino: telemetria, vídeo e áudio. |
+| **Ativar Vídeo** | **Desativado** |  |
+| **Ativar Telemetria** | **Desativado** |  |
+| **Somente leitura** | Desativado | A estação de controle terrestre recebe telemetria, mas não pode alterar nada no veículo. Isso vale a partir do UAVcast-Pro 6.5.3; em versões anteriores, **Somente leitura** não bloqueia gravações de parâmetros. |
+
+## Câmera → Configurações da câmera
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Ativar Câmera?** | Sim |  |
+| **Selecionar Câmera** | Câmera Raspberry Pi | Câmeras CSI e USB detectadas. |
+| **Resolução** | 640×480 | Somente os tamanhos suportados pela câmera são oferecidos. |
+| **Selecionar FPS** | **Automático** | A câmera negocia. |
+| **Taxa de Bits:** | `0` (automático) | 0–10000 kbps. |
+| **Taxa de Recuperação do Stream** | **Automático** | Intervalo de quadros-chave. Automático = um quadro-chave por segundo. Níveis mais rápidos se recuperam antes de perdas de pacotes, mas usam mais largura de banda. |
+| **Rotação:** / **Configurações de espelhamento** | 0°, sem espelhamento | **Espelhar Horizontalmente**, **Espelhar Verticalmente**. |
+| **Ativar Visualização ao Vivo?** | Sim | Visualização nesta página e no Mapa de Voo. |
+| **Pipeline personalizado** | pipeline de teste | Substitui os destinos de Estações de Controle Terrestre. Omita o prefixo `gst-launch-1.0`. |
+| **Ativar Troca por Canal RC** | Desativado |  |
+| **Canal RC** | 7 | PWM < 1500 = Câmera 1, PWM > 1500 = Câmera 2. |
+| **Igualar Resolução da Câmera 1** | Desativado | A câmera 2 captura na resolução da câmera 1. |
+| **Transmissão dupla** | Desativado | Transmite as duas câmeras ao mesmo tempo. |
+| **Áudio** | Desativado | Áudio Opus na visualização. |
+| **Dispositivo de áudio** | **Automático (microfone da câmera, se houver)** | Ou um dispositivo de captura, ou **Tom de teste (não precisa de microfone)**. |
+| **Taxa de Bits** (áudio) | 64 kbps |  |
+| **Enviar áudio para as estações de solo** | Desativado | RTP/Opus para cada destino de vídeo na Porta de Vídeo + 2. |
+
+## Câmera → Gravações → Configurações
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Local de armazenamento** | **Armazenamento interno** | Um pendrive ou SSD USB, ou **Ou outra pasta**. |
+| **Manter livre** | 2 GB | 0,5–1000 GB. |
+| **Excluir as gravações mais antigas quando o espaço acabar** | Ativado | Desativado = a gravação para quando o disco estiver cheio. |
+| **Excluir gravações mais antigas que** | 0 dias | 0 mantém até que o espaço seja necessário. |
+| **Gravar automaticamente ao armar** | Ativado |  |
+| **Gravar câmera 1** / **Gravar câmera 2** | Ativado / Ativado | A câmera 2 só com transmissão dupla. |
+| **Duração do arquivo** | 1 min | 1–30 minutos por arquivo. |
+| **Gravar telemetria** | **Enquanto armado** | **Sempre que conectado** ou **Desligado**. |
+
+## Modem
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Ativar Modem Celular?** | Sim |  |
+| **Tipo de modem** | **Tradicional (PPP)** | Ou **HiLink**. |
+| **Nome do Ponto de Acesso (Opcional)** | vazio (**Automático**) | Deixe vazio para detectar automaticamente. |
+| **Nome de usuário (Opcional)** / **Senha (Opcional)** | vazio | A maioria das operadoras não exige nenhum dos dois. |
+| **Código PIN (Opcional)** | vazio | PIN do SIM, a menos que o PIN esteja desativado. |
+
+## Rede Privada Virtual
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Ativar VPN** | Não |  |
+| **Serviços** | **ZeroTier** | **ZeroTier** ou **Tailscale**. |
+| **ID da Rede** (ZeroTier) | vazio | Do seu próprio controlador ZeroTier. |
+| **Chave de Autenticação** / **Nome do Host (Opcional)** (Tailscale) | vazio | Ou entre com **Login Web**, ou pela aba **Fleet Manager** após o pareamento. |
+
+## DNS Dinâmico
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Ativar DNS Dinâmico?** | Não |  |
+| **Sistema DNS** | `noip` | `generic` (com **URL do DNS**), `noip`, `dyndns`, `duck`. |
+| Usuário, **Senha**, **Alias** | vazio | Do seu provedor de DNS. |
+
+## Redes
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Prioridade de Rede** | roteamento do sistema | **Prioridade WiFi (Modo Interno)**, **Prioridade Modem (Modo Externo)** ou **Automático (Padrão do Sistema)**. |
+
+## Fleet Management
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Device Name** | vazio | Exibido no Fleet Manager. Sem ele, o hostname é usado. |
+
+## Usuários
+
+| Configuração | Valores e observações |
+| --- | --- |
+| **Role** | **Admin - Full access** ou **Read Only - View only**. O primeiro usuário deve ser um Admin. |
+
+## Aplicação
+
+| Configuração | Padrão | Valores e observações |
+| --- | --- | --- |
+| **Porta do Servidor** | `80` | 80 ou superior. **Enviar e reiniciar servidor** aplica a mudança; o endereço passa a ser `http://<dispositivo>:<porta>/`. |
+| **Idioma** | Idioma do navegador | Inglês, espanhol, português, italiano, holandês, polonês, turco, russo, chinês (simplificado e tradicional). |
+| **Tema Escuro** |  |  |
+| **Registros**: lista de logs / intervalo de tempo | **Todos os Logs** / **Últimas 2 horas** | Veja [Coletar registros](https://docs.uavmatrix.com/pt/troubleshooting/collect-logs/). |
+
+**Banco de Dados** oferece **Fazer Backup do Banco de Dados**, **Restaurar Banco de Dados** (um arquivo `.db`) e **Redefinir Banco de Dados**, que exclui todas as configurações.
+
+Source: https://docs.uavmatrix.com/pt/reference/settings/

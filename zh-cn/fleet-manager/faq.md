@@ -1,0 +1,85 @@
+# Fleet Manager 常见问题
+
+> Fleet Manager 常见问题解答：无人机数量限制、许可证、VPN、地面控制站、ArduPilot 与 PX4、数据保留以及无人机迁移。
+
+### 使用 Fleet Manager 需要什么？
+
+需要一个 UAVmatrix 账户，以及运行已激活许可证的 UAVcast-Pro 的无人机。每架无人机的许可证都必须归本组织的成员所有。参见[许可证与席位](https://docs.uavmatrix.com/zh-cn/fleet-manager/licenses/)。
+
+### Fleet Manager 需要额外付费吗？
+
+不需要。Fleet Manager 已包含在您的 UAVcast-Pro 许可证中。没有单独的订阅，团队成员也是免费的。
+
+### 我可以管理多少架无人机？
+
+Fleet Manager 本身不设上限。每架无人机都需要自己的 UAVcast-Pro 许可证激活，因此无人机的数量取决于您拥有的许可证和设备名额。
+
+### 团队成员需要许可证吗？
+
+不需要。您可以根据需要邀请任意数量的 Admin 和 Viewer。参见[邀请您的团队](https://docs.uavmatrix.com/zh-cn/fleet-manager/team/)。
+
+### 有哪些角色？
+
+**Owner**、**Admin** 和 **Viewer**。没有 "Member" 角色。参见[角色与权限](https://docs.uavmatrix.com/zh-cn/fleet-manager/team/roles-and-permissions/)。
+
+### 配对码从哪里获取？
+
+从无人机获取。在 UAVcast-Pro 中，打开 **Fleet Management → Connect to Fleet Manager**。页面会显示一个 8 位数字的配对码，有效期为 5 分钟。然后在 Fleet Manager 的 **Fleet → Pair Device** 中输入该代码。参见[添加您的第一架无人机](https://docs.uavmatrix.com/zh-cn/fleet-manager/pair-uav/)。
+
+### Fleet Manager 能否通过 4G/LTE 使用？
+
+可以。无人机会主动向 Fleet Manager 的 TCP 8883 端口建立连接，因此即使位于运营商 NAT 之后、没有公网 IP，也能正常工作。运营商不得阻止 8883 端口。
+
+### 我需要 VPN 吗？
+
+只有在需要通过 Fleet Manager 将无人机的视频和遥测数据发送到地面控制站时才需要。地图、遥测、命令、任务、终端以及 UAVcast-Pro 的远程访问都无需 VPN 即可使用。参见 [Network 与 VPN](https://docs.uavmatrix.com/zh-cn/fleet-manager/network/)。
+
+### 一台地面控制站可以接收多架无人机吗？
+
+可以。每个[流绑定](https://docs.uavmatrix.com/zh-cn/fleet-manager/network/stream-bindings/)在该地面控制站上都有自己的一组端口，并为第二个摄像头和音频预留了空间。第一架无人机使用 5600 / 14550。
+
+### 我可以继续使用自己的 ZeroTier 或 Tailscale 网络吗？
+
+可以，前提是您不需要 Fleet Manager 的流绑定。配对时您可以拒绝使用 VPN。如果接受，已位于 Tailscale 网络中的无人机会被移至您组织的网络。位于 ZeroTier 中的无人机会保留其 ZeroTier 网络，并与组织网络并行加入。只有在取消配对无人机时才会退出 ZeroTier。
+
+### 是否支持 ArduPilot 和 PX4？
+
+Fleet Manager 支持 UAVcast-Pro 所连接的任何 MAVLink 飞控，包括 ArduPilot 或 PX4：实时地图、遥测、状态、终端和流绑定的功能都相同。飞行模式控制使用 ArduPilot 针对 Copter、Plane、Rover 和 Sub 的模式，任务命令列表也遵循 ArduPilot 的命名方式，因此在 PX4 上，请在地面控制站中切换模式并规划任务。
+
+### 我能否仅通过 Fleet Manager 驾驶无人机？
+
+Fleet Manager 可以切换模式、解锁，以及启动、暂停和停止任务。但它并非用于手动摇杆控制。请始终让飞手通过地面控制站或遥控器保持对飞行的控制，并遵守当地法规。
+
+### 飞行历史保存多久？
+
+默认最长保存 1 年。Owner 和 Admin 可以将其缩短为 7、14、30、60 或 90 天，或 6 个月。参见[飞行历史](https://docs.uavmatrix.com/zh-cn/fleet-manager/map/flight-history/#how-long-history-is-kept)。
+
+### 我能导出飞行日志吗？
+
+目前不能。Fleet Manager 可以在地图上回放飞行，但不导出文件，也不存储 `.tlog`、DataFlash 或视频。
+
+### Fleet Manager 会通过电子邮件发送告警吗？
+
+目前还不会。状态会在地图、Fleet 列表和无人机页面上实时显示。参见[状态指示器与通知](https://docs.uavmatrix.com/zh-cn/fleet-manager/alerts-and-status/)。
+
+### 无人机失去连接时会发生什么？
+
+在 20 秒没有数据后，无人机会显示为 **OFFLINE**，并在链路恢复后自动重新连接。飞机的行为由飞控自身的故障保护决定；连接丢失时，Fleet Manager 不会发出任何指令。
+
+### 如何将无人机转移到另一个组织？
+
+先将其从当前组织中移除（这会删除该组织中的历史记录），然后将其配对到新的组织。参见[移除或转移无人机](https://docs.uavmatrix.com/zh-cn/fleet-manager/fleet/remove-or-transfer/)。
+
+### 我用其他邮箱购买了许可证，怎么办？
+
+将该邮箱邀请加入组织，或请求支持人员将其添加为您账户的额外许可证邮箱。参见[使用其他邮箱购买的许可证](https://docs.uavmatrix.com/zh-cn/fleet-manager/licenses/#licenses-bought-with-another-email)。
+
+### 有移动应用吗？
+
+浏览器中提供了适合手机的[精简视图](https://docs.uavmatrix.com/zh-cn/fleet-manager/lite-view/)。
+
+### 我的数据安全吗？
+
+每架无人机都有自己的 TLS 客户端证书，每个组织都有自己的加密 VPN，角色权限由服务器强制执行。参见[安全与隐私](https://docs.uavmatrix.com/zh-cn/fleet-manager/security/)。
+
+Source: https://docs.uavmatrix.com/zh-cn/fleet-manager/faq/

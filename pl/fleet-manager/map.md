@@ -1,0 +1,91 @@
+# Mapa na żywo
+
+> Śledź każdego drona w swojej flocie na jednej mapie na żywo ze wskaźnikami statusu, liniami kursu, 5-minutowymi śladami, trybem śledzenia i warstwami przestrzeni powietrznej OpenAIP.
+
+**Fleet Map** (w pasku bocznym **Overview → Fleet Map**) pokazuje każdego drona w wybranej organizacji na jednej mapie, aktualizowanej na żywo w miarę napływania telemetrii. Mapa jest przeznaczona do centrum sterowania: zostaw ją otwartą, a od razu zobaczysz, które statki powietrzne są w locie, dokąd lecą i które wymagają uwagi.
+
+![Mapa floty z wieloma kolorowymi znacznikami dronów, liniami kursu i śladami lotu nad regionem](https://docs.uavmatrix.com/pl/img/screenshots/fleet-manager/map.webp)
+
+*Fleet Map w stylu Dark nad portem w Rotterdamie: każdy dron w swoim kolorze z linią kursu i śladem oraz szare znaczniki offline z podpisem, jak dawno były widziane.*
+
+## Odczytywanie znacznika
+
+Każdy dron jest rysowany we własnym kolorze, z ikoną typu pojazdu: czterowirnik, sześciowirnik, samolot, VTOL, łazik, łódź lub łódź podwodna. Pierścienie i odznaki wokół znacznika sygnalizują problemy:
+
+| Na znaczniku | Znaczenie |
+| --- | --- |
+| Kolor własny drona, bez pierścienia | Online i w dobrym stanie. |
+| Szary znacznik, szary przerywany pierścień i odznaka zegara | **Offline**: brak danych przez 20 sekund. |
+| Pomarańczowy pierścień z odznaką **!** | **NO MAVLINK**: UAVcast-Pro jest online, ale przez 10 sekund nie otrzymał telemetrii od kontrolera lotu. Sprawdź połączenie z kontrolerem lotu. |
+| Czerwony przerywany pierścień | **GPS lost**: brak satelitów lub brak fixa. |
+| Żółty przerywany pierścień | **GPS weak**: mniej niż 6 satelitów lub tylko fix 2D. |
+| Znacznik **H** | Pozycja startowa drona, ustawiana w chwili uzbrojenia. Najedź kursorem, aby zobaczyć jej wysokość (AMSL). |
+
+Stan uzbrojenia lub rozbrojenia nie jest pokazywany przez sam znacznik. Otwórz wyskakujące okienko lub [panel sterowania](https://docs.uavmatrix.com/pl/fleet-manager/fleet/remote-control/), aby zobaczyć **Armed**.
+
+Etykieta obok znacznika ma postać `Name • FLIGHTMODE`, z dopisanymi **NO MAVLINK**, **NO GPS** lub **WEAK GPS**, gdy dotyczą, albo `Name • OFFLINE • 5 mins ago` dla drona offline.
+
+### Linia kursu i ślad
+
+- **Linia kursu** to przerywana linia w kolorze drona, wskazująca, dokąd jest skierowany dziób. Jest ukryta, gdy dron jest offline.
+- **Ślad lotu** pokazuje ostatnie **5 minut** trasy jako przerywaną linię w kolorze drona (szara, gdy dron jest offline). Nowy punkt dodawany jest mniej więcej co 11 m ruchu.
+
+## Wyskakujące okienko drona
+
+Wybierz znacznik, aby otworzyć jego okienko: nazwa, organizacja i status, następnie **Battery**, **Altitude**, **Mode**, **Armed**, **GPS** (satelity i typ fixa: No Fix, 2D, 3D, DGPS lub RTK), **Signal** oraz, gdy dron jest offline, **Last seen**. Pojawia się też najnowszy komunikat statusu z kontrolera lotu, co często jest najszybszym sposobem odczytania przyczyny błędu pre-arm.
+
+**Signal** to czas obiegu między Fleet Manager a dronem, mierzony co 10 sekund: doskonały poniżej 100 ms, dobry poniżej 300 ms, przeciętny poniżej 600 ms, słaby powyżej tego lub po trzech nieodebranych pingach.
+
+![Wyskakujące okienko drona na mapie z wierszami baterii, wysokości, trybu, uzbrojenia, GPS i sygnału oraz przyciskami Follow, History i Controls](https://docs.uavmatrix.com/pl/img/screenshots/fleet-manager/map--popup.webp)
+
+*Okienko uzbrojonego drona do zdjęć w trybie AUTO: Battery 71%, Altitude 85.5 m, GPS 20 sats (3D), Signal 61 ms (Excellent), z przyciskami Follow, History i Controls.*
+
+Trzy przyciski:
+
+- **Follow** utrzymuje drona w kadrze. Zobacz poniżej.
+- **History** otwiera [historię lotów](https://docs.uavmatrix.com/pl/fleet-manager/map/flight-history/) dla tego drona.
+- **Controls** otwiera [panel sterowania UAV](https://docs.uavmatrix.com/pl/fleet-manager/fleet/remote-control/).
+
+## Śledzenie drona
+
+Wybierz **Follow** w okienku. Mapa przybliża się (co najmniej do poziomu 14) i centruje się na dronie, a następnie przesuwa się tylko wtedy, gdy dron zbliża się do krawędzi ekranu, dzięki czemu mapa nie drga. Pojawia się baner **Following *name***; aby go zatrzymać, wybierz jego **X** lub **Unfollow**. Otwarcie **History** również kończy śledzenie.
+
+![Mapa śledząca jednego drona z banerem Following u góry](https://docs.uavmatrix.com/pl/img/screenshots/fleet-manager/map--follow.webp)
+
+*Tryb Follow dla samolotu kartograficznego mapującego korytarz, z banerem Following i śladem za nim.*
+
+## Drony bez GPS
+
+Drony, które są online, ale nie mają jeszcze pozycji, są wymienione w polu **drones without GPS** na mapie. Wybierz jeden, aby otworzyć jego panel sterowania. Licznik **n drones on map** pokazuje, ile dronów jest naniesionych na mapę.
+
+## Ustawienia mapy
+
+Wybierz przycisk koła zębatego w prawym górnym rogu, aby otworzyć **Map Settings**. Twoje wybory są zapisywane w tej przeglądarce.
+
+| Sekcja | Opcja | Domyślnie |
+| --- | --- | --- |
+| **Overlays** | **Airspace Layers**: strefy ograniczone, lotniska, lądowiska helikopterów | Off |
+| **Drone Filter** | **All Drones**, **Online Only** lub **Offline Only** | All Drones |
+| **Marker Options** | **Heading Line** | On |
+|  | **Marker Tooltip**: etykieta nazwy na znacznikach | On |
+|  | **Always Visible**: pokazuj etykietę stale zamiast po najechaniu kursorem | On |
+|  | **Flight Trail**: ostatnia trasa lotu (ostatnie 5 min) | On |
+| **Map Style** | **Satellite**, **Light** lub **Dark** | Dark |
+
+![Panel Map Settings z nakładkami, filtrem dronów, opcjami znaczników i stylem mapy](https://docs.uavmatrix.com/pl/img/screenshots/fleet-manager/map--settings.webp)
+
+*Panel Map Settings z włączonymi Airspace Layers, filtrem Drone Filter ustawionym na Online Only i stylem mapy Satellite.*
+
+> **Dla zatłoczonej mapy**
+>
+> Gdy w jednym obszarze jest 20+ dronów, wyłącz **Always Visible**, aby etykiety pojawiały się tylko po najechaniu kursorem, i użyj **Online Only**, aby ukryć zaparkowane statki powietrzne.
+
+## Warstwy przestrzeni powietrznej
+
+**Airspace Layers** nanosi na mapę strefy ograniczone, lotniska i lądowiska helikopterów z OpenAIP. Warstwa pojawia się od poziomu przybliżenia 7 i bliżej. To jedna połączona warstwa; kategorii nie można przełączać osobno.
+
+> **Nie zastępuje oficjalnych sprawdzeń przestrzeni powietrznej**
+>
+> Warstwa przestrzeni powietrznej służy do orientacji w sytuacji. Przed każdym lotem sprawdź NOTAM oraz krajową mapę dronów lub usługę UTM.
+
+Source: https://docs.uavmatrix.com/pl/fleet-manager/map/

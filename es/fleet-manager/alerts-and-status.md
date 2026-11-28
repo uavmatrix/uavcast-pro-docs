@@ -1,0 +1,48 @@
+# Indicadores de estado y notificaciones
+
+> Qué significan los indicadores de Fleet Manager de dron sin conexión, sin MAVLink, GPS, failsafe y batería, además de los anuncios del sistema, la página de estado y las alertas.
+
+Fleet Manager muestra los problemas donde ya estás mirando: en el mapa, en la lista de drones de **Fleet** y en la página de cada dron. Esta página enumera cada indicador y lo que debes hacer al respecto.
+
+## Indicadores del dron
+
+| Indicador | Dónde | Significado | Primer paso a revisar |
+| --- | --- | --- | --- |
+| **OFFLINE**, marcador gris con insignia de reloj | Fleet, mapa, página del dron | No se ha recibido nada de UAVcast-Pro durante 20 segundos | La conexión a internet del dron y el puerto 8883. Consulta [Dron sin conexión en Fleet Manager](https://docs.uavmatrix.com/es/troubleshooting/drone-offline-fleet-manager/). |
+| **NO MAVLINK**, anillo naranja con **!** | Mapa | UAVcast-Pro está en línea, pero no ha recibido datos del controlador de vuelo durante 10 segundos | La alimentación y el cable del controlador de vuelo. Consulta [Sin latido MAVLink](https://docs.uavmatrix.com/es/troubleshooting/no-mavlink-heartbeat/). |
+| Anillo punteado rojo, **NO GPS** | Mapa | Sin satélites o sin fijación | La vista del cielo desde la antena y el cable GPS. |
+| Anillo punteado amarillo, **WEAK GPS** | Mapa | Menos de 6 satélites o solo fijación 2D | Espera a tener más satélites antes del vuelo. |
+| Batería en amarillo / rojo | Tarjetas de Fleet | Por debajo del 50 % / por debajo del 20 % | Planifica el aterrizaje. |
+| **ARMED** | Página del dron, panel de control, ventana emergente del mapa | Motores armados | Trata la aeronave como activa. |
+| **FAILSAFE** | Página del dron, panel de control | El controlador de vuelo está en failsafe | Los mensajes del controlador de vuelo, que se muestran en la ventana emergente del mapa y en **Logs**. |
+| **GCS FAILSAFE** / **GCS Failsafe not enabled** | Página del dron, panel de control | Se activó el failsafe de la estación de control en tierra, o no está configurado | Configura `FS_GCS_ENABLE` antes de los vuelos BVLOS. |
+| **Re-pair required** | Fleet, página del dron | El dron usa un certificado de conexión antiguo | [Vuelve a emparejar el dron](https://docs.uavmatrix.com/es/fleet-manager/fleet/remove-or-transfer/#re-pair-a-drone). |
+| **Signal** poor | Ventana emergente del mapa | Ida y vuelta al dron superior a 600 ms, o tres pings perdidos | La cobertura celular o un enlace saturado. |
+
+Los indicadores se actualizan en vivo mientras la página está abierta. Fleet Manager comprueba si hay drones sin conexión cada 5 segundos.
+
+![Acercamiento del mapa con marcadores que muestran los anillos de OFFLINE, NO MAVLINK y GPS débil](https://docs.uavmatrix.com/es/img/screenshots/fleet-manager/map--indicators.webp)
+
+*Acercamiento a cuatro marcadores: un dron en buen estado, uno OFFLINE con insignia de reloj, uno NO MAVLINK con anillo naranja y uno WEAK GPS con anillo amarillo punteado.*
+
+## Registro de actividad
+
+Los cambios que realiza tu equipo (emparejamiento, eliminación de drones, vinculaciones de stream, invitaciones, cambios de rol y VPN) se registran en **Recent Activity** en el [Dashboard](https://docs.uavmatrix.com/es/fleet-manager/dashboard/), junto con quién los realizó.
+
+## Anuncios del sistema
+
+Cuando UAVmatrix tiene un mantenimiento programado o un incidente, aparece un banner en la parte superior de cada página: azul para información, ámbar para advertencias y rojo para incidentes críticos. Si lo descartas, se oculta hasta que abras Fleet Manager en una nueva sesión del navegador.
+
+## Página de estado
+
+**System → Status** (página **System Status**) indica si Fleet Manager funciona con normalidad: **All systems operational**, o **We're experiencing some issues** con los **Active Incidents**. **Past Incidents** enumera los últimos incidentes resueltos con su **Resolution**. Revísala primero cuando muchos drones pasen a estar sin conexión al mismo tiempo.
+
+![Página System Status con All systems operational y una lista de incidentes pasados](https://docs.uavmatrix.com/es/img/screenshots/fleet-manager/status.webp)
+
+*System Status que muestra All systems operational y dos Past Incidents marcados como Resolved.*
+
+## Alertas por correo electrónico y webhook
+
+Fleet Manager todavía no envía alertas por correo electrónico, SMS ni webhook sobre eventos de los drones (por ejemplo, batería baja o un dron que pasa a estar sin conexión). Mantén abierto el mapa o la lista de **Fleet** en la sala de control y confía en los failsafes propios del controlador de vuelo para la batería y la pérdida de enlace.
+
+Source: https://docs.uavmatrix.com/es/fleet-manager/alerts-and-status/

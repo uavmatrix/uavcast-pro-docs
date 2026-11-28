@@ -1,0 +1,63 @@
+# QGroundControl
+
+> 在 Windows、macOS 或 Linux 上將 UAVcast-Pro 遙測與即時 H.264 視訊傳入 QGroundControl：UDP 14550 自動連線、視訊來源 UDP h.264（連接埠 5600）、低延遲模式與故障排除。
+
+QGroundControl 預設會監聽 UDP 連接埠 14550 上的 MAVLink，因此 UAVcast-Pro 無人機的遙測資料一抵達，就會出現在畫面上。若要接收視訊，請將視訊來源一次性設定為 **UDP h.264 Video Stream**，連接埠為 5600。QGroundControl 內建 GStreamer，因此無需安裝其他任何軟體。此設定在 Windows、macOS 與 Linux 上的操作方式相同；若使用平板，請參閱 [Android](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/android/)。
+
+## 開始之前
+
+- 在無人機上新增一個 [地面控制站](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/) 目標位址，填入此電腦的 IP 位址（4G 網路上的 VPN 位址），開啟 **啟用遙測**；若需要視訊，請另外開啟 **啟用視訊**。
+- 在 **攝影機 → 攝影機設定** 中啟用攝影機串流。
+- 從 [qgroundcontrol.com](https://qgroundcontrol.com/) 取得 QGroundControl。
+
+## 遙測
+
+啟動 QGroundControl。收到第一個封包後數秒內，飛行器就會出現，工具列會顯示其飛行模式與電池電量。
+
+![QGroundControl Fly 視圖連接至 ArduPilot 飛行器：工具列顯示 Not Ready 與 Stabilize，地圖上有一個五個航點的任務並顯示飛行器的 No GPS Lock，左下角的視訊視窗顯示 WAITING FOR VIDEO](https://docs.uavmatrix.com/zh-tw/img/screenshots/gcs/qgroundcontrol--fly-view.webp)
+
+*遙測運作正常：工具列顯示飛行器的狀態與飛行模式（Not Ready、Stabilize）。這是未連接 GPS 的台架測試設定，因此顯示 No GPS Lock for Vehicle。左下角的視訊視窗在您於下方完成視訊設定之前，會顯示 WAITING FOR VIDEO。*
+
+沒有任何顯示？請檢查自動 UDP 連線是否已開啟：點擊 **Q** 圖示 → **Application Settings**，然後確認 **AutoConnect to the following devices** 下的 **UDP** 已勾選（預設即為勾選）。依 QGroundControl 版本不同，AutoConnect 清單可能位於 **Comm Links** 頁面或 **General** 頁面。若無人機上的 **遙測連接埠** 設定為 14550 以外的值，請改為新增連線：前往 **Application Settings** → **Comm Links** → **Add**，類型選擇 **UDP**，輸入您選擇的連接埠，然後點擊 **Connect**。
+
+## 視訊
+
+1. 點擊左上角的 **Q** 圖示 → **Application Settings**。
+2. 開啟 **Video** 頁面。在較舊的版本中，視訊設定位於 **General** 頁面的 **Video** 區段。
+3. 將 **Source** 設為 **UDP h.264 Video Stream**。
+4. 確認 UDP 位址。預設的 `0.0.0.0:5600` 會監聽連接埠 5600，這與無人機預設的 **Video Port** 相符。若您在無人機上變更了 **Video Port**，請在此使用相同的連接埠。新版本將此欄位稱為 **UDP URL**；較舊的版本則顯示 **UDP Port** 數字欄位。
+5. 返回 **Fly** 視圖。視訊會顯示在角落的小視窗中。點擊該視窗即可切換視訊與地圖的位置。
+
+*QGroundControl 應用程式設定示意圖：Video 頁面，Source 設為 UDP h.264 Video Stream，UDP 位址為 0.0.0.0:5600，並啟用 Low Latency Mode。*
+
+*示意圖 QGroundControl 簡化示意圖。(1) Q 圖示 → Application Settings，(2) Video，(3) Source 設為 UDP h.264 Video Stream，(4) UDP URL 使用連接埠 5600。*
+
+### 低延遲模式
+
+在相同的視訊設定中，開啟 **Low Latency Mode**。QGroundControl 會捨棄延遲抵達的影格，而不是將其緩衝，因此在連線良好時可明顯減少延遲。在較弱的 4G 連線上，此模式可能會讓畫面卡頓；若發生這種情況，請將其關閉。
+
+## 防火牆
+
+- **Windows**：Windows 詢問時，請允許 QGroundControl 在 **Private** 與 **Public** 網路上運作。VPN 介面卡（ZeroTier、Tailscale）通常會被歸類為 Public。若要手動開放連接埠，請參閱 [Mission Planner：Windows 防火牆](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/mission-planner/#allow-mission-planner-through-the-windows-firewall)；相同的規則同樣適用。
+- **macOS**：macOS 詢問時，請允許 QGroundControl 的傳入連線。
+- **Linux**：若 `ufw` 已啟用，請執行 `sudo ufw allow 14550/udp` 與 `sudo ufw allow 5600:5602/udp`。
+
+## 第二支攝影機與音訊
+
+QGroundControl 一次只會播放一個視訊串流。開啟[雙路視訊串流](https://docs.uavmatrix.com/zh-tw/uavcast-pro/camera/multi-camera/)時，攝影機 2 會送往連接埠 5601：您可以將 UDP 連接埠改為 `5601` 來觀看，或在 QGroundControl 旁開啟 GStreamer 視窗來觀看攝影機 2（[Windows](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/gstreamer-windows/)、[Linux](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/gstreamer-linux/)、[macOS](https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/gstreamer-macos/)）。
+
+QGroundControl 不會播放音訊。請使用 GStreamer 在視訊連接埠 + 2（`5602`）上播放音訊。
+
+## 常見問題
+
+| 症狀 | 原因與解決方法 |
+| --- | --- |
+| *Waiting For Vehicle Connection* | 沒有遙測資料抵達此電腦。請檢查目標位址的 IP（4G 上的 VPN IP）、**啟用遙測**，以及防火牆。 |
+| 遙測正常，但視訊視窗顯示無視訊 | **啟用視訊** 未開啟、攝影機未執行、來源不是 **UDP h.264 Video Stream**，或 UDP 5600 被封鎖。 |
+| 視訊出現後，在 4G 上凍結 | 封包遺失。請降低無人機上的位元率，將 **串流恢復速率** 設為 15–30 影格，並關閉 **Low Latency Mode**。 |
+| 飛行器出現兩次 | 有兩個目標位址指向此電腦，或第二個連線重複了自動連線。請移除其中一個。 |
+| 啟動 GStreamer 測試時視訊停止 | 同一個 UDP 連接埠只能由一個程式監聽。請關閉其中一個程式。 |
+
+更多檢查項目：[QGroundControl 或 Mission Planner 無視訊](https://docs.uavmatrix.com/zh-tw/troubleshooting/no-video-in-gcs/)。
+
+Source: https://docs.uavmatrix.com/zh-tw/uavcast-pro/ground-stations/qgroundcontrol/

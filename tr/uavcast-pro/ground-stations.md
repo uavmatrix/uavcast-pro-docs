@@ -1,0 +1,99 @@
+# Yer kontrol istasyonları
+
+> UAVcast-Pro'da yer kontrol istasyonu hedefleri ekleyerek MAVLink telemetrisini (UDP 14550) ve H.264 videosunu (UDP 5600) Mission Planner, QGroundControl veya birden fazla PC'ye gönderin.
+
+Hedef, UAVcast-Pro'ya telemetri ve videonun nereye gönderileceğini söyler. Her hedef bir IP adresi, bir telemetri portu ve bir video portundan oluşur. UAVcast-Pro, etkin olan tüm hedeflere UDP üzerinden aynı anda gönderir; bu sayede bir dizüstü bilgisayardaki Mission Planner ile bir tabletteki QGroundControl aynı dronu alabilir. Kenar çubuğunda **Yer Kontrol İstasyonları** bölümünü açın.
+
+![İki hedef kartı ve Hedef Ekle düğmesinin bulunduğu Yer Kontrol İstasyonu sayfası](https://docs.uavmatrix.com/tr/img/screenshots/uavcast-pro/ground-control.webp)
+
+*İki hedef kartı: devre dışı, boş bir kart ve telemetri ile video açık, etkin bir hedef.*
+
+## Hedef ekleme
+
+1. **Hedef Ekle** seçin. Yeni bir kart görünür. (Yeni bir kurulumda zaten boş bir kart bulunur.)
+2. **Ad** girin, örneğin `Pilot laptop`.
+3. Yer kontrol istasyonu bilgisayarının IPv4 adresini **Hedef IP veya Sunucu** alanına girin ve Enter'a basın. Yeşil bir onay işareti kaydedildiğini gösterir.
+4. **Telemetri Portu** (varsayılan `14550`) ve **Video Portu** (varsayılan `5600`) değerlerini kontrol edin. Yer kontrol istasyonunuzun dinlediği portları kullanın.
+5. **Telemetriyi Etkinleştir** seçeneğini ve videoyu istiyorsanız **Videoyu Etkinleştir** seçeneğini açın.
+
+Her alan Enter'a bastığınızda veya alandan çıktığınızda kaydedilir. Kaydet düğmesi yoktur. Telemetri yönlendirmesi değişikliği birkaç saniye içinde alır.
+
+> **Sunucu adı değil, IPv4 adresi kullanın**
+>
+> **Hedef IP veya Sunucu** etiketine rağmen UAVcast-Pro yalnızca `192.168.1.20` gibi bir IPv4 adresini ya da `10.147.17.5` gibi bir VPN adresini kabul eder. Sunucu adları *Enter a valid IPv4 address, for example 192.168.1.10.* mesajıyla reddedilir.
+
+## Hangi IP adresi kullanılmalı
+
+| Yer kontrol istasyonunun konumu | Kullanılacak adres |
+| --- | --- |
+| Dronla aynı Wi-Fi veya Ethernet ağında | Yer kontrol istasyonunun LAN adresi, örneğin `192.168.1.20`. |
+| Herhangi bir yerde, 4G/LTE üzerinden | Yer kontrol istasyonunun **VPN** adresi (ZeroTier, Tailscale veya Fleet Manager). Bkz. [VPN](https://docs.uavmatrix.com/tr/uavcast-pro/connectivity/vpn/). |
+| Birden fazla bilgisayar | Bilgisayar başına bir hedef. |
+
+## Hedef ayarları
+
+| Ayar | Varsayılan | Değerler | Notlar |
+| --- | --- | --- | --- |
+| **Uç Noktayı Etkinleştir** | Açık | Açık, kapalı | Ana anahtar. Kapalıyken bu hedefe telemetri, video ve ses gönderilmez ama ayarları korunur. |
+| **Ad** | boş | en fazla 49 karakter | Kartta ve [Kontrol Paneli](https://docs.uavmatrix.com/tr/uavcast-pro/dashboard/) üzerinde gösterilir. |
+| **Hedef IP veya Sunucu** | boş | IPv4 adresi | Telemetri veya video açmadan önce gereklidir. |
+| **Telemetri Portu** | `14550` | 1–65535 | Yer kontrol istasyonunun MAVLink için dinlediği UDP portu. |
+| **Video Portu** | `5600` | 1–65535 | H.264 RTP videosu için UDP portu (kamera 1). |
+| **Video Portu (Kamera 2)** | boş = Video Portu + 1 | 1–65535 | Yalnızca [çift akış](https://docs.uavmatrix.com/tr/uavcast-pro/camera/multi-camera/) açıkken görünür. |
+| **Videoyu Etkinleştir** | Kapalı | Açık, kapalı | Kamera akışını bu hedefe gönderir. |
+| **Telemetriyi Etkinleştir** | Kapalı | Açık, kapalı | MAVLink'i bu hedefe gönderir ve bu hedeften komut kabul eder. |
+| **Read Only** | Kapalı | Açık, kapalı | **Telemetriyi Etkinleştir** gerektirir. Yer kontrol istasyonu telemetriyi alır ancak araç üzerinde hiçbir şeyi değiştiremez: komutlar, arm, mod değişiklikleri, parametre ve görev yazmaları, RC override ve manuel kontrol engellenir. Bu, UAVcast-Pro 6.5.3'ten itibaren geçerlidir; önceki sürümlerde Read Only parametre yazmalarını engellemez. |
+
+Ses, **Sesi yer kontrol istasyonlarına gönder** seçeneği Kamera sayfasında açıkken, video alan her hedefe **Video Portu + 2** üzerinden gider (ör. `5602`). Bkz. [Ses](https://docs.uavmatrix.com/tr/uavcast-pro/camera/audio/).
+
+Böylece her hedef üç video tarafı portunu kullanır: **Video Portu**, +1 (kamera 2) ve +2 (ses). İki hedef aynı bilgisayara işaret ediyorsa video portlarını 3 aralıklı seçin, örneğin `5600` ve `5603`. Bkz. [Bir bilgisayarda iki yer kontrol istasyonu](https://docs.uavmatrix.com/tr/guides/multiple-ground-stations/#3-two-stations-on-one-computer).
+
+## Alıcı tarafını kurun
+
+Yerde kullandığınız programı seçin. Her sayfada tam ayarlar, güvenlik duvarı adımı ve sık karşılaşılan hatalara çözümler bulunur.
+
+| Yer kontrol istasyonu | Telemetri | Video | Sayfa |
+| --- | --- | --- | --- |
+| Mission Planner (Windows) | UDP 14550 | GStreamer kaynağı, 5600 | [Mission Planner](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/mission-planner/) |
+| QGroundControl (Windows, macOS, Linux) | UDP 14550, kendiliğinden bağlanır | 5600 üzerinde UDP h.264 | [QGroundControl](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/qgroundcontrol/) |
+| Android tablet veya telefon | QGroundControl, UDP 14550 | 5600 üzerinde UDP h.264 | [Android](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/android/) |
+| GStreamer on Windows | – | 5600 üzerinde `gst-launch-1.0` | [Windows'ta GStreamer](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-windows/) |
+| GStreamer on Linux | – | 5600 üzerinde `gst-launch-1.0` | [Linux'ta GStreamer](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-linux/) |
+| GStreamer on macOS | – | 5600 üzerinde `gst-launch-1.0` | [macOS'ta GStreamer](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-macos/) |
+| VLC veya dronetan RTSP çekme | – | SDP dosyası veya 8554 üzerinde RTSP | [VLC ve RTSP](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/vlc-and-rtsp/) |
+
+### Dronun gönderdikleri
+
+| Akış | Biçim | Yer kontrol istasyonundaki port |
+| --- | --- | --- |
+| Telemetri | UDP üzerinden MAVLink | **Telemetri Portu** (varsayılan `14550`) |
+| Kamera 1 videosu | UDP üzerinden RTP içinde H.264, payload type 96 | **Video Portu** (varsayılan `5600`) |
+| Kamera 2 videosu (çift akış) | UDP üzerinden RTP içinde H.264, payload type 96 | **Video Portu (Kamera 2)** (varsayılan Video Portu + 1, `5601`) |
+| Ses (isteğe bağlı) | UDP üzerinden RTP içinde Opus, payload type 97, 48 kHz | Video Portu + 2 (`5602`) |
+
+Dron her akışı hedefe gönderir. Yer kontrol istasyonunun dronla bağlantı kurması gerekmez, ancak yer kontrol istasyonunun güvenlik duvarı gelen UDP paketlerine izin vermelidir.
+
+## Birden fazla yer kontrol istasyonu
+
+Bilgisayar başına bir hedef ekleyin. İki yer kontrol istasyonu **aynı** bilgisayarda çalışıyorsa (örneğin QGroundControl ve bir günlük aracı), bunlara farklı telemetri portları verin, örneğin `14550` ve `14551`, ve her uygulamayı kendi portuna ayarlayın.
+
+Gözlemciler, yük operatörleri veya ikinci bir ekran için **Read Only** kullanın: her şeyi görürler ama araca komut veremezler.
+
+## Fleet Manager'dan gelen hedefler
+
+Dron Fleet Manager ile eşleştirildiğinde ve orada bir akış bağlama oluşturduğunuzda Fleet Manager hedefi sizin için ekler. Bu kartlar bulut simgesi gösterir (*Managed by Fleet Manager*). Bunları burada değil, Fleet Manager'da değiştirin. Bkz. [Fleet Manager ile eşleştirme](https://docs.uavmatrix.com/tr/uavcast-pro/fleet-pairing/).
+
+## Verinin aktığını kontrol edin
+
+- [Kontrol Paneli](https://docs.uavmatrix.com/tr/uavcast-pro/dashboard/) üzerindeki **Ground station** satırı *Sending · 16 packets/s* veya *Sending to 2 · … packets/s* gösterir.
+- **Uçuş Kontrolcüsü → Bağlantı → Connection check** her hedefi paket hızıyla listeler.
+- *1 set up · waiting for flight controller* mesajı, hedefin doğru olduğu ancak uçuş kontrolcüsünden henüz telemetri gelmediği anlamına gelir.
+
+Salt okunur kullanıcılar bu sayfayı görür ancak değiştiremez.
+
+## Sorun giderme
+
+- [Yer kontrol istasyonunda telemetri yok](https://docs.uavmatrix.com/tr/troubleshooting/no-telemetry-in-gcs/)
+- [QGroundControl veya Mission Planner'da video yok](https://docs.uavmatrix.com/tr/troubleshooting/no-video-in-gcs/)
+
+Source: https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/

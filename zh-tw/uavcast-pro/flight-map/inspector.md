@@ -1,0 +1,33 @@
+# MAVLink 檢查器
+
+> 使用 UAVcast-Pro MAVLink 檢查器查看飛行控制器傳送的每一則訊息，包括其速率、System ID 與元件 ID，並用於除錯遙測與注入器。
+
+檢查器會列出 UAVcast-Pro 接收到的每一則 MAVLink 訊息，依飛行器分組，並顯示其速率與最新的欄位值。您可以用它確認飛行控制器是否傳送了預期的內容、查出訊息的確切欄位名稱，或確認 [注入器](https://docs.uavmatrix.com/zh-tw/uavcast-pro/flight-controller/injectors/) 是否正確產生 `NAMED_VALUE_FLOAT` 訊息。請開啟 **飛行地圖 → 檢查器**。
+
+![MAVLink 檢查器，包含連線狀態，以及系統 1 的訊息清單，顯示訊息名稱、Hz 速率與計數](https://docs.uavmatrix.com/zh-tw/img/screenshots/uavcast-pro/flight-map--inspector.webp)
+
+*飛行地圖 → 檢查器，顯示來自飛行控制器（系統 1）的訊息，並展開了 ATTITUDE。*
+
+## 畫面說明
+
+頂部為 **MAVLink 連接狀態**：**連接**、**飛行器**、**GPS 衛星**、**總訊息數**與 **System ID**。
+
+下方為**訊息檢查器**：每個飛行器為一個群組（*飛行器（System ID: 1）*），群組中每則訊息佔一列，包含：
+
+- 訊息名稱，
+- **COMP**：發送該訊息的元件 ID（1 = 自動駕駛儀，194 = 注入器的預設值），
+- 以 **Hz** 表示的速率，以及已接收的訊息數量。
+
+開啟某則訊息即可查看其欄位與目前的值。
+
+## 常見檢查項目
+
+| 問題 | 查看內容 |
+| --- | --- |
+| GPS 是否正在傳送資料？ | `GPS_RAW_INT` 速率為 2 至 10 Hz；若使用 [RTK](https://docs.uavmatrix.com/zh-tw/uavcast-pro/flight-controller/ntrip-rtk/)，也請查看 `GPS_RTK`。 |
+| 為什麼地面站的遙測很慢？ | `ATTITUDE`、`VFR_HUD` 或 `GLOBAL_POSITION_INT` 的速率偏低。請在飛行控制器的 MAVLink 連接埠上提高 `SRx_` 串流速率。 |
+| 我的注入器是否正常運作？ | COMP 194（或您設定的 compid）下的 `NAMED_VALUE_FLOAT`。 |
+
+若清單顯示 *等待訊息...*，表示飛行控制器連線尚未建立。請參閱 [飛行控制器](https://docs.uavmatrix.com/zh-tw/uavcast-pro/flight-controller/)。
+
+Source: https://docs.uavmatrix.com/zh-tw/uavcast-pro/flight-map/inspector/

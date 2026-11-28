@@ -1,0 +1,93 @@
+# NTRIP caster ile 4G üzerinden RTK GPS
+
+> UAVcast-Pro ile bir NTRIP caster'dan LTE üzerinden uçuş kontrolcüsüne RTCM3 düzeltmeleri aktarın; RTK Sabit için, sahada baz istasyonu olmadan.
+
+UAVcast-Pro, RTCM3 düzeltmelerini drone'un kendi internet bağlantısı üzerinden bir NTRIP caster'dan çekebilir ve uçuş kontrolcüsüne iletebilir. Bir baz istasyonu veya ayrı bir radyo taşımadan **RTK Kayan** veya **RTK Sabit** konumlandırma elde edersiniz. Standart NTRIP v1 veya v2 caster'ların hepsi çalışır.
+
+```text
+NTRIP caster ──RTCM3 over TCP/TLS──► UAVcast-Pro ──MAVLink GPS_RTCM_DATA──► flight controller ──► RTK GPS
+      ▲                                    │
+      └──────── GGA position (VRS) ────────┘
+```
+
+**Gerekenler:**
+
+- Uçuş kontrolcüsünde RTK destekleyen bir GPS; örneğin bir u-blox F9P modülü, Here3+ veya Septentrio Mosaic. Standart M8N/M10 navigasyon modülleri RTK yapamaz.
+- Uçuş kontrolcüsü **Bağlı** durumdayken ve drone'da internet varken UAVcast-Pro.
+- Bir caster hesabı: ulusal bir CORS ağı, ticari bir hizmet (Trimble, Hexagon, Topcon …) veya ücretsiz topluluk caster'ı rtk2go.com.
+
+## 1. Caster'ı girin
+
+1. **Uçuş Kontrolcüsü → NTRIP / RTK** bölümünü açın.
+2. **Caster ana bilgisayarı** ve **Port** değerlerini girin (genellikle `2101`).
+3. **TLS kullan (HTTPS)** seçeneğini yalnızca sağlayıcınız gerektiriyorsa açın. Ticari caster'lar çoğunlukla gerektirir, açık olanlar nadiren.
+4. **Kullanıcı adı** ve **Şifre** alanlarını girin. rtk2go.com için kullanıcı adı olarak e-posta adresinizi kullanın ve şifreyi boş bırakın.
+5. **Bağlantıyı test et** düğmesine basın. **Caster accepted the credentials.** mesajını bekleyin.
+
+## 2. Bir mountpoint seçin
+
+1. **Mountpoint'lere göz at** düğmesine basın. UAVcast-Pro caster'ın listesini yükler.
+2. Uçtuğunuz yere en yakın mountpoint'i seçin. Listede **Biçim**, **GNSS**, **Country**, **Konum** ve bir konuma ihtiyaç duyup duymadığı (**NMEA**: **Gerekli**) gösterilir.
+3. **Select** düğmesine basın. Ad **Mountpoint** alanına yazılır.
+
+![Caster kartı: NTRIP istemcisini etkinleştir, caster ana bilgisayarı, port 2101, mountpoint alanı, Mountpoint'lere göz at düğmesi ve TLS kullan seçeneği](https://docs.uavmatrix.com/tr/img/screenshots/uavcast-pro/flight-controller--ntrip-caster.webp)
+
+*Caster kartı. Mountpoint alanının yanındaki Mountpoint'lere göz at, mountpoint listesini açar.*
+
+## 3. Konumunuzu gönderin (VRS ve en yakın mountpoint caster'ları)
+
+VRS ve en yakın mountpoint caster'ları konumunuz için düzeltmeler üretir; bu nedenle konumunuzu bir NMEA GGA cümlesi olarak almaları gerekir.
+
+1. **GGA upstream gönder** seçeneğini açık bırakın (varsayılan) ve **Gönderim aralığı (saniye)** değerini 10'da tutun.
+2. **Konum kaynağı** değerini **Uçuş kontrol cihazından canlı konum** olarak tutun.
+3. Ayrıca **Sabit manuel konum** altında **Enlem**, **Boylam** ve **Yükseklik (m)** değerlerini girin. UAVcast-Pro, uçuş kontrolcüsü bir GPS konumu alana kadar bunu kullanır.
+
+Tek bir sabit baz için GGA zararlı değildir, ancak kapatabilirsiniz.
+
+## 4. Akışı başlatın
+
+**NTRIP istemcisini etkinleştir** seçeneğini açın. Birkaç saniye içinde durum panelinde şunlar görünmelidir:
+
+1. **Durum**: **Düzeltmeler aktarılıyor**; **Caster response** değeri `ICY 200 OK` gibi.
+2. **RTCM messages forwarded** değeri artar ve **Last RTCM frame** *just now* olur.
+3. GNSS sistemlerinizle birlikte **Recent message types**; örneğin 1005, 1077, 1087, 1097.
+4. Açık gökyüzü altında RTK rozeti **3D Konum**'dan **RTK Kayan**'a ve ardından **RTK Sabit**'e geçer.
+
+![Durum paneli Disabled ve sıfır sayaçları gösteren NTRIP / RTK sekmesi; GPS kalitesi kartında Kilit Yok yazıyor](https://docs.uavmatrix.com/tr/img/screenshots/uavcast-pro/flight-controller--ntrip.webp)
+
+*Durum paneli ve GPS kalitesi kartı; caster kurulmadan önce gösterilmektedir (Disabled, GPS konumu yok). Düzeltmeler akmaya başladığında izlenecek alanlar bunlardır.*
+
+**GPS kalitesi** kartı, alıcının bildirdiği doğruluğa ek olarak, alıcının kendi tahminine dayanmayan ölçülmüş bir **Konum stabilitesi (1σ)** değerini gösterir. Kontrol paneli durumu **RTK corrections** altında, kilit türünü ise **GPS** altında gösterir.
+
+## Hazır ayarlar
+
+```text
+Caster host   rtk2go.com
+Port          2101
+TLS           off
+Username      you@example.com
+Password      (empty)
+Mountpoint    nearest one from Browse mountpoints
+```
+
+```text
+Caster host   provider host name
+Port          2101 (sometimes 2102 or 443)
+TLS           as the provider says
+Username      provider account
+Password      provider password
+Mountpoint    the provider's VRS mountpoint
+GGA upstream  on, 10 s, live position from flight controller
+```
+
+## Bilmeniz faydalı
+
+- Düzeltmeler, telemetriyle aynı MAVLink bağlantısı üzerinden gider; bu nedenle uçuş kontrolcüsü bağlantısı açık olmalıdır.
+- Kısa bir internet kesintisinden sonra düzeltmeler birkaç saniye içinde devam eder. Caster sessiz kalırsa UAVcast-Pro kendiliğinden yeniden bağlanır.
+- Doğruluk, baz istasyonuna olan mesafe arttıkça düşer. En yakın mountpoint'i seçin ya da bir VRS hizmeti kullanın.
+
+## Sorun giderme
+
+**Bağlanıyor** durumunda takılı kalırsanız, `401` yanıtı alırsanız, RTCM verisi gelmezse veya RTK konumu alınamazsa: [RTK düzeltmeleri ulaşmıyor](https://docs.uavmatrix.com/tr/troubleshooting/rtk-corrections-not-arriving/). Bu sayfadaki tüm ayarlar [NTRIP / RTK](https://docs.uavmatrix.com/tr/uavcast-pro/flight-controller/ntrip-rtk/) sayfasında anlatılır.
+
+Source: https://docs.uavmatrix.com/tr/guides/rtk-ntrip-caster/

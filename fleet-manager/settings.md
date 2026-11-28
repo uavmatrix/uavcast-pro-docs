@@ -1,0 +1,50 @@
+# Settings, account and billing
+
+> The Fleet Manager Settings tabs for profile, organizations, support and history, where billing and invoices live, and how to delete your account.
+
+Open **Settings** from the sidebar (**Organization → Settings**) or the user menu. It has four tabs: **Profile**, **Organizations**, **Support** and **History**.
+
+## Profile
+
+Your name, email, picture and password belong to your UAVmatrix account. **Profile changes are managed through the UAVMatrix Store**: under **Password & Security**, select **UAVMatrix Store** to change them there. Fleet Manager picks up the changes automatically.
+
+![Settings Profile tab with account details, link to the UAVMatrix Store and Danger Zone](https://docs.uavmatrix.com/img/screenshots/fleet-manager/settings--profile.webp)
+
+*Settings → Profile with the Password & Security row and the Danger Zone.*
+
+## Organizations
+
+Rename the organization, edit its description or (Owner only) delete it. See [Set up your organization](https://docs.uavmatrix.com/fleet-manager/set-up-organization/#rename-or-delete-the-organization).
+
+## Support
+
+Your support tickets with their status, and the **Support Chat Bubble** switch that shows or hides the floating support button. See [Support and FleetBot](https://docs.uavmatrix.com/fleet-manager/support/).
+
+## History
+
+Telemetry retention, pruning and per-drone history deletion, for Owners and Admins. See [Flight history](https://docs.uavmatrix.com/fleet-manager/map/flight-history/#how-long-history-is-kept).
+
+## Billing
+
+Fleet Manager has no billing page. Licenses, device slots, orders and invoices are all in your account at [uavmatrix.com](https://uavmatrix.com/). See [Licenses and seats](https://docs.uavmatrix.com/fleet-manager/licenses/).
+
+## Delete your account
+
+**Profile → Danger Zone → Delete Account** deletes your Fleet Manager account. Type `DELETE` to confirm.
+
+What it removes:
+
+- your profile and account information in Fleet Manager
+- all your organization memberships
+- all your active sessions
+- missions you created and invitations you sent
+
+Entries you made in **Recent Activity** stay, without your name.
+
+> **Owners must hand over first**
+>
+> You can't delete your account while you own an organization. Fleet Manager lists the organizations and asks you to [transfer ownership](https://docs.uavmatrix.com/fleet-manager/team/#transfer-ownership) or delete them first.
+
+Deleting your Fleet Manager account doesn't delete your UAVmatrix store account or your licenses. Manage those at [uavmatrix.com](https://uavmatrix.com/).
+
+Source: https://docs.uavmatrix.com/fleet-manager/settings/

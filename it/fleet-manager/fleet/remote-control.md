@@ -1,0 +1,70 @@
+# Controllo remoto
+
+> Cambia le modalità di volo, arma o disarma, esegui missioni e avvia una calibrazione pre-volo dal pannello di controllo UAV di Fleet Manager, con verifiche di sicurezza.
+
+L'**UAV Control Panel** (pannello di controllo UAV) invia comandi al controllore di volo tramite UAVcast-Pro, sulla connessione cifrata di Fleet Manager. Funziona su qualsiasi collegamento internet di cui il drone dispone, incluso il 4G, e non richiede la VPN.
+
+Aprilo con **Operations** su una scheda della [Flotta](https://docs.uavmatrix.com/it/fleet-manager/fleet/), oppure con **Controls** nel popup di un drone sulla [mappa Fleet](https://docs.uavmatrix.com/it/fleet-manager/map/). Sulla mappa, il pannello ha anche le schede **Terminal** e **Logs**.
+
+![UAV Control Panel con le colonne Flight Mode, Mission e Actions per un quadricottero armato](https://docs.uavmatrix.com/it/img/screenshots/fleet-manager/control-panel.webp)
+
+*UAV Control Panel per un quadricottero armato in LOITER: Flight Mode con i pulsanti RTL, Circle e Loiter, Mission con una missione di rilievo da 18 waypoint selezionata e Actions con Arm e Disarm.*
+
+Solo **Owner** e **Admin** possono inviare comandi. Vedi [Ruoli e permessi](https://docs.uavmatrix.com/it/fleet-manager/team/roles-and-permissions/).
+
+> **I comandi remoti muovono velivoli reali**
+>
+> Un comando da Fleet Manager agisce sul velivolo come se fosse inviato da una stazione di controllo a terra. Tieni un pilota con una stazione di controllo a terra o un trasmettitore RC in controllo di ogni volo, rispetta le regole locali per le operazioni remote e BVLOS, e considera Fleet Manager uno strumento di supervisione e di dispacciamento, non il tuo unico collegamento.
+
+## Intestazione
+
+L'intestazione mostra lo stato del drone, i flag **ARMED** e **FAILSAFE**, un badge **GCS Failsafe**, il selettore del colore sulla mappa (**Change map color**, con **Reset to auto**) e un link **Details** alla [pagina UAV](https://docs.uavmatrix.com/it/fleet-manager/fleet/uav-details/).
+
+Se il failsafe GCS del controllore di volo è disattivato, il pannello mostra l'avviso **GCS Failsafe not enabled. Without GCS failsafe, the vehicle will not return to launch if it loses connection to the ground station.** Configura il failsafe nel software della stazione di controllo a terra (parametro ArduPilot `FS_GCS_ENABLE`) prima di volare oltre la visuale diretta.
+
+## Modalità di volo
+
+Scegli una modalità dal menu a tendina oppure usa i pulsanti rapidi **RTL**, **Circle** e **Loiter** (**Hold** sui rover). Ogni cambio di modalità chiede conferma, e più la modalità è pericolosa, più forte è il controllo:
+
+| Conferma | Modalità |
+| --- | --- |
+| Semplice **Change to *MODE*?** | STABILIZE, ALT_HOLD, LOITER, POSHOLD, BRAKE, FLOWHOLD, HOLD, FBWA, FBWB, CRUISE, QHOVER, QLOITER, QSTABILIZE |
+| Conferma con una descrizione di cosa fa la modalità | AUTO, GUIDED, RTL, SMART_RTL, CIRCLE, FOLLOW, ZIGZAG, QRTL, TAKEOFF, AVOID_ADSB, ACRO, MANUAL |
+| Digita il nome della modalità per confermare | LAND, SPORT, AUTOTUNE, FLIP, DRIFT, THROW, QLAND, QACRO, AUTOROTATE |
+
+![Finestra di conferma del cambio modalità che chiede di digitare LAND per confermare](https://docs.uavmatrix.com/it/img/screenshots/fleet-manager/control-panel--mode-confirm.webp)
+
+*Conferma per LAND, una modalità che va digitata per essere confermata.*
+
+Gli elenchi delle modalità sono quelli di ArduPilot (Copter, Plane, Rover e Sub). Su un controllore di volo PX4, usa la stazione di controllo a terra per cambiare modalità.
+
+## Missione
+
+Esegue le [missioni](https://docs.uavmatrix.com/it/fleet-manager/missions/) salvate nella tua organizzazione:
+
+- **Select mission** sceglie una missione salvata. Il contatore mostra il waypoint attuale e il totale, ad esempio `3/18`, oppure **None**.
+- **Start** legge prima la missione sul drone e la confronta con quella selezionata. Se sono diverse, **Mission Not Loaded on Drone** propone **Upload & Start**.
+- **Stop**, **Read** (recupera la missione dal drone) e **Clear**.
+
+Ogni azione chiede conferma.
+
+## Azioni
+
+- **Arm** e **Disarm**. La finestra di armo dice **This will arm the UAV. Ensure all personnel are clear of the propellers before arming.** Spunta **Force arm (bypass pre-arm checks)** solo in laboratorio: salta i controlli che impediscono un decollo non sicuro.
+- **Select action... → Preflight Calibration** calibra il giroscopio e livella l'accelerometro. Tieni il velivolo completamente fermo su una superficie piana, poi seleziona **Start Calibration**.
+
+![Finestra di conferma dell'armo con l'avviso sulle eliche e la casella Force arm non selezionata](https://docs.uavmatrix.com/it/img/screenshots/fleet-manager/control-panel--arm-confirm.webp)
+
+*Finestra di armo con l'avviso sulle eliche e la casella Force arm (bypass pre-arm checks) non spuntata.*
+
+Armo, disarmo e calibrazione pre-volo richiedono UAVcast-Pro **6.3.0_rc13** o successivo sul drone. Nelle versioni precedenti il pannello mostra **UAVcast Upgrade Required**. Vedi [Aggiornamento](https://docs.uavmatrix.com/it/get-started/updating/).
+
+## Quando un comando non va a buon fine
+
+- Il drone deve essere online. I comandi verso un drone offline falliscono.
+- Fleet Manager attende che il drone confermi ogni comando. Se il controllore di volo lo rifiuta, ad esempio armando con controlli pre-armo non superati, l'errore compare nel pannello e nei messaggi di stato del drone.
+- I messaggi del controllore di volo (errori pre-armo, cambi di modalità) compaiono nel popup del drone sulla mappa e nella scheda [Logs](https://docs.uavmatrix.com/it/fleet-manager/fleet/uav-details/#logs).
+
+Per gli schermi di dimensioni telefono, vedi [Vista Lite](https://docs.uavmatrix.com/it/fleet-manager/lite-view/).
+
+Source: https://docs.uavmatrix.com/it/fleet-manager/fleet/remote-control/

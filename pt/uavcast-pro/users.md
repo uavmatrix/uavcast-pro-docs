@@ -1,0 +1,56 @@
+# Usuários e acesso
+
+> Proteja a interface web do UAVcast-Pro com um login de administrador, adicione usuários somente leitura que podem acompanhar telemetria e vídeo, mas não controlar o drone, e altere ou redefina senhas.
+
+Uma instalação nova do UAVcast-Pro não tem usuários nem login: qualquer pessoa que consiga abrir a interface web tem direitos totais de administrador. Adicione um usuário administrador para ativar o login. Depois disso, você pode adicionar usuários **Read Only** para observadores, clientes ou operadores de carga útil que devem ver tudo, mas não alterar nada. Abra **Gerenciamento → Users**.
+
+![Página Users com o diálogo Add New User aberto, com os campos Username, Password, Confirm Password e role](https://docs.uavmatrix.com/pt/img/screenshots/uavcast-pro/users.webp)
+
+*Gerenciamento → Users com o diálogo Add New User aberto.*
+
+## Ative o login
+
+1. Vá até **Users** e selecione **Add User**.
+2. Digite um **Username** (com pelo menos 3 caracteres), uma **Password** (com pelo menos 6 caracteres) e **Confirm Password**.
+3. Selecione **Create User**. O primeiro usuário é sempre um **Admin** (*First user must be an admin*).
+
+A partir de agora, todo visitante verá uma página de login. O login dura 7 dias naquele navegador, ou até você selecionar **Sair** no menu do usuário, na parte inferior da barra lateral.
+
+> **A interface web usa HTTP sem criptografia**
+>
+> Logins e configurações trafegam sem criptografia. Isso é aceitável na sua LAN ou dentro de uma [VPN](https://docs.uavmatrix.com/pt/uavcast-pro/connectivity/vpn/), mas nunca encaminhe a porta da interface web para a internet.
+
+## Funções
+
+| Pode… | **Admin** | **Read Only** |
+| --- | --- | --- |
+| Ver as páginas Painel, Fluxos de Dados, Controlador de Voo, Mapa de Voo, Estações de Controle Terrestre e Câmera | Sim | Sim |
+| Assistir ao vídeo e à telemetria ao vivo, ver painéis e gravações | Sim | Sim |
+| Alterar qualquer configuração | Sim | Não |
+| Armar, desarmar, mudar o modo, iniciar ou limpar missões | Sim | Não |
+| Iniciar ou parar gravações | Sim | Não |
+| Abrir Modem, Rede Privada Virtual, DNS Dinâmico, Redes, Fleet Management, Users e Aplicação | Sim | Não (oculto) |
+
+Você não pode criar um usuário **Read Only** antes que exista um administrador (*Create an admin user first before adding read-only users*).
+
+Usuários somente leitura da interface web são diferentes da opção **Read Only** de um destino de estação de controle terrestre, que bloqueia comandos de um programa da estação. Veja [Estações de controle terrestre](https://docs.uavmatrix.com/pt/uavcast-pro/ground-stations/).
+
+## Altere a senha
+
+Selecione **Change Password**, digite a **Current Password** e a **New Password** duas vezes e selecione **Update Password**. As senhas são armazenadas como hashes bcrypt.
+
+## Exclua um usuário
+
+Selecione **Delete** na linha do usuário e confirme.
+
+- Você não pode excluir a própria conta enquanto houver outros usuários.
+- Excluir o **último** usuário desativa o login novamente: *After deletion, the application will be open without authentication until a new user is created.*
+
+## Esqueceu a senha do administrador
+
+Não há link de redefinição, porque o drone não tem e-mail, e a recuperação de senha não é feita pelo próprio usuário.
+
+- Se outro administrador ainda conseguir entrar, ele pode excluir seu usuário em **Users** e criá-lo novamente.
+- Se ninguém com a função de administrador conseguir entrar, entre em contato com o suporte em **[support@uavmatrix.com](mailto:support@uavmatrix.com)**. Inclua sua chave de licença (ou o e-mail com que você a comprou), o hostname ou nome do dispositivo como aparece em **Aplicação → Gerenciador de Licença → Dispositivos Ativados**, a versão do UAVcast-Pro e se você consegue acessar o dispositivo via SSH.
+
+Source: https://docs.uavmatrix.com/pt/uavcast-pro/users/

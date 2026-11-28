@@ -1,0 +1,48 @@
+# 狀態指示與通知
+
+> 說明 Fleet Manager 的離線、無 MAVLink、GPS、故障保護與電池指示的含義，以及系統公告、狀態頁與警示。
+
+Fleet Manager 會在您正在查看的地方顯示問題：地圖、無人機清單，以及每架無人機的頁面。本頁列出所有指示及其處理方式。
+
+## 無人機指示
+
+| 指示 | 位置 | 含義 | 首先檢查 |
+| --- | --- | --- | --- |
+| **OFFLINE**，灰色標記附時鐘徽章 | Fleet、地圖、UAV page | 20 秒內未收到 UAVcast-Pro 的任何資料 | 無人機的網際網路連線與連接埠 8883。請參閱[Fleet Manager 中無人機離線](https://docs.uavmatrix.com/zh-tw/troubleshooting/drone-offline-fleet-manager/)。 |
+| **NO MAVLINK**，橘色圓環附 **!** | 地圖 | UAVcast-Pro 在線上，但 10 秒內未收到飛行控制器資料 | 飛行控制器的電源與線路。請參閱[無 MAVLink 心跳](https://docs.uavmatrix.com/zh-tw/troubleshooting/no-mavlink-heartbeat/)。 |
+| 紅色虛線圓環，**NO GPS** | 地圖 | 無衛星或無定位 | 天線的天空視野、GPS 線路。 |
+| 黃色虛線圓環，**WEAK GPS** | 地圖 | 衛星少於 6 顆，或僅有 2D 定位 | 起飛前等待更多衛星。 |
+| 電池為黃色／紅色 | Fleet 卡片 | 低於 50 % ／低於 20 % | 規劃降落。 |
+| **ARMED** | UAV page、控制面板、地圖彈出視窗 | 馬達已解鎖 | 將飛行器視為帶電狀態。 |
+| **FAILSAFE** | UAV page、控制面板 | 飛行控制器處於故障保護狀態 | 飛行控制器的訊息，顯示在地圖彈出視窗與 **Logs** 中。 |
+| **GCS FAILSAFE** ／ **GCS Failsafe not enabled** | UAV page、控制面板 | 地面站故障保護已觸發，或尚未設定 | 進行 BVLOS 飛行前，請設定 `FS_GCS_ENABLE`。 |
+| **Re-pair required** | Fleet、UAV page | 無人機使用舊的連線憑證 | [重新配對無人機](https://docs.uavmatrix.com/zh-tw/fleet-manager/fleet/remove-or-transfer/#re-pair-a-drone)。 |
+| **Signal** poor | 地圖彈出視窗 | 往返無人機的延遲超過 600 毫秒，或遺失三次 ping | 行動網路涵蓋範圍，或連線壅塞。 |
+
+頁面開啟期間，指示會即時更新。Fleet Manager 每 5 秒檢查一次無人機是否離線。
+
+![地圖特寫，標記顯示離線、無 MAVLink 與弱 GPS 圓環](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/map--indicators.webp)
+
+*四個標記的特寫：一架正常的無人機、一架附時鐘徽章的 OFFLINE、一架橘色圓環的 NO MAVLINK，以及一架黃色虛線圓環的 WEAK GPS。*
+
+## 活動記錄
+
+您的團隊所做的變更（配對、移除無人機、串流綁定、邀請、角色變更、VPN）會記錄在[儀表板](https://docs.uavmatrix.com/zh-tw/fleet-manager/dashboard/)的 **Recent Activity** 下，並附上執行者。
+
+## 系統公告
+
+當 UAVmatrix 進行計畫性維護或發生事件時，每個頁面頂端會出現橫幅：藍色代表資訊、琥珀色代表警告、紅色代表嚴重。關閉後，橫幅會保持隱藏，直到您在新的瀏覽器工作階段中開啟 Fleet Manager。
+
+## 狀態頁
+
+**System → Status**（頁面 **System Status**）會顯示 Fleet Manager 是否正常運作：**All systems operational**，或 **We're experiencing some issues** 並列出 **Active Incidents**。**Past Incidents** 會列出最近已解決的事件及其 **Resolution**。當許多無人機同時離線時，請先查看此頁。
+
+![System Status 頁面，顯示 All systems operational 以及過去事件清單](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/status.webp)
+
+*System Status 顯示 All systems operational，以及兩則標記為 Resolved 的 Past Incidents。*
+
+## 電子郵件與 Webhook 警示
+
+Fleet Manager 目前尚不會針對無人機事件（例如電量低或無人機離線）發送電子郵件、簡訊或 Webhook 警示。請在控制室保持地圖或無人機清單開啟，並依賴飛行控制器本身的故障保護來處理電池與連線中斷。
+
+Source: https://docs.uavmatrix.com/zh-tw/fleet-manager/alerts-and-status/

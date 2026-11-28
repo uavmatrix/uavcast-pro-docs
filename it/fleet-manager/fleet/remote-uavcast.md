@@ -1,0 +1,40 @@
+# Apri UAVcast-Pro da remoto
+
+> Raggiungi le impostazioni UAVcast-Pro di un drone da ovunque tramite Fleet Manager, sia con il proxy integrato senza VPN sia direttamente sulla VPN della tua organizzazione.
+
+Puoi modificare le impostazioni UAVcast-Pro di un drone (telecamera, modem, stazioni di controllo a terra e così via) senza essere sulla stessa rete del drone. Nella [pagina UAV](https://docs.uavmatrix.com/it/fleet-manager/fleet/uav-details/), la scheda **UAVcast Application** ha due pulsanti:
+
+| Pulsante | Come si connette | Da usare per |
+| --- | --- | --- |
+| **Open via Proxy** | Tramite la connessione cifrata di Fleet Manager verso il drone. Funziona per qualsiasi drone online, senza VPN. | Modifiche di configurazione e gestione di base. |
+| **Open via VPN** | Apre direttamente `http://<indirizzo VPN del drone>`. Visibile solo quando il drone è sulla VPN della tua organizzazione, e anche il tuo computer deve essere su quella VPN. | Tutto, incluse la mappa di volo live e la telemetria. |
+
+Il proxy è riservato a Owner e Admin. Fleet Manager lo nega ai Viewer con **Access denied. Only administrators can access UAVcast remotely.**
+
+## Apri tramite Proxy
+
+1. Nella pagina UAV, seleziona **Open via Proxy**.
+2. Leggi la finestra **Remote UAVcast Access via Proxy** e seleziona **Continue**.
+3. UAVcast-Pro si apre in una nuova scheda, sulla sua pagina **Application**. Accedi con l'utente UAVcast-Pro del drone: il proxy non trasmette il tuo accesso a Fleet Manager. (Un drone che non ha ancora utenti UAVcast-Pro si apre senza accesso.)
+
+![Finestra Remote UAVcast Access via Proxy con l'elenco delle funzionalità non disponibili](https://docs.uavmatrix.com/it/img/screenshots/fleet-manager/drone-detail--proxy-warning.webp)
+
+*Finestra Remote UAVcast Access via Proxy, che elenca le funzionalità WebSocket non disponibili: telemetria live, stato della connessione MAVLink e mappa di volo.*
+
+Il proxy trasporta le normali richieste di pagina, non le connessioni live. **WebSocket features unavailable** indica che questi elementi non funzionano attraverso il proxy:
+
+- telemetria live e aggiornamenti in tempo reale
+- stato della connessione MAVLink
+- la mappa di volo
+
+Ogni richiesta ha 30 secondi per completarsi. Su un collegamento lento, le pagine pesanti possono andare in timeout con **Request timed out. UAVcast may be unreachable.** Se il drone è offline compare **Drone is offline. UAVcast interface is not available.**
+
+> **Attenzione alle impostazioni di rete tramite il proxy**
+>
+> Il proxy passa per la connessione internet del drone. Se modifichi il modem, la priorità di rete o le impostazioni VPN e il drone perde la connessione internet, anche il proxy si interrompe, e per risolvere il problema serve l'accesso locale.
+
+## Apri tramite VPN
+
+Collega il tuo computer alla VPN dell'organizzazione allo stesso modo di una stazione di controllo a terra (vedi [Collega una stazione di controllo a terra](https://docs.uavmatrix.com/it/fleet-manager/connect-gcs/)). Poi **Open via VPN** apre direttamente l'interfaccia del drone, con tutte le funzionalità live. È la scelta migliore per qualsiasi cosa oltre alla modifica di un'impostazione.
+
+Source: https://docs.uavmatrix.com/it/fleet-manager/fleet/remote-uavcast/

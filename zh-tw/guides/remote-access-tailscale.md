@@ -1,0 +1,61 @@
+# 使用 Tailscale 遠端存取
+
+> 使用 Tailscale 與 UAVcast-Pro 透過 LTE 連線至無人機，無需連接埠轉送：以網址或驗證金鑰登入、將筆電新增為 GCS，並停用金鑰到期。
+
+Tailscale 是以 WireGuard 為基礎的 VPN。若您的團隊已在使用它，這是透過 4G 連線至無人機最快的方式：無人機與您的筆電加入同一個 tailnet，並透過各自的 `100.x.y.z` 位址彼此通訊。
+
+沒有 tailnet 嗎？隨授權附贈的 Fleet Manager VPN 無需 Tailscale 帳號，即可達成相同效果：請參閱[透過 4G 超視距飛行](https://docs.uavmatrix.com/zh-tw/guides/bvlos-4g/)與[機隊上線](https://docs.uavmatrix.com/zh-tw/guides/fleet-onboarding/)。
+
+**您需要：**具備網際網路連線（Wi-Fi 或數據機）的 UAVcast-Pro 無人機、一個 Tailscale 帳號，以及筆電上的 Tailscale 用戶端。
+
+## 1. 讓無人機登入 Tailscale
+
+1. 在 UAVcast-Pro 中，開啟 **虛擬專用網路**。
+
+2. 將 **啟用 VPN** 設為 **是**，並將 **服務** 設為 **Tailscale**。
+
+3. 選擇登入方式：
+
+   - **Web Login**（網頁登入）：按下 **Generate Login URL**（生成登入 URL），接著按下 **Authenticate this device**（認證此裝置），然後在開啟的頁面中以您的 Tailscale 帳號登入。
+   - **Auth Key**（認證金鑰）：在 Tailscale 管理控制台中建立驗證金鑰，將其貼到 **Auth Key**（認證金鑰）中，視需要設定 **Hostname (Optional)**（主機名（可選）），然後按下 **Connect with Auth Key**（使用認證金鑰連接）。當您要替他人設定無人機，或一次設定多台時，請使用此方式。
+
+4. 等待顯示 **已連接**。記下 **IPv4 Address**（IPv4 位址）（100.x.y.z）。
+
+![虛擬專用網路頁面，啟用 VPN 設為是，服務為 Tailscale，並有 Fleet Manager、Web Login 與 Auth Key 分頁，VPN 資訊顯示未連接](https://docs.uavmatrix.com/zh-tw/img/screenshots/uavcast-pro/private-network.webp)
+
+*服務設為 Tailscale 且無人機尚未登入時的虛擬專用網路（未連接）。登入後，VPN 資訊會顯示連線詳細資料。*
+
+> **為無人機停用金鑰到期**
+>
+> Tailscale 裝置金鑰會到期，金鑰過期的無人機會離開 tailnet，直到有人再次登入為止。**Expires** 欄位會顯示到期時間。請在 Tailscale 管理控制台中，為您部署的無人機停用金鑰到期。
+
+## 2. 將筆電加入同一個 tailnet
+
+在筆電上安裝 Tailscale，並以相同的帳號或 tailnet 登入。執行 `tailscale status`：無人機必須出現在清單中。接著：
+
+```bash
+ping <drone tailscale ip>
+```
+
+在 `http://<drone tailscale ip>/` 開啟無人機的網頁介面。
+
+## 3. 將遙測與視訊傳送至筆電
+
+1. 在 UAVcast-Pro 中，前往 **地面控制站**，然後按下 **新增目標位址**。
+2. 在 **目標IP或主機** 中，輸入**筆電的** Tailscale IPv4 位址（在筆電上執行 `tailscale ip -4`）。
+3. 開啟 **啟用遙測** 與 **啟用視訊**。
+4. 在筆電的防火牆中，允許傳入的 UDP 14550 與 5600。Windows 通常會將 Tailscale 介面識別為公用網路。
+
+開啟 QGroundControl 或 Mission Planner。遙測會經由 UDP 14550 抵達，視訊則經由 UDP 5600 抵達。
+
+## 4. 檢查連線品質
+
+**虛擬專用網路** 頁面上的 **Relay** 欄位會顯示流量是否經過 Tailscale 中繼。經由中繼的路徑可以運作，但會增加延遲。部分行動電信業者不允許直接連線，因此請使用您飛行時所用的電信業者進行測試。
+
+## 疑難排解
+
+- 無法 ping 通無人機：[已連接 VPN 但無法連線至無人機](https://docs.uavmatrix.com/zh-tw/troubleshooting/vpn-cant-reach-drone/)
+- Ping 正常但沒有遙測：[地面站沒有遙測](https://docs.uavmatrix.com/zh-tw/troubleshooting/no-telemetry-in-gcs/)
+- 若您稍後將無人機與 Fleet Manager 配對，並選擇 **Replace existing VPN with Fleet Manager network**，它會離開您的 tailnet，改為加入組織的網路。
+
+Source: https://docs.uavmatrix.com/zh-tw/guides/remote-access-tailscale/

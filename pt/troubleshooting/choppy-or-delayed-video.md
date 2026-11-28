@@ -1,0 +1,72 @@
+# Vídeo travado, com atraso ou cinza pela 4G
+
+> Corrija engasgos, manchas cinzas e atraso no vídeo do UAVcast-Pro pelo LTE ou VPN ajustando bitrate, resolução, FPS e Taxa de Recuperação do Stream ao link.
+
+A imagem chega, mas trava, congela, deixa manchas cinzas de blocos na tela ou fica segundos atrás. Quase sempre o stream pede mais do que o link consegue transportar, ou o codificador envia keyframes raramente demais para se recuperar de pacotes perdidos.
+
+| O que você vê | Causa provável | Comece em |
+| --- | --- | --- |
+| Manchas cinzas ou verdes que somem depois de um ou dois segundos | Pacotes perdidos e poucos keyframes para se recuperar | [Verificação 2](https://docs.uavmatrix.com/pt/troubleshooting/choppy-or-delayed-video/#check-2) |
+| Fluido no Wi-Fi, mas trava ou congela pelo LTE | Bitrate acima do que o uplink celular suporta | [Verificação 1](https://docs.uavmatrix.com/pt/troubleshooting/choppy-or-delayed-video/#check-1) |
+| Trava mesmo na rede local | Limite de CPU no drone, ou a estação de controle terrestre não consegue decodificar rápido o bastante | [Verificação 3](https://docs.uavmatrix.com/pt/troubleshooting/choppy-or-delayed-video/#check-3) |
+| O vídeo fica segundos atrás do drone | Você está vendo a pré-visualização do navegador, ou a estação armazena o vídeo em buffer | [Verificação 4](https://docs.uavmatrix.com/pt/troubleshooting/choppy-or-delayed-video/#check-4) |
+
+## Verificação 1: reduza o bitrate e a resolução
+
+Um uplink celular é bem mais lento que a velocidade de download e muda conforme o drone se move entre as células. Comece com valores baixos e aumente aos poucos.
+
+1. Vá em **Câmera → Configurações da câmera**.
+2. Defina **Resolução** como 1280×720 ou menos.
+3. Defina **Selecionar FPS** como 15 ou 20.
+4. Mova o controle **Bitrate:** para cerca de 1000–1500 kbps. `0` significa automático.
+5. As configurações são salvas conforme você as altera, e a câmera as aplica.
+6. Voe, ou dirija, a rota que te interessa. Se ela se sustentar, aumente um valor de cada vez.
+
+![Cartão Configurações da câmera com Resolução, Selecionar FPS, Bitrate e Taxa de Recuperação do Stream](https://docs.uavmatrix.com/pt/img/screenshots/uavcast-pro/camera--settings.webp)
+
+*Câmera → Configurações da câmera: Resolução, Selecionar FPS, Bitrate e Taxa de Recuperação do Stream são os valores para ajustar conforme o uplink.*
+
+> **Quanto o link suporta?**
+>
+> **Painel → Tráfego de Rede** mostra a taxa TX ao vivo por interface. Se a interface do modem fica sempre no mesmo teto, não importa o bitrate que você defina: esse teto é o seu uplink.
+
+## Verificação 2: defina uma Taxa de Recuperação do Stream mais rápida
+
+As manchas cinzas vêm de pacotes perdidos. O decodificador só consegue reparar a imagem no próximo keyframe. A **Taxa de Recuperação do Stream** define com que frequência os keyframes são enviados.
+
+1. Em **Câmera → Configurações da câmera**, encontre **Taxa de Recuperação do Stream**.
+2. Mova o controle de **Auto** em direção a **Ultra Rápido**: menos quadros entre os keyframes reparam a imagem mais cedo, mas usam mais banda. Em direção a **Poupador de Largura de Banda**, economiza banda, mas se recupera devagar. A dica abaixo do controle (por exemplo *VPN/WiFi Friendly*) indica para que cada posição serve.
+3. Salve e compare. Se o link estiver muito lento, combine uma taxa de recuperação mais rápida com um bitrate menor (verificação 1).
+
+Em **Auto**, o UAVcast-Pro envia um keyframe por segundo (um a cada *FPS* quadros, ou a cada 30 quadros quando o FPS está em automático).
+
+## Verificação 3: verifique a carga da CPU
+
+O UAVcast-Pro codifica H.264 por software. Em um Raspberry Pi Zero 2 W, ou com duas câmeras transmitindo ao mesmo tempo, a CPU pode chegar ao limite.
+
+1. Abra **Câmera → Configurações da câmera** e observe o cartão **Carga do sistema**.
+2. Se ele disser **A CPU está perto do limite. Reduza a resolução ou o bitrate.**, faça exatamente isso.
+3. Com **Dual stream** ativado, reduza a resolução ou o bitrate de um dos streams, ou desligue o segundo stream.
+4. Verifique no **Painel** se aparece **Reduzido (calor ou energia)** em **Fonte de alimentação**. Uma CPU limitada codifica mais devagar. Veja [Subtensão e limitação de CPU](https://docs.uavmatrix.com/pt/troubleshooting/undervoltage-and-throttling/).
+
+## Verificação 4: saiba qual stream você está assistindo
+
+A **Visualização ao Vivo** no navegador e a janela de vídeo no **Mapa de Voo** passam pelo servidor de mídia integrado, que adiciona atraso. Eles servem para a configuração, não para voar. O stream enviado para a estação de controle terrestre vai direto por UDP e tem latência bem menor.
+
+Se a própria estação estiver atrasada:
+
+- No QGroundControl, confira se o modo de baixa latência está ativo nas configurações de vídeo.
+- Em pipelines GStreamer, use `sync=false` no video sink, como no [comando de teste](https://docs.uavmatrix.com/pt/troubleshooting/no-video-in-gcs/#check-5).
+- Pela VPN, garanta que o ZeroTier ou o Tailscale alcance o drone diretamente, e não por um relay. O Tailscale mostra o relay em uso em **Relay**, na página **Rede Privada Virtual**.
+
+## Verificação 5: verifique o sinal celular
+
+Vá em **Modem** e observe **Qualidade do Sinal** e **Tecnologia** em **Informações do Modem**. Um sinal fraco, ou uma queda de LTE para 3G, corta o uplink. Afaste o modem do controlador de voo, dos ESCs e dos fios de energia, ou use um modem com antenas externas.
+
+## Ainda travando?
+
+[Baixe os logs](https://docs.uavmatrix.com/pt/troubleshooting/collect-logs/) (**Servidor de Câmera**, últimos 30 minutos) e envie para **[support@uavmatrix.com](mailto:support@uavmatrix.com)** com o modelo da sua câmera, a resolução, o FPS, o bitrate e o tipo de link em que você voa.
+
+Relacionado: [Configurações da câmera](https://docs.uavmatrix.com/pt/uavcast-pro/camera/) · [Modem celular](https://docs.uavmatrix.com/pt/uavcast-pro/connectivity/cellular-modem/)
+
+Source: https://docs.uavmatrix.com/pt/troubleshooting/choppy-or-delayed-video/

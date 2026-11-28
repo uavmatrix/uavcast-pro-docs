@@ -1,0 +1,67 @@
+# Koppelen met Fleet Manager
+
+> Verbind een drone met UAVcast-Pro met UAVmatrix Fleet Manager: haal de koppelcode op de drone op, voer deze in Fleet Manager in, controleer de verbinding en hernoem of ontkoppel de drone.
+
+Met koppelen verbindt u een drone met UAVcast-Pro met uw organisatie in [UAVmatrix Fleet Manager](https://docs.uavmatrix.com/nl/fleet-manager/), het clouddashboard voor uw vloot. Na het koppelen houdt de drone een via certificaat geauthenticeerde, versleutelde verbinding met Fleet Manager, en maakt die zelf opnieuw verbinding na een herstart of een netwerkwijziging. U start het koppelen op de drone en rondt het af in Fleet Manager. Dit duurt ongeveer twee minuten.
+
+## Voordat u begint
+
+- UAVcast-Pro met een **geactiveerde licentie** op de drone. Zonder licentie wordt koppelen geweigerd (*Geen geldige licentie gevonden. Activeer eerst uw licentie.*).
+- Een **admin**-gebruiker in UAVcast-Pro. **Fleet Management** is verborgen voor Alleen-lezen gebruikers.
+- Een Fleet Manager-account met de rol **Owner** of **Admin** in de organisatie. De licentie van de drone moet horen bij een lid van die organisatie.
+- Internet op de drone, met uitgaand TCP **8883** (MQTT over TLS) en HTTPS (443) toegestaan.
+
+## De drone koppelen
+
+1. Ga in de webinterface van de drone naar **Beheer → Fleet Management**.
+2. Selecteer **Connect to Fleet Manager**. De drone vraagt Fleet Manager om een code en toont een **Pairing Code** met een aftelling bij **Expires in**, daarna *Waiting for Manager to confirm pairing...*.
+3. Log in op een ander tabblad op [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com/) en ga naar **Fleet → Pair Device**.
+4. Voer de code van de drone in en controleer of de apparaatgegevens (hostnaam, architectuur, UAVcast-Pro-versie) overeenkomen met de drone die voor u staat.
+5. Rond de stappen in Fleet Manager af (VPN-keuze en naam).
+6. Terug op de drone schakelt de pagina over naar **Fleet Connection** met status **Connected**.
+
+![Kaart Connect to Fleet Manager met de knop Connect to Fleet Manager](https://docs.uavmatrix.com/nl/img/screenshots/uavcast-pro/fleet--connect.webp)
+
+*Beheer → Fleet Management op een drone die nog niet is gekoppeld. Als u Connect to Fleet Manager selecteert, wordt deze kaart vervangen door de 8-cijferige Pairing Code en de aftelling Expires in.*
+
+> **De code is 5 minuten geldig**
+>
+> Als de code verloopt voordat u hem invoert, selecteert u opnieuw **Connect to Fleet Manager** voor een nieuwe code.
+
+De Fleet Manager-kant, inclusief organisaties, VPN en wat u met de drone doet zodra die in de vloot zit, wordt behandeld in [Uw eerste drone toevoegen aan Fleet Manager](https://docs.uavmatrix.com/nl/fleet-manager/pair-uav/).
+
+## Na het koppelen
+
+De kaart **Fleet Connection** toont:
+
+| Veld | Betekenis |
+| --- | --- |
+| **Connected** / **Disconnected** | Of de drone nu met Fleet Manager communiceert. |
+| **Device Name** | De naam die in Fleet Manager wordt getoond. Bewerk hem hier of in Fleet Manager. *Managed by Fleet Manager* betekent dat de naam daar is ingesteld. |
+| **Hostname**, **Device ID** | Hoe Fleet Manager deze drone identificeert. |
+| **Manager URL** | De Fleet Manager-instantie waarmee de drone is gekoppeld. |
+| **Last Connected** | Wanneer de drone voor het laatst contact had met Fleet Manager. |
+
+Wat Fleet Manager van de drone ontvangt: live telemetrie (positie, batterij, GPS, vluchtstatus), de UAVcast-Pro-systeemstatus en het op afstand beheren van diensten. Bestemmingen voor grondstations die Fleet Manager via streamkoppelingen aanmaakt, verschijnen op [Grondcontrolestations](https://docs.uavmatrix.com/nl/uavcast-pro/ground-stations/) met een wolkicoon.
+
+Om de drone later aan het VPN van uw organisatie toe te voegen, gebruikt u het tabblad **Fleet Manager** op [Virtueel Privénetwerk](https://docs.uavmatrix.com/nl/uavcast-pro/connectivity/vpn/).
+
+## Koppeling verbreken
+
+1. Ga naar **Beheer → Fleet Management**.
+2. Selecteer **Disconnect from Fleet** en bevestig.
+
+Dit verwijdert de koppeling en de certificaten van de drone. Om de drone opnieuw in Fleet Manager te gebruiken, koppelt u hem opnieuw met een nieuwe code. Verwijder de drone ook uit uw vloot in Fleet Manager, zodat hij niet als offline blijft staan.
+
+## Probleemoplossing
+
+| Symptoom | Controleer |
+| --- | --- |
+| *Geen geldige licentie gevonden. Activeer eerst uw licentie.* | Activeer de licentie op **Applicatie**. Zie [Licentie en activering](https://docs.uavmatrix.com/nl/get-started/license-activation/). |
+| Fleet Manager meldt dat de licentie niet van een lid van de organisatie is | De licentie is gekocht met een e-mailadres dat geen lid is. Voeg dat e-mailadres toe in Fleet Manager (zie [Licenties](https://docs.uavmatrix.com/nl/fleet-manager/licenses/)), of nodig dat account uit voor de organisatie. |
+| Code verlopen | Selecteer opnieuw **Connect to Fleet Manager**. |
+| Gekoppeld, maar status blijft **Disconnected** | De drone kan Fleet Manager niet bereiken op TCP 8883. Sommige netwerken blokkeren dit. Controleer de internetverbinding en firewall van de drone. |
+
+Meer hulp: [Koppelcode ongeldig](https://docs.uavmatrix.com/nl/troubleshooting/pairing-code-invalid/) en [Drone offline in Fleet Manager](https://docs.uavmatrix.com/nl/troubleshooting/drone-offline-fleet-manager/).
+
+Source: https://docs.uavmatrix.com/nl/uavcast-pro/fleet-pairing/

@@ -1,0 +1,63 @@
+# QGroundControl
+
+> Получите телеметрию UAVcast-Pro и живое видео H.264 в QGroundControl на Windows, macOS или Linux: автоподключение UDP 14550, источник Video Source UDP h.264 на порту 5600, режим низкой задержки и решения проблем.
+
+По умолчанию QGroundControl принимает MAVLink на UDP-порту 14550, поэтому дрон UAVcast-Pro появляется сразу, как только поступает его телеметрия. Для видео один раз установите источник видео **UDP h.264 Video Stream** на порту 5600. В QGroundControl уже встроен GStreamer, поэтому ничего дополнительно устанавливать не нужно. Это работает одинаково в Windows, macOS и Linux; для планшетов см. [Android](https://docs.uavmatrix.com/ru/uavcast-pro/ground-stations/android/).
+
+## Перед началом
+
+- На дроне — пункт назначения в разделе [Наземные станции](https://docs.uavmatrix.com/ru/uavcast-pro/ground-stations/) с IP-адресом этого компьютера (адрес VPN через 4G), с включённой опцией **Включить телеметрию** и, для видео, включённой опцией **Включить видео**.
+- Камера запущена и ведёт трансляцию в разделе **Камера → Настройки камеры**.
+- QGroundControl с сайта [qgroundcontrol.com](https://qgroundcontrol.com/).
+
+## Телеметрия
+
+Запустите QGroundControl. Через несколько секунд после первого пакета аппарат появится на карте, а панель инструментов покажет его полётный режим и заряд батареи.
+
+![Вид Fly в QGroundControl, подключённый к аппарату ArduPilot: панель инструментов с Not Ready и Stabilize, миссия из пяти маршрутных точек на карте с No GPS Lock for Vehicle и окно видео в левом нижнем углу с WAITING FOR VIDEO](https://docs.uavmatrix.com/ru/img/screenshots/gcs/qgroundcontrol--fly-view.webp)
+
+*Телеметрия работает: панель инструментов показывает состояние аппарата и полётный режим (Not Ready, Stabilize). Это стендовая установка без GPS, поэтому отображается No GPS Lock for Vehicle. Окно видео (слева внизу) показывает WAITING FOR VIDEO, пока видео не настроено ниже.*
+
+Ничего не появилось? Проверьте, включено ли автоматическое подключение по UDP: значок **Q** → **Application Settings**, затем **AutoConnect to the following devices** → **UDP** отмечено (по умолчанию). В зависимости от версии QGroundControl список AutoConnect находится на странице **Comm Links** или на странице **General**. Если на дроне задан **Порт телеметрии**, отличный от 14550, вместо этого добавьте канал связи: **Application Settings** → **Comm Links** → **Add**, выберите **UDP**, укажите выбранный порт, затем **Connect**.
+
+## Видео
+
+1. Нажмите значок **Q** (слева вверху) → **Application Settings**.
+2. Откройте страницу **Video**. В старых версиях видео — это раздел **Video** на странице **General**.
+3. Установите **Source** в значение **UDP h.264 Video Stream**.
+4. Проверьте адрес UDP. По умолчанию `0.0.0.0:5600` слушает порт 5600, что совпадает с **Порт видео** на дроне по умолчанию. Если вы изменили **Порт видео** на дроне, укажите здесь этот порт. В текущих версиях поле называется **UDP URL**; в старых отображается номер **UDP Port**.
+5. Вернитесь к виду **Fly**. Видео появится в небольшом окне в углу. Нажмите на него, чтобы поменять местами видео и карту.
+
+*Иллюстрация настроек приложения QGroundControl: страница Video, Source — UDP h.264 Video Stream, адрес UDP 0.0.0.0:5600 и включён Low Latency Mode.*
+
+*Иллюстрация QGroundControl, упрощённо. (1) Значок Q → Application Settings, (2) Video, (3) Source UDP h.264 Video Stream, (4) UDP URL с портом 5600.*
+
+### Режим низкой задержки
+
+В тех же настройках видео включите **Low Latency Mode**. QGroundControl тогда отбрасывает запоздавшие кадры вместо буферизации, что заметно сокращает задержку на хорошем канале. На слабом канале 4G изображение может подтормаживать; если это происходит, выключите режим снова.
+
+## Брандмауэр
+
+- **Windows**: при запросе Windows разрешите QGroundControl в сетях **Private** и **Public**. Адаптеры VPN (ZeroTier, Tailscale) часто относятся к сети **Public**. Чтобы открыть порты вручную, см. [Mission Planner: брандмауэр Windows](https://docs.uavmatrix.com/ru/uavcast-pro/ground-stations/mission-planner/#allow-mission-planner-through-the-windows-firewall); правила те же.
+- **macOS**: разрешите входящие подключения для QGroundControl, когда macOS об этом спросит.
+- **Linux**: если `ufw` активен, выполните `sudo ufw allow 14550/udp` и `sudo ufw allow 5600:5602/udp`.
+
+## Вторая камера и звук
+
+QGroundControl воспроизводит один видеопоток. Если включён режим [два потока](https://docs.uavmatrix.com/ru/uavcast-pro/camera/multi-camera/), камера 2 передаётся на порт 5601: измените UDP-порт на `5601`, чтобы смотреть её, или откройте камеру 2 в окне GStreamer ([Windows](https://docs.uavmatrix.com/ru/uavcast-pro/ground-stations/gstreamer-windows/), [Linux](https://docs.uavmatrix.com/ru/uavcast-pro/ground-stations/gstreamer-linux/), [macOS](https://docs.uavmatrix.com/ru/uavcast-pro/ground-stations/gstreamer-macos/)) рядом с QGroundControl.
+
+QGroundControl не воспроизводит звук. Воспроизведите его с помощью GStreamer на Video Port + 2 (`5602`).
+
+## Частые проблемы
+
+| Симптом | Причина и решение |
+| --- | --- |
+| *Waiting For Vehicle Connection* | Телеметрия не доходит до этого компьютера. Проверьте IP-адрес пункта назначения (IP VPN через 4G), **Включить телеметрию** и брандмауэр. |
+| Телеметрия работает, в окне видео написано, что видео нет | **Включить видео** выключено, камера не запущена, источник не **UDP h.264 Video Stream** или UDP 5600 заблокирован. |
+| Видео появляется, а затем зависает через 4G | Потеря пакетов. Уменьшите **Битрейт** на дроне, установите **Скорость Восстановления Потока** 15–30 кадров и выключите **Low Latency Mode**. |
+| Дрон появляется дважды | Два пункта назначения указывают на этот компьютер, или второй канал дублирует автоподключение. Удалите один из них. |
+| Видео останавливается при запуске теста GStreamer | Только одна программа может слушать UDP-порт. Закройте одну из них. |
+
+Дополнительные проверки: [Нет видео в QGroundControl или Mission Planner](https://docs.uavmatrix.com/ru/troubleshooting/no-video-in-gcs/).
+
+Source: https://docs.uavmatrix.com/ru/uavcast-pro/ground-stations/qgroundcontrol/

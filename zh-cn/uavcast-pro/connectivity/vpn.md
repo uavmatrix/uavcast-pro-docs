@@ -1,0 +1,121 @@
+# VPN
+
+> 使用 Fleet Manager VPN，或您自己的 Tailscale 或 ZeroTier 网络，将无人机与地面站置于同一专用网络中，使遥测和视频可通过 4G/LTE 正常工作。
+
+在 4G/LTE 网络下，无人机获得的是移动运营商分配的地址，地面站无法访问该地址。VPN 可以解决这个问题：无人机和地面站加入同一个专用网络，并在其中获得固定地址，无论它们位于何处、使用何种网络。请在侧边栏中打开 **虚拟专用网络**。
+
+最快捷的方式是使用 **Fleet Manager VPN**，它已包含在您的 UAVcast-Pro 许可证中。如果您已经运行自己的 Tailscale tailnet 或 ZeroTier 网络，UAVcast-Pro 也可以改为加入该网络。
+
+![虚拟专用网络页面，VPN 已启用，已选择 Tailscale，显示 Fleet Manager 标签页，VPN 信息显示为未连接](https://docs.uavmatrix.com/zh-cn/img/screenshots/uavcast-pro/private-network.webp)
+
+*在尚未配对或登录的无人机上，选择 Tailscale 后的虚拟专用网络页面。*
+
+## 如何选择？
+
+|  | Fleet Manager VPN | Tailscale | ZeroTier |
+| --- | --- | --- | --- |
+| 账户 | 您的 Fleet Manager 组织（包含在许可证中） | 您自己的 Tailscale 账户 | 您自己的 ZeroTier 网络（自行管理） |
+| 无人机端设置 | 配对期间或配对之后一键完成 | 通过浏览器链接登录，或使用认证密钥 | 粘贴网络 ID |
+| 地面站 | 在 Fleet Manager 的 **Network** 页面中加入，流通过流绑定进行设置 | 加入您的 tailnet | 加入您的网络 |
+| 适用于 | 大多数操作员以及所有机队 | 已在使用 Tailscale 的团队 | 已在使用 ZeroTier 的团队 |
+
+通过此页面，无人机一次只能加入一个 VPN。
+
+> **UAVnet 即将停用**
+>
+> UAVnet 是 UAVmatrix 托管的 ZeroTier 控制器，地址为 uavnet.uavmatrix.com，现正停止服务，改由 Fleet Manager 取代。如果您的无人机正在使用 UAVnet 网络，请将它们迁移到 Fleet Manager VPN。本页的 **打开 UAVNet 控制台** 按钮会打开 UAVnet。
+
+## Fleet Manager VPN
+
+Fleet Manager VPN 是您组织的专用网络，由 Fleet Manager 通过 Tailscale 客户端运行。您无需拥有 Tailscale 账户。
+
+1. 在 Fleet Manager 中打开 **Network**，如果尚未启用，请选择 **Enable VPN Network**。参阅 [网络与 VPN](https://docs.uavmatrix.com/zh-cn/fleet-manager/network/)。
+2. [配对无人机](https://docs.uavmatrix.com/zh-cn/uavcast-pro/fleet-pairing/)，并在配对向导中保持勾选 **Enable VPN for this UAV**。已配对的无人机可从本页的 **Fleet Manager** 标签页加入（见下文），或在 Fleet Manager 的 **Network** 页面中使用 **Push to Drone**。
+3. 在 Fleet Manager 的 **Network** 页面中将每个地面站加入网络：[连接地面站](https://docs.uavmatrix.com/zh-cn/fleet-manager/connect-gcs/)。
+4. 通过[流绑定](https://docs.uavmatrix.com/zh-cn/fleet-manager/network/stream-bindings/)将流发送到该网络。Fleet Manager 会为您在无人机的[地面控制站](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/)页面中添加目标地址。
+
+通过 4G 进行飞行的分步设置说明，请参阅[超视距 4G 飞行](https://docs.uavmatrix.com/zh-cn/guides/bvlos-4g/)。
+
+## Tailscale
+
+用于您自己的 tailnet，或用于已配对无人机上的 Fleet Manager VPN。UAVcast-Pro 会安装 Tailscale。请在三个标签页中选择一个，设置无人机的登录方式。
+
+**网页登录**
+
+1. 将 **启用 VPN** 设置为 **是**，并在 **服务** 中选择 **Tailscale**。
+2. 在 **网页登录** 中，选择 **生成登录 URL**，然后选择 **认证此设备**。
+3. 在新标签页中登录 Tailscale，并批准该设备。
+4. 返回 UAVcast-Pro，状态会变为 **已连接**，并显示 **IPv4 地址**、**主机名** 和 **Tailnet**。
+
+**认证密钥**
+
+1. 在 [Tailscale 管理控制台](https://login.tailscale.com/admin/settings/keys)中生成认证密钥。将其设为预先批准；如果要设置多台无人机，请将其设为可重复使用。
+2. 在 UAVcast-Pro 中选择 **Tailscale**，打开 **认证密钥**，粘贴密钥（`tskey-auth-…`），并可选择设置 **主机名（可选）**。
+3. 选择 **使用认证密钥连接**。
+
+如果手边没有浏览器，或者需要以相同方式设置多台无人机，请使用此方法。
+
+**Fleet Manager**
+
+如果无人机已[与 Fleet Manager 配对](https://docs.uavmatrix.com/zh-cn/uavcast-pro/fleet-pairing/)，并且您的组织已启用 VPN，请选择 **Connect to Fleet Manager VPN**。连接最多可能需要 30 秒。状态随后会显示 **已连接到 Fleet Manager**。
+
+尚未配对？该标签页会显示 **Not Paired with Fleet Manager**，并链接到 **Go to Fleet Manager Pairing**。
+
+在地面站上安装 Tailscale，登录同一个 tailnet，并在地面控制站中使用其 Tailscale IP（`100.x.y.z`）作为目标地址。
+
+连接后，**关闭接口** 会在不注销的情况下关闭 Tailscale 接口，**启用接口** 会将其重新开启，**注销** 会将设备从 tailnet 中移除。
+
+> **Fleet Manager VPN 会替换您自己的 Tailscale 登录**
+>
+> Fleet Manager VPN 基于 Tailscale 运行，使用的是 Fleet Manager 自己的登录服务器。连接后，无人机会从您自己的 tailnet 中注销。如果您的 SSH 会话经由该 tailnet 进行，连接将中断。请在本地网络中执行此操作。
+
+## ZeroTier
+
+如果您运行自己的 ZeroTier 网络，例如在 ZeroTier Central 或您自己的控制器上，请使用此方式。
+
+### 将无人机加入网络
+
+1. 在 UAVcast-Pro 中，进入 **虚拟专用网络**。
+2. 将 **启用 VPN** 设置为 **是**。
+3. 在 **服务** 中选择 **ZeroTier**。
+4. 将 16 位网络 ID 粘贴到 **网络 ID** 中，然后选择 **加入网络**。
+5. 如果该网络是私有的，请在 ZeroTier 控制器中授权无人机。随后，**ZeroTier 网络** 面板会显示 **已连接** 和 **设备 IP**。
+
+**ACCESS_DENIED** 表示该成员尚未获得授权。
+
+### 将地面站加入网络
+
+1. 在地面站计算机上安装 [ZeroTier One](https://www.zerotier.com/download/)。
+2. 加入同一个网络 ID：在 Windows 和 macOS 上，从 ZeroTier 托盘或菜单栏图标中选择 **Join New Network**；在 Linux 上，使用 `sudo zerotier-cli join <network-id>`。
+3. 在控制器中授权该设备，并记下它获得的 IP 地址。
+
+在[地面控制站](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/)页面中，将 **目标IP或主机** 设置为地面站的 **ZeroTier** IP。遥测和视频现在将通过 VPN 传输。
+
+> **在 Wi-Fi 与 4G 之间切换**
+>
+> ZeroTier 和 Tailscale 会自动选择当前最佳的网络。您可以在现场先使用 Wi-Fi，当 Wi-Fi 超出范围时，链路会切换到调制解调器，而无需更改任何地址。
+
+## 设置参考
+
+| 设置 | 默认值 | 取值 | 说明 |
+| --- | --- | --- | --- |
+| **启用 VPN** | **否** | **是**、**否** |  |
+| **服务** | **ZeroTier** | **ZeroTier**、**Tailscale** | 在启用 VPN 之前处于禁用状态。 |
+| **网络 ID**（ZeroTier） | 空 | 16 位 ZeroTier 网络 ID | 来自您自己的 ZeroTier 控制器。 |
+| **认证密钥**（Tailscale） | 空 | `tskey-auth-…` |  |
+| **主机名（可选）**（Tailscale） | 系统主机名 | 文本 | 显示在 Tailscale 管理控制台中的名称。 |
+
+## 故障排除
+
+| 症状 | 检查项 |
+| --- | --- |
+| ZeroTier 显示 **ACCESS_DENIED** | 在 ZeroTier 控制器中授权该成员。 |
+| 已连接，但地面站没有遥测数据 | 目标地址仍在使用局域网 IP。请使用地面站的 VPN IP，并在其防火墙中允许 UDP 14550 和 5600。 |
+| *没有可用的 VPN 信息* | VPN 已禁用，或服务未运行。请检查 **启用 VPN** 和 **操作日志**。 |
+| Tailscale 网页登录显示 *没有认证 URL* | 改用 **认证密钥** 标签页。 |
+
+这些接口会以 `zt…`（ZeroTier）或 `tailscale0` 的形式出现在[网络](https://docs.uavmatrix.com/zh-cn/uavcast-pro/connectivity/networks/)页面中，并标记为 **VPN**。
+
+仍无法解决？请参阅 [VPN 已连接但无法访问无人机](https://docs.uavmatrix.com/zh-cn/troubleshooting/vpn-cant-reach-drone/)。
+
+Source: https://docs.uavmatrix.com/zh-cn/uavcast-pro/connectivity/vpn/

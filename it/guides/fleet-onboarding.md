@@ -1,0 +1,73 @@
+# Integra una flotta di droni con Fleet Manager
+
+> Pianifica le licenze, poi assegna i nomi, accoppia e collega oltre 20 droni UAVcast-Pro a UAVmatrix Fleet Manager, con ruoli del team, VPN dell'organizzazione e associazioni di flusso.
+
+Questa guida illustra come portare una flotta di, diciamo, 20 droni in [UAVmatrix Fleet Manager](https://docs.uavmatrix.com/it/fleet-manager/) in un colpo solo: licenze, denominazione, accoppiamento, VPN dell'organizzazione e collegamento delle stazioni di terra ai droni. Presuppone che ogni drone esegua già UAVcast-Pro con il controllore di volo collegato e accesso a internet.
+
+## 1. Pianifica le licenze
+
+Due regole decidono se un drone può essere accoppiato:
+
+- **Ogni drone deve avere una licenza UAVcast-Pro attiva** sul dispositivo. Una sola licenza può coprire più droni: il contatore **Dispositivi Consentiti** indica il numero di slot. Per 20 droni servono 20 slot in totale, distribuiti su una o più licenze.
+- **La licenza deve appartenere a un membro dell'organizzazione** in cui accoppi. Fleet Manager confronta l'indirizzo e-mail dell'account dello store che ha acquistato la licenza con gli indirizzi e-mail dei membri. Se l'acquisto è stato fatto con un altro account, invita quell'account nell'organizzazione, oppure chiedi al supporto di aggiungere l'e-mail dell'acquisto al tuo utente.
+
+Controlla questo prima del giorno dell'accoppiamento: un drone la cui licenza appartiene a una persona esterna viene rifiutato con **License is not owned by any member of this organization**.
+
+## 2. Configura l'organizzazione e il team
+
+1. Accedi a [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com/) con il tuo account uavmatrix.com e crea l'organizzazione. Vedi [Configura un'organizzazione](https://docs.uavmatrix.com/it/fleet-manager/set-up-organization/).
+2. In **Team**, invita le persone. Owner e Admin possono accoppiare, controllare e rimuovere i droni; i Viewer possono solo osservare. Vedi [Ruoli e permessi](https://docs.uavmatrix.com/it/fleet-manager/team/roles-and-permissions/).
+3. Se hai molti droni, dividi il lavoro di accoppiamento tra due o tre Admin. Ogni utente può completare 5 accoppiamenti al minuto: il limite impedisce di indovinare per tentativi, e rallenta anche una sola persona che accoppia 20 droni di seguito.
+
+## 3. Assegna un nome a ogni drone prima dell'accoppiamento
+
+Il nome che un drone ha in UAVcast-Pro diventa il suo nome in Fleet Manager. Concordate uno schema, per esempio `SURVEY-01` … `SURVEY-20`, ed etichetta i telai di conseguenza.
+
+Su ogni drone, apri UAVcast-Pro → **Fleet Management** e compila **Nome Dispositivo**. Senza un nome, il drone compare con il suo hostname. Puoi rinominarlo in seguito in Fleet Manager.
+
+## 4. Accoppia ogni drone
+
+Ripeti per ogni drone. Con due finestre del browser affiancate (quella di UAVcast-Pro del drone e Fleet Manager), ciascuna richiede circa un minuto.
+
+1. In UAVcast-Pro, apri **Fleet Management** e premi **Connect to Fleet Manager**. Compare un **Pairing Code** a 8 cifre. Scade dopo 5 minuti.
+2. In Fleet Manager, vai su **Fleet → Pair Device**.
+3. **Select Organization**, poi **Enter Pairing Code**.
+4. **Confirm Device**: controlla nome, hostname, architettura e versione di UAVcast, così accoppi il drone che credi di accoppiare.
+5. **VPN Connection**: spunta **Enable VPN for this UAV** se le stazioni di terra devono raggiungere il drone tramite la VPN dell'organizzazione. Se il drone usa già Tailscale, **Replace existing VPN with Fleet Manager network** lo sposta sulla rete dell'organizzazione.
+6. **Complete Pairing**. In UAVcast-Pro, **Fleet Connection** passa a **Connected**.
+
+![Procedura di accoppiamento in Fleet Manager nel passaggio Confirm Device, con nome UAV, hostname, architettura e versione di UAVcast](https://docs.uavmatrix.com/it/img/screenshots/fleet-manager/pair-device--confirm.webp)
+
+*Fleet → Pair Device, passaggio Confirm Device.*
+
+Errori e relativo significato: [Codice di accoppiamento non valido o scaduto](https://docs.uavmatrix.com/it/troubleshooting/pairing-code-invalid/). La procedura completa è descritta in [Accoppia il tuo primo UAV](https://docs.uavmatrix.com/it/fleet-manager/pair-uav/).
+
+## 5. Controlla la flotta
+
+Apri **Fleet**. Ogni drone dovrebbe comparire come online. Su **Fleet Map**, ogni drone appare nella sua posizione GPS non appena il controllore di volo ha un fix. Un drone che mostra **Offline** non ha inviato dati da 20 secondi: vedi [Drone offline in Fleet Manager](https://docs.uavmatrix.com/it/troubleshooting/drone-offline-fleet-manager/).
+
+## 6. Collega le stazioni di terra
+
+1. Vai su **Network** e premi **Enable VPN Network** se la VPN dell'organizzazione non è ancora attiva.
+2. Premi **Connect a Device**, scegli **Ground Control Station (GCS)** e copia il **GCS Connection Command**. Eseguilo in un terminale **sul laptop della stazione di terra**, con Tailscale installato. Non incollarlo in UAVcast-Pro.
+3. Il laptop compare sotto **Ground Stations** una volta connesso.
+4. In **Stream Bindings**, premi **Add Stream Binding** e collega ogni drone alla stazione di terra che deve riceverlo. Il drone deve essere online, perché Fleet Manager gli invia la destinazione.
+5. Ogni binding ottiene il proprio blocco di porte su quella stazione di terra: il primo drone usa i valori predefiniti, 5600 (video) e 14550 (telemetria), e ogni drone successivo ottiene il blocco libero successivo. Configura il software della stazione di terra con le porte mostrate su ogni binding.
+
+![Pagina Network di Fleet Manager con gli stream binding che collegano diversi droni a una stazione di terra, con porte assegnate automaticamente](https://docs.uavmatrix.com/it/img/screenshots/fleet-manager/network--stream-bindings.webp)
+
+*Network → Stream Bindings: ogni binding mostra la sua stazione di terra e le sue porte video e telemetria.*
+
+Dettagli: [Collega una stazione di terra](https://docs.uavmatrix.com/it/fleet-manager/connect-gcs/) e [Stream binding](https://docs.uavmatrix.com/it/fleet-manager/network/stream-bindings/).
+
+> **Doppio flusso e audio**
+>
+> Ogni binding ottiene un proprio blocco di porte sulla stazione di terra, con spazio per la seconda telecamera del drone e per l'audio dopo la sua porta video, così più droni possono condividere una stessa stazione di terra.
+
+## 7. Gestione quotidiana
+
+- **Re-pair required**: quando Fleet Manager mostra questo badge, accoppia di nuovo il drone una volta da UAVcast-Pro. Mantiene il suo nome e la sua cronologia. Vedi [Rimuovi o trasferisci un UAV](https://docs.uavmatrix.com/it/fleet-manager/fleet/remove-or-transfer/).
+- **Sostituire la scheda SD o la scheda elettronica di un drone non libera nulla da sola**: annulla la registrazione del vecchio dispositivo in **Applicazione → Gestore Licenze → Dispositivi Attivati** su qualsiasi drone che usa la stessa licenza, poi accoppia quello nuovo.
+- **Lavoro remoto su un drone**: la pagina dei dettagli UAV in Fleet Manager ha un terminale, i log e azioni come il riavvio. Vedi [Dettagli UAV](https://docs.uavmatrix.com/it/fleet-manager/fleet/uav-details/).
+
+Source: https://docs.uavmatrix.com/it/guides/fleet-onboarding/

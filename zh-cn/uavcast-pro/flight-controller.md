@@ -1,0 +1,88 @@
+# 连接飞行控制器
+
+> 通过 USB 或 UART 将 Pixhawk 或其他 ArduPilot 或 PX4 飞行控制器连接到 UAVcast-Pro，支持自动识别端口和波特率，并提供实时连接检查。
+
+UAVcast-Pro 通过 USB 或 UART（TELEM 端口）从飞行控制器（ArduPilot、PX4 或其他 MAVLink 自动驾驶仪）读取 MAVLink，并将其转发给您添加的每个地面站。**Port** 和 **Baud rate** 保持为 **Automatic**（默认值）时，它会自行找到飞行控制器，记住有效的设置，并在重启、USB 故障或稍后上电后自动重新连接。您可以在 **飞行控制器 → Connection** 下找到该功能。
+
+![飞行控制器连接页面，显示已连接、连接检查（四个步骤已通过）以及 MAVLink 检查器](https://docs.uavmatrix.com/zh-cn/img/screenshots/uavcast-pro/flight-controller.webp)
+
+*飞行控制器 → Connection，通过 USB 连接 Pixhawk。*
+
+## 通过 USB 连接
+
+1. 使用支持数据传输的线缆，将飞行控制器的 USB 端口连接到伴随计算机。
+2. 进入 **飞行控制器 → Connection**，在 **Link type** 下选择 **USB**。
+3. 将 **Port** 保持为 **Automatic**。USB 连接不使用波特率。
+4. 如果状态面板显示 **Link stopped**，请选择 **Connect**。
+
+几秒钟内，状态会显示 **已连接**，并附带飞行器类型和系统 ID，例如 *Connected to Quadrotor (system 1) on ArduPilot fmuv2 (ttyACM0)*。
+
+## 通过 TELEM 端口连接（UART）
+
+1. 连接 TELEM 端口：将飞行控制器的 **TX** 接伴随计算机的 **RX**，**RX** 接 **TX**，**GND** 接 **GND**。如果两块板各自有供电，请勿连接 5 V。
+2. 在飞行控制器上将该端口设置为 MAVLink 2：对于 TELEM2，即 `SERIAL2_PROTOCOL = 2`。记下 `SERIAL2_BAUD`。
+3. 在 UAVcast-Pro 中，于 **Link type** 下选择 **UART / Serial**。
+4. 将 **Port** 和 **Baud rate** 保持为 **Automatic**，或选择端口（在树莓派上，GPIO UART 标有 **推荐**）以及与 `SERIALx_BAUD` 匹配的波特率。
+5. 如果链路已停止，请选择 **Connect**。
+
+更改会立即生效，无需重启任何组件。
+
+> **自动波特率**
+>
+> 在自动模式下，UAVcast-Pro 会依次尝试 57600、115200、921600、1500000、460800、230400 和 500000 波特，并从上一次有效的波特率开始。如果心跳中断 20 秒，而数据仍在到达（例如修改了 `SERIALx_BAUD` 之后），它会重新搜索。
+
+## 设置参考
+
+| 设置 | 默认值 | 取值 | 说明 |
+| --- | --- | --- | --- |
+| **Link enabled** | 开 | 开、关 | 关闭后会释放串口，并停止向所有地面站发送遥测数据。 |
+| **Link type** | **USB** | **USB**、**UART / Serial** | 决定 **Automatic** 搜索哪些端口。 |
+| **Port** | **Automatic** | **Automatic**、检测到的端口、**Custom path…** | **Automatic** 优先使用稳定的 `/dev/serial/by-id/…` 路径，并在设备编号变化时跟随该设备。**Custom path** 可指定任何设备，例如 `/dev/ttyAMA0`。被其他程序占用的端口会显示 *正被…占用*。 |
+| **Baud rate** | **Automatic** | **Automatic** 或固定波特率 | 对 USB 无效。固定时必须与 `SERIALx_BAUD` 一致。 |
+
+## 读取状态面板
+
+| 状态 | 含义 |
+| --- | --- |
+| **已连接** | 正在接收心跳。**已连接时长**、**上次心跳** 和 **自动重连次数** 显示链路的运行状况。 |
+| **等待设备** | 端口不存在。飞行控制器未插入、未供电，或仍在启动。 |
+| **正在检测波特率** | 正在尝试各个波特率（*正在尝试 115200 波特（第 2 个，共 7 个）*）。 |
+| **无心跳** | 端口已打开，但未收到有效的 MAVLink：波特率错误、TX/RX 接反，或端口未设置为 MAVLink。 |
+| **正在重新连接** | 链路已断开，正在自动恢复。 |
+| **搜索中** | **自动检测** 正在扫描每个端口和每种速率。这可能需要长达一分钟。 |
+| **关闭** / **已停止** | 链路已关闭或停止。请选择 **Connect**。 |
+
+### 连接检查
+
+**连接检查** 卡片每秒更新一次，沿着数据从线路到地面站的路径进行检查。第一个非绿色的行即为问题所在：
+
+1. **飞行控制器已插入**（USB）或 **串口可用**（UART）。*未检测到* 通常表示使用了仅供充电的 USB 线缆，或未供电。
+2. **线路有信号**：端口上有数据字节到达。
+3. **可读取的飞行控制器数据**：字节可解码为 MAVLink。*% 已损坏* 表示线路松动或过长、缺少地线，或电源线产生噪声。
+4. **飞行控制器响应**：来自飞行器的心跳。
+5. **发送至地面站**：发送到每个已启用目标地址的每秒数据包数，或 *未设置地面站*。
+
+### 自动检测
+
+**自动检测** 会暂停链路，在每个串口上以每种波特率进行监听，保存找到的端口和速率，然后使用它们启动链路。当您不确定飞行控制器使用哪个端口或波特率时，请使用此功能。**Show what was tried** 会列出每一次尝试。
+
+## MAVLink 检查器面板
+
+右侧栏显示实时的飞行器状态：连接、**地面站故障保护信息**、**飞行器信息**（类型、控制器、飞行模式、解锁状态）、**电池状态**、**GPS信息** 以及飞行数据。如果面板显示 **警告 - 故障保护已禁用**，说明飞行控制器没有 GCS 故障保护。在通过蜂窝链路飞行之前，请启用它（ArduPilot 上为 `FS_GCS_ENABLE`）。
+
+## 安全：无开放的遥测端口
+
+UAVcast-Pro 不接受传入的遥测连接。mavlink-router 通常会打开的 TCP 5760 服务器已被关闭，因此只有您在[地面控制站](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/)中添加的地面站才能获取遥测数据，并且仅在 **启用遥测** 开启时生效。
+
+> **从旧版本升级**
+>
+> 早期版本默认使用 `/dev/ttyACM0`，波特率为 57600，并接受端口 5760 上的 TCP 连接。自 v6.4.3 起，所有设备会一次性切换为 **Automatic**，并优先尝试旧的端口和波特率。自 v6.5.0 起，TCP 5760 已关闭：请将您的电脑添加为地面站，并改用 UDP 连接。
+
+## 相关内容
+
+- [NTRIP / RTK 修正数据](https://docs.uavmatrix.com/zh-cn/uavcast-pro/flight-controller/ntrip-rtk/)
+- [注入器：将您自己的传感器数据送入 MAVLink](https://docs.uavmatrix.com/zh-cn/uavcast-pro/flight-controller/injectors/)
+- [地面控制站](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/)
+- [故障排除：无 MAVLink 心跳](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-mavlink-heartbeat/)
+
+Source: https://docs.uavmatrix.com/zh-cn/uavcast-pro/flight-controller/

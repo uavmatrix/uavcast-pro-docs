@@ -1,0 +1,60 @@
+# VLC e RTSP
+
+> Reproduza o vídeo RTP H.264 do UAVcast-Pro no VLC com um arquivo SDP, ou obtenha a câmera do drone via RTSP na porta 8554 para um PC de gravação, parede de vídeo ou software de terceiros.
+
+O VLC pode reproduzir a transmissão do UAVcast-Pro com um pequeno arquivo SDP que a descreve. Se preferir puxar o vídeo do drone a recebê-lo enviado até você, o servidor de mídia do drone também disponibiliza cada câmera via RTSP. Ambos adicionam mais atraso que o QGroundControl, o Mission Planner ou o GStreamer, então use-os para assistir e gravar, não para voar.
+
+## Reproduza o fluxo UDP no VLC
+
+1. No drone, adicione um destino em [Estações de Controle Terrestre](https://docs.uavmatrix.com/pt/uavcast-pro/ground-stations/) com o IP deste computador e **Ativar Vídeo** ligado.
+
+2. Salve isto como `uavcast.sdp`:
+
+   ```text
+   v=0
+   o=- 0 0 IN IP4 127.0.0.1
+   s=UAVcast-Pro
+   c=IN IP4 0.0.0.0
+   t=0 0
+   m=video 5600 RTP/AVP 96
+   a=rtpmap:96 H264/90000
+   ```
+
+3. Abra-o no VLC com **Media → Open File**.
+
+Para a câmera 2 em transmissão dupla, faça uma cópia com `m=video 5601`. Para adicionar a faixa de áudio, acrescente:
+
+```text
+m=audio 5602 RTP/AVP 97
+a=rtpmap:97 opus/48000/2
+```
+
+Para reduzir o atraso, diminua o **Network caching** no VLC (**Tools → Preferences → Show settings: All → Input / Codecs**). Espere, de qualquer forma, mais atraso que com o GStreamer.
+
+## Puxe o vídeo do drone via RTSP
+
+Enquanto a câmera estiver em execução com **Ativar Pré-visualização ao Vivo?** marcado ou com a gravação da câmera ativada, o servidor de mídia do drone publica cada câmera via RTSP (somente TCP) na porta 8554:
+
+```text
+rtsp://<drone-ip>:8554/camera     # camera 1
+rtsp://<drone-ip>:8554/camera2    # camera 2 (dual stream)
+```
+
+Abra-o no VLC (**Media → Open Network Stream**), em um sistema de gerenciamento de vídeo ou com o GStreamer:
+
+```bash
+gst-launch-1.0 rtspsrc location=rtsp://192.168.1.50:8554/camera latency=100 ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+Use isso na rede local ou pela VPN. Não encaminhe a porta 8554 para a internet: a transmissão não tem senha.
+
+## Qual método devo usar?
+
+| Você quer | Use |
+| --- | --- |
+| Voar com vídeo | [QGroundControl](https://docs.uavmatrix.com/pt/uavcast-pro/ground-stations/qgroundcontrol/) ou [Mission Planner](https://docs.uavmatrix.com/pt/uavcast-pro/ground-stations/mission-planner/) |
+| Um teste rápido, uma janela para a segunda câmera ou áudio | GStreamer em [Windows](https://docs.uavmatrix.com/pt/uavcast-pro/ground-stations/gstreamer-windows/), [Linux](https://docs.uavmatrix.com/pt/uavcast-pro/ground-stations/gstreamer-linux/) ou [macOS](https://docs.uavmatrix.com/pt/uavcast-pro/ground-stations/gstreamer-macos/) |
+| VLC, porque ele já está instalado | O arquivo SDP acima |
+| Um PC ou sistema que deve buscar o vídeo por conta própria | RTSP |
+
+Source: https://docs.uavmatrix.com/pt/uavcast-pro/ground-stations/vlc-and-rtsp/

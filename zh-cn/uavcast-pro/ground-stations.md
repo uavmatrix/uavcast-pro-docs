@@ -1,0 +1,99 @@
+# 地面控制站
+
+> 在 UAVcast-Pro 中添加地面站目标地址，将 MAVLink 遥测（UDP 14550）和 H.264 视频（UDP 5600）发送到 Mission Planner、QGroundControl 或多台 PC。
+
+目标地址用于告诉 UAVcast-Pro 将遥测和视频发送到哪里。每个目标地址包括一个 IP 地址、一个遥测端口和一个视频端口。UAVcast-Pro 会通过 UDP 同时向所有已启用的目标地址发送数据，因此一台笔记本上的 Mission Planner 与平板上的 QGroundControl 可以同时接收无人机数据。在侧边栏中打开 **地面控制站**。
+
+![地面控制站页面，包含两张目标地址卡片和添加目标地址按钮](https://docs.uavmatrix.com/zh-cn/img/screenshots/uavcast-pro/ground-control.webp)
+
+*两张目标地址卡片：一张已禁用且为空的卡片，以及一张已启用、开启遥测和视频的目标地址。*
+
+## 添加目标地址
+
+1. 选择 **添加目标地址**。将出现一张新卡片。（全新安装时已有一张空卡片。）
+2. 输入 **名称**，例如 `飞手笔记本`。
+3. 在 **目标IP或主机** 中输入地面站计算机的 IPv4 地址，然后按 Enter。出现绿色对勾表示已保存。
+4. 检查 **遥测端口**（默认 `14550`）和 **视频端口**（默认 `5600`）。使用地面站所监听的端口。
+5. 开启 **启用遥测**；如果需要视频，还需开启 **启用视频**。
+
+每个字段会在按下 Enter 或离开字段时自动保存，没有保存按钮。遥测路由会在几秒钟内应用更改。
+
+> **使用 IPv4 地址，而不是主机名**
+>
+> 尽管标签为 **目标IP或主机**，UAVcast-Pro 只接受 IPv4 地址，例如 `192.168.1.20`，或 VPN 地址，例如 `10.147.17.5`。主机名会被拒绝，并显示 *请输入有效的 IPv4 地址，例如 192.168.1.10。*
+
+## 使用哪个 IP 地址
+
+| 地面站所在位置 | 使用 |
+| --- | --- |
+| 与无人机位于同一 Wi-Fi 或以太网网络 | 地面站的局域网地址，例如 `192.168.1.20`。 |
+| 任意位置，通过 4G/LTE | 地面站的 **VPN** 地址（ZeroTier、Tailscale 或 Fleet Manager）。参见 [VPN](https://docs.uavmatrix.com/zh-cn/uavcast-pro/connectivity/vpn/)。 |
+| 多台计算机 | 每台计算机分别设置一个目标地址。 |
+
+## 目标地址设置
+
+| 设置 | 默认值 | 取值 | 说明 |
+| --- | --- | --- | --- |
+| **启用终端** | 开 | 开、关 | 总开关。关闭后会停止向此目标地址发送遥测、视频和音频，但保留其设置。 |
+| **名称** | 空 | 最多 49 个字符 | 显示在卡片和仪表盘中。 |
+| **目标IP或主机** | 空 | IPv4 地址 | 在开启遥测或视频之前必须填写。 |
+| **遥测端口** | `14550` | 1–65535 | 地面站监听 MAVLink 所用的 UDP 端口。 |
+| **视频端口** | `5600` | 1–65535 | H.264 RTP 视频（摄像头 1）所用的 UDP 端口。 |
+| **视频端口（摄像头 2）** | 空 = 视频端口 + 1 | 1–65535 | 仅在开启[双路视频流](https://docs.uavmatrix.com/zh-cn/uavcast-pro/camera/multi-camera/)时显示。 |
+| **启用视频** | 关 | 开、关 | 将摄像头视频流发送到此目标地址。 |
+| **启用遥测** | 关 | 开、关 | 将 MAVLink 发送到此目标地址，并接受其返回的命令。 |
+| **只读** | 关 | 开、关 | 需要开启 **启用遥测**。地面站可以接收遥测，但不能更改无人机上的任何内容：命令、解锁、模式切换、参数写入、任务写入、RC 覆盖以及来自地面站的手动控制均被阻止。 此行为自 UAVcast-Pro 6.5.3 起生效；在更早的版本中，只读不会阻止参数写入。 |
+
+开启 **摄像头** 页面中的 **将音频发送到地面站** 后，音频会发送到每个接收视频的目标地址，端口为 **视频端口 + 2**（例如 `5602`）。参见[音频](https://docs.uavmatrix.com/zh-cn/uavcast-pro/camera/audio/)。
+
+因此，每个目标地址占用三个视频相关端口：**视频端口**、+ 1（摄像头 2）以及 + 2（音频）。如果两个目标地址指向同一台计算机，请将它们的视频端口间隔 3，例如 `5600` 和 `5603`。参见[同一台计算机上的两个地面站](https://docs.uavmatrix.com/zh-cn/guides/multiple-ground-stations/#3-two-stations-on-one-computer)。
+
+## 设置接收端
+
+选择您在地面使用的程序。每个页面都包含确切的设置、防火墙步骤以及常见错误的解决方法。
+
+| 地面站 | 遥测 | 视频 | 页面 |
+| --- | --- | --- | --- |
+| Mission Planner（Windows） | UDP 14550 | 5600 端口上的 GStreamer 源 | [Mission Planner](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/mission-planner/) |
+| QGroundControl（Windows、macOS、Linux） | UDP 14550，自动连接 | 5600 端口的 UDP h.264 | [QGroundControl](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/qgroundcontrol/) |
+| Android 平板或手机 | QGroundControl，UDP 14550 | 5600 端口的 UDP h.264 | [Android 与平板](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/android/) |
+| Windows 上的 GStreamer | – | 5600 端口上的 `gst-launch-1.0` | [Windows 上的 GStreamer](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/gstreamer-windows/) |
+| Linux 上的 GStreamer | – | 5600 端口上的 `gst-launch-1.0` | [Linux 上的 GStreamer](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/gstreamer-linux/) |
+| macOS 上的 GStreamer | – | 5600 端口上的 `gst-launch-1.0` | [macOS 上的 GStreamer](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/gstreamer-macos/) |
+| VLC，或从无人机拉取 RTSP | – | SDP 文件，或 8554 端口上的 RTSP | [VLC 与 RTSP](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/vlc-and-rtsp/) |
+
+### 无人机发送的内容
+
+| 流 | 格式 | 地面站上的端口 |
+| --- | --- | --- |
+| 遥测 | 基于 UDP 的 MAVLink | **遥测端口**（默认 `14550`） |
+| 摄像头 1 视频 | 基于 UDP 的 RTP 封装 H.264，负载类型 96 | **视频端口**（默认 `5600`） |
+| 摄像头 2 视频（双路视频流） | 基于 UDP 的 RTP 封装 H.264，负载类型 96 | **视频端口（摄像头 2）**（默认为视频端口 + 1，即 `5601`） |
+| 音频（可选） | 基于 UDP 的 RTP 封装 Opus，负载类型 97，48 kHz | 视频端口 + 2（`5602`） |
+
+无人机会将每个流推送到目标地址。无需连接无人机，但地面站的防火墙必须允许 UDP 数据包进入。
+
+## 多个地面站
+
+每台计算机添加一个目标地址。如果两个地面站运行在**同一台**计算机上（例如 QGroundControl 和一个日志工具），请为它们设置不同的遥测端口，例如 `14550` 和 `14551`，并在每个应用中设置对应的端口。
+
+对于观察者、载荷操作员或第二块屏幕，请使用 **只读**：他们可以看到所有内容，但无法控制飞行器。
+
+## 来自 Fleet Manager 的目标地址
+
+当无人机与 Fleet Manager 配对，并在那里创建流绑定时，Fleet Manager 会自动为您添加目标地址。这些卡片会显示云图标（*Managed by Fleet Manager*）。请在 Fleet Manager 中修改它们，而不是在此处修改。参见[与 Fleet Manager 配对](https://docs.uavmatrix.com/zh-cn/uavcast-pro/fleet-pairing/)。
+
+## 检查数据是否正在传输
+
+- [仪表盘](https://docs.uavmatrix.com/zh-cn/uavcast-pro/dashboard/) 中的 **地面站** 行显示 *发送中 · 16 包/秒*，或 *发送至 2 个目标 · … 包/秒*。
+- **飞行控制器 → 连接 → 连接检查** 会列出每个目标地址及其数据包速率。
+- *已设置 1 个 · 等待飞行控制器* 表示目标地址设置正确，但尚未从飞行控制器接收到遥测。
+
+只读用户可以查看此页面，但无法更改。
+
+## 故障排除
+
+- [地面站中无遥测](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-telemetry-in-gcs/)
+- [QGroundControl 或 Mission Planner 中无视频](https://docs.uavmatrix.com/zh-cn/troubleshooting/no-video-in-gcs/)
+
+Source: https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/

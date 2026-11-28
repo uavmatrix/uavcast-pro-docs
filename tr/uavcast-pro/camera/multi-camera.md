@@ -1,0 +1,68 @@
+# İki kamera: RC geçişi ve çift akış
+
+> UAVcast-Pro'ya iki kamera bağlayın ve RC vericinizden aralarında geçiş yapın ya da ikisini aynı anda QGroundControl veya Mission Planner'a ayrı UDP portlarından aktarın.
+
+UAVcast-Pro iki kamerayı destekler; örneğin ileri bakan bir FPV kamera ve aşağı bakan veya gimbal kamera. İki şekilde kullanabilirsiniz:
+
+- **Geçiş**: Tek bir akış vardır ve hangi kameranın beslediğini web arayüzünden veya vericideki bir RC kanalından seçersiniz. Tek bir akışın bant genişliğini ve CPU'sunu kullanır.
+- **Çift akış**: İki kamera aynı anda akar; her biri kendi UDP portuna, kendi çözünürlüğü, FPS'i ve bit hızıyla gönderir. İki katı bant genişliği ve CPU kullanır.
+
+Desteklenen kombinasyonlar: CSI + USB, iki USB kamera veya iki kamera konektörü olan kartlarda (Raspberry Pi 5, Compute Module taşıyıcı kartları) iki CSI kamera.
+
+## İkinci kamerayı ekleme
+
+1. **Kamera → Kamera ayarları** sayfasına gidin. **CAM 1** yuvasında bir kamera olduğundan emin olun.
+2. CAM 1'in yanındaki **Kamera Ekle** seçeneğini seçin ve ikinci kamerayı seçin. Kamera **CAM 2** yuvasında görünür.
+3. Etkin kamerayı değiştirmek için bir yuvaya tıklayın (*Kamera 2'ye geçmek için tıklayın*).
+
+Geçiş modunda her iki kamera da Kamera 1'in çözünürlüğünü ve kare hızını kullanır (*Kamera 1'in çözünürlüğü ve FPS'i kullanılacak*). Kamera 2 bu boyutu desteklemiyorsa kendi yerel çözünürlüğünü kullanır ve ölçeklendirilir. Ancak bu boyutu destekleyen bir kamera için **Kamera 1 Çözünürlüğüne Eşle** seçeneğini açarsanız ölçeklendirme yapılmaz.
+
+## RC vericinizden kamera değiştirme
+
+**RC Kanal Değiştirme** bölümü, iki kamera ayarlıyken ve çift akış kapalıyken görünür.
+
+1. Vericinizde iki konumlu bir anahtarı boş bir kanala atayın, örneğin kanal 7. Mission Planner'da veya **Uçuş Haritası → Radyo** bölümünde kanalın yaklaşık 1000 ile 2000 µs arasında hareket ettiğini kontrol edin.
+2. **RC Kanal Değiştirme** altında **RC kanalı ile kamera değiştirmeyi etkinleştir** seçeneğini açın.
+3. **RC Kanalı** seçeneğini seçin.
+4. Anahtarı çevirin ve **Mevcut PWM** değerini izleyin. 1500'ün altında Kamera 1, 1500'ün üzerinde Kamera 2 seçilir.
+
+![CAM 1 dolu ve boş bir Kamera Ekle yuvası olan Kamera Kontrol Paneli](https://docs.uavmatrix.com/tr/img/screenshots/uavcast-pro/camera--control-panel.webp)
+
+*Kamera yuvaları: CAM 1 kullanımda, ikinci kamera için Kamera Ekle. RC Kanal Değiştirme, iki yuva dolduğunda ve çift akış kapalıyken görünür.*
+
+RC geçişi açıkken bir kamera yuvasına tıklamak bir şey yapmaz: kontrol vericidedir. Kameraları elle seçmek için RC geçişini kapatın.
+
+| Ayar | Varsayılan | Değerler | Notlar |
+| --- | --- | --- | --- |
+| **RC kanalı ile kamera değiştirmeyi etkinleştir** | Kapalı | Açık, kapalı |  |
+| **RC Kanalı** | Kanal 7 | Kanal 1–18 | Uçuş kontrolcüsünün RC girişinden okunur. |
+| Geçiş noktası | 1500 µs | sabit | PWM < 1500 = Kamera 1, PWM > 1500 = Kamera 2. |
+
+## Her iki kamerayı aynı anda yayınlama (çift akış)
+
+1. İki kamera ayarlıyken Kamera sayfasında **Çift akış** seçeneğini açın. Rozet **İkisi de canlı** gösterir.
+2. **Kamera başı ayarlar** altında her kamera için çözünürlüğü, FPS'i ve bit hızını ayarlayın.
+3. [Yer Kontrol İstasyonları](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/) sayfasında her hedefte artık **Video Portu (Kamera 2)** bulunur. Boş bırakırsanız **Video Portu** + 1 (`5601`) kullanılır veya başka bir port girin. Aynı bilgisayarda birden çok hedef varsa, kamera 2 ve ses başka bir hedefin portuna düşmesin diye video portlarını 3 aralıklı seçin (`5600`, `5603` …).
+4. Yer kontrol istasyonunda o port için ikinci bir video alıcısı ayarlayın.
+
+Kamera 1, her yer kontrol istasyonunun **Video Portu**'na (varsayılan `5600`), Kamera 2 ise **Video Portu (Kamera 2)**'ye (varsayılan `5601`) gider.
+
+QGroundControl aynı anda yalnızca bir video akışı gösterir. Kamera 2'yi izlemek için ikinci bir alıcı çalıştırın; örneğin 5601 portunda ikinci bir QGroundControl örneği, 5601 üzerinde GStreamer kaynağı olan Mission Planner veya doğrudan GStreamer:
+
+```bash
+gst-launch-1.0 udpsrc port=5601 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264" ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+> **CPU'yu ve bağlantıyı izleyin**
+>
+> İki akış, kodlama yükünü ve bant genişliğini iki katına çıkarır. **Sistem yükü** göstergesini izleyin (*CPU sınırına yakın. Bir akışın çözünürlüğünü/bit hızını düşürün veya ikinci akışı kapatın.*) ve birleşik bit hızını hücresel bağlantınızın bant genişliği içinde tutun. Yaygın bir bölüşüm, ana kamera için 1280x720 ve 1500 kbps, ikinci kamera için 854x480 ve 600 kbps'tir.
+
+Uçuş Haritası, etkin her akış için bir video penceresi gösterir. Kayıtlar her iki kamerayı da içerebilir: bkz. [Kayıtlar](https://docs.uavmatrix.com/tr/uavcast-pro/camera/recordings/) bölümündeki **Kamera 2'yi kaydet** seçeneği.
+
+## Sorun giderme
+
+- **İkinci kamera listede yok**: İki CSI kamera için iki kamera portu olan bir kart gerekir. Bir Raspberry Pi'de UAVcast-Pro'yu kurduktan sonra yeniden başlatın: kurucu, kamera bellek havuzunu (CMA) büyütür, böylece iki kamera birlikte çalışabilir.
+- **Kamera 2 görüntüsü gerilmiş**: Geçiş modunda Kamera 2, Kamera 1'in çözünürlüğüne ölçeklenir. Aynı en-boy oranına sahip kameralar kullanın veya **Kamera 1 Çözünürlüğüne Eşle** seçeneğini açın.
+- **Geçiş işe yaramıyor**: **Mevcut PWM** değerini kontrol edin. *Sinyal yok* ifadesi, uçuş kontrolcüsünün o kanalda RC girişi raporlamadığı anlamına gelir.
+
+Source: https://docs.uavmatrix.com/tr/uavcast-pro/camera/multi-camera/

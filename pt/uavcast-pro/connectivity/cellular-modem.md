@@ -1,0 +1,85 @@
+# Modem celular (4G/LTE)
+
+> Conecte um modem USB 4G/LTE HiLink ou tradicional ao UAVcast-Pro, com detecção automática de APN, PIN do chip SIM, reconexão automática e informações de sinal do modem para voar com conexão celular.
+
+Um modem 4G/LTE dá ao drone acesso à internet onde houver cobertura celular, para que a telemetria e o vídeo cheguem à sua estação de controle terrestre muito além do alcance do Wi-Fi. O UAVcast-Pro suporta modems **HiLink**, que se conectam sozinhos, e modems **Tradicional (PPP)**, aos quais o UAVcast-Pro se conecta pelo ModemManager. Para modems tradicionais, ele encontra o APN automaticamente, conecta-se na inicialização e reconecta após quedas. Abra **Modem** na barra lateral.
+
+![Página Modem com Tradicional (PPP) selecionado, APN em Automático e o painel Nenhum Modem Conectado](https://docs.uavmatrix.com/pt/img/screenshots/uavcast-pro/modem.webp)
+
+*Página Modem com Tradicional (PPP) selecionado e o APN em Automático, antes de conectar um modem.*
+
+## Qual é o tipo do meu modem?
+
+|  | HiLink | Tradicional (PPP) |
+| --- | --- | --- |
+| Como aparece | Uma placa de rede (`usb0` ou `eth1`). O modem executa seu próprio roteador e página web, geralmente em `192.168.8.1`. | Um dispositivo de modem gerenciado pelo ModemManager. A conexão normalmente aparece como `ppp0` ou `wwan0`. |
+| Quem conecta | O próprio modem. | O UAVcast-Pro, por meio do ModemManager e do NetworkManager. |
+| Configurações no UAVcast-Pro | Nenhuma. Defina o APN na página web do próprio modem, se necessário. | APN (opcional), nome de usuário, senha, PIN. |
+| Exemplos | Huawei E3372h, E8372 | Huawei E3372s, Quectel EC25 / EG25, Sierra Wireless |
+
+Não tem certeza? Conecte-o e execute `mmcli -L` no drone. Se o ModemManager o listar, use **Tradicional (PPP)**. Se não listar, e uma nova interface de rede aparecer em **Redes**, é um HiLink.
+
+## Configurar um modem tradicional
+
+1. Insira um chip SIM de dados e conecte o modem ao computador companheiro.
+2. Acesse **Modem**. Defina **Ativar modem** como **Sim** e **Tipo de modem** como **Tradicional (PPP)**.
+3. Deixe **Nome do Ponto de Acesso (Opcional)** vazio. O UAVcast-Pro o detecta.
+4. Digite o **Código PIN (Opcional)** se o seu chip SIM pedir um.
+5. Aguarde de 30 a 90 segundos. **Informações do Modem** mostra a operadora, a tecnologia e as **Informações IPv4** assim que estiver conectado.
+
+Um modem conectado se conecta automaticamente. Se você selecionar **Desconectar**, ele permanece desconectado até que você o conecte novamente, inclusive após uma reinicialização.
+
+### Como funciona o APN automático
+
+Com o campo APN vazio, o UAVcast-Pro tenta, nesta ordem:
+
+1. o APN que funcionou da última vez com a operadora deste chip SIM,
+2. o padrão da rede (APN vazio),
+3. o APN ao qual o modem se conectou na rede LTE,
+4. os APNs de internet da operadora, do banco de dados de provedores de banda larga móvel.
+
+O primeiro que obtiver um endereço de internet é salvo para essa operadora. Ao inserir um novo chip de outra operadora, ele detecta novamente. Se a sua operadora exigir um APN especial (APN privado, chips M2M ou corporativos), digite-o. Um APN definido pelo usuário é o único testado.
+
+## Configurar um modem HiLink
+
+1. Conecte o modem. Aguarde até que o LED mostre uma conexão estável.
+2. Em **Modem**, defina **Ativar modem** como **Sim** e **Tipo de modem** como **HiLink**.
+3. Confira as **Informações do Modem Hilink**: você deve ver a **Interface** e um **Endereço IP**.
+
+Modems HiLink se conectam, escolhem a rede e reconectam sozinhos, por isso não há botões de conexão. Altere o APN, o PIN ou o modo de rede na página web do próprio modem (acesse-a pela rede do drone, geralmente `http://192.168.8.1`).
+
+## Referência de configurações
+
+| Configuração | Padrão | Valores | Observações |
+| --- | --- | --- | --- |
+| **Ativar modem** | **Sim** | **Sim**, **Não** |  |
+| **Tipo de modem** | **Tradicional (PPP)** | **HiLink**, **Tradicional (PPP)** |  |
+| **Nome do Ponto de Acesso (Opcional)** | vazio (**Automático**) | APN da sua operadora | Somente tradicional. |
+| **Nome de usuário (Opcional)** / **Senha (Opcional)** | vazio |  | Somente tradicional. A maioria das operadoras não exige nenhum dos dois. |
+| **Código PIN (Opcional)** | vazio | PIN do chip SIM | Somente tradicional. Deixe vazio se o chip não tiver PIN. |
+
+## Informações do modem
+
+Para modems tradicionais, as **Informações do Modem** mostram **Qualidade do Sinal**, **Tecnologia** (LTE, UMTS …), **Desbloqueio Necessário**, **Estado**, **Fabricante**, **IMEI**, a rede (**Operadora**, **Código**, **Registro**), **Informações IPv4** (**Endereço IP**, **Gateway**, **DNS**, **MTU**) e **Propriedades da Conexão** (**APN**, **Tipo de IP**, **Roaming**).
+
+A linha **Celular** do painel mostra o mesmo resumo de sinal.
+
+## Antes de voar com conexão celular
+
+- Em [Redes](https://docs.uavmatrix.com/pt/uavcast-pro/connectivity/networks/), selecione **Prioridade Modem (Modo Externo)** para que o tráfego permaneça no modem mesmo quando o Wi-Fi ainda estiver ao alcance na decolagem.
+- Use uma [VPN](https://docs.uavmatrix.com/pt/uavcast-pro/connectivity/vpn/): as operadoras celulares não dão ao drone um endereço que a sua estação de controle terrestre possa alcançar.
+- Ative o Failsafe GCS no controlador de voo.
+- Verifique o sinal em altitude: a cobertura é planejada para o solo, e o sinal muda conforme você sobe.
+
+## Solução de problemas
+
+| Sintoma | Verifique |
+| --- | --- |
+| *Nenhum Modem Conectado* | O modem não é detectado. Verifique a conexão USB e o LED de energia do modem. Use um hub com alimentação se o Pi reiniciar quando o modem conectar. |
+| **Desbloqueio Necessário** exibe *bloqueado* | Digite o PIN do chip SIM, ou desative o PIN em um celular. |
+| Registrado, mas sem endereço IP | APN errado. Digite o APN da operadora em vez de usar o automático. |
+| Conecta, mas cai sob carga | Geralmente é energia. Verifique a linha **Fonte de alimentação** do painel. |
+
+Os **Registros de Ações** mostram cada tentativa de APN e o motivo da falha. Para mais ajuda, veja [Modem conectado, mas sem internet](https://docs.uavmatrix.com/pt/troubleshooting/modem-no-internet/).
+
+Source: https://docs.uavmatrix.com/pt/uavcast-pro/connectivity/cellular-modem/

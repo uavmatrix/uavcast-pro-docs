@@ -1,0 +1,55 @@
+# 自定义 GStreamer 管道
+
+> 在 UAVcast-Pro 中使用自定义 GStreamer 管道传输 RTSP IP 摄像头、热成像摄像头、H.265 或测试图案，附示例，并说明实时预览和目标地址的行为。
+
+当内置摄像头支持无法覆盖您的摄像头时，可以为 UAVcast-Pro 提供您自己的 GStreamer 管道。典型场景包括 RTSP IP 摄像头或云台摄像头、热成像摄像头、H.265，或发送到固定地址。UAVcast-Pro 会将管道作为摄像头服务运行，如果失败则自动重启，并且仍可为实时预览和录制器提供数据。
+
+## 设置自定义管道
+
+1. 前往 **摄像头 → 摄像头设置**。
+2. 点击 **CAM 1** 插槽，然后选择 **输入自定义管道**。
+3. 在 **自定义管道** 中输入管道内容，无需 `gst-launch-1.0` 前缀。（如果粘贴时带有该前缀，UAVcast-Pro 会将其去除。）
+4. 选择 **启动**（或 **重启**），并在 **操作日志** 中检查错误。
+
+> **自定义管道会忽略您的地面站列表**
+>
+> 管道决定视频的发送位置。[地面控制站](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/)上的 **视频端口** 和 **启用视频** 将不起作用：请将地面站的地址和端口写入管道的 `udpsink` 中。
+
+在粘贴之前，请先通过 SSH 运行 `gst-launch-1.0 -v <pipeline>` 测试管道。这样能得到更清晰的错误信息。
+
+## 示例
+
+```text
+videotestsrc ! x264enc ! video/x-h264, stream-format=byte-stream ! rtph264pay ! udpsink host=192.168.0.100 port=5600
+```
+
+```text
+rtspsrc location=rtsp://192.168.144.25:8554/main.264 latency=0 ! rtph264depay ! h264parse ! rtph264pay config-interval=1 pt=96 ! udpsink host=10.147.17.20 port=5600 sync=false
+```
+
+```text
+v4l2src device=/dev/video0 ! video/x-raw,width=1280,height=720,framerate=30/1 ! videoconvert ! x264enc tune=zerolatency speed-preset=superfast bitrate=1500 key-int-max=30 ! h264parse config-interval=1 ! rtph264pay pt=96 ! udpsink host=10.147.17.20 port=5600 sync=false
+```
+
+```text
+videotestsrc ! x264enc tune=zerolatency ! rtph264pay pt=96 ! multiudpsink clients=10.147.17.20:5600,10.147.17.21:5600
+```
+
+请将 IP 地址替换为您地面站的地址（通过 4G 连接时使用 VPN 地址）。
+
+## 实时预览与录制
+
+勾选 **启用实时预览？** 后，UAVcast-Pro 会在您的管道中添加一个分支，将编码后的视频发送到内置媒体服务器，因此预览、飞行地图中的视频窗口和录制功能都能继续工作。它会自动找到合适的位置：
+
+- 如果管道中有 `tee name=t`，则会从该 tee 添加一个分支。
+- 否则，它会在 `rtph264pay` 或 `rtph265pay` 之前分流视频流。
+- 对于无法识别解析器的 RTSP 源，它会保持管道不变，且不会提供预览。
+
+为获得最可预测的结果，请以 `h264parse` 和 `tee name=t` 结束编码流，并将您自己的 `udpsink` 放在该 tee 的一个分支上。
+
+## 限制
+
+- 双路流、RC 切换以及按摄像头的设置不适用于自定义管道。管道本身即为完整的视频设置。
+- 分辨率、帧率、比特率和翻转设置会被隐藏，因为它们由管道决定。
+
+Source: https://docs.uavmatrix.com/zh-cn/uavcast-pro/camera/custom-pipeline/

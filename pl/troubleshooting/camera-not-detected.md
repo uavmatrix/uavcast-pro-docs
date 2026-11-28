@@ -1,0 +1,68 @@
+# Nie wykryto kamery
+
+> UAVcast-Pro pokazuje No cameras available? Sprawdź taśmę CSI, rpicam-hello, obsługę kamer w Ubuntu i v4l2-ctl dla kamer USB.
+
+**Kamera → Ustawienia kamery** pokazuje **No cameras available** w polu **Wybierz Kamerę**, kamery, której szukasz, nie ma na liście, albo **Dziennik Działań** zawiera komunikat *No camera detected*.
+
+| Co widzisz | Prawdopodobna przyczyna | Zacznij od |
+| --- | --- | --- |
+| Brakuje kamery CSI Raspberry Pi (taśma) | Taśma, złącze lub stos kamery | [Sprawdzenie 1](https://docs.uavmatrix.com/pl/troubleshooting/camera-not-detected/#check-1) |
+| Kamera CSI w Ubuntu | Ubuntu nie ma domyślnie stosu kamery Raspberry Pi | [Sprawdzenie 2](https://docs.uavmatrix.com/pl/troubleshooting/camera-not-detected/#check-2) |
+| Brakuje kamery USB | Linux jej nie widzi albo to nie jest urządzenie do przechwytywania wideo | [Sprawdzenie 3](https://docs.uavmatrix.com/pl/troubleshooting/camera-not-detected/#check-3) |
+| Kamera jest na liście, ale wideo nie startuje | Nieobsługiwana rozdzielczość lub inny program ją blokuje | [Sprawdzenie 4](https://docs.uavmatrix.com/pl/troubleshooting/camera-not-detected/#check-4) |
+
+## Sprawdzenie 1: Kamera CSI Raspberry Pi
+
+1. Wyłącz zasilanie Pi. Dokładnie ponownie włóż taśmę na obu końcach, stykami w dobrą stronę, i zamknij zatrzaski złącza. Pi 5 i Pi Zero 2 W wymagają węższej taśmy 22-pinowej.
+
+2. Uruchom system i wykonaj na Pi:
+
+   ```bash
+   rpicam-hello --list-cameras
+   ```
+
+   W starszych obrazach Raspberry Pi OS polecenie to `libcamera-hello --list-cameras`.
+
+3. Jeśli kamery nie ma na liście, Linux jej nie widzi. Wypróbuj inną taśmę lub kamerę, zanim zmienisz cokolwiek w UAVcast-Pro.
+
+4. Jeśli jest na liście, uruchom kamerę ponownie na stronie Kamera (**Uruchom Ponownie** albo **Zatrzymaj**, a potem **Uruchom**) i otwórz ponownie **Wybierz Kamerę**. Każda kamera CSI pojawia się jako osobny wpis, na przykład *CSI Camera 0 - imx708 (libcamera)*.
+
+> **Dwie kamery CSI**
+>
+> Przy dwóch kamerach sterownik kamery potrzebuje więcej pamięci. Od wersji v6.2.2 instalator automatycznie zwiększa pamięć CMA w `config.txt` w konfiguracjach z wieloma kamerami. Jeśli drugą kamerę dodałeś później, uruchom ponownie urządzenie po instalacji.
+
+## Sprawdzenie 2: Kamera CSI w Ubuntu lub Debian
+
+UAVcast-Pro używa `rpicam-vid` do kamer CSI. Instalator instaluje `rpicam-apps` (lub `rpicam-apps-core`) w Raspberry Pi OS i Debian. W Ubuntu stos kamery Raspberry Pi nie jest dostępny jako pakiet, a w logu pojawia się komunikat *CSI camera not available: Ubuntu requires building libcamera from source. USB cameras are supported.*
+
+Jeśli potrzebujesz kamery CSI, użyj 64-bitowego Raspberry Pi OS. Na Ubuntu użyj kamery USB.
+
+## Sprawdzenie 3: Kamera USB
+
+1. Podłącz kamerę bezpośrednio do komputera towarzyszącego, a nie przez hub bez zasilania.
+
+2. Uruchom:
+
+   ```bash
+   v4l2-ctl --list-devices
+   ```
+
+3. Jeśli kamery brakuje, Linux jej nie widzi. Sprawdź `lsusb` i wypróbuj inny port i kabel.
+
+4. Jeśli kamera jest na liście, uruchom ją ponownie przyciskiem **Uruchom Ponownie** na stronie Kamera i otwórz ponownie **Wybierz Kamerę**.
+
+Większość kamer internetowych UVC działa, na przykład Logitech C920 i C615. Nie pojawiają się kamery, które wysyłają tylko format, którego enkoder nie obsługuje, ani urządzenia, które nie są urządzeniami do przechwytywania wideo (niektóre karty przechwytujące).
+
+## Sprawdzenie 4: Kamera jest na liście, ale wideo nie startuje
+
+- Jeśli log zawiera *Camera … does not support …x… - streaming at …x… instead*, wybierz w polu **Rozdzielczość** rozdzielczość obsługiwaną przez kamerę.
+- Zamknij wszystkie inne programy korzystające z kamery. Tylko jeden program może ją otworzyć naraz.
+- Jeśli **Włączyć Kamerę?** pokazuje *Insufficient permissions*, zaktualizuj do wersji v6.5.2 lub nowszej, w której to naprawiono.
+
+## Nadal nie wykryto kamery?
+
+[Pobierz logi](https://docs.uavmatrix.com/pl/troubleshooting/collect-logs/) z zaznaczoną opcją **All Logs**, dołącz wynik `rpicam-hello --list-cameras` lub `v4l2-ctl --list-devices` i wyślij wszystko na adres **[support@uavmatrix.com](mailto:support@uavmatrix.com)**.
+
+Powiązane: [Ustawienia kamery](https://docs.uavmatrix.com/pl/uavcast-pro/camera/) · [Obsługiwany sprzęt](https://docs.uavmatrix.com/pl/reference/supported-hardware/)
+
+Source: https://docs.uavmatrix.com/pl/troubleshooting/camera-not-detected/

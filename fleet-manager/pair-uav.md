@@ -1,0 +1,108 @@
+# Add your first drone
+
+> Pair a UAVcast-Pro drone with your Fleet Manager organization using the 8-digit pairing code, choose VPN access and see it live on the fleet map.
+
+Pairing links one drone running UAVcast-Pro to your organization. After pairing, the drone keeps a certificate-authenticated connection to Fleet Manager and reconnects by itself after a reboot or a change of network. You pair each drone once, and it takes about two minutes.
+
+You work in two browser tabs: the drone's UAVcast-Pro web interface, and Fleet Manager. Keep both open.
+
+## Before you begin
+
+- **UAVcast-Pro installed with an activated license.** UAVcast-Pro refuses to start pairing without one and shows **No valid license found. Please activate your license first.** See [Activate your license](https://docs.uavmatrix.com/get-started/license-activation/).
+- **The license is owned by a member of your organization.** Fleet Manager compares the email of the license owner in the UAVmatrix store with the emails of your members. See [Licenses](https://docs.uavmatrix.com/fleet-manager/licenses/).
+- **Owner or Admin role** in the organization. Viewers don't see **Pair Device**. See [Roles and permissions](https://docs.uavmatrix.com/fleet-manager/team/roles-and-permissions/).
+- **Internet on the drone** over Ethernet, Wi-Fi or a cellular modem, with outbound HTTPS (TCP 443) and TCP **8883** open. Port 8883 carries the encrypted MQTT connection to Fleet Manager.
+- **A current UAVcast-Pro 6 release.** Pairing starts from **Management → Fleet Management** in UAVcast-Pro. Arm and disarm and pre-flight calibration from Fleet Manager need UAVcast-Pro 6.3.0_rc13 or newer; Fleet Manager marks them with a version badge on older drones.
+
+## Pair the drone
+
+1. **Get a pairing code in UAVcast-Pro.** Open the drone's web interface. In the sidebar under **Management**, select **Fleet Management**, then **Connect to Fleet Manager**. UAVcast-Pro shows an 8-digit **Pairing Code**, an **Expires in** countdown and **Waiting for Manager to confirm pairing...**
+
+   ![UAVcast-Pro Connect to Fleet Manager card with the Connect to Fleet Manager button](https://docs.uavmatrix.com/img/screenshots/uavcast-pro/fleet--connect.webp)
+
+   *UAVcast-Pro → Fleet Management before pairing. Selecting Connect to Fleet Manager shows the 8-digit code, the Expires in countdown and Waiting for Manager to confirm pairing...*
+
+   > **The code is valid for 5 minutes**
+   >
+   > If the countdown runs out before you enter it, select **Connect to Fleet Manager** again. Always type the code that is on screen now: UAVcast-Pro only waits for its newest code.
+
+2. **Open Pair Device in Fleet Manager.** Go to **Fleet** and select **Pair Device**. The **Pair UAV** wizard opens.
+
+3. **Choose the organization.** On the **Organization** step, pick the organization this drone should belong to and select **Continue**. The list only shows organizations where you are Owner or Admin. If you have just one, Fleet Manager selects it and skips this step.
+
+4. **Enter the code.** On the **Pairing Code** step, type the 8 digits and select **Continue**. Fleet Manager looks the code up and moves on to **Confirm Device**.
+
+   ![Pair UAV wizard on the Pairing Code step with an 8-digit code entered](https://docs.uavmatrix.com/img/screenshots/fleet-manager/pair-device--code.webp)
+
+   *Fleet → Pair Device, Pairing Code step, with the progress bar showing Organization completed.*
+
+5. **Confirm the device.** Check the details UAVcast-Pro sent: **Name**, **Hostname**, **OS**, **Architecture** and **UAVcast Version**. Make sure they match the drone in front of you, then select **Complete Pairing**. If your organization has VPN enabled, the button says **Continue** and the next step is VPN.
+
+   ![Confirm Device step listing name, hostname, OS, architecture and UAVcast version](https://docs.uavmatrix.com/img/screenshots/fleet-manager/pair-device--confirm.webp)
+
+   *Confirm Device step: check that the name, hostname, OS, architecture and UAVcast Version match the drone in front of you.*
+
+6. **Choose VPN access (only if VPN is enabled).** The **VPN Connection** step appears when the organization has [VPN enabled](https://docs.uavmatrix.com/fleet-manager/network/). With VPN on, ground stations on your organization's network receive this drone's video and telemetry directly, over 4G, Wi-Fi or satellite, without port forwarding.
+
+   - **Enable VPN for this UAV** is ticked by default. UAVcast-Pro joins your organization's VPN right after pairing.
+   - If the drone is already on a Tailscale network, Fleet Manager shows **Existing VPN Connection Detected** with that network's server and IP. The box changes to **Replace existing VPN with Fleet Manager network** and is not ticked. Tick it only if you want the drone to leave its current network.
+
+   Select **Complete Pairing**.
+
+   ![VPN Connection step with the Enable VPN for this UAV checkbox ticked](https://docs.uavmatrix.com/img/screenshots/fleet-manager/pair-device--vpn.webp)
+
+   *VPN Connection step, with the three benefits listed and Enable VPN for this UAV ticked.*
+
+   > **Replacing a VPN can drop your SSH session**
+   >
+   > If you replace an existing Tailscale connection and your current SSH or browser session to the drone runs over it, that session drops. Connect to the drone over the local network before you continue, or use its new VPN address afterwards.
+
+7. **Name the drone.** **Pairing Complete!** appears with a **UAV Name** field. Type a name your team will recognize on the map, such as the airframe's tail number or "Survey-14", and select **Save**. The name syncs to UAVcast-Pro when the drone is online. Select **View UAV** to open its page.
+
+   ![Pairing Complete screen with UAV Name field and View UAV button](https://docs.uavmatrix.com/img/screenshots/fleet-manager/pair-device--complete.webp)
+
+   *Pairing Complete! with the UAV Name field edited to a tail number.*
+
+Meanwhile UAVcast-Pro, which checks back every 5 seconds, receives the drone's certificate and connection settings (and the VPN key, if you chose VPN). Its Fleet Management page switches to **Connected**.
+
+## Check the connection
+
+The drone appears on **Fleet** and on **Fleet Map** within a few seconds. Its badge shows:
+
+| Badge | What it means |
+| --- | --- |
+| **PAIRING** | Fleet Manager has issued the certificate and is waiting for the drone's first heartbeat. |
+| **ONLINE** | The drone is connected. UAVcast-Pro sends a heartbeat every 5 seconds. |
+| **OFFLINE** | Nothing received for 20 seconds. The card shows when the drone was last seen. |
+
+If the badge stays on **PAIRING** or turns **OFFLINE**, check from the drone that it can reach Fleet Manager on port 8883:
+
+```bash
+nc -vz fleet-manager.uavmatrix.com 8883
+```
+
+A line ending in `succeeded!` means the port is open. Anything else points to a firewall or a carrier that blocks the port. See [Drone offline in Fleet Manager](https://docs.uavmatrix.com/troubleshooting/drone-offline-fleet-manager/).
+
+## Send video and telemetry to a ground station
+
+Pairing doesn't start any streams. To fly from QGroundControl or Mission Planner, [connect a ground station](https://docs.uavmatrix.com/fleet-manager/connect-gcs/) to the VPN and add a [stream binding](https://docs.uavmatrix.com/fleet-manager/network/stream-bindings/). Fleet Manager gives each binding its own block of ports (video, room for camera 2 and audio, and telemetry), so several drones can stream to one ground station at once. The first drone uses the defaults, 5600 and 14550; read the others from the binding's **Ports** column.
+
+## If pairing fails
+
+| Message | Cause and fix |
+| --- | --- |
+| **Invalid pairing code** | No such code. Check the digits, or get a new code in UAVcast-Pro. |
+| **This pairing code has expired** | More than 5 minutes passed. Select **Connect to Fleet Manager** again in UAVcast-Pro. |
+| **This pairing code has already been used** | The code was claimed already, by you or a colleague. Check **Fleet** for the drone before you pair again. |
+| **License is not owned by any member of this organization** | The license on the drone belongs to an email that isn't a member. Invite that person, or ask support to add the email to your account. See [Licenses](https://docs.uavmatrix.com/fleet-manager/licenses/#licenses-bought-with-another-email). |
+| **License has expired** / **License has been refunded** | The license on the drone is no longer active. Renew it or activate another license in UAVcast-Pro. |
+| **This UAV is already paired to an organization** | The drone belongs to a different organization. It must be removed there first. See [Remove or transfer a drone](https://docs.uavmatrix.com/fleet-manager/fleet/remove-or-transfer/). |
+| **Too many attempts. Please wait a minute and try again.** | More than 10 code checks or 5 pairing attempts in a minute. Wait a minute. |
+
+More causes and checks: [Pairing code invalid or expired](https://docs.uavmatrix.com/troubleshooting/pairing-code-invalid/).
+
+## Pairing the same drone again
+
+Pairing a drone again into the **same** organization keeps its name, telemetry history and stream bindings and only renews its certificate. You need this after you select **Disconnect from Fleet** in UAVcast-Pro, or when Fleet Manager shows **Re-pair required**. See [Re-pair a drone](https://docs.uavmatrix.com/fleet-manager/fleet/remove-or-transfer/#re-pair-a-drone).
+
+Source: https://docs.uavmatrix.com/fleet-manager/pair-uav/

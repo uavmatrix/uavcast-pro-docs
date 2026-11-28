@@ -1,0 +1,63 @@
+# Cronologia di volo
+
+> Riproduci il volo registrato di un drone sulla mappa di Fleet Manager, leggi durata, quota massima e velocità, salva i voli con nome e imposta la conservazione della telemetria.
+
+Fleet Manager registra la telemetria di ogni drone una volta al secondo mentre è connesso: posizione, quota, velocità, rotta, batteria, modalità di volo, stato di armamento e GPS. La **Cronologia di volo** (Flight history) riproduce quella registrazione sulla mappa.
+
+## Apri la cronologia di un drone
+
+Sulla **Fleet Map**, seleziona il marcatore del drone e poi **History** nel popup. Il pannello ***name* - Flight History** si apre in basso sulla mappa.
+
+![Pannello della cronologia di volo sotto la mappa con selettore delle sessioni, controlli di riproduzione, statistiche e percorso del volo riprodotto](https://docs.uavmatrix.com/it/img/screenshots/fleet-manager/map--history.webp)
+
+*Cronologia di volo per un drone da ispezione: il volo salvato Turbine blade inspection selezionato, riproduzione a 4x e Duration, Max Alt, Max Speed e Avg Battery.*
+
+## Scegli una sessione
+
+**Select flight session** elenca:
+
+1. Prima i **voli salvati** (con un'icona a segnalibro), quelli che il tuo team ha dato un nome.
+2. Poi una voce per **giorno** con telemetria registrata, per gli ultimi 30 giorni.
+
+Un giorno raggruppa tutta la telemetria di quella data, quindi più voli nello stesso giorno compaiono come un'unica sessione. Salva il tratto che ti interessa come volo con nome per ritrovarlo rapidamente.
+
+## Riproduzione
+
+- Avvia e metti in pausa la riproduzione, torna indietro o avanti del 5 % della sessione, oppure vai all'inizio o alla fine. Trascina la timeline per scorrerla.
+- Velocità: **0.5x**, **1x** (tempo reale), **2x**, **4x**, **8x**, **10x** e **20x**.
+- Tastiera: **Space** avvia/pausa, **←** / **→** passo indietro/avanti, **Esc** chiude.
+
+Sulla mappa, un marcatore verde **Start** e uno rosso **End** delimitano il volo. La parte già riprodotta è disegnata in ciano, il resto tratteggiato in grigio, e un'icona di drone con la quota come etichetta si muove lungo il percorso.
+
+Il pannello statistiche mostra **Duration**, **Max Alt**, **Max Speed** e **Avg Battery**, mentre **Current Position** mostra **Alt**, **Speed**, **Heading** e **Mode** nel punto di riproduzione.
+
+## Salva, rinomina ed elimina i voli
+
+Gli Owner e gli Admin possono salvare, rinominare ed eliminare i voli con nome. I Viewer possono solo riprodurli.
+
+- **Save and name this flight** salva l'intervallo di tempo corrente con un nome (fino a 100 caratteri), ad esempio "Rilievo sul campo A". Due voli salvati non possono sovrapporsi: **A saved session already exists for this time range**.
+- **Rename flight** cambia il nome.
+- **Delete saved flight** rimuove solo il nome. **Delete Saved Flight?** spiega che la telemetria stessa non viene eliminata.
+
+## Per quanto tempo viene conservata la cronologia
+
+Gli Owner e gli Admin impostano la conservazione per organizzazione in **Settings → History** (**Telemetry History**):
+
+- **Retention:** 7, 14, 30, 60 o 90 giorni, **6 months** o **1 year**. Il valore predefinito e il massimo è 1 anno.
+- **Prune Now** elimina subito i dati più vecchi di 7, 14, 30, 60 o 90 giorni (predefinito 30), dopo la conferma **Prune Old History**.
+- **Delete Drone History** (icona del cestino per ogni drone) oppure **Select All** → **Delete Selected (n)** cancella la cronologia dei droni scelti.
+- Le schede mostrano **Storage Used**, **Total Records** e **Retention**.
+
+Fleet Manager rimuove una volta al giorno i dati oltre il periodo di conservazione. I dati più vecchi di 7 giorni vengono compressi, così un anno di cronologia per una flotta grande resta gestibile.
+
+![Scheda History delle impostazioni con selettore di conservazione, opzioni di pulizia ed elenco della cronologia per drone](https://docs.uavmatrix.com/it/img/screenshots/fleet-manager/settings--history.webp)
+
+*Settings → History per un'organizzazione con 46 droni: Storage Used, Total Records, Retention 90 days e l'elenco per drone con i pulsanti Delete.*
+
+> **Nessun export dei log**
+>
+> Fleet Manager non esporta la cronologia dei voli come file e non memorizza video o log del controllore di volo (`.tlog`, DataFlash). Conservali dal software della stazione di terra o dalla scheda SD del controllore di volo. Per le registrazioni video sul drone, vedi [Registrazioni e revisione del volo](https://docs.uavmatrix.com/it/guides/recording-flight-review/).
+
+Rimuovere un drone elimina l'intera sua cronologia, voli salvati compresi. Vedi [Rimuovere o trasferire un drone](https://docs.uavmatrix.com/it/fleet-manager/fleet/remove-or-transfer/).
+
+Source: https://docs.uavmatrix.com/it/fleet-manager/map/flight-history/

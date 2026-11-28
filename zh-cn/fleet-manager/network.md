@@ -1,0 +1,98 @@
+# 网络与 VPN
+
+> 在 Fleet Manager 中启用贵组织的私有 WireGuard VPN，连接无人机和地面站笔记本，并管理设备表。
+
+每个组织都可以拥有自己的私有 VPN：一个由 Fleet Manager 运营、连接您的无人机与地面站的 WireGuard 网状网络。在该网络中，每台设备都会获得固定的 `100.x.y.z` 地址，并可直接相互访问，无论其位于 4G、Wi-Fi 还是卫星网络上，均无需端口转发或公网 IP 地址。
+
+Fleet Manager 使用此网络路由[流绑定](https://docs.uavmatrix.com/zh-cn/fleet-manager/network/stream-bindings/)：将视频和 MAVLink 从无人机发送到飞手运行 QGroundControl 或 Mission Planner 的笔记本电脑。
+
+以上所有功能都位于 **Network**（侧边栏 **Fleet Management → Network**）中。
+
+## 何时需要 VPN？
+
+VPN 是**可选的**：Fleet Manager 无需 VPN 也能显示、映射和控制无人机，通过无人机自身的加密连接即可实现。当您希望数据流到达地面站时，再启用 VPN。
+
+| 建议使用 VPN | 无需 VPN |
+| --- | --- |
+| 无人机与地面站位于不同网络（4G、远程站点） | 无人机与地面站位于同一本地 Wi-Fi |
+| 您希望直接进行视频和遥测流传输 | 您使用直连 USB 或串口遥测链路 |
+| 您需要站点之间的加密链路 | 您在受控环境中测试 |
+| 您在多个地点运营 |  |
+
+## 启用 VPN
+
+仅限 Owner 和 Admin。
+
+1. 打开 **Network**。若 VPN 处于关闭状态，页面会显示 **Enable VPN Network** 及其提供的功能：基于 WireGuard 的安全连接、低延迟的视频和遥测流传输，以及可在任何网络上运行。
+2. 选择 **Enable VPN Network**。
+
+![Network 页面，组织尚未启用 VPN，显示 Enable VPN Network 卡片](https://docs.uavmatrix.com/zh-cn/img/screenshots/fleet-manager/network--enable.webp)
+
+*启用 VPN 之前的 Network 页面，包含三项优势和 Enable VPN Network 按钮。*
+
+启用 VPN 后，页面会显示四个计数器（**Total Devices**、**Online**、**UAVs**、**Ground Stations**）以及三个选项卡：**Devices**、**Stream Bindings** 和 **Settings**。
+
+![Network 页面的 Devices 选项卡，包含状态计数器和已连接设备表](https://docs.uavmatrix.com/zh-cn/img/screenshots/fleet-manager/network.webp)
+
+*大型运营商的 Network → Devices：Total Devices 51、Online 39、UAVs 44、Ground Stations 7，以及 Connected Devices 表。*
+
+## 将无人机接入 VPN
+
+无人机无需手动执行命令。有两种方式：
+
+- **配对时。** 若在配对前已启用 VPN，配对向导中的 **VPN Connection** 步骤会将无人机接入。参见[添加第一架无人机](https://docs.uavmatrix.com/zh-cn/fleet-manager/pair-uav/)。
+- **Push to Drone。** 对于在启用 VPN 之前已配对的无人机，**Devices** 选项卡上的 **Push to Drone** 卡片会列出所有不在您网络中的无人机。点击某架无人机旁的 **Connect**，即可向其发送 VPN 设置。无人机必须处于在线状态。
+
+如果无人机已接入其他 Tailscale 网络，它会显示 **Existing VPN** 徽章。点击 **Connect** 会要求确认（**Existing VPN Connection Detected**），然后 **Replace & Connect** 会将其迁移到贵组织的网络。
+
+该无人机会出现在 **Connected Devices** 中，类型为 **UAV**，并带有其 VPN 地址，同时其 UAV 页面会出现 **Open via VPN** 按钮。
+
+## 将地面站接入 VPN
+
+地面站通过 **Connect a Device** 中的一条 Tailscale 命令加入网络。请遵循[连接地面站](https://docs.uavmatrix.com/zh-cn/fleet-manager/connect-gcs/)的步骤。
+
+## 已连接设备
+
+该表列出网络上的每台设备：
+
+| 列 | 显示内容 |
+| --- | --- |
+| **Status** | 设备在 VPN 上的在线或离线状态 |
+| **Device** | 名称和主机名 |
+| **Type** | **UAV**、**GCS** 或 **Unknown**。未知设备带有 **Configure** 按钮。 |
+| **IP Address** | 设备的 VPN 地址（`100.x.y.z`） |
+| **Last Check-in** | 设备最后一次在网络上被看到的时间 |
+
+选择 **Sync** 可从 VPN 服务器刷新列表。每行的操作菜单包含：
+
+- **Rename**：设置可读的名称，例如“野外笔记本 – 北部团队”。
+- **Change Type**：在 **UAV**、**GCS** 和 **Unknown** 之间切换。对于 UAV，请选择它对应的已配对无人机。
+- **Remove Device**：将设备移出网络。对于无人机，Fleet Manager 会通知其离开 VPN，并删除其流绑定。
+
+### 配置未知设备
+
+新的地面站会显示为 **Unknown**，横幅会统计需要配置的设备数量。选择 **Configure**，然后回答 **What type of device is this?**
+
+- **Ground Control Station (GCS)：** 运行 QGroundControl、Mission Planner 或类似软件的计算机。它将**接收**视频和遥测数据，并可用于流绑定。
+- **Drone / UAV：** 运行 UAVcast-Pro 的无人机。请选择它对应的已配对无人机，以便管理其数据流。
+
+选择 **Continue**，然后选择 **Complete Setup**。
+
+## 设置选项卡
+
+**Danger Zone → Delete Network** 会永久删除 VPN 网络、所有已连接设备、所有认证密钥以及所有流绑定。设备将从网络中断开，您需要重新连接每台地面站和无人机。
+
+删除网络还会为该组织关闭 VPN，并通知在线 UAV 离开 VPN。随后 Network 页面将再次显示 **Enable VPN Network**，这会创建一个新的空网络。没有单独的开关可以关闭 VPN：**Delete Network** 是唯一的方式。
+
+## 网络要求
+
+| 设备 | 需要出站 |
+| --- | --- |
+| 无人机（Fleet Manager 连接） | HTTPS（TCP 443）访问 `fleet-manager.uavmatrix.com`，以及 TCP 8883 上的 MQTT over TLS |
+| 无人机和地面站（VPN） | HTTPS（TCP 443）访问 `vpn-connect.uavmatrix.com`，以及 WireGuard 所用的 UDP。Tailscale 默认使用 UDP 41641。 |
+
+大多数蜂窝网络和办公网络都允许上述连接。若设备已加入 VPN 但彼此无法通信，请参见[VPN 已连接但无法访问无人机](https://docs.uavmatrix.com/zh-cn/troubleshooting/vpn-cant-reach-drone/)。
+
+当两台设备无法通过 UDP 直接通信时，它们的流量会通过 Tailscale 的公共 DERP 中继服务器经由 HTTPS（TCP 443）转发。流量仍保持端到端加密，但中继会增加延迟，因此请尽可能允许出站 UDP。
+
+Source: https://docs.uavmatrix.com/zh-cn/fleet-manager/network/

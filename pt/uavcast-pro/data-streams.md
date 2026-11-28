@@ -1,0 +1,63 @@
+# Fluxos de Dados
+
+> Crie painéis de Fluxos de Dados do UAVcast-Pro com gráficos, indicadores e mosaicos para qualquer campo MAVLink ou valor de sensor NAMED_VALUE_FLOAT, com limiares, histórico e importação/exportação JSON.
+
+Os **Fluxos de Dados** permitem criar seus próprios painéis de telemetria ao vivo. Adicione mosaicos numéricos, gráficos de linhas, indicadores, barras e luzes de status, e vincule cada um a qualquer valor MAVLink enviado pelo controlador de voo ou a qualquer sinal `NAMED_VALUE_FLOAT` de um sensor ou de um [injetor](https://docs.uavmatrix.com/pt/uavcast-pro/flight-controller/injectors/). Os painéis ficam armazenados no drone, então todos que abrirem a interface web verão os mesmos painéis. Abra **Fluxos de Dados** na barra lateral.
+
+Usos típicos: a tela de um operador de carga útil com leituras de sensores, um painel de link LTE com RSRP e SINR, ou um painel de bateria e energia para voos longos.
+
+![Página Fluxos de Dados com a mensagem Ainda sem painéis e o botão Criar painel](https://docs.uavmatrix.com/pt/img/screenshots/uavcast-pro/mission-data.webp)
+
+*Fluxos de Dados antes do primeiro painel: Criar painel inicia um.*
+
+## Criar um painel
+
+1. Selecione **Criar painel** (ou **Novo painel**, se você já tiver um), dê um **Nome** e selecione **Criar**.
+2. Selecione **Editar** para entrar no modo de edição, depois **Adicionar widget** e escolha um tipo.
+3. Na aba **Origem**, pesquise um sinal e escolha-o. Um ponto verde significa que as amostras estão chegando.
+4. Defina o título, as unidades e as casas decimais em **Exibição**, os limites e os limiares de cor em **Faixa**, e as opções do gráfico em **Gráfico**. Selecione **Salvar**.
+5. Arraste e redimensione os widgets e, em seguida, selecione **Concluído**.
+
+Somente administradores podem criar e editar painéis. Usuários somente leitura podem visualizá-los.
+
+## Tipos de widget
+
+| Tipo | Mostra |
+| --- | --- |
+| **Mosaico numérico** | O valor atual, em destaque, com prefixo e sufixo opcionais. |
+| **Linha compacta** | Uma pequena linha de tendência abaixo do valor. |
+| **Gráfico de linhas** | Um ou mais sinais em uma janela de tempo. |
+| **Indicador** | O valor em uma escala circular com limiares coloridos. |
+| **Indicador de barra** | O valor como uma barra entre o mínimo e o máximo. |
+| **Estado** | Um estado colorido definido por limiares, por exemplo OK / aviso / alarme. |
+| **Tabela de valores nomeados** | Cada sinal `NAMED_VALUE_FLOAT` com **Valor**, **Idade** e **Src**. **Filtro** aceita uma substring ou um `*.glob`. |
+
+Um widget mostra **Desatualizado** quando nenhuma amostra chegou há 5 segundos, e *Ainda sem amostras* quando o sinal nunca foi visto.
+
+## Sinais
+
+- **Campos MAVLink**: todo campo numérico enviado pelo controlador de voo (atitude, VFR HUD, bateria, GPS, home, RTK, failsafe, heartbeat e valores de status) aparece automaticamente, com nomes amigáveis e unidades quando conhecidas.
+- **Valores nomeados**: sinais `NAMED_VALUE_FLOAT`, exibidos como `NAME@sysid:compid`, por exemplo `LTE_RSRP@1:194`.
+
+Você pode digitar um sinal que ainda não está sendo enviado e pressionar Enter para adicioná-lo, assim pode montar o painel antes de ligar o sensor. Use o ícone de lápis em uma origem selecionada para dar a ela um nome de exibição.
+
+## Opções do gráfico
+
+| Opção | Valores |
+| --- | --- |
+| **Janela** | **1 min**, **5 min**, **15 min**, **1 hora**, ou **Personalizado (segundos)** |
+| **Curva** | **Linear**, **Suave (monotônica)**, **Escada**, **Escada antes**, **Escada depois**, **Spline básica** |
+| Outros | **Mostrar legenda**, **Mostrar grade**, **Largura da linha**, **Preenchimento de área**, **Mostrar pontos de dados**, **Linhas de referência de limiar**, **Rótulo do eixo Y** |
+
+## Histórico
+
+O UAVcast-Pro mantém um histórico curto de cada sinal no drone (até 3600 amostras por sinal, cerca de uma hora a 1 Hz), então os gráficos são preenchidos assim que você abre um painel, mesmo após atualizar a página.
+
+## Compartilhar painéis
+
+- **Exportar JSON** copia o painel para a área de transferência.
+- **Importar JSON** cria um painel a partir de JSON colado. Use-o para copiar um painel para outro drone.
+- **Duplicar** e **Renomear** estão na barra de ferramentas; **Excluir** remove um painel e seus widgets.
+- **Tela cheia** oculta o restante da interface, para um monitor dedicado.
+
+Source: https://docs.uavmatrix.com/pt/uavcast-pro/data-streams/

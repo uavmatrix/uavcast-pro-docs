@@ -1,0 +1,129 @@
+# QGroundControl veya Mission Planner'da video yok
+
+> Telemetri çalışıyor ama QGroundControl veya Mission Planner'da video siyah mı kalıyor? Kamerayı, Videoyu Etkinleştir seçeneğini, hedef IP adresini, UDP 5600 portunu ve GCS'yi kontrol edin.
+
+Telemetri geliyor ve drone haritada görünüyor, ancak video alanı siyah kalıyor ya da QGroundControl'ün video penceresi **WAITING FOR VIDEO** yazıyor. Kontrolleri sırayla uygulayın. Çoğu durum 2. veya 3. kontrolle çözülür.
+
+![ArduPilot aracına bağlı QGroundControl Fly görünümü: araç çubuğunda Not Ready ve Stabilize, haritada beş yol noktalı bir görev, araç için No GPS Lock, sol alt köşede WAITING FOR VIDEO gösteren video penceresi](https://docs.uavmatrix.com/tr/img/screenshots/gcs/qgroundcontrol--fly-view.webp)
+
+*QGroundControl'de belirti: telemetri geliyor (araç çubuğunda Not Ready ve Stabilize; bu test düzeneğinde GPS olmadığı için No GPS Lock), ama sol alt köşedeki video penceresi WAITING FOR VIDEO yazıyor.*
+
+| Ne görürsünüz | Olası neden | Başlangıç |
+| --- | --- | --- |
+| Video GCS ve UAVcast-Pro canlı önizlemesinde siyah | Kamera drone üzerinde çalışmıyor | [Kontrol 1](https://docs.uavmatrix.com/tr/troubleshooting/no-video-in-gcs/#check-1) |
+| Canlı önizleme çalışıyor, yer istasyonu siyah kalıyor | Bu yer istasyonu için Videoyu Etkinleştir kapalı veya IP yanlış | [Kontrol 2](https://docs.uavmatrix.com/tr/troubleshooting/no-video-in-gcs/#check-2) |
+| Evde Wi-Fi üzerinde çalışıyordu, 4G üzerinde siyah | Hedef, VPN IP adresi yerine yerel bir IP adresi kullanıyor | [Kontrol 2](https://docs.uavmatrix.com/tr/troubleshooting/no-video-in-gcs/#check-2) |
+| Her şey doğru görünüyor, Windows üzerinde hâlâ siyah | Güvenlik duvarı gelen UDP 5600 trafiğini engelliyor | [Kontrol 3](https://docs.uavmatrix.com/tr/troubleshooting/no-video-in-gcs/#check-3) |
+| QGroundControl video gösteriyor, Mission Planner göstermiyor | Mission Planner üzerinde GStreamer kaynağı ayarlanmamış | [Kontrol 4](https://docs.uavmatrix.com/tr/troubleshooting/no-video-in-gcs/#check-4) |
+
+## Kontrol 1: Kameranın drone üzerinde yayın yaptığını doğrulayın
+
+Drone video üretmiyorsa, hiçbir yer istasyonu ayarı işe yaramaz.
+
+1. UAVcast-Pro web arayüzünü açın ve **Kamera → Kamera ayarları** bölümüne gidin.
+2. **Kamera Etkinleştirilsin mi?** seçeneğinin **Evet** olduğunu ve **Kamera Seç** alanında bir kameranın seçili olduğunu kontrol edin.
+3. Kameranın çalıştığını doğrulayın: kontrol panelindeki **Video** satırı **Running** göstermeli. Durduysa Kamera sayfasında **Başlat** düğmesine basın (kamera çalışırken düğme **Yeniden Başlat** yazar).
+4. **Canlı Önizleme Etkinleştirilsin mi?** seçeneğini açın ve **Canlı Önizleme** bölümüne bakın. Bir görüntü görüyorsanız kamera çalışıyor demektir ve 2. kontrole geçebilirsiniz.
+5. **Kamera Seç** alanında **No cameras available** yazıyorsa, [kamera algılanmıyor](https://docs.uavmatrix.com/tr/troubleshooting/camera-not-detected/) sayfasına gidin.
+
+![CAM 1 etkin UAVcast-Pro Kamera ayarları sayfası; Canlı Önizleme paneli, Canlı Önizleme Etkinleştirilsin mi? işaretlenene kadar No Video Available gösteriyor](https://docs.uavmatrix.com/tr/img/screenshots/uavcast-pro/camera.webp)
+
+*Kamera → Kamera ayarları, CAM 1 etkin. Canlı Önizleme Etkinleştirilsin mi? işaretlenene kadar Canlı Önizleme paneli No Video Available gösterir.*
+
+> **Önizleme, yer istasyonu yayını değildir**
+>
+> Tarayıcı önizlemesi yerleşik medya sunucusu üzerinden gider (8889 portunda WebRTC). Yer istasyonu ise UDP üzerinden ayrı bir H.264 yayını alır. Çalışan bir önizleme kameranın çalıştığını kanıtlar, ancak UDP yayınının dizüstü bilgisayarınıza ulaştığını kanıtlamaz.
+
+Kamera sayfasındaki **Action Logs** bir kameranın bir çözünürlüğü *does not support* ettiğini yazıyorsa, **Resolution** alanından başka bir değer seçin. UAVcast-Pro desteklenen en büyük boyuta geri döner ve hangisini kullandığını kaydeder.
+
+## Kontrol 2: Yer istasyonu hedefini kontrol edin
+
+UAVcast-Pro videoyu yalnızca video açık olan hedeflere gönderir. Telemetri ve video ayrı anahtarlara sahiptir ve **yeni bir hedefte ikisi de kapalıdır**.
+
+1. **Yer Kontrol İstasyonları** sayfasına gidin ve yer istasyonunuzu çalıştıran bilgisayarın kartını bulun.
+2. **Uç Noktayı Etkinleştir** ve **Videoyu Etkinleştir** seçeneklerinin ikisinin de açık olduğundan emin olun.
+3. **Hedef IP veya Sunucu** alanını kontrol edin. Drone'dan görülen yer istasyonu bilgisayarının IPv4 adresi olmalıdır. Sunucu adları kabul edilmez.
+4. **Video Portu** değerinin `5600` olduğunu veya yer istasyonunuzun dinlediği porta eşit olduğunu kontrol edin.
+5. Alanlar, alanı terk ettiğinizde veya Enter tuşuna bastığınızda kaydedilir. Yeşil bir onay işareti kaydedildiğini gösterir.
+
+![Video Portu 5600 ve Videoyu Etkinleştir anahtarı açık](https://docs.uavmatrix.com/tr/img/screenshots/uavcast-pro/ground-control--video-enabled.webp)
+
+*Yer Kontrol İstasyonları: Videoyu Etkinleştir açık ve Video Portu 5600 olan bir hedef.*
+
+> **4G üzerinde uçuyorsanız VPN IP adresini kullanın**
+>
+> Hücresel bağlantı üzerinden drone, dizüstü bilgisayarınızın yerel adresine (`192.168.1.20` gibi) ulaşamaz. Dizüstü bilgisayarınızın VPN üzerindeki adresini kullanın (Fleet Manager VPN, Tailscale veya ZeroTier). Windows'ta `ipconfig` komutunu çalıştırın ve Tailscale veya ZeroTier bağdaştırıcısını arayın.
+
+Fleet Manager mı kullanıyorsunuz? Bir yayın bağlaması eklediğinizde hedefler sizin için oluşturulur ve aynı yer istasyonundaki her ek drone kendi portlarını alır. 5600 yerine bağlamada gösterilen video portunu kontrol edin. Bkz. [Yayın bağlamaları](https://docs.uavmatrix.com/tr/fleet-manager/network/stream-bindings/).
+
+## Kontrol 3: Güvenlik duvarında UDP 5600'e izin verin
+
+Video, gelen UDP trafiği olarak ulaşır. Windows'ta bu varsayılan olarak engellenir; telemetri, yer istasyonunun bir istisna istemesi sayesinde geçebilir, ancak video için bu istisna genellikle yoktur.
+
+**Windows**
+
+**Yönetici olarak PowerShell** açın ve şunu çalıştırın:
+
+```powershell
+New-NetFirewallRule -DisplayName "UAV Video" -Direction Inbound -Protocol UDP -LocalPort 5600 -Action Allow
+New-NetFirewallRule -DisplayName "MAVLink Telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+```
+
+ZeroTier ve Tailscale bağdaştırıcıları genellikle *Public* ağ olarak sınıflandırılır. Bu şekilde oluşturulan bir kural tüm profiller için geçerlidir.
+
+**Linux**
+
+```bash
+sudo ufw allow 5600/udp comment 'UAV Video'
+sudo ufw allow 14550/udp comment 'MAVLink Telemetry'
+```
+
+**macOS**
+
+macOS güvenlik duvarı, onayladığınız uygulamalar için gelen UDP trafiğine izin verir. QGroundControl ilk başladığında *Deny* seçeneğine tıkladıysanız, **Sistem Ayarları → Ağ → Güvenlik Duvarı → Seçenekler** bölümünden yeniden izin verin.
+
+## Kontrol 4: Yer istasyonunuzda videoyu ayarlayın
+
+**QGroundControl**
+
+1. **Q** simgesine, ardından **Application Settings** seçeneğine tıklayın.
+2. Video ayarlarını açın (**Video** veya eski sürümlerde **General → Video**).
+3. **Source** değerini **UDP h.264 Video Stream** olarak ayarlayın ve UDP adresinin `5600` portunu kullandığını kontrol edin (güncel sürümlerde **UDP URL** `0.0.0.0:5600`, eski sürümlerde **UDP Port** `5600`).
+4. Fly görünümüne geri dönün. Video karosu birkaç saniye içinde bir görüntü göstermelidir.
+
+**Mission Planner**
+
+Mission Planner videoyu HUD içinde gösterir. Siyah kalırsa kaynağı elle ayarlayın:
+
+1. HUD üzerinde sağ tıklayın ve **Video → Set GStreamer Source** seçeneğini seçin.
+2. Aşağıdaki pipeline'ı yapıştırın ve onaylayın:
+
+```text
+udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+```
+
+## Kontrol 5: Yer istasyonu olmadan yayını test edin
+
+Bu test, yer istasyonu yazılımını işin dışında bırakır. Video içeren bir pencere açılırsa drone, ağ ve güvenlik duvarı sorunsuzdur ve sorun GCS ayarlarındadır.
+
+```bash
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+> **Windows: Complete kurulumunu seçin**
+>
+> GStreamer'ı (MSVC 64-bit çalışma zamanı) kurarken **Complete** seçeneğini seçin. Typical kurulumu H.264 kod çözücüyü içermez ve komut `no element "avdec_h264"` hatasıyla başarısız olur.
+
+Yer istasyonunuzu yeniden açmadan önce testi kapatın: aynı anda yalnızca bir program 5600 portunu dinleyebilir. Adım adım alıcı kurulumu: [Mission Planner](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/mission-planner/), [QGroundControl](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/qgroundcontrol/) ve GStreamer için [Windows](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-windows/), [Linux](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-linux/) veya [macOS](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-macos/).
+
+> **Video var ama 4G üzerinde kesik mi?**
+>
+> Bkz. [Kesik veya gecikmeli video](https://docs.uavmatrix.com/tr/troubleshooting/choppy-or-delayed-video/).
+
+## Hâlâ video yok mu?
+
+**Kamera Sunucusu** seçiliyken günlük listesinde [günlükleri indirin](https://docs.uavmatrix.com/tr/troubleshooting/collect-logs/) ve UAVcast-Pro sürümünüzü, kamera modelinizi ve kullandığınız yer istasyonunu belirterek **[support@uavmatrix.com](mailto:support@uavmatrix.com)** adresine gönderin.
+
+İlgili: [Kamera ayarları](https://docs.uavmatrix.com/tr/uavcast-pro/camera/) · [Yer Kontrol İstasyonları](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/)
+
+Source: https://docs.uavmatrix.com/tr/troubleshooting/no-video-in-gcs/

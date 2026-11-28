@@ -1,0 +1,83 @@
+# Mission Planner
+
+> Connect Mission Planner to a UAVcast-Pro drone: MAVLink over UDP 14550, live H.264 video in the HUD with the exact GStreamer source, Windows firewall, a second camera and common errors.
+
+Mission Planner receives UAVcast-Pro telemetry over UDP port 14550 and shows the live video in its HUD through a GStreamer source on port 5600. Telemetry needs one click; video needs a pipeline pasted once, which Mission Planner remembers.
+
+## Before you begin
+
+- On the drone, a destination on [Ground Control Stations](https://docs.uavmatrix.com/uavcast-pro/ground-stations/) with this PC's IP address (the VPN address over 4G), **Enable Telemetry** on, and **Enable Video** on for video.
+- The camera streaming on **Camera → Camera settings**.
+- A current Mission Planner on Windows. Find this PC's IP with `ipconfig` in a Command Prompt.
+
+## Connect telemetry
+
+1. In the top-right corner of Mission Planner, choose **UDP** in the connection drop-down. The baud rate is ignored.
+2. Select **Connect**.
+3. When asked for the listen port, keep `14550` (or the **Telemetry Port** you set on the drone) and select **OK**.
+4. Mission Planner downloads the parameters, and the drone appears on the map.
+
+![Mission Planner Flight Data view connected over UDP: the top-right connection box shows UDP, the link UDP14550-1-QUADRO and the DISCONNECT button; the HUD shows DISARMED, Unhealthy AHRS and GPS: No Fix](https://docs.uavmatrix.com/img/screenshots/gcs/mission-planner--connected.webp)
+
+*Connected. The top-right box shows UDP and the link UDP14550-1-QUADRO, and the button now reads DISCONNECT. This is a bench setup without GPS, so the HUD shows DISARMED, Unhealthy AHRS and GPS: No Fix.*
+
+## Show the video in the HUD
+
+1. Right-click the HUD (the artificial horizon) and choose **Video → Set GStreamer Source**.
+
+2. Paste this pipeline and select **OK**:
+
+   ```text
+   udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+   ```
+
+3. The video replaces the HUD background within a few seconds. The flight data stays on top of it.
+
+*Illustration of Mission Planner: right-click menu on the HUD with Video highlighted and its submenu item Set GStreamer Source.*
+
+*Illustration Mission Planner, simplified. (1) Right-click the HUD, (2) Video, (3) Set GStreamer Source, then paste the pipeline.*
+
+Mission Planner uses its own copy of GStreamer for the HUD, so you don't need the separate install from [GStreamer on Windows](https://docs.uavmatrix.com/uavcast-pro/ground-stations/gstreamer-windows/) for this. If Mission Planner offers to download GStreamer, let it.
+
+Keep the end of the pipeline exactly as shown: Mission Planner needs `video/x-raw,format=BGRA ! appsink name=outsink` to draw the picture. Change only the port.
+
+### Lower latency
+
+`rtpjitterbuffer` smooths out packets that arrive late, at the cost of about 200 ms of delay. On a good link you can cut it down:
+
+```text
+udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer latency=0 ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink sync=false
+```
+
+On a weak 4G link, keep the default jitter buffer; the picture breaks up less.
+
+## Allow Mission Planner through the Windows firewall
+
+Windows asks the first time Mission Planner listens on the network. Allow it on **Private** and **Public** networks. A ZeroTier or Tailscale adapter is often classified as **Public**, so ticking only Private blocks the VPN.
+
+If you dismissed the prompt, open the ports in an administrator PowerShell:
+
+```powershell
+New-NetFirewallRule -DisplayName "UAVcast-Pro telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+New-NetFirewallRule -DisplayName "UAVcast-Pro video" -Direction Inbound -Protocol UDP -LocalPort 5600-5602 -Action Allow
+```
+
+## Second camera (dual stream)
+
+With [dual stream](https://docs.uavmatrix.com/uavcast-pro/camera/multi-camera/) on, camera 2 goes to **Video Port (Camera 2)**, by default `5601`. Mission Planner's HUD shows one source. Either switch the HUD source to port 5601 when you need camera 2, or watch camera 2 in a separate GStreamer window: see [GStreamer on Windows](https://docs.uavmatrix.com/uavcast-pro/ground-stations/gstreamer-windows/).
+
+Audio (Video Port + 2) is ignored by Mission Planner. Play it with GStreamer.
+
+## Common problems
+
+| Symptom | Cause and fix |
+| --- | --- |
+| Connects on Wi-Fi, nothing over 4G | The destination uses the LAN IP. Use this PC's VPN IP. |
+| *No heartbeat packets received* | The drone isn't sending to this PC: wrong IP, **Enable Telemetry** off, or the firewall blocks UDP 14550. |
+| Telemetry works, HUD stays black | **Enable Video** is off for this destination, the camera isn't running, or UDP 5600 is blocked. Test with [GStreamer on Windows](https://docs.uavmatrix.com/uavcast-pro/ground-stations/gstreamer-windows/). |
+| Video freezes or smears grey | Packet loss. Lower the bitrate on the drone and set **Stream Recovery Rate** to 15–30 frames. |
+| Video stops when another program opens | Only one program can listen on a UDP port. Close the GStreamer window or QGroundControl that also uses 5600. |
+
+More checks: [No video in QGroundControl or Mission Planner](https://docs.uavmatrix.com/troubleshooting/no-video-in-gcs/) and [No telemetry in the ground station](https://docs.uavmatrix.com/troubleshooting/no-telemetry-in-gcs/).
+
+Source: https://docs.uavmatrix.com/uavcast-pro/ground-stations/mission-planner/

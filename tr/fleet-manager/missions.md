@@ -1,0 +1,68 @@
+# Görevler
+
+> Haritada görev çizin, MAVLink komutlarını ve irtifa çerçevelerini seçin, görevleri tüm organizasyon için kaydedin ve çevrimiçi herhangi bir drone'a yükleyin.
+
+**Missions** (kenar çubuğunda **Fleet Management → Missions**), tarayıcıda çalışan bir yol noktası planlayıcısıdır. Görevler organizasyon için kaydedilir; böylece ekipteki herkes bir görevi yükleyebilir, Owner veya Admin ise bir görevi çevrimiçi herhangi bir drone'a yükleyebilir.
+
+![Satellite stilinde Mission Planner; tarama ızgarası şeklinde yol noktaları ve toplam mesafe](https://docs.uavmatrix.com/tr/img/screenshots/fleet-manager/missions.webp)
+
+*Satellite stilinde Mission Planner; 18 yol noktalı bir tarama ızgarası, Takeoff ve Return to Launch ile üst bölümde 18 waypoints ve toplam mesafe.*
+
+Viewer'lar kayıtlı görevleri açıp inceleyebilir. Kaydetme, yükleme ve silme için Owner veya Admin rolü gerekir.
+
+## Görev planlama
+
+1. **Create New** (veya **Missions → New Mission**) seçin.
+2. Yol noktası eklemek için haritaya tıklayın. Bir yol noktasını taşımak için sürükleyin. Yerleştirirken **Next WP**, önceki yol noktasına olan mesafeyi (**Prev:**) ve ev konumuna olan mesafeyi (**Home:**) gösterir.
+3. Her satırı düzenlemek için yol noktası çekmecesini (**n Waypoints**) açın: **Command**, **Params**, **Alt**, **Frame** ve **Radius**. Satırları yeniden sıralamak için sürükleyin. **H** satırı ev konumudur.
+4. Çekmecenin üstündeki **Defaults:** bölümünde yeni yol noktaları için **Alt** (varsayılan 50 m) ve **WP Radius** (varsayılan 30 m) değerlerini ayarlayın.
+
+![Komut, parametre, koordinat, irtifa, çerçeve, yarıçap ve mesafe sütunlarına sahip yol noktası çekmecesi](https://docs.uavmatrix.com/tr/img/screenshots/fleet-manager/missions--waypoint-drawer.webp)
+
+*Takeoff, birkaç Waypoint satırı, bir Change Speed ve bir Return to Launch içeren yol noktası çekmecesi; Frame Relative olarak ayarlı.*
+
+### İrtifa çerçeveleri
+
+| Çerçeve | İrtifa şundan ölçülür |
+| --- | --- |
+| **Relative** (varsayılan) | Ev konumu |
+| **Absolute** | Ortalama deniz seviyesi |
+| **Terrain** | Yol noktasının altındaki zemin (uçuş kontrolcüsünde arazi verisi gerekir) |
+
+### Komutlar
+
+**Command** seçici aranabilirdir ve ArduPilot'un anladığı MAVLink görev komutlarını şu gruplar halinde listeler:
+
+- **Navigation:** Waypoint, Takeoff, Land, Return to Launch, Loiter Unlim, Loiter Turns, Loiter Time, Loiter to Alt, Spline Waypoint, Vtol Takeoff, Vtol Land, Payload Place, Delay ve daha fazlası.
+- **Conditions:** Delay, Change Alt, Distance, Yaw.
+- **Do commands:** Change Speed, Set ROI Location, Set Servo, Set Relay, Jump, Digicam Control, Set Cam Trigg Dist, Mount Control, Gripper, Parachute, VTOL Transition ve diğerleri.
+
+Parametre alan komutlar (örneğin gecikme süresi, loiter turu, hız veya servo PWM) **Params** içinde düzenlenebilir alanlar alır.
+
+Sınırlar: irtifa 0 ile 10.000 m arasında, yarıçap 1 ile 1.000 m arasında olmalıdır ve en az bir yol noktası bulunmalıdır.
+
+## Kaydetme
+
+**Save** seçin, bir **Name** (en fazla 100 karakter) ve isteğe bağlı bir **Description** girin, ardından **Save Mission** ile onaylayın. Değişiklik varken başlıkta **Unsaved** görünür; **Update Mission** bunları kaydeder. Kayıtlı görevleri **Missions → Saved Missions** altından açın.
+
+## Drone'a yükleme
+
+1. Görevi kaydedin. Kaydedilmemiş bir görev yüklenemez (**Mission not saved**).
+2. **Upload to Drone** seçin, **Select UAV** altından UAV'yi seçin ve onaylayın.
+3. Onayı bekleyin. Drone yanıt vermezse yükleme 30 saniye sonra zaman aşımına uğrar.
+
+![Çevrimiçi UAV'lerin listelendiği Upload Mission to Drone iletişim kutusu](https://docs.uavmatrix.com/tr/img/screenshots/fleet-manager/missions--upload.webp)
+
+*Seçebileceğiniz çevrimiçi UAV'lerle Upload Mission to Drone iletişim kutusu.*
+
+Uçmak için görevi drone'un [kontrol panelinde](https://docs.uavmatrix.com/tr/fleet-manager/fleet/remote-control/#mission) seçin ve **Start** seçeneğini seçin. Drone'daki görev, seçtiğiniz görevden farklıysa panel **Upload & Start** seçeneğini sunar.
+
+## Drone'dan görev okuma
+
+**Missions → Read from Drone** altında çevrimiçi bir drone seçin. Drone'un mevcut görevi, **Mission from *name*** adıyla planlayıcıya yüklenir. Üzerine yazmadan önce olduğu gibi bir kopyasını tutmak için kaydedin.
+
+> **Uçuştan önce görevi yer kontrol istasyonunuzda kontrol edin**
+>
+> Fleet Manager, planladığınızı tam olarak yükler. Otomatik bir uçuştan önce görevi ve aracın failsafe ayarlarını, diğer planlama araçlarında olduğu gibi QGroundControl veya Mission Planner'da kontrol edin.
+
+Source: https://docs.uavmatrix.com/tr/fleet-manager/missions/

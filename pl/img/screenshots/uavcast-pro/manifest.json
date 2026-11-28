@@ -1,0 +1,2433 @@
+{
+  "product": "uavcast-pro",
+  "generatedAt": "2026-11-28T06:25:35.060Z",
+  "generator": "website/scripts/screenshots/uavcast-pro/capture.ts",
+  "capture": {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "deviceScaleFactor": 2,
+    "format": "webp",
+    "quality": 88
+  },
+  "naming": "<screen>[--state][.<locale>][.dark].webp, en has no locale suffix",
+  "count": 95,
+  "totalBytes": 16854930,
+  "shots": [
+    {
+      "id": "uavcast-pro/login--create-admin",
+      "description": "First visit: the Create Admin Account form shown before any user exists.",
+      "route": "/login",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "login--create-admin.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 31760
+          },
+          "dark": {
+            "file": "login--create-admin.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 31504
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/first-login",
+        "uavcast-pro/login--first-admin"
+      ],
+      "pages": [
+        "first-login"
+      ]
+    },
+    {
+      "id": "uavcast-pro/login",
+      "description": "Login form shown once at least one user account exists.",
+      "route": "/login",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "login.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 22094
+          },
+          "dark": {
+            "file": "login.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 21870
+          }
+        }
+      },
+      "pages": [
+        "first-login",
+        "system/users"
+      ]
+    },
+    {
+      "id": "uavcast-pro/tour",
+      "description": "Guided UI tour: the welcome step offered on first login.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "tour.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 148396
+          },
+          "dark": {
+            "file": "tour.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 146004
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/tour--welcome"
+      ],
+      "pages": [
+        "first-login"
+      ]
+    },
+    {
+      "id": "uavcast-pro/tour--flight-controller",
+      "description": "Guided UI tour highlighting the flight controller connection panel.",
+      "route": "/flightcontroller",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "tour--flight-controller.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 194204
+          },
+          "dark": {
+            "file": "tour--flight-controller.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 179846
+          }
+        }
+      },
+      "pages": [
+        "first-login"
+      ]
+    },
+    {
+      "id": "uavcast-pro/sidebar",
+      "description": "The sidebar navigation: Operations, Connectivity, Media and Management sections.",
+      "route": "/dashboard",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "sidebar.webp",
+            "width": 480,
+            "height": 1768,
+            "bytes": 39882
+          },
+          "dark": {
+            "file": "sidebar.dark.webp",
+            "width": 480,
+            "height": 1768,
+            "bytes": 38986
+          }
+        }
+      },
+      "pages": [
+        "first-login",
+        "uavcast-pro"
+      ]
+    },
+    {
+      "id": "uavcast-pro/sidebar--language-menu",
+      "description": "User menu at the bottom of the sidebar with the Language submenu open.",
+      "route": "/dashboard",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "sidebar--language-menu.webp",
+            "width": 754,
+            "height": 740,
+            "bytes": 28804
+          },
+          "dark": {
+            "file": "sidebar--language-menu.dark.webp",
+            "width": 754,
+            "height": 740,
+            "bytes": 28168
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/language-switcher"
+      ],
+      "pages": [
+        "first-login"
+      ]
+    },
+    {
+      "id": "uavcast-pro/header--status-badges",
+      "description": "Header status badges: flight controller link, armed state, vehicle type, flight mode and GCS failsafe.",
+      "route": "/dashboard",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "header--status-badges.webp",
+            "width": 2368,
+            "height": 120,
+            "bytes": 13650
+          },
+          "dark": {
+            "file": "header--status-badges.dark.webp",
+            "width": 2368,
+            "height": 120,
+            "bytes": 13442
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/header"
+      ],
+      "pages": [
+        "flight-controller",
+        "system/dashboard"
+      ]
+    },
+    {
+      "id": "uavcast-pro/dashboard",
+      "description": "Dashboard: application status, system information, network traffic and memory.",
+      "route": "/dashboard",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "dashboard.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 155806
+          },
+          "dark": {
+            "file": "dashboard.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 164178
+          }
+        }
+      },
+      "pages": [
+        "system/dashboard",
+        "uavcast-pro"
+      ]
+    },
+    {
+      "id": "uavcast-pro/dashboard--full",
+      "description": "Dashboard, full height, including memory usage and storage.",
+      "route": "/dashboard",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "dashboard--full.webp",
+            "width": 2880,
+            "height": 4260,
+            "bytes": 262228
+          },
+          "dark": {
+            "file": "dashboard--full.dark.webp",
+            "width": 2880,
+            "height": 4260,
+            "bytes": 281018
+          }
+        }
+      },
+      "pages": [
+        "system/dashboard"
+      ]
+    },
+    {
+      "id": "uavcast-pro/dashboard--status-card",
+      "description": "Application status card: vehicle, connectivity and system health with a problem count.",
+      "route": "/dashboard",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "dashboard--status-card.webp",
+            "width": 1180,
+            "height": 776,
+            "bytes": 37660
+          },
+          "dark": {
+            "file": "dashboard--status-card.dark.webp",
+            "width": 1180,
+            "height": 776,
+            "bytes": 37082
+          }
+        }
+      },
+      "pages": [
+        "system/dashboard",
+        "troubleshooting"
+      ]
+    },
+    {
+      "id": "uavcast-pro/dashboard--system-information",
+      "description": "System information card: OS, hardware, uptime and CPU temperature.",
+      "route": "/dashboard",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "dashboard--system-information.webp",
+            "width": 1180,
+            "height": 776,
+            "bytes": 25988
+          },
+          "dark": {
+            "file": "dashboard--system-information.dark.webp",
+            "width": 1180,
+            "height": 776,
+            "bytes": 26234
+          }
+        }
+      },
+      "pages": [
+        "system/dashboard",
+        "troubleshooting/undervoltage"
+      ]
+    },
+    {
+      "id": "uavcast-pro/dashboard--network-traffic",
+      "description": "Network traffic chart with per-interface receive and transmit rates.",
+      "route": "/dashboard",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "dashboard--network-traffic.webp",
+            "width": 2344,
+            "height": 1172,
+            "bytes": 75620
+          },
+          "dark": {
+            "file": "dashboard--network-traffic.dark.webp",
+            "width": 2344,
+            "height": 1172,
+            "bytes": 102822
+          }
+        }
+      },
+      "pages": [
+        "system/dashboard"
+      ]
+    },
+    {
+      "id": "uavcast-pro/dashboard--memory",
+      "description": "Memory usage chart (sampled every 10 seconds).",
+      "route": "/dashboard",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "dashboard--memory.webp",
+            "width": 2344,
+            "height": 1172,
+            "bytes": 45464
+          },
+          "dark": {
+            "file": "dashboard--memory.dark.webp",
+            "width": 2344,
+            "height": 1172,
+            "bytes": 55492
+          }
+        }
+      },
+      "pages": [
+        "system/dashboard"
+      ]
+    },
+    {
+      "id": "uavcast-pro/dashboard--storage",
+      "description": "Storage card with total, used and free space per partition.",
+      "route": "/dashboard",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "dashboard--storage.webp",
+            "width": 2344,
+            "height": 644,
+            "bytes": 24002
+          },
+          "dark": {
+            "file": "dashboard--storage.dark.webp",
+            "width": 2344,
+            "height": 644,
+            "bytes": 23332
+          }
+        }
+      },
+      "pages": [
+        "system/dashboard"
+      ]
+    },
+    {
+      "id": "uavcast-pro/mission-data",
+      "description": "Data Streams: live telemetry dashboards (empty state with Create dashboard).",
+      "route": "/missiondata",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "mission-data.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 89392
+          },
+          "dark": {
+            "file": "mission-data.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 88886
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/data-streams",
+        "uavcast-pro/missiondata"
+      ],
+      "pages": [
+        "data-streams"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller",
+      "description": "Flight Controller → Connection: link status, connection check and MAVLink inspector.",
+      "route": "/flightcontroller",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 196010
+          },
+          "dark": {
+            "file": "flight-controller.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 192660
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flightcontroller",
+        "uavcast-pro/flight-controller--connection"
+      ],
+      "pages": [
+        "flight-controller",
+        "troubleshooting/no-heartbeat"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--full",
+      "description": "Flight Controller → Connection, full height, including link type, port and action logs.",
+      "route": "/flightcontroller",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--full.webp",
+            "width": 2880,
+            "height": 3288,
+            "bytes": 358558
+          },
+          "dark": {
+            "file": "flight-controller--full.dark.webp",
+            "width": 2880,
+            "height": 3288,
+            "bytes": 357246
+          }
+        }
+      },
+      "pages": [
+        "flight-controller"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--link",
+      "description": "Flight controller link card: connected status, port, baud rate, vehicle and uptime.",
+      "route": "/flightcontroller",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--link.webp",
+            "width": 1180,
+            "height": 2080,
+            "bytes": 89424
+          },
+          "dark": {
+            "file": "flight-controller--link.dark.webp",
+            "width": 1180,
+            "height": 2080,
+            "bytes": 87716
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flight-controller--status"
+      ],
+      "pages": [
+        "flight-controller",
+        "troubleshooting/no-heartbeat"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--connection-check",
+      "description": "Connection check: plugged in, readable data, flight controller responding, sending to GCS.",
+      "route": "/flightcontroller",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--connection-check.webp",
+            "width": 1080,
+            "height": 540,
+            "bytes": 28068
+          },
+          "dark": {
+            "file": "flight-controller--connection-check.dark.webp",
+            "width": 1080,
+            "height": 540,
+            "bytes": 27690
+          }
+        }
+      },
+      "pages": [
+        "flight-controller",
+        "troubleshooting/no-heartbeat",
+        "troubleshooting/no-telemetry"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--link-type",
+      "description": "Link type (USB or UART/serial), port and baud rate settings.",
+      "route": "/flightcontroller",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--link-type.webp",
+            "width": 1176,
+            "height": 1876,
+            "bytes": 83342
+          },
+          "dark": {
+            "file": "flight-controller--link-type.dark.webp",
+            "width": 1176,
+            "height": 1876,
+            "bytes": 81806
+          }
+        }
+      },
+      "pages": [
+        "flight-controller"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--mavlink-inspector",
+      "description": "MAVLink information panel: connection, GCS failsafe, vehicle, battery, GPS and flight data.",
+      "route": "/flightcontroller",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--mavlink-inspector.webp",
+            "width": 1180,
+            "height": 2080,
+            "bytes": 59410
+          },
+          "dark": {
+            "file": "flight-controller--mavlink-inspector.dark.webp",
+            "width": 1180,
+            "height": 2080,
+            "bytes": 58652
+          }
+        }
+      },
+      "pages": [
+        "flight-controller",
+        "flight-map/inspector"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--action-logs",
+      "description": "Action Logs for the flight controller service.",
+      "route": "/flightcontroller",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--action-logs.webp",
+            "width": 2344,
+            "height": 928,
+            "bytes": 113108
+          },
+          "dark": {
+            "file": "flight-controller--action-logs.dark.webp",
+            "width": 2344,
+            "height": 928,
+            "bytes": 144968
+          }
+        }
+      },
+      "pages": [
+        "flight-controller",
+        "troubleshooting/logs"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--ntrip",
+      "description": "Flight Controller → NTRIP / RTK: correction stream status and GPS quality.",
+      "route": "/flightcontroller?tab=ntrip",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--ntrip.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 152382
+          },
+          "dark": {
+            "file": "flight-controller--ntrip.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 166808
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flight-controller-ntrip",
+        "uavcast-pro/ntrip-rtk"
+      ],
+      "pages": [
+        "flight-controller/ntrip-rtk",
+        "guides/rtk-ntrip"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--ntrip-full",
+      "description": "NTRIP / RTK, full height: status, GPS quality, caster, authentication and GGA upstream.",
+      "route": "/flightcontroller?tab=ntrip",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--ntrip-full.webp",
+            "width": 2880,
+            "height": 4838,
+            "bytes": 411876
+          },
+          "dark": {
+            "file": "flight-controller--ntrip-full.dark.webp",
+            "width": 2880,
+            "height": 4838,
+            "bytes": 414586
+          }
+        }
+      },
+      "pages": [
+        "flight-controller/ntrip-rtk",
+        "guides/rtk-ntrip"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--ntrip-gps-quality",
+      "description": "GPS quality panel: fix type, satellites, accuracy, position stability and last correction.",
+      "route": "/flightcontroller?tab=ntrip",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--ntrip-gps-quality.webp",
+            "width": 2344,
+            "height": 940,
+            "bytes": 51086
+          },
+          "dark": {
+            "file": "flight-controller--ntrip-gps-quality.dark.webp",
+            "width": 2344,
+            "height": 940,
+            "bytes": 64434
+          }
+        }
+      },
+      "pages": [
+        "flight-controller/ntrip-rtk",
+        "guides/rtk-ntrip"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--ntrip-caster",
+      "description": "NTRIP caster form: host, port, mountpoint, TLS and authentication.",
+      "route": "/flightcontroller?tab=ntrip",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--ntrip-caster.webp",
+            "width": 1180,
+            "height": 952,
+            "bytes": 34612
+          },
+          "dark": {
+            "file": "flight-controller--ntrip-caster.dark.webp",
+            "width": 1180,
+            "height": 952,
+            "bytes": 32410
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flight-controller--ntrip-caster-form"
+      ],
+      "pages": [
+        "flight-controller/ntrip-rtk",
+        "guides/rtk-ntrip"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--ntrip-gga",
+      "description": "GGA upstream settings for VRS and nearest-mountpoint casters.",
+      "route": "/flightcontroller?tab=ntrip",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--ntrip-gga.webp",
+            "width": 2344,
+            "height": 916,
+            "bytes": 49108
+          },
+          "dark": {
+            "file": "flight-controller--ntrip-gga.dark.webp",
+            "width": 2344,
+            "height": 916,
+            "bytes": 50570
+          }
+        }
+      },
+      "pages": [
+        "flight-controller/ntrip-rtk"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--injectors",
+      "description": "Flight Controller → Injectors: overview with typical uses and the three transports.",
+      "route": "/flightcontroller?tab=injectors",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--injectors.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 162134
+          },
+          "dark": {
+            "file": "flight-controller--injectors.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 162850
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flight-controller-injectors",
+        "uavcast-pro/injectors"
+      ],
+      "pages": [
+        "flight-controller/injectors"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--injectors-add-http",
+      "description": "Add injector dialog with the HTTP transport selected.",
+      "route": "/flightcontroller?tab=injectors",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--injectors-add-http.webp",
+            "width": 1632,
+            "height": 1358,
+            "bytes": 81424
+          },
+          "dark": {
+            "file": "flight-controller--injectors-add-http.dark.webp",
+            "width": 1632,
+            "height": 1358,
+            "bytes": 82532
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flight-controller--injectors-add-dialog"
+      ],
+      "pages": [
+        "flight-controller/injectors"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--injectors-add-udp",
+      "description": "Add injector dialog with the UDP transport selected (not saved).",
+      "route": "/flightcontroller?tab=injectors",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-controller--injectors-add-udp.webp",
+            "width": 1632,
+            "height": 1716,
+            "bytes": 96542
+          },
+          "dark": {
+            "file": "flight-controller--injectors-add-udp.dark.webp",
+            "width": 1632,
+            "height": 1716,
+            "bytes": 97756
+          }
+        }
+      },
+      "pages": [
+        "flight-controller/injectors"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-controller--injectors-add-serial",
+      "description": "Add injector dialog with the Serial transport selected (not saved).",
+      "route": "/flightcontroller?tab=injectors",
+      "locales": {
+        "en": {
+          "dark": {
+            "file": "flight-controller--injectors-add-serial.dark.webp",
+            "width": 1632,
+            "height": 1716,
+            "bytes": 105164
+          },
+          "light": {
+            "file": "flight-controller--injectors-add-serial.webp",
+            "width": 1632,
+            "height": 1716,
+            "bytes": 105456
+          }
+        }
+      },
+      "pages": [
+        "flight-controller/injectors"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map",
+      "description": "Flight Map: map view, HUD, status badges and telemetry cards.",
+      "route": "/flightmap",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 193340
+          },
+          "dark": {
+            "file": "flight-map.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 200826
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flightmap",
+        "uavcast-pro/flight-map--map-view"
+      ],
+      "pages": [
+        "flight-map"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--toolbar",
+      "description": "Flight Map toolbar: tabs, telemetry/camera recording, storage, update rate and data rate.",
+      "route": "/flightmap",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--toolbar.webp",
+            "width": 2328,
+            "height": 112,
+            "bytes": 13110
+          },
+          "dark": {
+            "file": "flight-map--toolbar.dark.webp",
+            "width": 2328,
+            "height": 112,
+            "bytes": 13418
+          }
+        }
+      },
+      "pages": [
+        "flight-map"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--hud",
+      "description": "Flight Map side panel: HUD with heading, speed and altitude tapes and pre-arm messages.",
+      "route": "/flightmap",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--hud.webp",
+            "width": 820,
+            "height": 804,
+            "bytes": 36952
+          },
+          "dark": {
+            "file": "flight-map--hud.dark.webp",
+            "width": 820,
+            "height": 804,
+            "bytes": 44508
+          }
+        }
+      },
+      "pages": [
+        "flight-map",
+        "flight-map/cockpit-hud"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--status-tab",
+      "description": "Status tab: link, battery, flight controller, telemetry, GPS and attitude cards.",
+      "route": "/flightmap",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--status-tab.webp",
+            "width": 820,
+            "height": 712,
+            "bytes": 34274
+          },
+          "dark": {
+            "file": "flight-map--status-tab.dark.webp",
+            "width": 820,
+            "height": 712,
+            "bytes": 34060
+          }
+        }
+      },
+      "pages": [
+        "flight-map"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--actions-tab",
+      "description": "Actions tab: arm/disarm, flight modes, mission, pre-flight and emergency commands.",
+      "route": "/flightmap",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--actions-tab.webp",
+            "width": 820,
+            "height": 712,
+            "bytes": 16356
+          },
+          "dark": {
+            "file": "flight-map--actions-tab.dark.webp",
+            "width": 820,
+            "height": 712,
+            "bytes": 16478
+          }
+        }
+      },
+      "pages": [
+        "flight-map"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--messages-tab",
+      "description": "Messages tab with flight controller status text such as pre-arm failures.",
+      "route": "/flightmap",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--messages-tab.webp",
+            "width": 820,
+            "height": 712,
+            "bytes": 37544
+          },
+          "dark": {
+            "file": "flight-map--messages-tab.dark.webp",
+            "width": 820,
+            "height": 712,
+            "bytes": 37708
+          }
+        }
+      },
+      "pages": [
+        "flight-map",
+        "flight-map/inspector",
+        "troubleshooting"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--gauge-tab",
+      "description": "Gauge tab: round instruments instead of the HUD.",
+      "route": "/flightmap",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--gauge-tab.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 182708
+          },
+          "dark": {
+            "file": "flight-map--gauge-tab.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 190692
+          }
+        }
+      },
+      "pages": [
+        "flight-map"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--recordings-tab",
+      "description": "Recordings tab in the Flight Map side panel.",
+      "route": "/flightmap",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--recordings-tab.webp",
+            "width": 820,
+            "height": 712,
+            "bytes": 25136
+          },
+          "dark": {
+            "file": "flight-map--recordings-tab.dark.webp",
+            "width": 820,
+            "height": 712,
+            "bytes": 25106
+          }
+        }
+      },
+      "pages": [
+        "flight-map",
+        "camera/recordings"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--map-settings",
+      "description": "Map settings panel: auto-pan, heading, flight path trail and home marker.",
+      "route": "/flightmap",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--map-settings.webp",
+            "width": 696,
+            "height": 1048,
+            "bytes": 31726,
+            "capturedIn": "dark"
+          }
+        }
+      },
+      "pages": [
+        "flight-map"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--layers",
+      "description": "Map layer picker: base maps and overlays.",
+      "route": "/flightmap",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--layers.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 194548
+          },
+          "dark": {
+            "file": "flight-map--layers.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 203152
+          }
+        }
+      },
+      "pages": [
+        "flight-map"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--mission-planner",
+      "description": "Mission Planner tab: map, waypoint table and file/flight controller actions.",
+      "route": "/flightmap?tab=missionplanner",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--mission-planner.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 269462
+          },
+          "dark": {
+            "file": "flight-map--mission-planner.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 268242
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flight-map-mission-planner",
+        "uavcast-pro/mission-planner"
+      ],
+      "pages": [
+        "flight-map/mission-planner"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--radio",
+      "description": "Radio tab: RSSI and live PWM values for primary and auxiliary RC channels.",
+      "route": "/flightmap?tab=radio",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--radio.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 122362
+          },
+          "dark": {
+            "file": "flight-map--radio.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 124304
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flight-map-radio"
+      ],
+      "pages": [
+        "flight-map/radio"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--inspector",
+      "description": "Inspector tab: MAVLink connection status and live message inspector.",
+      "route": "/flightmap?tab=inspector",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--inspector.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 144662
+          },
+          "dark": {
+            "file": "flight-map--inspector.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 142630
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flight-map-inspector"
+      ],
+      "pages": [
+        "flight-map/inspector"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--flight-analytics",
+      "description": "Flight Analytics tab: live mode and .tlog file analysis.",
+      "route": "/flightmap?tab=loganalyzer",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--flight-analytics.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 98674
+          },
+          "dark": {
+            "file": "flight-map--flight-analytics.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 97708
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flight-map-analytics",
+        "uavcast-pro/flight-analytics"
+      ],
+      "pages": [
+        "flight-map/flight-analytics"
+      ]
+    },
+    {
+      "id": "uavcast-pro/hud",
+      "description": "Full-screen cockpit HUD (/hud).",
+      "route": "/hud",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "hud.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 100194,
+            "capturedIn": "dark"
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/cockpit-hud"
+      ],
+      "pages": [
+        "flight-map/cockpit-hud"
+      ]
+    },
+    {
+      "id": "uavcast-pro/flight-map--detached-window",
+      "description": "Detached flight map window (/flightmapwindow) for a second monitor.",
+      "route": "/flightmapwindow",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "flight-map--detached-window.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 146158
+          },
+          "dark": {
+            "file": "flight-map--detached-window.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 153924
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/flight-map-window",
+        "uavcast-pro/flightmapwindow"
+      ],
+      "pages": [
+        "flight-map/cockpit-hud"
+      ]
+    },
+    {
+      "id": "uavcast-pro/ground-control",
+      "description": "Ground Control Stations: UDP destinations for telemetry and video.",
+      "route": "/groundcontrol",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "ground-control.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 144188
+          },
+          "dark": {
+            "file": "ground-control.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 140530
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/ground-control-stations",
+        "uavcast-pro/groundcontrol"
+      ],
+      "pages": [
+        "ground-control-stations",
+        "guides/multiple-ground-stations"
+      ]
+    },
+    {
+      "id": "uavcast-pro/ground-control--destination",
+      "description": "One destination card: name, IP or host, telemetry and video ports, video and telemetry switches.",
+      "route": "/groundcontrol",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "ground-control--destination.webp",
+            "width": 792,
+            "height": 1278,
+            "bytes": 28242
+          },
+          "dark": {
+            "file": "ground-control--destination.dark.webp",
+            "width": 792,
+            "height": 1278,
+            "bytes": 27968
+          }
+        }
+      },
+      "pages": [
+        "ground-control-stations",
+        "guides/mission-planner",
+        "guides/qgroundcontrol"
+      ]
+    },
+    {
+      "id": "uavcast-pro/ground-control--video-enabled",
+      "description": "Video port and Enable Video switch on a destination.",
+      "route": "/groundcontrol",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "ground-control--video-enabled.webp",
+            "width": 700,
+            "height": 256,
+            "bytes": 5302
+          },
+          "dark": {
+            "file": "ground-control--video-enabled.dark.webp",
+            "width": 700,
+            "height": 256,
+            "bytes": 5252
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/ground-control--video-toggle"
+      ],
+      "pages": [
+        "ground-control-stations",
+        "guides/receive-video"
+      ]
+    },
+    {
+      "id": "uavcast-pro/ground-control--telemetry-enabled",
+      "description": "Telemetry options on a destination: Enable Telemetry and Read Only.",
+      "route": "/groundcontrol",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "ground-control--telemetry-enabled.webp",
+            "width": 700,
+            "height": 290,
+            "bytes": 6128
+          },
+          "dark": {
+            "file": "ground-control--telemetry-enabled.dark.webp",
+            "width": 700,
+            "height": 290,
+            "bytes": 6064
+          }
+        }
+      },
+      "pages": [
+        "ground-control-stations"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera",
+      "description": "Camera settings: camera slots, resolution, FPS, bitrate and live preview.",
+      "route": "/camera",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 154720
+          },
+          "dark": {
+            "file": "camera.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 151240
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/camera--settings-page"
+      ],
+      "pages": [
+        "camera"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--full",
+      "description": "Camera page, full height: camera, audio, stream settings, live preview and logs.",
+      "route": "/camera",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--full.webp",
+            "width": 2880,
+            "height": 3464,
+            "bytes": 435944
+          },
+          "dark": {
+            "file": "camera--full.dark.webp",
+            "width": 2880,
+            "height": 3464,
+            "bytes": 432636
+          }
+        }
+      },
+      "pages": [
+        "camera"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--control-panel",
+      "description": "Camera Control Panel: enable camera and camera slots (CAM 1, Add Camera).",
+      "route": "/camera",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--control-panel.webp",
+            "width": 1180,
+            "height": 516,
+            "bytes": 14670
+          },
+          "dark": {
+            "file": "camera--control-panel.dark.webp",
+            "width": 1180,
+            "height": 516,
+            "bytes": 14294
+          }
+        }
+      },
+      "pages": [
+        "camera",
+        "camera/multi-camera"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--add-camera-menu",
+      "description": "Add Camera menu listing the cameras that can be added as CAM 2.",
+      "route": "/camera",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--add-camera-menu.webp",
+            "width": 1180,
+            "height": 546,
+            "bytes": 17138
+          },
+          "dark": {
+            "file": "camera--add-camera-menu.dark.webp",
+            "width": 1180,
+            "height": 546,
+            "bytes": 16624
+          }
+        }
+      },
+      "pages": [
+        "camera/multi-camera"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--settings",
+      "description": "Camera Settings: resolution, FPS, bitrate, stream recovery rate and flip.",
+      "route": "/camera",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--settings.webp",
+            "width": 1180,
+            "height": 1072,
+            "bytes": 51124
+          },
+          "dark": {
+            "file": "camera--settings.dark.webp",
+            "width": 1180,
+            "height": 1072,
+            "bytes": 49192
+          }
+        }
+      },
+      "pages": [
+        "camera"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--resolution-dropdown",
+      "description": "Resolution dropdown open, listing the modes the camera supports.",
+      "route": "/camera",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--resolution-dropdown.webp",
+            "width": 1180,
+            "height": 1072,
+            "bytes": 47564
+          },
+          "dark": {
+            "file": "camera--resolution-dropdown.dark.webp",
+            "width": 1180,
+            "height": 1072,
+            "bytes": 45246
+          }
+        }
+      },
+      "pages": [
+        "camera"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--fps-dropdown",
+      "description": "FPS dropdown open.",
+      "route": "/camera",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--fps-dropdown.webp",
+            "width": 1180,
+            "height": 1072,
+            "bytes": 37538
+          },
+          "dark": {
+            "file": "camera--fps-dropdown.dark.webp",
+            "width": 1180,
+            "height": 1072,
+            "bytes": 36814
+          }
+        }
+      },
+      "pages": [
+        "camera"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--audio",
+      "description": "Audio panel: add microphone audio (Opus) to the stream.",
+      "route": "/camera",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--audio.webp",
+            "width": 1180,
+            "height": 456,
+            "bytes": 13684
+          },
+          "dark": {
+            "file": "camera--audio.dark.webp",
+            "width": 1180,
+            "height": 456,
+            "bytes": 13540
+          }
+        }
+      },
+      "pages": [
+        "camera/audio"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--stream-settings",
+      "description": "Stream settings: Enable Live Preview with restart and stop.",
+      "route": "/camera",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--stream-settings.webp",
+            "width": 1180,
+            "height": 436,
+            "bytes": 18180
+          },
+          "dark": {
+            "file": "camera--stream-settings.dark.webp",
+            "width": 1180,
+            "height": 436,
+            "bytes": 17092
+          }
+        }
+      },
+      "pages": [
+        "camera"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--live-preview",
+      "description": "Live Preview panel.",
+      "route": "/camera",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--live-preview.webp",
+            "width": 1180,
+            "height": 2378,
+            "bytes": 33044
+          },
+          "dark": {
+            "file": "camera--live-preview.dark.webp",
+            "width": 1180,
+            "height": 2378,
+            "bytes": 32722
+          }
+        }
+      },
+      "pages": [
+        "camera",
+        "troubleshooting/no-video"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--recordings",
+      "description": "Camera → Recordings library: storage bar and recorded flights with video and telemetry.",
+      "route": "/camera?tab=recordings",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--recordings.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 115458
+          },
+          "dark": {
+            "file": "camera--recordings.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 114438
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/camera-recordings",
+        "uavcast-pro/recordings"
+      ],
+      "pages": [
+        "camera/recordings"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--recordings-settings",
+      "description": "Recording settings: storage location, keep free, retention, file length and telemetry.",
+      "route": "/camera?tab=recordings",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--recordings-settings.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 153286
+          },
+          "dark": {
+            "file": "camera--recordings-settings.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 151756
+          }
+        }
+      },
+      "pages": [
+        "camera/recordings"
+      ]
+    },
+    {
+      "id": "uavcast-pro/camera--flight-review",
+      "description": "Flight review player: recorded video with telemetry timeline.",
+      "route": "/camera?tab=recordings",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "camera--flight-review.webp",
+            "width": 2880,
+            "height": 1760,
+            "bytes": 58822
+          },
+          "dark": {
+            "file": "camera--flight-review.dark.webp",
+            "width": 2880,
+            "height": 1760,
+            "bytes": 58294
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/camera-recordings--flight-review"
+      ],
+      "pages": [
+        "camera/flight-review"
+      ]
+    },
+    {
+      "id": "uavcast-pro/modem",
+      "description": "Modem page: enable modem, modem type, APN, credentials and modem information.",
+      "route": "/modem",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "modem.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 150728
+          },
+          "dark": {
+            "file": "modem.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 150412
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/cellular-modem"
+      ],
+      "pages": [
+        "connectivity/cellular-modem",
+        "troubleshooting/modem"
+      ]
+    },
+    {
+      "id": "uavcast-pro/modem--type-dropdown",
+      "description": "Modem type dropdown: HiLink or Traditional (PPP).",
+      "route": "/modem",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "modem--type-dropdown.webp",
+            "width": 1180,
+            "height": 1644,
+            "bytes": 63900
+          },
+          "dark": {
+            "file": "modem--type-dropdown.dark.webp",
+            "width": 1180,
+            "height": 1644,
+            "bytes": 67528
+          }
+        }
+      },
+      "pages": [
+        "connectivity/cellular-modem"
+      ]
+    },
+    {
+      "id": "uavcast-pro/modem--configuration",
+      "description": "Modem configuration card: APN (automatic when empty), username, password and PIN.",
+      "route": "/modem",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "modem--configuration.webp",
+            "width": 1180,
+            "height": 1644,
+            "bytes": 67406
+          },
+          "dark": {
+            "file": "modem--configuration.dark.webp",
+            "width": 1180,
+            "height": 1644,
+            "bytes": 71510
+          }
+        }
+      },
+      "pages": [
+        "connectivity/cellular-modem"
+      ]
+    },
+    {
+      "id": "uavcast-pro/modem--no-modem",
+      "description": "No Modem Connected panel with checks to run.",
+      "route": "/modem",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "modem--no-modem.webp",
+            "width": 1180,
+            "height": 732,
+            "bytes": 27744
+          },
+          "dark": {
+            "file": "modem--no-modem.dark.webp",
+            "width": 1180,
+            "height": 732,
+            "bytes": 24048
+          }
+        }
+      },
+      "pages": [
+        "troubleshooting/modem"
+      ]
+    },
+    {
+      "id": "uavcast-pro/private-network",
+      "description": "Virtual Private Network page with Tailscale selected and VPN information.",
+      "route": "/private-network",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "private-network.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 129200
+          },
+          "dark": {
+            "file": "private-network.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 129582
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/vpn"
+      ],
+      "pages": [
+        "connectivity/vpn",
+        "guides/tailscale"
+      ]
+    },
+    {
+      "id": "uavcast-pro/private-network--service-dropdown",
+      "description": "VPN service dropdown: ZeroTier or Tailscale.",
+      "route": "/private-network",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "private-network--service-dropdown.webp",
+            "width": 1180,
+            "height": 1164,
+            "bytes": 36768
+          },
+          "dark": {
+            "file": "private-network--service-dropdown.dark.webp",
+            "width": 1180,
+            "height": 1164,
+            "bytes": 37764
+          }
+        }
+      },
+      "pages": [
+        "connectivity/vpn",
+        "guides/zerotier",
+        "guides/tailscale"
+      ]
+    },
+    {
+      "id": "uavcast-pro/private-network--tailscale-web-login",
+      "description": "Tailscale Web Login tab.",
+      "route": "/private-network",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "private-network--tailscale-web-login.webp",
+            "width": 1180,
+            "height": 1104,
+            "bytes": 36252
+          },
+          "dark": {
+            "file": "private-network--tailscale-web-login.dark.webp",
+            "width": 1180,
+            "height": 1104,
+            "bytes": 36946
+          }
+        }
+      },
+      "pages": [
+        "connectivity/vpn",
+        "guides/tailscale"
+      ]
+    },
+    {
+      "id": "uavcast-pro/private-network--tailscale-auth-key",
+      "description": "Tailscale Auth Key tab.",
+      "route": "/private-network",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "private-network--tailscale-auth-key.webp",
+            "width": 1180,
+            "height": 1320,
+            "bytes": 35998
+          },
+          "dark": {
+            "file": "private-network--tailscale-auth-key.dark.webp",
+            "width": 1180,
+            "height": 1320,
+            "bytes": 37654
+          }
+        }
+      },
+      "pages": [
+        "connectivity/vpn",
+        "guides/tailscale"
+      ]
+    },
+    {
+      "id": "uavcast-pro/private-network--tailscale-fleet-manager",
+      "description": "Tailscale Fleet Manager tab, before the drone is paired with Fleet Manager.",
+      "route": "/private-network",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "private-network--tailscale-fleet-manager.webp",
+            "width": 1180,
+            "height": 1164,
+            "bytes": 40898
+          },
+          "dark": {
+            "file": "private-network--tailscale-fleet-manager.dark.webp",
+            "width": 1180,
+            "height": 1164,
+            "bytes": 42064
+          }
+        }
+      },
+      "pages": [
+        "connectivity/vpn",
+        "fleet-pairing"
+      ]
+    },
+    {
+      "id": "uavcast-pro/dynamic-dns",
+      "description": "Dynamic DNS: enable, provider account, alias and DNS system.",
+      "route": "/dynamic-dns",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "dynamic-dns.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 100950
+          },
+          "dark": {
+            "file": "dynamic-dns.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 102286
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/dns"
+      ],
+      "pages": [
+        "connectivity/dynamic-dns"
+      ]
+    },
+    {
+      "id": "uavcast-pro/networks",
+      "description": "Networks: summary cards, network priority and interfaces table.",
+      "route": "/networks",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "networks.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 151656
+          },
+          "dark": {
+            "file": "networks.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 149626
+          }
+        }
+      },
+      "pages": [
+        "connectivity/networks"
+      ]
+    },
+    {
+      "id": "uavcast-pro/networks--full",
+      "description": "Networks page, full height, including every interface.",
+      "route": "/networks",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "networks--full.webp",
+            "width": 2880,
+            "height": 1986,
+            "bytes": 158608
+          },
+          "dark": {
+            "file": "networks--full.dark.webp",
+            "width": 2880,
+            "height": 1986,
+            "bytes": 156488
+          }
+        }
+      },
+      "pages": [
+        "connectivity/networks"
+      ]
+    },
+    {
+      "id": "uavcast-pro/networks--priority",
+      "description": "Network priority: WiFi (indoor), Modem (outdoor) or Auto.",
+      "route": "/networks",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "networks--priority.webp",
+            "width": 2344,
+            "height": 832,
+            "bytes": 51352
+          },
+          "dark": {
+            "file": "networks--priority.dark.webp",
+            "width": 2344,
+            "height": 832,
+            "bytes": 51078
+          }
+        }
+      },
+      "pages": [
+        "connectivity/networks",
+        "connectivity/cellular-modem"
+      ]
+    },
+    {
+      "id": "uavcast-pro/networks--interfaces",
+      "description": "Network interfaces table: IP address, gateway, status, speed, type and default route.",
+      "route": "/networks",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "networks--interfaces.webp",
+            "width": 2344,
+            "height": 718,
+            "bytes": 40610
+          },
+          "dark": {
+            "file": "networks--interfaces.dark.webp",
+            "width": 2344,
+            "height": 718,
+            "bytes": 40208
+          }
+        }
+      },
+      "pages": [
+        "connectivity/networks"
+      ]
+    },
+    {
+      "id": "uavcast-pro/fleet",
+      "description": "Fleet Management page before pairing: Connect to Fleet Manager and feature overview.",
+      "route": "/fleet",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "fleet.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 134968
+          },
+          "dark": {
+            "file": "fleet.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 133374
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/fleet-pairing",
+        "uavcast-pro/fleet-management"
+      ],
+      "pages": [
+        "fleet-pairing",
+        "fleet-manager/pair-uav"
+      ]
+    },
+    {
+      "id": "uavcast-pro/fleet--connect",
+      "description": "Connect to Fleet Manager card (generates the pairing code when clicked).",
+      "route": "/fleet",
+      "locales": {
+        "en": {
+          "dark": {
+            "file": "fleet--connect.dark.webp",
+            "width": 1180,
+            "height": 408,
+            "bytes": 18500
+          },
+          "light": {
+            "file": "fleet--connect.webp",
+            "width": 1180,
+            "height": 408,
+            "bytes": 18622
+          }
+        }
+      },
+      "pages": [
+        "fleet-pairing"
+      ]
+    },
+    {
+      "id": "uavcast-pro/users--list",
+      "description": "User Management: users list with Add User and Change Password.",
+      "route": "/users",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "users--list.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 79326
+          },
+          "dark": {
+            "file": "users--list.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 79124
+          }
+        }
+      },
+      "pages": [
+        "system/users"
+      ]
+    },
+    {
+      "id": "uavcast-pro/users",
+      "description": "Management → Users with the Add New User dialog open (full window).",
+      "route": "/users",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "users.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 66966
+          },
+          "dark": {
+            "file": "users.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 65970
+          }
+        }
+      },
+      "pages": [
+        "system/users"
+      ]
+    },
+    {
+      "id": "uavcast-pro/users--add-dialog",
+      "description": "Add New User dialog: username, password and role.",
+      "route": "/users",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "users--add-dialog.webp",
+            "width": 1120,
+            "height": 1092,
+            "bytes": 27690
+          },
+          "dark": {
+            "file": "users--add-dialog.dark.webp",
+            "width": 1120,
+            "height": 1092,
+            "bytes": 27302
+          }
+        }
+      },
+      "pages": [
+        "system/users"
+      ]
+    },
+    {
+      "id": "uavcast-pro/users--change-password",
+      "description": "Change Password dialog.",
+      "route": "/users",
+      "locales": {
+        "en": {
+          "dark": {
+            "file": "users--change-password.dark.webp",
+            "width": 1120,
+            "height": 860,
+            "bytes": 26766
+          },
+          "light": {
+            "file": "users--change-password.webp",
+            "width": 1120,
+            "height": 860,
+            "bytes": 27026
+          }
+        }
+      },
+      "pages": [
+        "system/users"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application",
+      "description": "Application page: license manager, updates, settings, logging and database.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 188664
+          },
+          "dark": {
+            "file": "application.dark.webp",
+            "width": 2880,
+            "height": 1800,
+            "bytes": 188246
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/settings",
+        "uavcast-pro/system-settings"
+      ],
+      "pages": [
+        "system/settings",
+        "license-activation"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application--full",
+      "description": "Application page, full height.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application--full.webp",
+            "width": 2880,
+            "height": 2576,
+            "bytes": 229590
+          },
+          "dark": {
+            "file": "application--full.dark.webp",
+            "width": 2880,
+            "height": 2576,
+            "bytes": 230756
+          }
+        }
+      },
+      "pages": [
+        "system/settings"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application--license-activated",
+      "description": "License Manager: masked license key, status, device slots and activated devices.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application--license-activated.webp",
+            "width": 1568,
+            "height": 1400,
+            "bytes": 85040
+          },
+          "dark": {
+            "file": "application--license-activated.dark.webp",
+            "width": 1568,
+            "height": 1400,
+            "bytes": 83756
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/application--license",
+        "uavcast-pro/license-activation"
+      ],
+      "pages": [
+        "license-activation",
+        "troubleshooting/license"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application--activated-devices",
+      "description": "Activated Devices table with Unregister to free a device slot.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application--activated-devices.webp",
+            "width": 1468,
+            "height": 650,
+            "bytes": 45854
+          },
+          "dark": {
+            "file": "application--activated-devices.dark.webp",
+            "width": 1468,
+            "height": 650,
+            "bytes": 44948
+          }
+        }
+      },
+      "pages": [
+        "license-activation"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application--update-available",
+      "description": "Update Application card: current and latest version, version picker and Update Now.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application--update-available.webp",
+            "width": 1568,
+            "height": 1008,
+            "bytes": 34854
+          },
+          "dark": {
+            "file": "application--update-available.dark.webp",
+            "width": 1568,
+            "height": 1008,
+            "bytes": 34886
+          }
+        }
+      },
+      "aliases": [
+        "uavcast-pro/application--update"
+      ],
+      "pages": [
+        "system/settings"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application--version-dropdown",
+      "description": "Version picker open in the Update Application card.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application--version-dropdown.webp",
+            "width": 1568,
+            "height": 1008,
+            "bytes": 35616
+          },
+          "dark": {
+            "file": "application--version-dropdown.dark.webp",
+            "width": 1568,
+            "height": 1008,
+            "bytes": 35242
+          }
+        }
+      },
+      "pages": [
+        "system/settings"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application--settings",
+      "description": "Settings card: dark theme, server port, language and Take a Tour.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application--settings.webp",
+            "width": 804,
+            "height": 808,
+            "bytes": 15766
+          },
+          "dark": {
+            "file": "application--settings.dark.webp",
+            "width": 804,
+            "height": 808,
+            "bytes": 16704
+          }
+        }
+      },
+      "pages": [
+        "system/settings",
+        "first-login"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application--language-dropdown",
+      "description": "Language dropdown in Settings with every UI language.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application--language-dropdown.webp",
+            "width": 804,
+            "height": 1286,
+            "bytes": 31122
+          },
+          "dark": {
+            "file": "application--language-dropdown.dark.webp",
+            "width": 804,
+            "height": 1286,
+            "bytes": 31502
+          }
+        }
+      },
+      "pages": [
+        "first-login",
+        "system/settings"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application--logging",
+      "description": "Logging card: choose logs and time range, download or prune.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application--logging.webp",
+            "width": 804,
+            "height": 824,
+            "bytes": 20590
+          },
+          "dark": {
+            "file": "application--logging.dark.webp",
+            "width": 804,
+            "height": 824,
+            "bytes": 21586
+          }
+        }
+      },
+      "pages": [
+        "system/settings",
+        "troubleshooting/logs"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application--log-dropdown",
+      "description": "Log selector open: all logs or a single service.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application--log-dropdown.webp",
+            "width": 804,
+            "height": 1030,
+            "bytes": 28674
+          },
+          "dark": {
+            "file": "application--log-dropdown.dark.webp",
+            "width": 804,
+            "height": 1030,
+            "bytes": 29912
+          }
+        }
+      },
+      "pages": [
+        "troubleshooting/logs"
+      ]
+    },
+    {
+      "id": "uavcast-pro/application--database",
+      "description": "Database card: backup, restore and reset.",
+      "route": "/application",
+      "locales": {
+        "en": {
+          "light": {
+            "file": "application--database.webp",
+            "width": 804,
+            "height": 792,
+            "bytes": 21136
+          },
+          "dark": {
+            "file": "application--database.dark.webp",
+            "width": 804,
+            "height": 792,
+            "bytes": 22690
+          }
+        }
+      },
+      "pages": [
+        "system/settings"
+      ]
+    }
+  ]
+}

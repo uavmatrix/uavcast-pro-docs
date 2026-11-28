@@ -1,0 +1,21 @@
+# 指南
+
+> UAVcast-Pro 分步指南：通过 4G 飞行、VPN 远程访问、多地面站、基于 NTRIP 的 RTK、双摄像头和机队接入。
+
+这些端到端的教程结合了多项功能，帮助您完成实际任务。每篇指南开头都会列出所需条件，结尾则包含一项确认步骤，用于验证功能是否正常工作。
+
+## 连接
+
+[通过 4G 超视距飞行调制解调器、Fleet Manager VPN，以及将遥测和视频发送到 QGroundControl 或 Mission Planner。](https://docs.uavmatrix.com/zh-cn/guides/bvlos-4g/)[通过 Tailscale 远程访问无需端口转发，即可通过 LTE 在您的 tailnet 中访问无人机。](https://docs.uavmatrix.com/zh-cn/guides/remote-access-tailscale/)[向多个地面控制站传输同一架无人机上的飞手、载荷操作员以及只读观察者。](https://docs.uavmatrix.com/zh-cn/guides/multiple-ground-stations/)
+
+## 定位与视频
+
+[通过 NTRIP caster 实现 4G 上的 RTK将 caster 提供的 RTCM3 校正数据发送至飞行控制器，以获得 RTK 固定解。](https://docs.uavmatrix.com/zh-cn/guides/rtk-ntrip-caster/)[双摄像头：遥控切换或双路传输通过发射机切换摄像头，或同时传输两路视频。](https://docs.uavmatrix.com/zh-cn/guides/dual-camera-rc-switching/)[在地面控制站中接收视频适用于 Windows、Linux 和 macOS 的 Mission Planner、QGroundControl、GStreamer，以及 Android、VLC 和 RTSP。](https://docs.uavmatrix.com/zh-cn/uavcast-pro/ground-stations/)[录制飞行并进行复盘无人机端保存视频和遥测数据，并在同一时间轴上回放。](https://docs.uavmatrix.com/zh-cn/guides/recording-flight-review/)
+
+## 机队
+
+[使用 Fleet Manager 批量接入机队针对 20 架以上无人机的许可证、命名、配对、组织 VPN 和流绑定。](https://docs.uavmatrix.com/zh-cn/guides/fleet-onboarding/)
+
+遇到问题？请从[故障排除](https://docs.uavmatrix.com/zh-cn/troubleshooting/)开始。
+
+Source: https://docs.uavmatrix.com/zh-cn/guides/

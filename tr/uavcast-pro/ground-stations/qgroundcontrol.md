@@ -1,0 +1,63 @@
+# QGroundControl
+
+> Windows, macOS veya Linux üzerinde UAVcast-Pro telemetrisini ve canlı H.264 videoyu QGroundControl'e alın: UDP 14550 otomatik bağlantı, 5600 portunda Video Source UDP h.264, düşük gecikme modu ve çözümler.
+
+QGroundControl varsayılan olarak UDP 14550 portunda MAVLink dinler; bu nedenle telemetri geldiği anda bir UAVcast-Pro drone'u görünür. Video için video kaynağını bir kez **UDP h.264 Video Stream** olarak ve 5600 portuna ayarlayın. QGroundControl'de GStreamer yerleşik olduğu için başka bir şey kurmanız gerekmez. Bu, Windows, macOS ve Linux'ta aynı şekilde çalışır; tabletler için bkz. [Android](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/android/).
+
+## Başlamadan önce
+
+- Drone üzerinde, [Yer Kontrol İstasyonları](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/) bölümünden bu bilgisayarın IP adresiyle (4G üzerinden VPN adresi) bir hedef, **Telemetriyi Etkinleştir** açık ve video için **Videoyu Etkinleştir** açık olmalıdır.
+- Kamera, **Kamera → Kamera ayarları** bölümünde akış yapıyor olmalıdır.
+- QGroundControl'ü [qgroundcontrol.com](https://qgroundcontrol.com/) adresinden indirin.
+
+## Telemetri
+
+QGroundControl'ü başlatın. İlk paketten birkaç saniye içinde araç görünür ve araç çubuğunda uçuş modu ile batarya gösterilir.
+
+![ArduPilot aracına bağlı QGroundControl Fly görünümü: araç çubuğunda Not Ready ve Stabilize, haritada No GPS Lock for Vehicle uyarısıyla beş yol noktalı bir görev ve sol alt köşede WAITING FOR VIDEO yazan video penceresi](https://docs.uavmatrix.com/tr/img/screenshots/gcs/qgroundcontrol--fly-view.webp)
+
+*Telemetri çalışıyor: araç çubuğunda aracın durumu ve uçuş modu (Not Ready, Stabilize) görünüyor. Bu, GPS olmayan bir tezgah kurulumudur; bu yüzden No GPS Lock for Vehicle yazıyor. Video penceresi (sol altta), video aşağıda kurulana kadar WAITING FOR VIDEO yazısını gösterir.*
+
+Hiçbir şey görünmüyorsa otomatik UDP bağlantısının açık olduğunu kontrol edin: **Q** simgesi → **Application Settings**, ardından **AutoConnect to the following devices** → **UDP** işaretli olmalıdır (varsayılan budur). QGroundControl sürümünüze bağlı olarak AutoConnect listesi **Comm Links** sayfasında ya da **General** sayfasında bulunur. Drone üzerinde 14550 dışında bir **Telemetri Portu** ayarladıysanız bunun yerine bir bağlantı ekleyin: **Application Settings** → **Comm Links** → **Add**, **UDP** seçin, seçtiğiniz portu girin, ardından **Connect** seçin.
+
+## Video
+
+1. Sol üstteki **Q** simgesine → **Application Settings** seçeneğine tıklayın.
+2. **Video** sayfasını açın. Eski sürümlerde video, **General** sayfasında bir **Video** bölümüdür.
+3. **Source** alanını **UDP h.264 Video Stream** olarak ayarlayın.
+4. UDP adresini kontrol edin. Varsayılan `0.0.0.0:5600`, drone'un varsayılan **Video Portu** ile eşleşen 5600 portunu dinler. Drone üzerinde **Video Portu**'nu değiştirdiyseniz burada o portu kullanın. Güncel sürümlerde alanın adı **UDP URL**'dir; eski sürümlerde ise bir **UDP Port** numarası gösterilir.
+5. **Fly** görünümüne dönün. Video, köşedeki küçük pencerede görünür. Video ile haritayı değiştirmek için pencereye tıklayın.
+
+*QGroundControl Uygulama Ayarları çizimi: Kaynağı UDP h.264 Video Stream olarak ayarlanmış Video sayfası, UDP adresi 0.0.0.0:5600 ve Düşük Gecikme Modu.*
+
+*Çizim QGroundControl, sadeleştirilmiş. (1) Q simgesi → Application Settings, (2) Video, (3) Source UDP h.264 Video Stream, (4) 5600 portlu UDP URL.*
+
+### Düşük gecikme modu
+
+Aynı video ayarlarında **Low Latency Mode** seçeneğini açın. Bu durumda QGroundControl, gecikmiş kareleri tamponlamak yerine atar; bu da iyi bir bağlantıda gecikmeyi belirgin biçimde azaltır. Zayıf bir 4G bağlantısında görüntü takılabilir; böyle bir durumda seçeneği tekrar kapatın.
+
+## Güvenlik duvarı
+
+- **Windows**: Windows sorduğunda QGroundControl'e **Private** ve **Public** ağlarda izin verin. VPN adaptörleri (ZeroTier, Tailscale) genellikle Public olarak sınıflandırılır. Portları elle açmak için bkz. [Mission Planner: Windows güvenlik duvarı](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/mission-planner/#allow-mission-planner-through-the-windows-firewall); aynı kurallar geçerlidir.
+- **macOS**: macOS sorduğunda QGroundControl için gelen bağlantılara izin verin.
+- **Linux**: `ufw` etkinse `sudo ufw allow 14550/udp` ve `sudo ufw allow 5600:5602/udp` komutlarını çalıştırın.
+
+## İkinci kamera ve ses
+
+QGroundControl tek bir video akışını oynatır. [Çift akış](https://docs.uavmatrix.com/tr/uavcast-pro/camera/multi-camera/) açıkken kamera 2, 5601 portuna gider: izlemek için UDP portunu `5601` olarak değiştirin ya da kamera 2'yi QGroundControl'ün yanında bir GStreamer penceresinde açın ([Windows](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-windows/), [Linux](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-linux/), [macOS](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-macos/)).
+
+QGroundControl sesi yok sayar. Sesi, Video Portu + 2 (`5602`) üzerinde GStreamer ile oynatın.
+
+## Sık karşılaşılan sorunlar
+
+| Belirti | Neden ve çözüm |
+| --- | --- |
+| *Waiting For Vehicle Connection* | Bu bilgisayara telemetri ulaşmıyor. Hedef IP'yi (4G üzerinden VPN IP'si), **Telemetriyi Etkinleştir** seçeneğini ve güvenlik duvarını kontrol edin. |
+| Telemetri çalışıyor, video penceresinde video yok yazıyor | **Videoyu Etkinleştir** kapalı, kamera çalışmıyor, kaynak **UDP h.264 Video Stream** değil ya da UDP 5600 engelleniyor. |
+| Video görünüyor, sonra 4G üzerinde donuyor | Paket kaybı. Drone üzerinde bit hızını düşürün, **Akış Kurtarma Hızı** değerini 15–30 kare olarak ayarlayın ve **Low Latency Mode** seçeneğini kapatın. |
+| Araç iki kez görünüyor | İki hedef bu bilgisayara işaret ediyor ya da ikinci bir bağlantı otomatik bağlantıyı çoğaltıyor. Birini kaldırın. |
+| GStreamer testini başlattığınızda video duruyor | Bir UDP portunu yalnızca bir program dinleyebilir. Programlardan birini kapatın. |
+
+Ek kontroller: [QGroundControl veya Mission Planner'da video yok](https://docs.uavmatrix.com/tr/troubleshooting/no-video-in-gcs/).
+
+Source: https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/qgroundcontrol/

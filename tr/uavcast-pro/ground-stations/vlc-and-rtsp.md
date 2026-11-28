@@ -1,0 +1,60 @@
+# VLC ve RTSP
+
+> Bir SDP dosyası ile UAVcast-Pro H.264 RTP videosunu VLC'de oynatın ya da kayıt bilgisayarı, video duvarı veya üçüncü taraf yazılım için kamerayı 8554 portu üzerinden RTSP ile drone'dan çekin.
+
+VLC, UAVcast-Pro akışını onu tanımlayan küçük bir SDP dosyasıyla oynatabilir. Videoyu size gönderilmesi yerine drone'dan çekmek isterseniz drone'un medya sunucusu her kamerayı ayrıca RTSP üzerinden de sunar. Her iki yöntem de QGroundControl, Mission Planner veya GStreamer'a göre daha fazla gecikme ekler; bu nedenle bunları uçuş için değil, izleme ve kayıt için kullanın.
+
+## VLC'de UDP akışını oynatın
+
+1. Drone üzerinde, [Yer Kontrol İstasyonları](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/) bölümünden bu bilgisayarın IP adresiyle bir hedef ekleyin ve **Videoyu Etkinleştir** seçeneğini açın.
+
+2. Bunu `uavcast.sdp` olarak kaydedin:
+
+   ```text
+   v=0
+   o=- 0 0 IN IP4 127.0.0.1
+   s=UAVcast-Pro
+   c=IN IP4 0.0.0.0
+   t=0 0
+   m=video 5600 RTP/AVP 96
+   a=rtpmap:96 H264/90000
+   ```
+
+3. VLC'de **Media → Open File** ile açın.
+
+Çift akışta kamera 2 için `m=video 5601` ile bir kopya oluşturun. Ses kanalını eklemek için şunu ekleyin:
+
+```text
+m=audio 5602 RTP/AVP 97
+a=rtpmap:97 opus/48000/2
+```
+
+Gecikmeyi azaltmak için VLC'de **Network caching** değerini düşürün (**Tools → Preferences → Show settings: All → Input / Codecs**). Yine de GStreamer'a göre daha fazla gecikme olmasını bekleyin.
+
+## Videoyu RTSP üzerinden drone'dan çekin
+
+Kamera **Canlı Önizleme Etkinleştirilsin mi?** işaretliyken veya kamera kaydı etkinken çalışırken drone'un medya sunucusu her kamerayı 8554 portunda RTSP üzerinden (yalnızca TCP) yayınlar:
+
+```text
+rtsp://<drone-ip>:8554/camera     # camera 1
+rtsp://<drone-ip>:8554/camera2    # camera 2 (dual stream)
+```
+
+Bunu VLC'de (**Media → Open Network Stream**), bir video yönetim sisteminde veya GStreamer ile açın:
+
+```bash
+gst-launch-1.0 rtspsrc location=rtsp://192.168.1.50:8554/camera latency=100 ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+Bunu yerel ağda veya VPN üzerinden kullanın. 8554 portunu internete yönlendirmeyin: akışın parolası yoktur.
+
+## Hangi yöntemi kullanmalıyım?
+
+| İstediğiniz | Kullanın |
+| --- | --- |
+| Videoyla uçmak | [QGroundControl](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/qgroundcontrol/) veya [Mission Planner](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/mission-planner/) |
+| Hızlı bir test, ikinci bir kamera penceresi veya ses | [Windows](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-windows/), [Linux](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-linux/) veya [macOS](https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/gstreamer-macos/) üzerinde GStreamer |
+| Zaten kurulu olduğu için VLC | Yukarıdaki SDP dosyası |
+| Videoyu kendisi çekmesi gereken bir bilgisayar veya sistem | RTSP |
+
+Source: https://docs.uavmatrix.com/tr/uavcast-pro/ground-stations/vlc-and-rtsp/

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /search/
+
+Sitemap: https://docs.uavmatrix.com/sitemap-index.xml
+
+# Plain-text docs for AI tools (llmstxt.org): https://docs.uavmatrix.com/llms.txt
+# Every docs page also has a Markdown copy: append .md to its URL (without the trailing slash).

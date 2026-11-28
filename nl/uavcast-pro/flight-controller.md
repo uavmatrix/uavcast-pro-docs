@@ -1,0 +1,88 @@
+# De vluchtcontroller verbinden
+
+> Sluit een Pixhawk of een andere ArduPilot- of PX4-vluchtcontroller aan op UAVcast-Pro via USB of UART, met automatische detectie van poort en baudrate en een live verbindingscontrole.
+
+UAVcast-Pro leest MAVLink van uw vluchtcontroller (ArduPilot, PX4 of een andere MAVLink-autopiloot) via USB of een UART (TELEM-poort) en stuurt die door naar elk grondstation dat u toevoegt. Met **Poort** en **Baudrate** op **Automatisch**, de standaard, vindt het de vluchtcontroller zelf, onthoudt het wat werkte en maakt het opnieuw verbinding na een herstart, USB-storing of late opstart. U vindt het onder **Vluchtcontroller → Verbinding**.
+
+![Pagina Vluchtcontroller-verbinding met Verbonden, de verbindingscontrole met vier geslaagde stappen en de MAVLink Inspector](https://docs.uavmatrix.com/nl/img/screenshots/uavcast-pro/flight-controller.webp)
+
+*Vluchtcontroller → Verbinding met een USB-verbinding naar een Pixhawk.*
+
+## Verbinden via USB
+
+1. Steek de USB-poort van de vluchtcontroller met een kabel die data kan overdragen in de companion computer.
+2. Ga naar **Vluchtcontroller → Verbinding** en selecteer **USB** onder **Linktype**.
+3. Laat **Poort** op **Automatisch**. USB-verbindingen gebruiken geen baudrate.
+4. Als het statuspaneel **Verbinding gestopt** toont, selecteert u **Verbinden**.
+
+Binnen enkele seconden toont de status **VERBONDEN** met het voertuigtype en het systeem-ID, bijvoorbeeld *Verbonden met Quadrotor (systeem 1) op ArduPilot fmuv2 (ttyACM0)*.
+
+## Verbinden via een TELEM-poort (UART)
+
+1. Bedraad de TELEM-poort: vluchtcontroller **TX → RX** op de companion computer, **RX → TX** en **GND → GND**. Sluit geen 5 V aan als beide printen hun eigen voeding hebben.
+2. Stel op de vluchtcontroller de poort in op MAVLink 2: voor TELEM2 is dat `SERIAL2_PROTOCOL = 2`. Noteer `SERIAL2_BAUD`.
+3. Selecteer in UAVcast-Pro **UART / Serial** onder **Linktype**.
+4. Laat **Poort** en **Baudrate** op **Automatisch**, of kies de poort (op een Raspberry Pi is de GPIO-UART gemarkeerd als **aanbevolen**) en de baudrate die overeenkomt met `SERIALx_BAUD`.
+5. Selecteer **Verbinden** als de verbinding gestopt is.
+
+Wijzigingen zijn direct van kracht. U hoeft niets te herstarten.
+
+> **Automatische baudrate**
+>
+> In de automatische modus probeert UAVcast-Pro 57600, 115200, 921600, 1500000, 460800, 230400 en 500000 baud, te beginnen met de laatst werkende snelheid. Als heartbeats 20 seconden uitblijven terwijl er nog data binnenkomt (bijvoorbeeld nadat u `SERIALx_BAUD` hebt gewijzigd), zoekt het opnieuw.
+
+## Overzicht van instellingen
+
+| Instelling | Standaard | Waarden | Opmerkingen |
+| --- | --- | --- | --- |
+| **Link enabled** | Aan | Aan, uit | Uit geeft de seriële poort vrij en stopt de telemetrie naar alle grondstations. |
+| **Linktype** | **USB** | **USB**, **UART / Serial** | Bepaalt welke poorten **Automatisch** doorzoekt. |
+| **Poort** | **Automatisch** | **Automatisch**, een gedetecteerde poort, **Aangepast pad…** | **Automatisch** geeft de voorkeur aan het stabiele pad `/dev/serial/by-id/…` en volgt het apparaat als het nummer verandert. **Aangepast pad…** accepteert elk apparaat, zoals `/dev/ttyAMA0`. Poorten die door een ander programma worden gebruikt, tonen *in gebruik door …*. |
+| **Baudrate** | **Automatisch** | **Automatisch** of een vaste snelheid | Wordt genegeerd voor USB. Moet overeenkomen met `SERIALx_BAUD` als er een vaste waarde is ingesteld. |
+
+## Het statuspaneel lezen
+
+| Status | Betekenis |
+| --- | --- |
+| **Verbonden** | Heartbeats komen binnen. **Verbonden gedurende**, **Laatste heartbeat** en **Automatisch opnieuw verbinden** tonen de gezondheid van de verbinding. |
+| **Wachten op apparaat** | De poort bestaat niet. De vluchtcontroller is niet aangesloten, niet van stroom voorzien of nog aan het opstarten. |
+| **Baudrate detecteren** | Baudrates worden geprobeerd (*Proberen 115200 baud (2 van 7)*). |
+| **Geen heartbeat** | De poort is open, maar er komt geen geldige MAVLink binnen: verkeerde baudrate, TX/RX verwisseld, of de poort staat niet op MAVLink. |
+| **Opnieuw verbinden** | De verbinding is weggevallen en herstelt zich zelf. |
+| **Zoeken** | **Automatische detectie** scant elke poort en elke snelheid. Dit kan tot een minuut duren. |
+| **Uit** / **Gestopt** | De verbinding is uitgeschakeld of gestopt. Selecteer **Verbinden**. |
+
+### Verbindingscontrole
+
+De kaart **Verbindingscontrole** wordt elke seconde bijgewerkt en volgt de data van de draad tot het grondstation. De eerste rij die niet groen is, is het probleem:
+
+1. **Vluchtcontroller aangesloten** (USB) of **Seriële poort beschikbaar** (UART). *Niet gedetecteerd* betekent meestal dat de USB-kabel alleen oplaadt of dat er geen stroom is.
+2. **Signaal op de draad**: bytes komen binnen op de poort.
+3. **Leesbare vluchtcontrollerdata**: bytes worden gedecodeerd als MAVLink. *% beschadigd* wijst op een losse of lange draad, een ontbrekende aarding of ruis van voedingskabels.
+4. **Vluchtcontroller reageert**: heartbeats van het voertuig.
+5. **Verzenden naar grondstation**: pakketten per seconde naar elke ingeschakelde bestemming, of *Geen grondstation ingesteld*.
+
+### Automatische detectie
+
+**Automatische detectie** pauzeert de verbinding, luistert op elke seriële poort bij elke baudrate, slaat de poort en snelheid op die het vindt en start de verbinding ermee. Gebruik dit als u niet weet welke poort of baudrate de vluchtcontroller gebruikt. **Toon wat geprobeerd is** toont elke poging.
+
+## Het Mavlink Inspector-paneel
+
+De rechterkolom toont de actuele voertuigstatus: verbinding, **GCS Failsafe Informatie**, **Voertuiginformatie** (type, controller, vliegmodus, actief), **Batterijstatus**, **GPS-informatie** en vluchtdata. Als het paneel **Waarschuwing - Failsafe Uitgeschakeld** toont, heeft de vluchtcontroller geen GCS failsafe. Schakel die in (`FS_GCS_ENABLE` op ArduPilot) voordat u over een mobiele verbinding vliegt.
+
+## Beveiliging: geen open telemetriepoort
+
+UAVcast-Pro accepteert geen inkomende telemetrieverbindingen. De TCP-server op poort 5760 die mavlink-router normaal opent, is uitgeschakeld. Alleen grondstations die u toevoegt op [Grondcontrolestations](https://docs.uavmatrix.com/nl/uavcast-pro/ground-stations/) ontvangen telemetrie, en alleen zolang **Telemetrie Inschakelen** aan staat.
+
+> **Vanaf een oudere versie**
+>
+> Eerdere versies gebruikten standaard `/dev/ttyACM0` met 57600 baud en accepteerden TCP-verbindingen op poort 5760. Vanaf v6.4.3 schakelt elk apparaat eenmalig over naar **Automatisch**, waarbij eerst de oude poort en baudrate worden geprobeerd. Vanaf v6.5.0 is TCP 5760 gesloten: voeg uw pc toe als grondstation en verbind via UDP.
+
+## Gerelateerd
+
+- [NTRIP / RTK-correcties](https://docs.uavmatrix.com/nl/uavcast-pro/flight-controller/ntrip-rtk/)
+- [Injectors: uw eigen sensordata naar MAVLink sturen](https://docs.uavmatrix.com/nl/uavcast-pro/flight-controller/injectors/)
+- [Grondcontrolestations](https://docs.uavmatrix.com/nl/uavcast-pro/ground-stations/)
+- [Probleemoplossing: geen MAVLink-heartbeat](https://docs.uavmatrix.com/nl/troubleshooting/no-mavlink-heartbeat/)
+
+Source: https://docs.uavmatrix.com/nl/uavcast-pro/flight-controller/

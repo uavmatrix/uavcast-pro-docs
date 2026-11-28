@@ -1,0 +1,68 @@
+# 任務
+
+> 在地圖上繪製航點任務、選擇 MAVLink 指令與高度座標系、將任務儲存給整個組織，並上傳至任一架上線的無人機。
+
+**Missions**（側邊欄 **Fleet Management → Missions**）是瀏覽器中的航點規劃工具。任務會儲存給組織，因此團隊中的任何人都能載入任務，而 Owner 或 Admin 可以將其上傳至任一架上線的無人機。
+
+![任務規劃器，在衛星地圖上繪製了航點測繪路徑](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/missions.webp)
+
+*採用 Satellite 樣式的任務規劃器，包含 18 個航點的測繪網格、Takeoff 與 Return to Launch，標頭顯示 18 個航點與總距離。*
+
+Viewer 可以開啟並檢視已儲存的任務。儲存、上傳與刪除需要 Owner 或 Admin 權限。
+
+## 規劃任務
+
+1. 選取 **Create New**（或 **Missions → New Mission**）。
+2. 在地圖上點擊以新增航點。拖曳航點即可移動它。放置時，**Next WP** 會顯示與前一個航點的距離（**Prev:**），以及與原點的距離（**Home:**）。
+3. 開啟航點抽屜（**n Waypoints**）以編輯每一列：**Command**、**Params**、**Alt**、**Frame** 與 **Radius**。拖曳列即可重新排序。列 **H** 代表原點（home）。
+4. 在抽屜頂部的 **Defaults:** 設定新航點的預設值：**Alt**（預設 50 公尺）與 **WP Radius**（預設 30 公尺）。
+
+![航點抽屜，欄位包含指令、參數、座標、高度、座標系、半徑與距離](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/missions--waypoint-drawer.webp)
+
+*航點抽屜：包含一個 Takeoff、數個 Waypoint 列、一個 Change Speed 與一個 Return to Launch，Frame 設為 Relative。*
+
+### 高度座標系
+
+| 座標系 | 高度的量測基準 |
+| --- | --- |
+| **Relative**（預設） | 原點位置 |
+| **Absolute** | 平均海平面 |
+| **Terrain** | 航點下方的地面（需要飛行控制器上有地形資料） |
+
+### 指令
+
+**Command** 選擇器可搜尋，並列出 ArduPilot 能識別的 MAVLink 任務指令，分為以下幾類：
+
+- **Navigation:** Waypoint、Takeoff、Land、Return to Launch、Loiter Unlim、Loiter Turns、Loiter Time、Loiter to Alt、Spline Waypoint、Vtol Takeoff、Vtol Land、Payload Place、Delay 等。
+- **Conditions:** Delay、Change Alt、Distance、Yaw。
+- **Do commands:** Change Speed、Set ROI Location、Set Servo、Set Relay、Jump、Digicam Control、Set Cam Trigg Dist、Mount Control、Gripper、Parachute、VTOL Transition 等。
+
+需要參數的指令（例如延遲時間、盤旋圈數、速度或伺服 PWM）會在 **Params** 中提供可編輯欄位。
+
+限制：高度 0 至 10,000 公尺、半徑 1 至 1,000 公尺，且至少需要一個航點。
+
+## 儲存
+
+選取 **Save**，輸入 **Name**（最多 100 個字元）及選填的 **Description**，然後確認 **Save Mission**。有未儲存的變更時，標頭會顯示 **Unsaved**；選取 **Update Mission** 即可儲存變更。若要開啟已儲存的任務，請前往 **Missions → Saved Missions**。
+
+## 上傳至無人機
+
+1. 儲存任務。未儲存的任務無法上傳（**Mission not saved**）。
+2. 選取 **Upload to Drone**，在 **Select UAV** 下選擇 UAV 並確認。
+3. 等待確認訊息。若無人機在 30 秒內未回應，上傳會逾時。
+
+![Upload Mission to Drone 對話方塊，列出可選擇的上線 UAV](https://docs.uavmatrix.com/zh-tw/img/screenshots/fleet-manager/missions--upload.webp)
+
+*Upload Mission to Drone 對話方塊，顯示可供選擇的上線 UAV。*
+
+若要飛行，請在無人機的[控制面板](https://docs.uavmatrix.com/zh-tw/fleet-manager/fleet/remote-control/#mission)中選取該任務，然後選取 **Start**。若無人機上的任務與您所選的不同，面板會提供 **Upload & Start**。
+
+## 從無人機讀取任務
+
+在 **Missions → Read from Drone** 下，選擇一架上線的無人機。其目前的任務會以 **Mission from *name*** 載入規劃器。若要保留副本（例如在覆寫之前），請將其儲存。
+
+> **飛行前請先在地面站檢查任務**
+>
+> Fleet Manager 會上傳您規劃的確切內容。自動飛行前，請像使用任何其他規劃工具一樣，在 QGroundControl 或 Mission Planner 中檢查任務以及載具的故障保護設定。
+
+Source: https://docs.uavmatrix.com/zh-tw/fleet-manager/missions/
