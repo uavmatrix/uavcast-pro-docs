@@ -432,16 +432,16 @@
     "message": "Aan de slag"
   },
   "nav.guides": {
-    "message": "Handleidingen"
+    "message": "Gidsen"
   },
   "nav.troubleshooting": {
-    "message": "Probleemoplossing"
+    "message": "Problemen"
   },
   "nav.reference": {
     "message": "Referentie"
   },
   "nav.changelog": {
-    "message": "Wijzigingslogboek"
+    "message": "Wijzigingen"
   },
   "product.uavcast": {
     "message": "UAVcast-Pro"

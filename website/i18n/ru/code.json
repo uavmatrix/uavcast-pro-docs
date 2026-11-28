@@ -429,19 +429,19 @@
     "message": "Порты, настройки, поддерживаемое оборудование"
   },
   "nav.getStarted": {
-    "message": "Начало работы"
+    "message": "Начало"
   },
   "nav.guides": {
     "message": "Руководства"
   },
   "nav.troubleshooting": {
-    "message": "Устранение неполадок"
+    "message": "Неполадки"
   },
   "nav.reference": {
     "message": "Справочник"
   },
   "nav.changelog": {
-    "message": "Список изменений"
+    "message": "Изменения"
   },
   "product.uavcast": {
     "message": "UAVcast-Pro"

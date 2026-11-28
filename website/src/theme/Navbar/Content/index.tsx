@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
@@ -79,6 +79,41 @@ function ProductMenu() {
   );
 }
 
+/** Short code for the language button: EN, ES … and 简 / 繁 for the two Chinese locales. */
+function localeCode(locale: string): string {
+  if (locale === 'zh-Hans') return '简';
+  if (locale === 'zh-Hant') return '繁';
+  return locale.toUpperCase();
+}
+
+/**
+ * Keeps the top bar on one row in every language: when the items don't fit,
+ * first drop the "Docs" label and narrow the search box, then hide the text
+ * links, then the "Install" label, then the product switcher. Measured on the real DOM (no fixed breakpoints), on resize,
+ * after web fonts load and when the route changes the product label.
+ */
+const COLLAPSE_LEVELS = 4;
+function useBarCollapse(ref: React.RefObject<HTMLDivElement | null>, deps: unknown[]) {
+  useEffect(() => {
+    const bar = ref.current;
+    if (!bar) return undefined;
+    const fit = () => {
+      for (let level = 0; level <= COLLAPSE_LEVELS; level += 1) {
+        for (let i = 1; i <= COLLAPSE_LEVELS; i += 1) bar.classList.toggle(`is-c${i}`, i <= level);
+        // Reading scrollWidth forces layout with the classes just set.
+        if (bar.scrollWidth <= bar.clientWidth + 1) break;
+      }
+      bar.classList.add('is-fitted');
+    };
+    fit();
+    const ro = new ResizeObserver(() => fit());
+    ro.observe(bar);
+    document.fonts?.ready.then(fit).catch(() => undefined);
+    return () => ro.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+}
+
 export function LocaleMenu({compact}: {compact?: boolean}) {
   const locales = useLocales();
   const current = locales.find((l) => l.current)!;
@@ -91,7 +126,7 @@ export function LocaleMenu({compact}: {compact?: boolean}) {
       button={
         <>
           <Icon name="globe" />
-          {!compact && <span className="uvm-mono uvm-lang__code">{current.locale.replace('zh-Hans', 'ZH').replace('zh-Hant', 'ZH-TW').toUpperCase()}</span>}
+          {!compact && <span className="uvm-mono uvm-lang__code">{localeCode(current.locale)}</span>}
         </>
       }>
       {(close) => (
@@ -163,9 +198,12 @@ export default function NavbarContent() {
   const area = useCurrentArea();
   const fleetUrl = siteConfig.customFields?.fleetManagerUrl as string;
   const install = useInstallLinks();
+  const {pathname} = useLocation();
+  const barRef = useRef<HTMLDivElement>(null);
+  useBarCollapse(barRef, [pathname]);
 
   return (
-    <div className="navbar__inner uvm-bar">
+    <div className="navbar__inner uvm-bar" ref={barRef}>
       <button
         type="button"
         className="uvm-iconbtn uvm-only-mobile"
@@ -194,9 +232,10 @@ export default function NavbarContent() {
       <Link
         to={install.command}
         className="uvm-navinstall uvm-hide-md"
-        title={translate({id: 'nav.installTitle', message: 'Install UAVcast-Pro: the one-line install command'})}>
+        title={translate({id: 'nav.installTitle', message: 'Install UAVcast-Pro: the one-line install command'})}
+        aria-label={translate({id: 'nav.installTitle', message: 'Install UAVcast-Pro: the one-line install command'})}>
         <Icon name="term" size={14} />
-        {translate({id: 'nav.install', message: 'Install'})}
+        <span className="uvm-navinstall__label">{translate({id: 'nav.install', message: 'Install'})}</span>
       </Link>
       <SearchBar />
       <LocaleMenu />

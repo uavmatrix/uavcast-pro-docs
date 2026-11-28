@@ -435,13 +435,13 @@
     "message": "Guías"
   },
   "nav.troubleshooting": {
-    "message": "Resolución de problemas"
+    "message": "Problemas"
   },
   "nav.reference": {
     "message": "Referencia"
   },
   "nav.changelog": {
-    "message": "Registro de cambios"
+    "message": "Cambios"
   },
   "product.uavcast": {
     "message": "UAVcast-Pro"

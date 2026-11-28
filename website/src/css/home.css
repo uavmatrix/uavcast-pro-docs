@@ -1282,19 +1282,49 @@
   background: var(--bg-subtle);
 }
 
-/* Room for the Install item: keep the top bar on one line. The primary links
-   (also in the sidebar and product menu) give way first, then the search box narrows. */
+/* Top bar: always one row, in every language. Items never shrink or wrap
+   their text; useBarCollapse (Navbar/Content) adds is-c1..is-c4 when they
+   don't fit: c1 drops the "Docs" label and narrows search, c2 hides the text
+   links, c3 the Install label, c4 the product switcher. */
 .navbar__inner.uvm-bar {
   flex-wrap: nowrap;
+}
+.uvm-bar > * {
+  flex-shrink: 0;
+}
+.uvm-bar > .uvm-spacer {
+  flex-shrink: 1;
+  min-width: 0;
+}
+.uvm-bar a,
+.uvm-bar button,
+.uvm-navlinks a {
+  white-space: nowrap;
+}
+.uvm-bar.is-c1 .uvm-brand__docs {
+  display: none;
+}
+@media (min-width: 997px) {
+  .uvm-bar.is-c1 .uvm-searchbtn {
+    width: 160px;
+  }
+}
+.uvm-bar.is-c2 .uvm-navlinks {
+  display: none;
+}
+.uvm-bar.is-c3 .uvm-navinstall__label {
+  display: none;
+}
+.uvm-bar.is-c3 .uvm-navinstall {
+  padding: 0 8px;
+}
+.uvm-bar.is-c4 .uvm-product,
+.uvm-bar.is-c4 .uvm-slash {
+  display: none;
 }
 @media (min-width: 997px) and (max-width: 1520px) {
   .uvm-searchbtn {
     width: 200px;
-  }
-}
-@media (min-width: 997px) and (max-width: 1400px) {
-  .uvm-navlinks {
-    display: none;
   }
 }
 .uvm-drawer__installlink {
@@ -1330,4 +1360,22 @@
     overflow-wrap: anywhere;
     line-height: 1.5;
   }
+}
+
+/* CJK headings: break only at phrase boundaries (punctuation, spaces), never
+   inside a word such as 管理; overflow-wrap is the safety net on narrow screens. */
+:lang(zh) :is(h1, h2, h3, h4, .uvm-hero__title, .uvm-sechead__t, .uvm-card__title),
+:lang(ja) :is(h1, h2, h3, h4, .uvm-hero__title),
+:lang(ko) :is(h1, h2, h3, h4, .uvm-hero__title) {
+  word-break: keep-all;
+  line-break: strict;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+:lang(zh) .uvm-hero__title {
+  /* Each phrase (e.g. 飞行并管理联网无人机。, 11 characters) must fit on one line
+     in the hero column, so the only break is at the 、. */
+  font-size: clamp(28px, 3.6vw, 48px);
+  max-width: 13em;
+  letter-spacing: -0.02em;
 }
