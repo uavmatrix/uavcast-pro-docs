@@ -1,0 +1,80 @@
+---
+title: "Usługi, pliki i opcje instalatora UAVcast-Pro"
+sidebar_label: Usługi, pliki i instalator
+description: "Usługi systemd instalowane przez UAVcast-Pro, miejsce przechowywania bazy danych, logów i nagrań, opcje instalatora dla wersji oraz przydatne polecenia SSH."
+sidebar_position: 5
+---
+
+# Usługi, pliki i opcje instalatora {/* #services-files-and-installer-options */}
+
+Na wypadek pracy z urządzeniem przez SSH: z jakich usług składa się UAVcast-Pro, gdzie znajdują się jego pliki i jak zainstalować konkretną wersję.
+
+## Usługi {/* #services */}
+
+UAVcast-Pro działa jako zestaw usług systemd. Każda z nich restartuje się sama, jeśli ulegnie awarii.
+
+| Usługa | Co robi |
+|---|---|
+| `uavcast-web` | Interfejs webowy (Node.js). Nasłuchuje na porcie 80, chyba że zmieniono **Port Serwera**. |
+| `uavcast-factory` | API w tle: licencja, modem, VPN, sieć, logi, pamięć nagrań i połączenie z Fleet Manager. |
+| `mavlink-manager` | Łącze z kontrolerem lotu i router telemetrii do stacji naziemnych. Startuje bez czekania na internet. |
+| `uavcast-camera` | Przechwytywanie z kamery, kodowanie H.264 i strumień wideo UDP. Startuje bez czekania na internet. |
+| `mediamtx` | Serwer mediów dla podglądu w przeglądarce, RTSP i nagrań. |
+| `uavcast-ntrip` | Klient NTRIP dla poprawek RTK. |
+| `uavcast-dns` | Aktualizator Dynamicznego DNS. |
+| `redis-server` | Wewnętrzna magistrala komunikatów, od której zależą pozostałe usługi. |
+| `zerotier-one`, `tailscaled` | Klienty VPN instalowane przez instalator UAVcast-Pro. |
+
+Przydatne polecenia:
+
+```bash
+sudo systemctl status uavcast-web            # is it running?
+sudo systemctl restart uavcast-camera        # restart one service
+journalctl -u mavlink-manager -f             # follow a service's log live
+journalctl -u uavcast-web --since yesterday  # read recent history
+```
+
+## Pliki i foldery {/* #files-and-folders */}
+
+Wszystko znajduje się w `/opt/uavcast-pro`.
+
+| Ścieżka | Zawartość |
+|---|---|
+| `/opt/uavcast-pro/uavcast.db` | Baza ustawień (SQLite). Wykonaj kopię zapasową w **Aplikacja → Baza Danych → Kopia Zapasowa Bazy Danych**. |
+| `/opt/uavcast-pro/logs/` | Logi usług, rotowane automatycznie. Pobierz je z **Aplikacja → Logowanie**. |
+| `/opt/uavcast-pro/recordings/` | Nagrania z kamer i logi telemetrii na pamięci wewnętrznej (chyba że **Miejsce zapisu** wskazuje dysk USB lub inny folder). |
+| `/opt/uavcast-pro/missions/` | Zapisane misje. |
+| `/opt/uavcast-pro/installer.log` | Log ostatniej instalacji. |
+| `/etc/systemd/system/uavcast-web.service` | Usługa interfejsu webowego, w tym `SERVER_PORT`. |
+
+## Opcje instalatora {/* #installer-options */}
+
+Instalator to pojedyncze polecenie. Uruchom je ponownie w dowolnym momencie, aby naprawić lub zaktualizować instalację.
+
+```bash
+# Install or update to the latest version
+curl -fsSL https://install.uavmatrix.com | sudo bash
+
+# List the versions available for this device's architecture
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l
+
+# Install a specific version
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.2
+```
+
+| Opcja | Znaczenie |
+|---|---|
+| `-l` | Lista dostępnych wersji dla tej architektury (arm64 lub amd64). |
+| `-b <version>` | Instaluje tę wersję zamiast najnowszej. |
+
+Instalator wykrywa architekturę i system, instaluje pakiety systemowe, ZeroTier, Tailscale i pakiety kamer, konfiguruje UART na Raspberry Pi, ustawia usługi i uruchamia interfejs webowy. Jego log to `/opt/uavcast-pro/installer.log`.
+
+Możesz też zaktualizować z poziomu interfejsu webowego: **Aplikacja → Aktualizacja Aplikacji**, wybierz wersję w **Wybierz wersję do aktualizacji**, a następnie kliknij **Aktualizuj Teraz**.
+
+## Punkty integracji {/* #integration-points */}
+
+UAVcast-Pro nie ma publicznego REST API. Do integracji użyj:
+
+- **MAVLink przez UDP** do każdego miejsca docelowego stacji naziemnej (domyślnie port 14550), dla dowolnego oprogramowania obsługującego MAVLink.
+- **Wideo** przez RTP/UDP (port 5600) lub RTSP z drona (port 8554). Zobacz [VLC i RTSP](../uavcast-pro/ground-stations/vlc-and-rtsp.mdx).
+- **Wstrzykiwacze**, które wysyłają twoje własne wartości czujników do strumienia MAVLink przez HTTP, UDP lub port szeregowy. Zobacz [Wstrzykiwacze](../uavcast-pro/flight-controller/injectors.mdx).

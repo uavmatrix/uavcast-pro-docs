@@ -1,0 +1,70 @@
+---
+title: "RC ile geçiş veya çift akışla iki kamera"
+sidebar_label: İki kamera ve RC ile geçiş
+description: "İki kamerayı UAVcast-Pro'ya bağlayın ve RC vericiniz üzerinden aralarında geçiş yapın ya da çift akış ile ikisini aynı anda yayınlayın. Kurulum, portlar ve CPU."
+sidebar_position: 6
+---
+
+# İki kamera: RC ile geçiş veya çift akış {/* #two-cameras-rc-switching-or-dual-stream */}
+
+UAVcast-Pro iki kamerayı destekler; örneğin ileri bakan bir kamera ile aşağı bakan veya zoom yapabilen bir kamera. İki mod arasından seçim yapabilirsiniz:
+
+| | **Geçiş** (varsayılan) | **Çift akış** |
+|---|---|---|
+| Yer kontrol istasyonunun aldığı | Tek bir video akışı; kamera 1 veya kamera 2 gösterilir | Aynı anda iki video akışı |
+| Nasıl seçersiniz | Web arayüzündeki kamera rozetleri veya bir RC kanalı | Her ikisi de her zaman canlı |
+| Portlar | **Video Port** | Kamera 1 **Video Port** üzerinde, kamera 2 **Video Portu (Kamera 2)** üzerinde (varsayılan: Video Port + 1) |
+| CPU ve bant genişliği | Tek kodlama | İki kodlama, uplink yaklaşık iki katı |
+
+## 1. İkinci kamerayı ekleyin {/* #1-add-the-second-camera */}
+
+<Steps>
+
+1. İki kameranın da bağlantısını yapın. Bir Pi 5 üzerinde iki CSI kamera, bir CSI ve bir USB kamera ya da iki USB kamera; hepsi çalışır.
+2. **Kamera → Kamera ayarları** bölümünü açın. Kamera yuvaları **CAM 1** ve **CAM 2** olarak görünür.
+3. İkinci yuvada **Kamera Ekle** düğmesine tıklayın ve kamerayı seçin.
+4. Geçiş modunda **Kamera 1'in çözünürlüğü ve FPS değeri kullanılır**. Kamera 2, kamera 1'in çözünürlüğünü destekliyorsa **Kamera 1 Çözünürlüğüne Eşle** seçeneğini açın; aksi halde kamera 2 kendi çözünürlüğünü kullanır ve eşleşecek şekilde ölçeklenir.
+
+</Steps>
+
+Kamera listede yoksa [Kamera algılanmadı](../troubleshooting/camera-not-detected.mdx) sayfasına bakın.
+
+## 2a. Kameraları verici üzerinden değiştirin {/* #2a-switch-cameras-from-your-transmitter */}
+
+<Steps>
+
+1. **RC Kanal Değiştirme** altında **RC kanalı ile kamera değiştirmeyi etkinleştir** seçeneğini açın.
+2. **RC Kanalı** alanında boş bir kanal seçin. Varsayılan kanal 7'dir.
+3. Vericinizdeki iki konumlu bir anahtarı bu kanala atayın.
+4. Anahtarı çevirin ve **Mevcut PWM** değerini izleyin: 1500 µs'nin altı kamera 1'i, 1500 µs'nin üstü kamera 2'yi seçer.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera--control-panel" alt="Kamera Kontrol Paneli: Kamera Etkinleştirilsin mi? ayarı Evet, CAM 1 dolu ve boş bir Kamera Ekle yuvası" caption="Bir kameralı Kamera Kontrol Paneli. RC Kanal Değiştirme paneli, yalnızca CAM 2 eklendiğinde ve çift akış kapalıyken altta görünür." />
+
+RC ile geçiş açıkken web arayüzündeki kamera rozetleri kamera değiştirmez. Kameraları yeniden elle seçmek için RC ile geçişi kapatın.
+
+## 2b. İki kamerayı aynı anda yayınlayın {/* #2b-stream-both-cameras-at-once */}
+
+<Steps>
+
+1. **Çift akış** seçeneğini açın. Rozet **İkisi de canlı** gösterir.
+2. Artık her kameranın **Kamera başı ayarlar** altında kendi çözünürlüğü, FPS değeri ve bit hızı vardır.
+3. **Yer Kontrol İstasyonları** bölümünü açın. Her hedefte artık **Video Portu (Kamera 2)** görünür. Varsayılan olarak **Video Portu** + 1 (5601) kullanması için boş bırakın ya da bir port girin.
+4. Yer kontrol istasyonunda ikinci akışı bu porttan alın; örneğin ikinci bir QGroundControl video kaynağı veya bir GStreamer penceresiyle. Her işletim sistemi için QGroundControl, Mission Planner ve GStreamer ayrıntıları için [Yer kontrol istasyonları ve video](../uavcast-pro/ground-stations/index.mdx#set-up-the-receiving-side) sayfasındaki alıcı taraf kurulumuna bakın.
+
+</Steps>
+
+:::warning CPU'yu izleyin
+UAVcast-Pro videoyu yazılımla kodlar. İki akışla birlikte **Sistem yükü** değerini izleyin. **CPU is near its limit** uyarısı görünürse, akışlardan birinin çözünürlüğünü veya bit hızını düşürün ya da ikinci akışı kapatın. Çift akış için Raspberry Pi 4 veya 5 önerilir.
+:::
+
+**Uçuş Haritası**, etkin her akış için bir video penceresi gösterir. Bunları haritanın altında sekme olarak gizleyebilirsiniz.
+
+## Port planlaması {/* #port-planning */}
+
+Çift akış açıkken her hedef iki video portu kullanır; ses (**Sesi yer kontrol istasyonlarına gönder** açıksa) ise video portu + 2'yi kullanır. Aynı bilgisayara daha fazla hedef eklerseniz, video portlarını en az üç aralıklı seçin; örneğin 5600 ve 5610.
+
+## İki kamerayı kaydetme {/* #recording-both-cameras */}
+
+**Kamera → Kayıtlar → Ayarlar** altında **Kamera 2'yi kaydet** yalnızca çift akış açıkken çalışır. Bkz. [Uçuşları kaydedin ve inceleyin](./recording-flight-review.mdx).

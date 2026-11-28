@@ -1,0 +1,89 @@
+---
+title: "UAVcast-Pro-video en telemetrie naar Mission Planner streamen"
+description: "Verbind Mission Planner met een UAVcast-Pro-drone: MAVLink via UDP 14550, live H.264-video in de HUD met de exacte GStreamer-bron, Windows-firewall, een tweede camera en veelvoorkomende fouten."
+sidebar_position: 2
+sidebar_label: "Mission Planner"
+---
+
+# Mission Planner {/* #mission-planner */}
+
+Mission Planner ontvangt UAVcast-Pro-telemetrie via UDP-poort 14550 en toont de live video in zijn HUD via een GStreamer-bron op poort 5600. Telemetrie vraagt één klik; video vraagt eenmalig het plakken van een pipeline, die Mission Planner onthoudt.
+
+## Voordat u begint {/* #before-you-begin */}
+
+- Op de drone een bestemming bij [Grondcontrolestations](./index.mdx) met het IP-adres van deze pc (het VPN-adres via 4G), **Telemetrie Inschakelen** aan, en voor video **Video Inschakelen** aan.
+- De camera streamt via **Camera → Camera-instellingen**.
+- Een actuele Mission Planner op Windows. Zoek het IP-adres van deze pc met `ipconfig` in een opdrachtprompt.
+
+## Telemetrie verbinden {/* #connect-telemetry */}
+
+<Steps>
+
+1. Kies in de rechterbovenhoek van Mission Planner **UDP** in de verbindingskeuzelijst. De baudrate wordt genegeerd.
+2. Selecteer **Connect**.
+3. Houd bij de vraag naar de luisterpoort `14550` aan (of de **Telemetriepoort** die u op de drone hebt ingesteld) en selecteer **OK**.
+4. Mission Planner downloadt de parameters en de drone verschijnt op de kaart.
+
+</Steps>
+
+<Screenshot id="gcs/mission-planner--connected" url="Mission Planner" alt="Mission Planner-weergave Flight Data verbonden via UDP: het verbindingsvak rechtsboven toont UDP, de link UDP14550-1-QUADRO en de knop DISCONNECT; de HUD toont DISARMED, Unhealthy AHRS en GPS: No Fix" caption="Verbonden. Het vak rechtsboven toont UDP en de link UDP14550-1-QUADRO, en de knop toont nu DISCONNECT. Dit is een testopstelling zonder GPS, dus de HUD toont DISARMED, Unhealthy AHRS en GPS: No Fix." />
+
+## De video in de HUD tonen {/* #show-the-video-in-the-hud */}
+
+<Steps>
+
+1. Klik met de rechtermuisknop op de HUD (de kunstmatige horizon) en kies **Video → Set GStreamer Source**.
+2. Plak deze pipeline en selecteer **OK**:
+
+   ```text title="Camera 1, poort 5600"
+   udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+   ```
+
+3. De video vervangt de HUD-achtergrond binnen enkele seconden. De vluchtgegevens blijven er bovenop staan.
+
+</Steps>
+
+<UiSketch variant="mission-planner-gstreamer" caption="Mission Planner, vereenvoudigd. (1) Klik met de rechtermuisknop op de HUD, (2) Video, (3) Set GStreamer Source, en plak daarna de pipeline." />
+
+Mission Planner gebruikt voor de HUD zijn eigen kopie van GStreamer, dus u hebt hiervoor de aparte installatie van [GStreamer op Windows](./gstreamer-windows.mdx) niet nodig. Als Mission Planner aanbiedt GStreamer te downloaden, sta dit dan toe.
+
+Houd het einde van de pipeline precies zoals getoond: Mission Planner heeft `video/x-raw,format=BGRA ! appsink name=outsink` nodig om het beeld te tekenen. Wijzig alleen de poort.
+
+### Lagere latentie {/* #lower-latency */}
+
+`rtpjitterbuffer` egaliseert pakketten die laat binnenkomen, ten koste van ongeveer 200 ms vertraging. Bij een goede verbinding kunt u die verlagen:
+
+```text title="Lagere latentie, poort 5600"
+udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer latency=0 ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink sync=false
+```
+
+Houd bij een zwakke 4G-verbinding de standaard jitterbuffer aan; het beeld hapert dan minder.
+
+## Mission Planner toestaan via de Windows-firewall {/* #allow-mission-planner-through-the-windows-firewall */}
+
+Windows vraagt de eerste keer dat Mission Planner op het netwerk luistert. Sta dit toe op **Privé**- en **Openbare** netwerken. Een ZeroTier- of Tailscale-adapter wordt vaak als **Openbaar** geclassificeerd, dus alleen Privé aanvinken blokkeert de VPN.
+
+Hebt u de melding weggeklikt, open dan de poorten in een PowerShell als beheerder:
+
+```powershell title="PowerShell als beheerder"
+New-NetFirewallRule -DisplayName "UAVcast-Pro telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+New-NetFirewallRule -DisplayName "UAVcast-Pro video" -Direction Inbound -Protocol UDP -LocalPort 5600-5602 -Action Allow
+```
+
+## Tweede camera (dubbele stream) {/* #second-camera-dual-stream */}
+
+Met [dubbele stream](../camera/multi-camera.mdx) aan gaat camera 2 naar **Videopoort (Camera 2)**, standaard `5601`. De HUD van Mission Planner toont één bron. Schakel de HUD-bron naar poort 5601 wanneer u camera 2 nodig hebt, of bekijk camera 2 in een apart GStreamer-venster: zie [GStreamer op Windows](./gstreamer-windows.mdx).
+
+Audio (Videopoort + 2) wordt door Mission Planner genegeerd. Speel deze af met GStreamer.
+
+## Veelvoorkomende problemen {/* #common-problems */}
+
+| Symptoom | Oorzaak en oplossing |
+|---|---|
+| Verbindt via Wi-Fi, niets via 4G | De bestemming gebruikt het LAN-IP. Gebruik het VPN-IP van deze pc. |
+| *No heartbeat packets received* | De drone stuurt niet naar deze pc: verkeerd IP, **Telemetrie Inschakelen** uit, of de firewall blokkeert UDP 14550. |
+| Telemetrie werkt, HUD blijft zwart | **Video Inschakelen** staat uit voor deze bestemming, de camera draait niet, of UDP 5600 is geblokkeerd. Test met [GStreamer op Windows](./gstreamer-windows.mdx). |
+| Video bevriest of wordt grijs uitgesmeerd | Pakketverlies. Verlaag de bitsnelheid op de drone en stel **Stream Herstelsnelheid** in op 15–30 frames. |
+| Video stopt wanneer een ander programma opent | Slechts één programma kan op een UDP-poort luisteren. Sluit het GStreamer-venster of QGroundControl dat ook 5600 gebruikt. |
+
+Meer controles: [Geen video in QGroundControl of Mission Planner](../../troubleshooting/no-video-in-gcs.mdx) en [Geen telemetrie in het grondstation](../../troubleshooting/no-telemetry-in-gcs.mdx).

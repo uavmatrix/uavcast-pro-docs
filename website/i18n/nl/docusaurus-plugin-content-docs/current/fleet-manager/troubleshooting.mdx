@@ -1,0 +1,83 @@
+---
+title: Fleet Manager-probleemoplossing - koppelen, offline, streams
+sidebar_label: Probleemoplossing
+description: "Los veelvoorkomende Fleet Manager-problemen op: koppelfouten, drones die vastzitten op PAIRING of offline zijn, Re-pair required, ontbrekende streams en mislukte commando's."
+sidebar_position: 17
+---
+
+# Fleet Manager-probleemoplossing {/* #fleet-manager-troubleshooting */}
+
+Begin bij wat u ziet. Elke rij linkt naar de oplossing, hieronder of op de gedeelde [probleemoplossingspagina's](../troubleshooting/index.mdx).
+
+| Wat u ziet | Waarschijnlijke oorzaak | Ga naar |
+|---|---|---|
+| **Invalid pairing code**, **This pairing code has expired**, **This pairing code has already been used** | Typefout, code ouder dan 5 minuten, of al geclaimd | [Koppelcode ongeldig of verlopen](../troubleshooting/pairing-code-invalid.mdx) |
+| **License is not owned by any member of this organization** | Licentie gekocht met een e-mailadres dat geen lid is | [Licenties gekocht met een ander e-mailadres](./licenses.mdx#licenses-bought-with-another-email) |
+| **This UAV is already paired to an organization** | De drone hoort nog bij een andere organisatie | [Een drone verplaatsen](./fleet/remove-or-transfer.mdx#move-a-drone-to-another-organization) |
+| UAVcast-Pro toont **No valid license found** of **Invalid or inactive license** | Licentie niet geactiveerd op de drone, verlopen of teruggegeven | [Licentie activeert niet](../troubleshooting/license-activation-failed.mdx) |
+| Geen knop **Pair Device** | U bent Viewer | [Rollen en rechten](./team/roles-and-permissions.mdx) |
+| Drone blijft hangen op **PAIRING** | De drone heeft nog geen verbinding gemaakt met de broker | [Blijft hangen op PAIRING](#stuck-on-pairing) |
+| Drone **OFFLINE** | Geen internet, poort 8883 geblokkeerd, of UAVcast-Pro draait niet | [Drone offline in Fleet Manager](../troubleshooting/drone-offline-fleet-manager.mdx) |
+| **Re-pair required** | Oud verbindingscertificaat | [Een drone opnieuw koppelen](./fleet/remove-or-transfer.mdx#re-pair-a-drone) |
+| **NO MAVLINK** op de kaart | UAVcast-Pro heeft geen gegevens van de vluchtcontroller | [Geen MAVLink-heartbeat](../troubleshooting/no-mavlink-heartbeat.mdx) |
+| Streamkoppeling mislukt: **Failed to send configuration to drone - it may be offline** | Drone offline of heeft niet binnen 15 s bevestigd | [Streamkoppeling wordt niet opgeslagen](#binding-wont-save) |
+| Streamkoppeling bestaat, maar er is geen telemetrie of video in het grondstation | Firewall, verkeerde poort, of stream uitgeschakeld | [Geen stream bij het grondstation](#no-stream-at-the-ground-station) |
+| Grondstation is verbonden met het VPN maar bereikt de drone niet | Apparaattype, drone niet op het VPN, of UDP geblokkeerd | [VPN verbonden maar drone niet bereikbaar](../troubleshooting/vpn-cant-reach-drone.mdx) |
+| Commando's werken niet, **UAVcast Upgrade Required** | Drone offline, Viewer-rol, of oudere UAVcast-Pro | [Commando's mislukken](#commands-fail) |
+| **Request timed out. UAVcast may be unreachable.** bij het op afstand openen van UAVcast-Pro | Trage verbinding via de proxy | [Proxy is traag of onvolledig](#proxy-is-slow-or-incomplete) |
+| Uitnodigingsmail nooit ontvangen | Spamfilter, of verkeerd adres | [Uitnodiging niet ontvangen](#invitation-not-received) |
+
+## Blijft hangen op PAIRING {/* #stuck-on-pairing */}
+
+**PAIRING** betekent dat Fleet Manager de code heeft geaccepteerd en wacht op de eerste heartbeat van de drone via MQTT.
+
+<Steps>
+
+1. Kijk op de pagina **Fleet Management** van UAVcast-Pro. Staat daar nog **Waiting for Manager to confirm pairing...**, dan heeft de drone zijn certificaat nog niet opgehaald. Controleer of hij internet heeft.
+2. Controleer uitgaande TCP 8883 vanaf de drone:
+
+   ```bash title="On the drone"
+   nc -vz fleet-manager.uavmatrix.com 8883
+   ```
+
+3. Hebt u een **oudere** code van dezelfde drone ingevoerd (bijvoorbeeld nadat u tweemaal **Connect to Fleet Manager** hebt geselecteerd), dan wacht UAVcast-Pro niet op die code. Selecteer **Disconnect from Fleet** als die wordt getoond, vraag een nieuwe code aan en koppel opnieuw aan dezelfde organisatie. De drone behoudt zijn record.
+
+</Steps>
+
+De drone heeft 15 minuten na het verlopen van de code de tijd om zijn certificaat op te halen. Daarna koppelt u opnieuw.
+
+## Streamkoppeling wordt niet opgeslagen {/* #binding-wont-save */}
+
+Fleet Manager slaat een streamkoppeling pas op nadat de drone deze heeft bevestigd. Controleer of de drone **ONLINE** toont en probeer het opnieuw. Is de drone online maar mislukken de koppelingen nog steeds, dan staat de drone mogelijk niet op het VPN: controleer onder **Network → Connected Devices** of hij er staat met type **UAV**, of gebruik **Push to Drone**.
+
+## Geen stream bij het grondstation {/* #no-stream-at-the-ground-station */}
+
+<Steps>
+
+1. Controleer op **Network → Stream Bindings** of **Video** en **Telemetry** zijn ingeschakeld, en noteer de **Ports**.
+2. Controleer of de grondstationsoftware precies op die poorten luistert. Alleen de eerste drone op een laptop gebruikt 5600 / 14550; elke volgende drone heeft eigen poorten.
+3. Sta inkomend UDP op die poorten toe in de firewall van de laptop. Op Windows staat u QGroundControl of Mission Planner toe op de netwerken **Private** en **Public**.
+4. Voer `tailscale status` uit op de laptop en controleer of de drone in de lijst staat.
+
+</Steps>
+
+Meer details: [Geen telemetrie in het grondstation](../troubleshooting/no-telemetry-in-gcs.mdx) en [Geen video in het grondstation](../troubleshooting/no-video-in-gcs.mdx).
+
+## Commando's mislukken {/* #commands-fail */}
+
+- De drone moet **ONLINE** zijn.
+- Alleen Owners en Admins kunnen commando's sturen. Viewers zien de commandoknoppen niet, en de server weigert commando's van hen.
+- Armen, ontwapenen en pre-flight-kalibratie vereisen UAVcast-Pro 6.3.0_rc13 of later. [Werk UAVcast-Pro bij](../get-started/updating.mdx).
+- De vluchtcontroller kan een commando weigeren, bijvoorbeeld armen bij mislukte pre-arm-controles. Lees het bericht in de kaartpop-up of op het tabblad **Logs**.
+
+## Proxy is traag of onvolledig {/* #proxy-is-slow-or-incomplete */}
+
+**Open via Proxy** stuurt elk paginaverzoek via de verbinding van de drone, met 30 seconden per verzoek, en ondersteunt geen live functies (WebSocket). Wacht bij een zwakke mobiele verbinding tot de pagina volledig is geladen, of verbind met het VPN en gebruik **Open via VPN**. Zie [UAVcast-Pro op afstand openen](./fleet/remote-uavcast.mdx).
+
+## Uitnodiging niet ontvangen {/* #invitation-not-received */}
+
+Vraag de persoon om de spammap te controleren. Controleer onder **Team** het e-mailadres onder **Pending Invitations**. Is het onjuist, trek de uitnodiging dan in met **Revoke** en nodig opnieuw uit. Uitnodigingen verlopen na 7 dagen.
+
+## Nog steeds vastgelopen? {/* #still-stuck */}
+
+Open een ticket via de supportknop met een schermafbeelding, of stuur een e-mail naar support@uavmatrix.com. Vermeld de naam en het apparaat-ID van de drone (op de UAV-pagina). Stuur het UAVcast-Pro-logboekpakket (een ZIP) naar support@uavmatrix.com met uw ticketnummer, omdat tickets alleen een afbeelding accepteren. Zie [Support](./support.mdx) en [Logboeken verzamelen](../troubleshooting/collect-logs.mdx).

@@ -1,0 +1,93 @@
+---
+title: Powiązania strumieni - wiele dronów do jednej stacji naziemnej
+sidebar_label: Powiązania strumieni
+description: Kieruj wideo i MAVLink z dowolnego drona do dowolnej stacji naziemnej przez VPN, dowiedz się, jak Fleet Manager przydziela porty UDP, oraz jak skonfigurować QGC i Mission Planner.
+sidebar_position: 2
+---
+
+# Powiązania strumieni {/* #stream-bindings */}
+
+Powiązanie strumienia nakazuje dronowi wysyłać wideo i telemetrię do jednej stacji naziemnej przez VPN twojej organizacji. Jeden dron może strumieniować do kilku stacji naziemnych, a jedna stacja naziemna może odbierać kilka dronów. Fleet Manager dobiera porty tak, aby strumienie nigdy się nie zderzały.
+
+## Zanim zaczniesz {/* #before-you-begin */}
+
+- [Włączony VPN](./index.mdx#enable-vpn) i dron w VPN (typ **UAV** w **Connected Devices**).
+- Stacja naziemna [podłączona i skonfigurowana jako **GCS**](../connect-gcs.mdx).
+- Rola **Owner** lub **Admin**.
+- Dron **online**. Fleet Manager natychmiast wysyła nowe miejsca docelowe do UAVcast-Pro i czeka na jego potwierdzenie.
+
+## Dodawanie powiązania {/* #add-a-binding */}
+
+<Steps>
+
+1. Przejdź do **Network → Stream Bindings** i wybierz **Add Binding**.
+2. W oknie **Add Stream Binding** wybierz **Drone** i **Ground Station**.
+3. Wybierz **Create Binding**.
+
+</Steps>
+
+<Screenshot id="fleet-manager/network--add-binding" alt="Okno Add Stream Binding z polami wyboru drona i stacji naziemnej oraz notatką o automatycznych portach" caption="Okno Add Stream Binding z wybranym dronem i stacją naziemną oraz informacją, że porty są przydzielane automatycznie." />
+
+Powiązanie pojawia się w tabeli z włączonymi **Video** i **Telemetry** oraz swoimi **Ports** (wideo / telemetria). UAVcast-Pro zaczyna wysyłać w ciągu kilku sekund.
+
+Jeśli dron nie potwierdzi w ciągu 15 sekund, Fleet Manager anuluje powiązanie z komunikatem **Failed to send configuration to drone - it may be offline**. Sprawdź, czy dron jest online, i spróbuj ponownie.
+
+## Jak przydzielane są porty {/* #how-ports-are-assigned */}
+
+{/* PENDING-RELEASE: port-blocks */}
+
+Porty są liczone **dla każdej stacji naziemnej**. Każde powiązanie dostaje własny blok portów UDP na tej stacji, dzięki czemu drony się nie nakładają:
+
+- port **wideo** dla kamery 1, a po nim miejsce na **kamerę 2** (podwójny strumień) i **audio**, które UAVcast-Pro wysyła na kolejne porty po porcie wideo;
+- port **telemetrii** dla MAVLink.
+
+Pierwsze powiązanie na stacji naziemnej używa wartości domyślnych: wideo **5600** i telemetria **14550**. Kolejne powiązania otrzymują następny wolny blok.
+
+Warto znać kilka konsekwencji:
+
+- **Każda stacja naziemna zaczyna od wartości domyślnych.** Ten sam dron może mieć różne porty na dwóch laptopach, zależnie od tego, co każdy z nich odbiera.
+- **Zwolnione porty są ponownie używane.** Usunięcie powiązania zwalnia jego blok dla następnego nowego powiązania z tym laptopem.
+- **Porty nie podążają za dronem.** Usunięcie i ponowne dodanie powiązania może dać inne porty. Zawsze odczytaj kolumnę **Ports** przed konfiguracją oprogramowania stacji naziemnej.
+- Porty przydziela Fleet Manager i nie można ich edytować w aplikacji.
+
+## Konfiguracja oprogramowania stacji naziemnej {/* #set-up-the-ground-station-software */}
+
+Użyj portów z kolumny **Ports** powiązania. Strumień przychodzi z adresu VPN drona.
+
+<Tabs>
+<TabItem value="qgc" label="QGroundControl">
+
+- **Telemetria:** QGroundControl domyślnie nasłuchuje na UDP 14550, więc pierwszy dron łączy się samodzielnie. Dla kolejnych dronów otwórz **Application Settings → Comm Links**, dodaj łącze typu **UDP** z portem telemetrii powiązania i połącz je.
+- **Wideo:** w **Application Settings → Video** (w starszych wersjach pod **General**) ustaw **Source** na **UDP h.264 Video Stream**, a port UDP na port wideo powiązania (**UDP URL** `0.0.0.0:<port>` w aktualnych wersjach). QGroundControl pokazuje jedno wideo naraz; aby oglądać kilka dronów, uruchom drugą instancję lub użyj odtwarzacza wideo dla pozostałych.
+
+</TabItem>
+<TabItem value="mp" label="Mission Planner">
+
+- **Telemetria:** w rozwijanej liście połączenia w prawym górnym rogu wybierz **UDP**, wybierz **Connect** i wpisz port telemetrii powiązania. Dla kilku dronów połącz się raz na każdy port; Mission Planner wyświetla każdy pojazd według system ID.
+- **Wideo:** kliknij prawym przyciskiem HUD, wybierz **Video → Set GStreamer Source** i wpisz pipeline nasłuchujący na porcie wideo powiązania. Dokładny pipeline znajdziesz w [Mission Planner](../../uavcast-pro/ground-stations/mission-planner.mdx).
+
+</TabItem>
+</Tabs>
+
+:::tip Nadaj każdemu dronowi własny identyfikator systemowy MAVLink
+Gdy jedna stacja naziemna odbiera kilka dronów, każdy kontroler lotu potrzebuje unikalnego `SYSID_THISMAV` (ArduPilot) lub `MAV_SYS_ID` (PX4). W przeciwnym razie stacja naziemna pomiesza je.
+:::
+
+Więcej o obsłudze wielu pojazdów z jednej stacji: [Strumieniowanie do wielu stacji naziemnych](../../guides/multiple-ground-stations.mdx).
+
+## Wstrzymywanie lub usuwanie powiązania {/* #pause-or-remove-a-binding */}
+
+- Wyłącz **Video** lub **Telemetry** w tabeli, aby zatrzymać dany strumień bez utraty powiązania i jego portów. Rób to, gdy dron jest online, aby otrzymał zmianę.
+- Wybierz ikonę kosza, aby usunąć powiązanie. Porty zostają zwolnione dla następnego powiązania z tą stacją naziemną.
+
+Użyj pola wyszukiwania i filtra **Video Status** (**All Video**, **Video On**, **Video Off**), aby znaleźć powiązania w dużej flocie.
+
+<Screenshot id="fleet-manager/network--stream-bindings" alt="Tabela Stream Bindings z listą dronów, stacji naziemnych, przełączników wideo i telemetrii oraz portów" caption="Zakładka Stream Bindings: każde powiązanie pokazuje drona, stację naziemną, przełączniki Video i Telemetry oraz porty." />
+
+## Powiązania na stronie UAV {/* #bindings-on-the-uav-page */}
+
+Na [stronie UAV](../fleet/uav-details.mdx#connected-ground-stations) każdego drona w sekcji **Connected Ground Stations** wymienione są jego stacje naziemne, z tymi samymi przełącznikami oraz **Pause** / **Resume**. **Add GCS** tworzy tam powiązanie w taki sam sposób jak **Add Binding** tutaj, z kolejnymi wolnymi portami na tej stacji naziemnej.
+
+## Brak strumienia? {/* #no-stream-arriving */}
+
+Zobacz [Brak telemetrii w stacji naziemnej](../../troubleshooting/no-telemetry-in-gcs.mdx) oraz [Brak wideo w stacji naziemnej](../../troubleshooting/no-video-in-gcs.mdx). Typowe przyczyny to zapora na laptopie blokująca przychodzący UDP, oprogramowanie stacji naziemnej nasłuchujące na złym porcie lub strumień wyłączony w powiązaniu.

@@ -1,0 +1,112 @@
+---
+title: 將第一架無人機新增到 Fleet Manager
+sidebar_label: 新增第一架無人機
+description: 使用 8 位數配對碼將 UAVcast-Pro 無人機與 Fleet Manager 組織配對，選擇 VPN 存取，並在機隊地圖上即時查看。
+sidebar_position: 3
+---
+
+# 新增第一架無人機 {/* #add-your-first-drone */}
+
+配對會將一架執行 UAVcast-Pro 的無人機連結到您的組織。配對完成後，無人機會與 Fleet Manager 保持憑證驗證的連線，並在重新開機或網路變更後自動重新連線。每架無人機只需配對一次，大約需要兩分鐘。
+
+您需要同時開啟兩個瀏覽器分頁：無人機的 UAVcast-Pro 網頁介面，以及 Fleet Manager。請保持兩者都開啟。
+
+## 開始之前 {/* #before-you-begin */}
+
+- **已安裝 UAVcast-Pro 並啟用授權。** 沒有有效授權時，UAVcast-Pro 會拒絕開始配對，並顯示 **No valid license found. Please activate your license first.** 請參閱[啟用您的授權](../get-started/license-activation.mdx)。
+- **授權由您組織的成員擁有。** Fleet Manager 會比對 UAVmatrix 商店中授權擁有者的電子郵件與您組織成員的電子郵件。請參閱[授權](./licenses.mdx)。
+- **組織中的 Owner 或 Admin 角色。** Viewer 看不到 **Pair Device**。請參閱[角色與權限](./team/roles-and-permissions.mdx)。
+- **無人機可連上網際網路**，可透過乙太網路、Wi-Fi 或行動數據機連線，並需開放對外 HTTPS（TCP 443）與 TCP **8883**。連接埠 8883 負責加密的 MQTT 連線，用來與 Fleet Manager 通訊。
+- **較新的 UAVcast-Pro 6 版本。** 配對從 UAVcast-Pro 的 **Management → Fleet Management** 開始。若要從 Fleet Manager 執行解鎖/上鎖與飛行前校準，需要 UAVcast-Pro 6.3.0_rc13 或更新版本；Fleet Manager 會在較舊的無人機上以版本標章標示。
+
+## 配對無人機 {/* #pair-the-drone */}
+
+<Steps>
+
+1. **在 UAVcast-Pro 取得配對碼。**
+   開啟無人機的網頁介面。在側邊欄的 **Management** 下選擇 **Fleet Management**，然後選擇 **Connect to Fleet Manager**。UAVcast-Pro 會顯示 8 位數的 **Pairing Code**、**Expires in** 倒數計時，以及 **Waiting for Manager to confirm pairing...**
+
+   <Screenshot id="uavcast-pro/fleet--connect" alt="UAVcast-Pro 的 Connect to Fleet Manager 卡片，包含 Connect to Fleet Manager 按鈕" caption="配對前的 UAVcast-Pro → Fleet Management。選擇 Connect to Fleet Manager 後會顯示 8 位數配對碼、Expires in 倒數計時，以及 Waiting for Manager to confirm pairing..." />
+
+   :::note 配對碼有效期為 5 分鐘
+   若您輸入前倒數計時已結束，請再次選擇 **Connect to Fleet Manager**。務必輸入畫面上目前顯示的配對碼：UAVcast-Pro 只會等待最新的配對碼。
+   :::
+
+2. **在 Fleet Manager 中開啟 Pair Device。**
+   前往 **Fleet** 並選擇 **Pair Device**。**Pair UAV** 精靈隨即開啟。
+
+3. **選擇組織。**
+   在 **Organization** 步驟中，選擇此無人機應隸屬的組織，然後選擇 **Continue**。清單只會顯示您擔任 Owner 或 Admin 的組織。若您只有一個組織，Fleet Manager 會自動選取並略過此步驟。
+
+4. **輸入配對碼。**
+   在 **Pairing Code** 步驟中，輸入 8 位數字並選擇 **Continue**。Fleet Manager 會查詢此配對碼，並前往 **Confirm Device**。
+
+   <Screenshot id="fleet-manager/pair-device--code" alt="Pair UAV 精靈的 Pairing Code 步驟，已輸入 8 位數配對碼" caption="Fleet → Pair Device，位於 Pairing Code 步驟，進度列顯示 Organization 已完成。" />
+
+5. **確認裝置。**
+   檢查 UAVcast-Pro 傳送的詳細資料：**Name**、**Hostname**、**OS**、**Architecture** 與 **UAVcast Version**。確認它們與您眼前的無人機相符，然後選擇 **Complete Pairing**。若您的組織已啟用 VPN，按鈕會顯示 **Continue**，下一步為 VPN。
+
+   <Screenshot id="fleet-manager/pair-device--confirm" alt="確認裝置步驟，列出名稱、主機名稱、作業系統、架構與 UAVcast 版本" caption="確認裝置步驟：請檢查 Name、Hostname、OS、Architecture 與 UAVcast Version 是否與眼前的無人機相符。" />
+
+6. **選擇 VPN 存取（僅在啟用 VPN 時）。**
+   當組織已[啟用 VPN](./network/index.mdx)時，會出現 **VPN Connection** 步驟。啟用 VPN 後，您組織網路上的地面站可直接透過 4G、Wi-Fi 或衛星接收此無人機的視訊與遙測，無需連接埠轉送。
+
+   - **Enable VPN for this UAV** 預設為勾選。UAVcast-Pro 會在配對後立即加入您組織的 VPN。
+   - 若無人機已在 Tailscale 網路上，Fleet Manager 會顯示 **Existing VPN Connection Detected**，以及該網路的伺服器與 IP。方塊會變更為 **Replace existing VPN with Fleet Manager network**，且預設不勾選。只有在您希望無人機離開目前的網路時才勾選。
+
+   選擇 **Complete Pairing**。
+
+   <Screenshot id="fleet-manager/pair-device--vpn" alt="VPN Connection 步驟，已勾選 Enable VPN for this UAV 方塊" caption="VPN Connection 步驟，列出三項優點，並已勾選 Enable VPN for this UAV。" />
+
+   :::warning 取代 VPN 可能會中斷您的 SSH 工作階段
+   若您取代現有的 Tailscale 連線，而您目前連往無人機的 SSH 或瀏覽器工作階段是透過該連線進行，該工作階段將會中斷。請在繼續之前透過本地網路連線到無人機，或之後改用其新的 VPN 位址。
+   :::
+
+7. **為無人機命名。**
+   **Pairing Complete!** 會出現，並附有 **UAV Name** 欄位。請輸入團隊在地圖上能辨識的名稱，例如機身的機號或「Survey-14」，然後選擇 **Save**。無人機上線時，名稱會同步到 UAVcast-Pro。選擇 **View UAV** 可開啟其頁面。
+
+   <Screenshot id="fleet-manager/pair-device--complete" alt="Pairing Complete 畫面，包含 UAV Name 欄位與 View UAV 按鈕" caption="Pairing Complete!，UAV Name 欄位已編輯為機號。" />
+
+</Steps>
+
+同時，UAVcast-Pro 每 5 秒會再次查詢一次，接收無人機的憑證與連線設定（若您選擇 VPN，還會接收 VPN 金鑰）。其 Fleet Management 頁面會切換為 **Connected**。
+
+## 檢查連線 {/* #check-the-connection */}
+
+無人機會在數秒內出現在 **Fleet** 與 **Fleet Map** 上。其標章含義如下：
+
+| 標章 | 意義 |
+|---|---|
+| **PAIRING** | Fleet Manager 已核發憑證，正在等待無人機的第一個心跳訊號。 |
+| **ONLINE** | 無人機已連線。UAVcast-Pro 每 5 秒傳送一次心跳訊號。 |
+| **OFFLINE** | 20 秒內未收到任何訊號。卡片會顯示最後一次看到該無人機的時間。 |
+
+若標章持續顯示 **PAIRING** 或變為 **OFFLINE**，請從無人機確認其能否連到 Fleet Manager 的 8883 連接埠：
+
+```bash title="在無人機上"
+nc -vz fleet-manager.uavmatrix.com 8883
+```
+
+若結果行以 `succeeded!` 結尾，表示連接埠已開放。其他結果則表示防火牆或電信業者封鎖了此連接埠。請參閱[Fleet Manager 中無人機離線](../troubleshooting/drone-offline-fleet-manager.mdx)。
+
+## 將視訊與遙測傳送到地面站 {/* #send-video-and-telemetry-to-a-ground-station */}
+
+配對本身不會啟動任何串流。若要使用 QGroundControl 或 Mission Planner 飛行，請[將地面站連接到 VPN](./connect-gcs.mdx)，並新增[串流綁定](./network/stream-bindings.mdx)。Fleet Manager 會為每個綁定分配一組專屬的連接埠（包含視訊、攝影機 2 與音訊所需的空間，以及遙測），因此多架無人機可同時串流到同一個地面站。第一架無人機使用預設值 5600 與 14550；其他無人機的連接埠請從綁定的 **Ports** 欄讀取。{/* PENDING-RELEASE: port-blocks */}
+
+## 配對失敗時 {/* #if-pairing-fails */}
+
+| 訊息 | 原因與解決方法 |
+|---|---|
+| **Invalid pairing code** | 沒有此配對碼。請檢查數字，或在 UAVcast-Pro 中取得新的配對碼。 |
+| **This pairing code has expired** | 已超過 5 分鐘。請在 UAVcast-Pro 中再次選擇 **Connect to Fleet Manager**。 |
+| **This pairing code has already been used** | 此配對碼已被認領，可能是您或同事。重新配對前，請先在 **Fleet** 中檢查該無人機。 |
+| **License is not owned by any member of this organization** | 無人機上的授權屬於不是成員的電子郵件。請邀請該人員加入，或請支援人員將該電子郵件新增到您的帳戶。請參閱[授權](./licenses.mdx#licenses-bought-with-another-email)。 |
+| **License has expired** / **License has been refunded** | 無人機上的授權已不再有效。請續約，或在 UAVcast-Pro 中啟用另一個授權。 |
+| **This UAV is already paired to an organization** | 此無人機屬於另一個組織，必須先在該組織中移除。請參閱[移除或轉移無人機](./fleet/remove-or-transfer.mdx)。 |
+| **Too many attempts. Please wait a minute and try again.** | 一分鐘內配對碼檢查超過 10 次，或配對嘗試超過 5 次。請等待一分鐘。 |
+
+更多原因與檢查方式請參閱：[配對碼無效或已過期](../troubleshooting/pairing-code-invalid.mdx)。
+
+## 重新配對同一架無人機 {/* #pairing-the-same-drone-again */}
+
+將無人機重新配對到**同一個**組織時，會保留其名稱、遙測紀錄與串流綁定，只會更新其憑證。當您在 UAVcast-Pro 中選擇 **Disconnect from Fleet**，或 Fleet Manager 顯示 **Re-pair required** 時，就需要這麼做。請參閱[重新配對無人機](./fleet/remove-or-transfer.mdx#re-pair-a-drone)。

@@ -1,0 +1,1218 @@
+{
+  "doc.readingTime": {
+    "message": "{n} 分钟阅读"
+  },
+  "doc.copyPageTitle": {
+    "message": "将此页面复制为 Markdown，用于笔记或 AI 助手"
+  },
+  "doc.copied": {
+    "message": "已复制"
+  },
+  "doc.copyFailed": {
+    "message": "复制失败"
+  },
+  "doc.copyPage": {
+    "message": "复制页面"
+  },
+  "doc.edit": {
+    "message": "编辑"
+  },
+  "feedback.question": {
+    "message": "此页面对您有帮助吗？"
+  },
+  "feedback.yes": {
+    "message": "是"
+  },
+  "feedback.no": {
+    "message": "否"
+  },
+  "feedback.thanks": {
+    "message": "感谢您告诉我们。"
+  },
+  "feedback.what": {
+    "message": "哪些内容缺失或有误？我们会阅读每一份反馈。"
+  },
+  "feedback.placeholder": {
+    "message": "例如：我的版本中该设置的名称不同"
+  },
+  "feedback.send": {
+    "message": "发送反馈"
+  },
+  "feedback.or": {
+    "message": "或"
+  },
+  "feedback.issue": {
+    "message": "提交 GitHub issue"
+  },
+  "feedback.or2": {
+    "message": "/"
+  },
+  "feedback.email": {
+    "message": "发送邮件给支持团队"
+  },
+  "home.eyebrow": {
+    "message": "UAVmatrix 文档 · UAVcast-Pro {version}"
+  },
+  "home.title": {
+    "message": "构建、飞行并管理联网无人机。"
+  },
+  "home.sub": {
+    "message": "UAVcast-Pro 在无人机伴随计算机上的指南与参考，以及浏览器中 Fleet Manager 的指南，涵盖从首次开机到通过 4G 传输视频和遥测数据的整个机队。"
+  },
+  "home.searchPlaceholder": {
+    "message": "搜索指南、设置和错误信息"
+  },
+  "home.popular": {
+    "message": "热门："
+  },
+  "home.goals.kicker": {
+    "message": "从您的目标开始"
+  },
+  "home.goals.title": {
+    "message": "选择与您当前工作相符的路径"
+  },
+  "home.products.kicker": {
+    "message": "产品"
+  },
+  "home.products.title": {
+    "message": "按产品浏览"
+  },
+  "home.uavcast.kicker": {
+    "message": "在无人机上"
+  },
+  "home.uavcast.body": {
+    "message": "运行于无人机的伴随计算机（例如 Raspberry Pi）。通过 4G/5G、Wi-Fi 或 VPN，将低延迟 H.264 视频和 MAVLink 遥测数据传输到 Mission Planner 或 QGroundControl。"
+  },
+  "home.uavcast.go": {
+    "message": "了解 UAVcast-Pro"
+  },
+  "home.fleet.kicker": {
+    "message": "在浏览器中"
+  },
+  "home.fleet.badge": {
+    "message": "新文档"
+  },
+  "home.fleet.body": {
+    "message": "为您的组织提供统一入口：使用 8 位配对码配对无人机，在实时地图上跟踪每次飞行，将视频和遥测数据绑定到地面站，并管理您的团队。"
+  },
+  "home.fleet.go": {
+    "message": "了解 Fleet Manager"
+  },
+  "home.start.kicker": {
+    "message": "从这里开始"
+  },
+  "home.start.title": {
+    "message": "初次使用 UAVcast-Pro？"
+  },
+  "home.popular.kicker": {
+    "message": "热门文章"
+  },
+  "home.popular.filter": {
+    "message": "筛选文章"
+  },
+  "home.popular.all": {
+    "message": "全部"
+  },
+  "home.popular.allGuides": {
+    "message": "全部指南"
+  },
+  "home.trouble.title": {
+    "message": "遇到问题？"
+  },
+  "home.trouble.all": {
+    "message": "全部修复方法"
+  },
+  "home.trouble.foot": {
+    "message": "需要联系支持？请在 UAVcast-Pro 中附上 {path} 处的日志归档。"
+  },
+  "home.trouble.path": {
+    "message": "应用程序 › 日志",
+    "description": "Menu path in the UAVcast-Pro web app; use the app’s own translated labels"
+  },
+  "home.trouble.how": {
+    "message": "处理方法"
+  },
+  "home.copy": {
+    "message": "复制 {value}"
+  },
+  "home.support.kicker": {
+    "message": "联系支持"
+  },
+  "home.support.title": {
+    "message": "仍有问题？请联系开发这款产品的人员。"
+  },
+  "home.support.body": {
+    "message": "支持由 UAVcast-Pro 开发团队负责。请附上您的 UAVcast-Pro 版本和日志归档，通常一次回复即可解决。"
+  },
+  "home.support.email": {
+    "message": "邮件"
+  },
+  "home.support.emailBody": {
+    "message": "许可证、安装和飞行相关问题。请附上日志文件。"
+  },
+  "home.support.discord": {
+    "message": "Discord 社区"
+  },
+  "home.support.discordBody": {
+    "message": "与其他飞行员交流、分享配置，并优先获取版本发布动态。"
+  },
+  "home.support.join": {
+    "message": "加入服务器"
+  },
+  "home.support.fm": {
+    "message": "在 Fleet Manager 中"
+  },
+  "home.support.fmBody": {
+    "message": "组织所有者和管理员可在应用内通过 FleetBot 和支持工单获得帮助。"
+  },
+  "home.support.fmLink": {
+    "message": "Fleet Manager 支持"
+  },
+  "home.recent.kicker": {
+    "message": "近期更新"
+  },
+  "home.recent.all": {
+    "message": "完整更新日志"
+  },
+  "home.metaTitle": {
+    "message": "UAVmatrix 文档：UAVcast-Pro 与 Fleet Manager 文档"
+  },
+  "home.metaDescription": {
+    "message": "安装 UAVcast-Pro，通过 4G/LTE 将无人机视频和 MAVLink 遥测数据传输到 Mission Planner 或 QGroundControl，并使用 UAVmatrix Fleet Manager 管理您的机队。"
+  },
+  "searchPage.title": {
+    "message": "搜索文档"
+  },
+  "search.placeholder": {
+    "message": "搜索指南、设置和错误信息"
+  },
+  "search.dialog": {
+    "message": "搜索文档"
+  },
+  "search.all": {
+    "message": "全部"
+  },
+  "search.noIndex": {
+    "message": "搜索索引由生产构建生成。请运行 npm run build，然后运行 npm run serve。"
+  },
+  "searchPage.count": {
+    "message": "“{q}”的 {n} 条结果"
+  },
+  "searchPage.metaTitle": {
+    "message": "搜索"
+  },
+  "searchPage.metaDescription": {
+    "message": "搜索 UAVmatrix 文档。"
+  },
+  "q.mp": {
+    "message": "Mission Planner 视频"
+  },
+  "q.qgc": {
+    "message": "QGroundControl 视频"
+  },
+  "q.gstWin": {
+    "message": "Windows 上的 GStreamer"
+  },
+  "q.pairing": {
+    "message": "配对码"
+  },
+  "q.apn": {
+    "message": "APN 设置"
+  },
+  "q.heartbeat": {
+    "message": "没有 MAVLink 心跳"
+  },
+  "goal.first.tag": {
+    "message": "从这里开始"
+  },
+  "goal.first.title": {
+    "message": "我正在设置第一架无人机"
+  },
+  "goal.first.body": {
+    "message": "在伴随计算机上安装 UAVcast-Pro，连接飞行控制器，并在地面站中获取实时视频。"
+  },
+  "goal.first.quick": {
+    "message": "快速入门"
+  },
+  "goal.first.mp": {
+    "message": "在 Mission Planner 中查看视频"
+  },
+  "goal.first.qgc": {
+    "message": "在 QGroundControl 中查看视频"
+  },
+  "goal.first.gcs": {
+    "message": "添加地面站"
+  },
+  "goal.first.license": {
+    "message": "激活许可证"
+  },
+  "goal.first.hw": {
+    "message": "硬件要求"
+  },
+  "goal.fleet.tag": {
+    "message": "组织所有者和管理员"
+  },
+  "goal.fleet.title": {
+    "message": "我管理一个机队"
+  },
+  "goal.fleet.body": {
+    "message": "将无人机、地面站和许可证统一纳入一个组织，在实时地图上跟踪每次飞行，并为您的团队分配合适的访问权限。"
+  },
+  "goal.fleet.org": {
+    "message": "创建组织"
+  },
+  "goal.fleet.pair": {
+    "message": "使用配对码配对无人机"
+  },
+  "goal.fleet.team": {
+    "message": "Owner、Admin 和 Viewer 角色"
+  },
+  "goal.fleet.overview": {
+    "message": "Fleet Manager 概览"
+  },
+  "goal.api.tag": {
+    "message": "HTTP · UDP · MAVLink"
+  },
+  "goal.api.title": {
+    "message": "我通过 API 集成"
+  },
+  "goal.api.body": {
+    "message": "将您自己的传感器数值推送到 MAVLink 数据流中，在您自己的软件中接收视频，并将遥测数据分发到更多工具。"
+  },
+  "goal.api.injectors": {
+    "message": "遥测注入器（HTTP、UDP、串口）"
+  },
+  "goal.api.video": {
+    "message": "在 Windows 上使用 GStreamer 接收视频"
+  },
+  "goal.api.ports": {
+    "message": "端口与协议"
+  },
+  "goal.api.streams": {
+    "message": "数据流仪表盘"
+  },
+  "goal.broken.tag": {
+    "message": "从症状开始"
+  },
+  "goal.broken.title": {
+    "message": "出现问题"
+  },
+  "goal.broken.body": {
+    "message": "每个修复方法都按能解决大多数情况的顺序列出检查项，并标明需要查看的具体设置。"
+  },
+  "goal.broken.video": {
+    "message": "地面站中没有视频"
+  },
+  "goal.broken.hb": {
+    "message": "没有 MAVLink 心跳"
+  },
+  "goal.broken.logs": {
+    "message": "为支持收集日志"
+  },
+  "goal.broken.all": {
+    "message": "全部故障排除"
+  },
+  "feat.video": {
+    "message": "视频流传输"
+  },
+  "feat.video.desc": {
+    "message": "基于 UDP 的 H.264，支持双摄像头和录制"
+  },
+  "feat.gcs": {
+    "message": "遥测与 GCS"
+  },
+  "feat.gcs.desc": {
+    "message": "Mission Planner、QGroundControl 等"
+  },
+  "feat.modem": {
+    "message": "蜂窝调制解调器"
+  },
+  "feat.modem.desc": {
+    "message": "支持 HiLink 和棒状调制解调器，自动配置 APN"
+  },
+  "feat.vpn": {
+    "message": "VPN"
+  },
+  "feat.vpn.desc": {
+    "message": "无需端口转发即可访问无人机"
+  },
+  "feat.rtk": {
+    "message": "RTK / NTRIP"
+  },
+  "feat.rtk.desc": {
+    "message": "通过蜂窝链路实现厘米级定位"
+  },
+  "feat.inj": {
+    "message": "注入器"
+  },
+  "feat.inj.desc": {
+    "message": "将您的传感器作为原生 MAVLink 数值"
+  },
+  "pl.u.install": {
+    "message": "安装"
+  },
+  "pl.u.camera": {
+    "message": "视频流传输"
+  },
+  "pl.u.modem": {
+    "message": "蜂窝调制解调器"
+  },
+  "pl.u.rtk": {
+    "message": "RTK / NTRIP"
+  },
+  "pl.f.org": {
+    "message": "设置您的组织"
+  },
+  "pl.f.pair": {
+    "message": "配对您的第一架无人机"
+  },
+  "pl.f.map": {
+    "message": "实时地图与遥测"
+  },
+  "pl.f.team": {
+    "message": "成员与角色"
+  },
+  "start.quick.meta": {
+    "message": "教程 · Raspberry Pi"
+  },
+  "start.quick.title": {
+    "message": "快速入门"
+  },
+  "start.quick.desc": {
+    "message": "从空白 SD 卡开始，直到地面站中出现实时视频和遥测数据。"
+  },
+  "start.quick.step0": {
+    "message": "刷写 64 位操作系统"
+  },
+  "start.quick.step1": {
+    "message": "运行安装程序"
+  },
+  "start.quick.step2": {
+    "message": "连接飞行控制器"
+  },
+  "start.quick.step3": {
+    "message": "添加地面站"
+  },
+  "start.hw.meta": {
+    "message": "参考"
+  },
+  "start.hw.title": {
+    "message": "硬件要求"
+  },
+  "start.hw.desc": {
+    "message": "伴随计算机、飞行控制器、摄像头和调制解调器。购买配件前请先确认。"
+  },
+  "start.hw.b0": {
+    "message": "Raspberry Pi、NVIDIA Jetson、Orange Pi"
+  },
+  "start.hw.b1": {
+    "message": "任何 arm64 或 amd64 Linux 计算机"
+  },
+  "start.hw.b2": {
+    "message": "任何 MAVLink 飞行控制器（ArduPilot、PX4）"
+  },
+  "start.hw.b3": {
+    "message": "USB 和 HiLink LTE 调制解调器"
+  },
+  "start.license.meta": {
+    "message": "许可"
+  },
+  "start.license.title": {
+    "message": "激活您的许可证"
+  },
+  "start.license.desc": {
+    "message": "在设备上激活密钥，将其转移到新硬件，并了解设备槽位的工作方式。"
+  },
+  "start.license.step0": {
+    "message": "在 UAVmatrix 商店购买密钥"
+  },
+  "start.license.step1": {
+    "message": "打开 应用程序 › 许可证管理器"
+  },
+  "start.license.step2": {
+    "message": "在联网状态下输入密钥"
+  },
+  "pop.mp": {
+    "message": "Mission Planner：遥测与视频"
+  },
+  "pop.mp.desc": {
+    "message": "通过 UDP 14550 传输遥测，并将 GStreamer 视频源用于 HUD。"
+  },
+  "pop.qgc": {
+    "message": "QGroundControl：遥测与视频"
+  },
+  "pop.qgc.desc": {
+    "message": "在桌面端和 Android 上，通过 UDP 5600 传输遥测和 H.264 视频。"
+  },
+  "pop.gstwin": {
+    "message": "在 Windows 上使用 GStreamer 接收视频"
+  },
+  "pop.gstwin.desc": {
+    "message": "安装合适的 GStreamer 版本，并播放来自无人机的视频流。"
+  },
+  "pop.4g": {
+    "message": "通过 4G 进行超视距飞行"
+  },
+  "pop.4g.desc": {
+    "message": "调制解调器、Fleet Manager VPN、遥测和视频，传输到 QGroundControl 或 Mission Planner。"
+  },
+  "pop.pair": {
+    "message": "使用 Fleet Manager 配对无人机"
+  },
+  "pop.pair.desc": {
+    "message": "将 UAVcast-Pro 显示的 8 位配对码输入 Fleet Manager。"
+  },
+  "pop.modem": {
+    "message": "设置蜂窝调制解调器"
+  },
+  "pop.modem.desc": {
+    "message": "HiLink 或棒状调制解调器、APN 与自动连接。"
+  },
+  "pop.gcs": {
+    "message": "连接 Mission Planner 或 QGroundControl"
+  },
+  "pop.gcs.desc": {
+    "message": "将遥测数据通过 UDP 14550、视频通过 UDP 5600 发送到各地面站。"
+  },
+  "pop.rtk": {
+    "message": "通过 4G 使用 NTRIP 基站实现 RTK"
+  },
+  "pop.rtk.desc": {
+    "message": "将 RTCM3 修正数据从基站发送到飞行控制器，以实现 RTK Fixed。"
+  },
+  "pop.bind": {
+    "message": "数据流绑定与端口分配"
+  },
+  "pop.bind.desc": {
+    "message": "多架无人机如何共享同一个地面站。"
+  },
+  "pop.rec": {
+    "message": "录制飞行并回放"
+  },
+  "pop.rec.desc": {
+    "message": "无人机上的视频和遥测数据，在同一时间轴上回放。"
+  },
+  "pop.ts": {
+    "message": "使用 Tailscale 远程访问"
+  },
+  "pop.ts.desc": {
+    "message": "通过 LTE 在您的 tailnet 中访问无人机，无需端口转发。"
+  },
+  "pop.multi": {
+    "message": "推流至多个地面站"
+  },
+  "pop.multi.desc": {
+    "message": "飞手、载荷操作员和观察员共用一架无人机。"
+  },
+  "pop.onboard": {
+    "message": "使用 Fleet Manager 接入机队"
+  },
+  "pop.onboard.desc": {
+    "message": "为多架无人机配置许可证、命名、配对、VPN 和数据流绑定。"
+  },
+  "ts.video": {
+    "message": "QGroundControl 或 Mission Planner 中没有视频"
+  },
+  "ts.hb": {
+    "message": "飞行控制器没有 MAVLink 心跳"
+  },
+  "ts.telemetry": {
+    "message": "地面站中没有遥测数据"
+  },
+  "ts.license": {
+    "message": "许可证密钥无法激活"
+  },
+  "ts.modem": {
+    "message": "调制解调器已连接但无法上网"
+  },
+  "ts.web": {
+    "message": "无法打开 Web 界面"
+  },
+  "ts.offline": {
+    "message": "Fleet Manager 中无人机显示为离线"
+  },
+  "ts.power": {
+    "message": "欠压与降频"
+  },
+  "recent.2026-11-24": {
+    "message": "使用其他电子邮件地址购买的许可证可以关联到您的账户。"
+  },
+  "recent.2026-11-21": {
+    "message": "摄像头修复：不再出现“权限不足”，并且关闭实时预览时视频仍会继续运行。"
+  },
+  "recent.2026-11-16": {
+    "message": "摄像头录制、存储管理和飞行回放播放器。"
+  },
+  "recent.2026-11-09": {
+    "message": "摄像头音频支持 Opus 编码，并且连接断开后 NTRIP/RTK 恢复更快。"
+  },
+  "area.getStarted": {
+    "message": "快速入门"
+  },
+  "area.getStarted.blurb": {
+    "message": "首次安装、激活并飞行"
+  },
+  "area.uavcastPro": {
+    "message": "UAVcast-Pro"
+  },
+  "area.uavcastPro.blurb": {
+    "message": "运行于无人机伴随计算机的软件"
+  },
+  "area.fleetManager": {
+    "message": "Fleet Manager"
+  },
+  "area.fleetManager.blurb": {
+    "message": "无人机、地面站和人员统一管理"
+  },
+  "area.guides": {
+    "message": "指南"
+  },
+  "area.guides.blurb": {
+    "message": "面向任务的分步指南"
+  },
+  "area.troubleshooting": {
+    "message": "故障排除"
+  },
+  "area.troubleshooting.blurb": {
+    "message": "从症状开始"
+  },
+  "area.reference": {
+    "message": "参考"
+  },
+  "area.reference.blurb": {
+    "message": "端口、设置、支持的硬件"
+  },
+  "nav.getStarted": {
+    "message": "快速入门"
+  },
+  "nav.guides": {
+    "message": "指南"
+  },
+  "nav.troubleshooting": {
+    "message": "故障排除"
+  },
+  "nav.reference": {
+    "message": "参考"
+  },
+  "nav.changelog": {
+    "message": "更新日志"
+  },
+  "product.uavcast": {
+    "message": "UAVcast-Pro"
+  },
+  "product.uavcast.sub": {
+    "message": "运行于无人机伴随计算机的软件"
+  },
+  "product.fleet": {
+    "message": "Fleet Manager"
+  },
+  "product.fleet.sub": {
+    "message": "无人机、许可证和人员统一管理"
+  },
+  "product.all": {
+    "message": "全部文档"
+  },
+  "product.all.sub": {
+    "message": "首页、指南和参考"
+  },
+  "home.schematic": {
+    "message": "数据流向：伴随计算机上的 UAVcast-Pro 通过 MQTT（TLS 加密，端口 8883）向 Fleet Manager 发送状态；视频和 MAVLink 遥测数据通过 UDP 端口 5600 和 14550 发送到地面站，可直接连接，也可通过 WireGuard VPN 连接。"
+  },
+  "home.schematic.aircraft": {
+    "message": "无人机"
+  },
+  "home.schematic.companion": {
+    "message": "伴随计算机"
+  },
+  "home.schematic.modem": {
+    "message": "LTE 调制解调器 · 4G/5G"
+  },
+  "home.schematic.cloud": {
+    "message": "云端"
+  },
+  "home.schematic.cloudBody": {
+    "message": "状态、位置、许可证"
+  },
+  "home.schematic.ground": {
+    "message": "地面"
+  },
+  "home.schematic.gcs": {
+    "message": "地面站"
+  },
+  "home.schematic.gcsVpn": {
+    "message": "直连，或通过 WireGuard VPN"
+  },
+  "home.schematic.link": {
+    "message": "链路 · 蜂窝 / Wi-Fi / 以太网"
+  },
+  "home.mini.temp": {
+    "message": "温度"
+  },
+  "home.mini.uplink": {
+    "message": "上行 · 最近 60 秒"
+  },
+  "home.mini.armed": {
+    "message": "已解锁"
+  },
+  "home.mini.online": {
+    "message": "在线"
+  },
+  "home.mini.ago": {
+    "message": "4 小时前"
+  },
+  "search.other": {
+    "message": "其他"
+  },
+  "search.close": {
+    "message": "关闭搜索"
+  },
+  "search.scope": {
+    "message": "将结果限定为"
+  },
+  "search.recent": {
+    "message": "最近"
+  },
+  "search.try": {
+    "message": "尝试"
+  },
+  "search.none": {
+    "message": "没有与“{q}”匹配的结果。"
+  },
+  "search.noneHint": {
+    "message": "尝试输入设置名称或完整的错误信息，或在 Discord 上提问。"
+  },
+  "search.loading": {
+    "message": "正在加载搜索索引…"
+  },
+  "search.navigate": {
+    "message": "导航"
+  },
+  "search.open": {
+    "message": "打开"
+  },
+  "search.toClose": {
+    "message": "关闭"
+  },
+  "search.offline": {
+    "message": "离线索引"
+  },
+  "shot.close": {
+    "message": "关闭"
+  },
+  "shot.placeholder": {
+    "message": "截图占位符：{id}"
+  },
+  "shot.soon": {
+    "message": "截图即将推出"
+  },
+  "shot.enlarge": {
+    "message": "放大截图：{alt}"
+  },
+  "symptom.check": {
+    "message": "检查 {n}"
+  },
+  "symptom.step": {
+    "message": "步骤 {n}"
+  },
+  "symptom.go": {
+    "message": "前往"
+  },
+  "symptom.see": {
+    "message": "您会看到"
+  },
+  "symptom.cause": {
+    "message": "可能原因"
+  },
+  "symptom.start": {
+    "message": "从此处开始"
+  },
+  "sketch.alt.mpConnect": {
+    "message": "Mission Planner 示意图：右上角的连接类型设置为 UDP，并点击 Connect 按钮；随后弹出对话框要求输入监听端口，已填入 14550。"
+  },
+  "sketch.alt.mpGstreamer": {
+    "message": "Mission Planner 示意图：HUD 上的右键菜单中 Video 已高亮，其子菜单项为 Set GStreamer Source。"
+  },
+  "sketch.alt.qgcVideo": {
+    "message": "QGroundControl 应用程序设置示意图：Video 页面中 Source 设置为 UDP h.264 Video Stream，UDP 地址为 0.0.0.0:5600，并启用了 Low Latency Mode。"
+  },
+  "sketch.tag": {
+    "message": "示意图"
+  },
+  "footer.store": {
+    "message": "UAVmatrix 商店"
+  },
+  "footer.quickStart": {
+    "message": "快速入门"
+  },
+  "footer.guides": {
+    "message": "指南"
+  },
+  "footer.troubleshooting": {
+    "message": "故障排除"
+  },
+  "footer.reference": {
+    "message": "参考"
+  },
+  "footer.changelog": {
+    "message": "更新日志"
+  },
+  "footer.contact": {
+    "message": "联系支持"
+  },
+  "nav.brandDocs": {
+    "message": "文档"
+  },
+  "footer.tagline": {
+    "message": "面向专业无人机操作人员的联网软件：UAVcast-Pro 运行于飞行器上，Fleet Manager 在浏览器中使用。"
+  },
+  "footer.products": {
+    "message": "产品"
+  },
+  "footer.resources": {
+    "message": "资源"
+  },
+  "footer.community": {
+    "message": "社区"
+  },
+  "footer.language": {
+    "message": "语言"
+  },
+  "nav.languageSoon": {
+    "message": "即将推出"
+  },
+  "footer.privacy": {
+    "message": "隐私"
+  },
+  "footer.terms": {
+    "message": "条款"
+  },
+  "footer.source": {
+    "message": "GitHub 上的文档源码"
+  },
+  "search.button": {
+    "message": "搜索文档…"
+  },
+  "toc.feedback": {
+    "message": "提供反馈"
+  },
+  "theme.common.editThisPage": {
+    "message": "编辑此页",
+    "description": "The link label to edit the current page"
+  },
+  "toc.top": {
+    "message": "回到顶部"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "本页总览",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "复制成功",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "复制代码到剪贴板",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "复制",
+    "description": "The copy button label on code blocks"
+  },
+  "codeblock.code": {
+    "message": "代码"
+  },
+  "doc.lastUpdated": {
+    "message": "最后更新于 {date}"
+  },
+  "doc.reportIssue": {
+    "message": "报告问题"
+  },
+  "nav.homeAria": {
+    "message": "UAVmatrix 文档首页"
+  },
+  "product.allShort": {
+    "message": "全部产品"
+  },
+  "product.menuLabel": {
+    "message": "产品"
+  },
+  "nav.language": {
+    "message": "语言"
+  },
+  "nav.languageLabel": {
+    "message": "语言 · 与 UAVcast-Pro 应用相同"
+  },
+  "nav.languageFoot": {
+    "message": "翻译工作正在进行中。产品界面已支持以上所有语言。"
+  },
+  "nav.theme": {
+    "message": "在深色和浅色模式之间切换"
+  },
+  "nav.openMenu": {
+    "message": "打开导航"
+  },
+  "nav.primary": {
+    "message": "主要"
+  },
+  "nav.openFleet": {
+    "message": "打开 Fleet Manager"
+  },
+  "notFound.kicker": {
+    "message": "页面未找到"
+  },
+  "theme.NotFound.title": {
+    "message": "找不到页面",
+    "description": "The title of the 404 page"
+  },
+  "theme.NotFound.p1": {
+    "message": "我们找不到您要找的页面。",
+    "description": "The first paragraph of the 404 page"
+  },
+  "breadcrumbs.docs": {
+    "message": "文档"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "文档侧边栏",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "sidebar.filter": {
+    "message": "筛选页面"
+  },
+  "sidebar.noMatch": {
+    "message": "没有匹配的页面标题。请尝试搜索（⌘K）。"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "关闭导航栏",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "drawer.areas": {
+    "message": "文档"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← 回到主菜单",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "页面已崩溃。",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "回到顶部",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "历史博文",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "历史博文",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "博文列表分页导航",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "较新的博文",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "较旧的博文",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "博文分页导航",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "较新一篇",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "较旧一篇",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "查看所有标签",
+    "description": "The label of the link targeting the tag list page"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "跟随系统模式",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "浅色模式",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "暗黑模式",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "切换浅色/暗黑模式（当前为{mode}）",
+    "description": "The ARIA label for the color mode toggle"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "页面路径",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "文件选项卡",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "上一页",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "下一页",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "{count} 篇文档带有标签",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged}「{tagName}」",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "版本：{versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "此为 {siteTitle} {versionLabel} 版尚未发行的文档。",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "此为 {siteTitle} {versionLabel} 版的文档，现已不再积极维护。",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "最新的文档请参阅 {latestVersionLink} ({versionLabel})。",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "最新版本",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "{heading}的直接链接",
+    "description": "Title for link to heading"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": "于 {date} ",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": "由 {user} ",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "最后{byUser}{atDate}更新",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "选择版本",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "标签：",
+    "description": "The label alongside a tag list"
+  },
+  "theme.admonition.caution": {
+    "message": "警告",
+    "description": "The default label used for the Caution admonition (:::caution)"
+  },
+  "theme.admonition.danger": {
+    "message": "危险",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "信息",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.note": {
+    "message": "备注",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "提示",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.warning": {
+    "message": "注意",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "关闭",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "最近博文导航",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "展开侧边栏分类 '{label}'",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "折叠侧边栏分类 '{label}'",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.IconExternalLink.ariaLabel": {
+    "message": "（在新标签页中打开）",
+    "description": "The ARIA label for the external link icon"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "主导航",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "选择语言",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.NotFound.p2": {
+    "message": "请联系原始链接来源网站的所有者，并告知他们链接已损坏。",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.blog.post.readMore": {
+    "message": "阅读更多",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "阅读 {title} 的全文",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "阅读需 {readingTime} 分钟",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "切换自动换行",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "主页面",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "收起侧边栏",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "收起侧边栏",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "切换导航栏",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
+    "message": "展开下拉菜单",
+    "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
+    "message": "收起下拉菜单",
+    "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "展开侧边栏",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "展开侧边栏",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.blog.post.plurals": {
+    "message": "{count} 篇博文",
+    "description": "Pluralized label for \"{count} posts\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.blog.tagTitle": {
+    "message": "{nPosts} 含有标签「{tagName}」",
+    "description": "The title of the page for a blog tag"
+  },
+  "theme.blog.author.pageTitle": {
+    "message": "{authorName} - {nPosts}",
+    "description": "The title of the page for a blog author"
+  },
+  "theme.blog.authorsList.pageTitle": {
+    "message": "作者",
+    "description": "The title of the authors page"
+  },
+  "theme.blog.authorsList.viewAll": {
+    "message": "查看所有作者",
+    "description": "The label of the link targeting the blog authors page"
+  },
+  "theme.blog.author.noPosts": {
+    "message": "该作者尚未撰写任何文章。",
+    "description": "The text for authors with 0 blog post"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "未列出页",
+    "description": "The unlisted content banner title"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "此页面未列出。搜索引擎不会对其索引，只有拥有直接链接的用户才能访问。",
+    "description": "The unlisted content banner message"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "草稿页",
+    "description": "The draft content banner title"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "此页面是草稿，仅在开发环境中可见，不会包含在正式版本中。",
+    "description": "The draft content banner message"
+  },
+  "theme.docs.DocCard.categoryDescription.plurals": {
+    "message": "{count} 个项目",
+    "description": "The default description for a category card in the generated index about how many items this category includes"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "重试",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "跳到主要内容",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "标签",
+    "description": "The title of the tag list page"
+  },
+  "install.copied": {
+    "message": "已复制"
+  },
+  "install.copyAria": {
+    "message": "复制安装命令"
+  },
+  "install.copy": {
+    "message": "复制"
+  },
+  "install.oneCommand": {
+    "message": "一条命令完成安装"
+  },
+  "install.docNote": {
+    "message": "在伴随计算机上运行（64 位 Raspberry Pi OS、Debian 或 Ubuntu，需联网）。下面的步骤说明它做了什么以及如何准备设备。"
+  },
+  "install.heroLabel": {
+    "message": "安装 UAVcast-Pro"
+  },
+  "install.moreLink": {
+    "message": "其他方法和要求"
+  },
+  "footer.install": {
+    "message": "安装 UAVcast-Pro"
+  },
+  "nav.installTitle": {
+    "message": "安装 UAVcast-Pro：一行安装命令"
+  },
+  "nav.install": {
+    "message": "安装"
+  },
+  "drawer.install": {
+    "message": "安装 UAVcast-Pro"
+  },
+  "drawer.installGuide": {
+    "message": "安装指南"
+  }
+}

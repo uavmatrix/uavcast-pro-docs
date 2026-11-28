@@ -6,7 +6,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start --host 0.0.0.0",
-    "build": "docusaurus build --locale en",
+    "build": "docusaurus build --locale en --locale es --locale it --locale nl --locale pl --locale pt --locale ru --locale tr --locale zh-Hans --locale zh-Hant",
     "build:all": "docusaurus build",
     "serve": "node scripts/serve.mjs build --port 4100 --host 0.0.0.0",
     "serve:docusaurus": "docusaurus serve --host 0.0.0.0 --port 4100 --no-open",

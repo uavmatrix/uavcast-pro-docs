@@ -11,9 +11,10 @@ const UAVCAST_VERSION = '6.5.2';
 
 /**
  * Locales. English lives at the root. A locale is "published" (linked from
- * the language menu, listed in hreflang and the sitemap index) only once its
- * translated docs exist in i18n/<path>/docusaurus-plugin-content-docs/current.
- * See README.md, "Adding a language".
+ * the language menu, listed in hreflang and the sitemap index) only once every
+ * doc under docs/ has a translation at the same relative path in
+ * i18n/<path>/docusaurus-plugin-content-docs/current. Until then it shows as
+ * "Soon". See README.md, "Adding a language".
  */
 const LOCALES = {
   en: {label: 'English', htmlLang: 'en', path: 'en'},
@@ -30,10 +31,33 @@ const LOCALES = {
 type Locale = keyof typeof LOCALES;
 const DEFAULT_LOCALE: Locale = 'en';
 
+/** Relative paths of every .md/.mdx file under `dir` (empty if it doesn't exist). */
+function docFiles(dir: string): string[] {
+  if (!fs.existsSync(dir)) return [];
+  return (fs.readdirSync(dir, {recursive: true}) as string[])
+    .filter((f) => /\.mdx?$/.test(f))
+    .map((f) => f.split(path.sep).join('/'));
+}
+
+const SOURCE_DOCS = docFiles(path.join(__dirname, 'docs'));
+
+/**
+ * Source docs that have no translation for this locale yet. A file that is
+ * missing, or still byte-identical to the English source (copied in but not
+ * translated), counts as missing.
+ */
+function missingDocs(l: Locale): string[] {
+  const dir = path.join(__dirname, 'i18n', LOCALES[l].path, 'docusaurus-plugin-content-docs', 'current');
+  const translated = new Set(docFiles(dir));
+  return SOURCE_DOCS.filter(
+    (f) =>
+      !translated.has(f) ||
+      fs.readFileSync(path.join(dir, f)).equals(fs.readFileSync(path.join(__dirname, 'docs', f))),
+  );
+}
+
 const publishedLocales = (Object.keys(LOCALES) as Locale[]).filter(
-  (l) =>
-    l === DEFAULT_LOCALE ||
-    fs.existsSync(path.join(__dirname, 'i18n', LOCALES[l].path, 'docusaurus-plugin-content-docs', 'current')),
+  (l) => l === DEFAULT_LOCALE || missingDocs(l).length === 0,
 );
 
 /** Reading time from the raw MDX source (≈ 220 wpm, code and JSX stripped). */

@@ -1,0 +1,67 @@
+---
+title: 远程无人机控制 - 飞行模式、解锁、任务
+sidebar_label: 远程控制
+description: 通过 Fleet Manager 的无人机控制面板切换飞行模式、解锁或上锁、运行任务并启动飞行前校准，并包含安全检查。
+sidebar_position: 3
+---
+
+# 远程控制 {/* #remote-control */}
+
+**UAV Control Panel**（无人机控制面板）通过 UAVcast-Pro，并经由 Fleet Manager 的加密连接，将命令发送至飞控。它可以通过无人机拥有的任何互联网链路工作（包括 4G），无需 VPN。
+
+您可以在 [Fleet](./index.mdx) 卡片上选择 **Operations** 打开它，或在[Fleet 地图](../map/index.mdx)上点击无人机弹窗中的 **Controls**。在地图上，控制面板还提供 **Terminal** 和 **Logs** 标签页。
+
+<Screenshot id="fleet-manager/control-panel" alt="无人机控制面板，包含 Flight Mode、Mission 和 Actions 三列，针对已解锁的四旋翼飞行器" caption="已解锁四旋翼飞行器（处于 LOITER 模式）的无人机控制面板：Flight Mode 中包含 RTL、Circle 和 Loiter 按钮，Mission 中已选择一个包含 18 个航点的测绘任务，Actions 中包含 Arm 和 Disarm。" />
+
+只有 **Owner** 和 **Admin** 可以发送命令。参见[角色与权限](../team/roles-and-permissions.mdx)。
+
+:::danger 远程命令会直接控制真实的飞行器
+Fleet Manager 发出的命令与地面控制站发出的命令具有同等效力，会直接作用于飞行器。请始终让飞手通过地面控制站或遥控器控制每次飞行，遵守您所在地区关于远程及超视距（BVLOS）运行的规定，并将 Fleet Manager 视为监督和调度工具，而不是您唯一的链路。
+:::
+
+## 标题栏 {/* #header */}
+
+标题栏显示无人机的状态、**ARMED** 和 **FAILSAFE** 标志、**GCS Failsafe** 徽章、地图颜色选择器（**Change map color**，以及 **Reset to auto**），以及指向[无人机页面](./uav-details.mdx)的 **Details** 链接。
+
+如果飞控的地面站故障保护已关闭，面板会发出警告：**GCS Failsafe not enabled. Without GCS failsafe, the vehicle will not return to launch if it loses connection to the ground station.** 在超视距飞行前，请在地面控制软件中设置故障保护（ArduPilot 参数 `FS_GCS_ENABLE`）。
+
+## 飞行模式 {/* #flight-mode */}
+
+从下拉列表中选择模式，或使用快捷按钮 **RTL**、**Circle** 和 **Loiter**（漫游车上为 **Hold**）。每次更改模式都需要确认，模式越危险，确认步骤越严格：
+
+| 确认方式 | 模式 |
+|---|---|
+| 简单的 **Change to *MODE*?** | STABILIZE、ALT_HOLD、LOITER、POSHOLD、BRAKE、FLOWHOLD、HOLD、FBWA、FBWB、CRUISE、QHOVER、QLOITER、QSTABILIZE |
+| 带有模式作用说明的确认 | AUTO、GUIDED、RTL、SMART_RTL、CIRCLE、FOLLOW、ZIGZAG、QRTL、TAKEOFF、AVOID_ADSB、ACRO、MANUAL |
+| 需要输入模式名称来确认 | LAND、SPORT、AUTOTUNE、FLIP、DRIFT、THROW、QLAND、QACRO、AUTOROTATE |
+
+<Screenshot id="fleet-manager/control-panel--mode-confirm" alt="模式切换确认对话框，要求输入 LAND 以确认" caption="LAND 模式的确认对话框，必须输入模式名称才能确认。" />
+
+模式列表采用 ArduPilot 的定义（Copter、Plane、Rover 和 Sub）。在 PX4 飞控上，请使用地面控制站切换模式。
+
+## 任务 {/* #mission */}
+
+运行您组织中已保存的[任务](../missions.mdx)：
+
+- **Select mission** 选择已保存的任务。计数器显示当前航点和总航点数，例如 `3/18`，或显示 **None**。
+- **Start** 会先读取无人机上的任务，并与您所选的任务进行比较。如果两者不同，会出现 **Mission Not Loaded on Drone**，并提供 **Upload & Start**。
+- **Stop**、**Read**（从无人机获取任务）和 **Clear**。
+
+每项操作都需要确认。
+
+## 操作 {/* #actions */}
+
+- **Arm** 和 **Disarm**。解锁对话框会显示 **This will arm the UAV. Ensure all personnel are clear of the propellers before arming.** 仅在台架上测试时才勾选 **Force arm (bypass pre-arm checks)**：它会跳过用于阻止不安全起飞的检查。
+- **Select action... → Preflight Calibration** 会校准陀螺仪并校平加速度计。请将飞行器完全静止地放在水平面上，然后选择 **Start Calibration**。
+
+<Screenshot id="fleet-manager/control-panel--arm-confirm" alt="解锁确认对话框，包含螺旋桨警告和未勾选的 Force arm 选项" caption="解锁对话框，显示螺旋桨警告，且未勾选 Force arm (bypass pre-arm checks)。" />
+
+解锁、上锁和飞行前校准需要无人机上的 UAVcast-Pro **6.3.0_rc13** 或更高版本。在较旧版本上，面板会显示 **UAVcast Upgrade Required**。参见[更新](../../get-started/updating.mdx)。
+
+## 命令未能执行时 {/* #when-a-command-doesnt-go-through */}
+
+- 无人机必须处于在线状态。发送给离线无人机的命令会失败。
+- Fleet Manager 会等待无人机确认每条命令。如果飞控拒绝命令（例如在预解锁检查未通过时解锁），错误会显示在面板中，并出现在无人机的状态消息中。
+- 飞控发出的消息（预解锁失败、模式切换）会显示在地图上无人机的弹窗中，以及[日志](./uav-details.mdx#logs)标签页中。
+
+手机屏幕的显示方式请参见[精简视图](../lite-view.mdx)。

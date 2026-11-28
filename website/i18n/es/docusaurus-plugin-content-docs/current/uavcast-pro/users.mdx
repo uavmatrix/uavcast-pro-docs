@@ -1,0 +1,61 @@
+---
+title: "Protege UAVcast-Pro con contraseña y agrega usuarios de solo lectura"
+description: "Asegura la interfaz web de UAVcast-Pro con un inicio de sesión de administrador, agrega usuarios de solo lectura que pueden ver la telemetría y el video pero no controlar el dron, y cambia o restablece contraseñas."
+sidebar_position: 10
+sidebar_label: "Usuarios y acceso"
+---
+
+# Usuarios y acceso {/* #users--access */}
+
+Una instalación nueva de UAVcast-Pro no tiene usuarios ni inicio de sesión: cualquiera que pueda abrir la interfaz web tiene derechos completos de administrador. Agrega un usuario administrador para activar el inicio de sesión. Después, puedes agregar usuarios de **Solo lectura** para observadores, clientes u operadores de carga útil que deben ver todo pero no cambiar nada. Abre **Gestión → Usuarios**.
+
+<Screenshot id="uavcast-pro/users" alt="Página Usuarios con el diálogo Agregar Nuevo Usuario abierto, con los campos de nombre de usuario, contraseña, confirmar contraseña y rol" caption="Gestión → Usuarios con el diálogo Agregar Nuevo Usuario abierto." />
+
+## Activar el inicio de sesión {/* #turn-on-the-login */}
+
+<Steps>
+
+1. Ve a **Usuarios** y selecciona **Agregar Usuario**.
+2. Ingresa un **Nombre de usuario** (al menos 3 caracteres), una **Contraseña** (al menos 6 caracteres) y **Confirmar Contraseña**.
+3. Selecciona **Crear Usuario**. El primer usuario siempre es **Administrador** (*El primer usuario debe ser administrador*).
+
+</Steps>
+
+A partir de ahora, cada visitante verá una página de inicio de sesión. Un inicio de sesión dura 7 días en ese navegador, o hasta que selecciones **Cerrar sesión** en el menú de usuario al final de la barra lateral.
+
+:::warning La interfaz web usa HTTP sin cifrar
+Los inicios de sesión y los ajustes viajan sin cifrar. Es aceptable en tu propia LAN o dentro de una [VPN](./connectivity/vpn.mdx), pero nunca reenvíes el puerto de la interfaz web a internet.
+:::
+
+## Roles {/* #roles */}
+
+| Puede… | **Administrador** | **Solo lectura** |
+|---|---|---|
+| Ver las páginas Tablero, Flujos de Datos, Controlador de Vuelo, Mapa de Vuelo, Control en Tierra y Cámara | Sí | Sí |
+| Ver video y telemetría en vivo, ver tableros y grabaciones | Sí | Sí |
+| Cambiar cualquier ajuste | Sí | No |
+| Armar, desarmar, cambiar de modo, iniciar o limpiar misiones | Sí | No |
+| Iniciar o detener grabaciones | Sí | No |
+| Abrir Módem, Red Privada Virtual, DNS Dinámico, Redes, Fleet Management, Usuarios y Aplicación | Sí | No (oculto) |
+
+No puedes crear un usuario de **Solo lectura** antes de que exista un administrador (*Crea primero un usuario administrador antes de agregar usuarios de solo lectura*).
+
+Los usuarios de solo lectura de la interfaz web son distintos del interruptor **Read Only** de un destino de estación de control en tierra, que bloquea los comandos de un programa de estación. Consulta [Estaciones de control en tierra](./ground-stations/index.mdx).
+
+## Cambiar la contraseña {/* #change-a-password */}
+
+Selecciona **Cambiar Contraseña**, ingresa la **Contraseña Actual** y la **Nueva Contraseña** dos veces, y selecciona **Actualizar Contraseña**. Las contraseñas se guardan como hashes bcrypt.
+
+## Eliminar un usuario {/* #delete-a-user */}
+
+Selecciona **Eliminar** en la fila del usuario y confirma.
+
+- No puedes eliminar tu propia cuenta mientras existan otros usuarios.
+- Eliminar el **último** usuario vuelve a desactivar el inicio de sesión: *Después de la eliminación, la aplicación quedará abierta sin autenticación hasta que se cree un nuevo usuario.*
+
+## Olvidaste la contraseña del administrador {/* #forgot-the-admin-password */}
+
+No hay enlace para restablecer la contraseña, porque el dron no tiene correo electrónico y la recuperación de contraseña no es un proceso de autoservicio.
+
+- Si otro administrador aún puede iniciar sesión, puede eliminar tu usuario en **Usuarios** y volver a crearlo.
+- Si nadie con el rol de administrador puede iniciar sesión, contacta con soporte en **support@uavmatrix.com**. Incluye tu clave de licencia (o el correo con el que la compraste), el nombre de host o nombre del dispositivo tal como aparece en **Aplicación → Gestor de Licencias → Dispositivos Activados**, la versión de UAVcast-Pro y si puedes acceder al dispositivo por SSH.

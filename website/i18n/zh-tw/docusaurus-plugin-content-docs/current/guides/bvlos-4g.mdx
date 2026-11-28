@@ -1,0 +1,143 @@
+---
+title: "使用 Fleet Manager VPN 透過 4G 超視距飛行"
+sidebar_label: 透過 4G 超視距飛行
+description: "使用 UAVcast-Pro、行動數據機與 Fleet Manager VPN 透過 4G/LTE 飛行無人機，並在 QGroundControl 或 Mission Planner 中查看遙測與即時視訊。"
+sidebar_position: 2
+---
+
+# 透過 4G 超視距飛行 {/* #fly-beyond-visual-range-over-4g */}
+
+本指南帶您從工作台開始，完成一趟經由行動網路的飛行：只要兩端都有訊號覆蓋，即可在 QGroundControl 或 Mission Planner 中取得遙測與即時視訊。本指南使用隨 [Fleet Manager](../fleet-manager/index.mdx) 提供的 VPN，該功能已包含在您的 UAVcast-Pro 授權中，因此兩端都不需要公用 IP 或連接埠轉送。
+
+**所需時間：**約一小時。**您需要：**
+
+- 一台伴隨電腦（Raspberry Pi 4 或 5，或其他[支援的開發板](../reference/supported-hardware.mdx)），並已[安裝](../get-started/installation.mdx) UAVcast-Pro 與[啟用授權](../get-started/license-activation.mdx)。
+- 一台 MAVLink 飛行控制器（ArduPilot 或 PX4），以及 USB 資料線或 TELEM 接線。
+- 一台 USB 4G/LTE 數據機與一張數據 SIM 卡。請先在手機上停用 SIM PIN，可省去許多麻煩。
+- 一台攝影機（若需要視訊）。
+- 一台安裝 QGroundControl 或 Mission Planner 的筆電，以及 [Tailscale 用戶端](https://tailscale.com/download)。
+- 一個您擔任 Owner 或 Admin 的 [Fleet Manager 組織](../fleet-manager/set-up-organization.mdx)。
+
+:::warning 超視距飛行規範
+在大多數國家，超出目視視距（BVLOS）的飛行需要取得授權。UAVcast-Pro 提供連線鏈路；營運核准、風險評估與故障保護則由您負責。
+:::
+
+## 架構概覽 {/* #how-it-fits-together */}
+
+```text
+Flight controller ──USB/UART── UAVcast-Pro ──4G──► internet ──► laptop
+                                    │                               │
+                                    └──── Fleet Manager VPN ────────┘
+                  telemetry and video on the ports of the stream binding
+```
+
+無人機會將 MAVLink 與 H.264 視訊傳送到您筆電的 VPN 位址。VPN 讓筆電可透過 4G 存取無人機，如同雙方位於同一個區域網路。
+
+:::tip 想自行架設 VPN？
+您可以使用自己的 ZeroTier 網路或 Tailscale tailnet 取代 Fleet Manager：請參閱 [VPN](../uavcast-pro/connectivity/vpn.mdx) 與[使用 Tailscale 遠端存取](./remote-access-tailscale.mdx)。下方步驟 1、2 以及 7 至 9 維持不變。
+:::
+
+## 1. 連接飛行控制器 {/* #1-connect-the-flight-controller */}
+
+<Steps>
+
+1. 透過 USB 將飛行控制器連接到伴隨電腦；或接線到 TELEM 連接埠（TX→RX、RX→TX、GND→GND），並在該連接埠上啟用 MAVLink（ArduPilot 為 `SERIALx_PROTOCOL = 2`，PX4 為 `MAV_x_CONFIG`）。
+2. 在 UAVcast-Pro 中，開啟 **飛行控制器 → 連線**。在 **連線類型** 下選擇 **USB** 或 **UART / Serial**，並將 **連接埠** 與 **鮑率** 保持為 **自動**。
+3. 等待狀態顯示 **已連接**，且 **飛行器** 中出現飛行器。若一直停留在 **無 heartbeat**，請參閱[無法接收 MAVLink heartbeat](../troubleshooting/no-mavlink-heartbeat.mdx)。
+
+</Steps>
+
+## 2. 設定數據機 {/* #2-set-up-the-modem */}
+
+<Steps>
+
+1. 插入數據機，並開啟 **數據機**。
+2. 將 **啟用行動數據機？** 設為 **是**，並選擇 **數據機類型**：對於可作為 USB 網路卡使用的數據機（例如 Huawei E3372h），選擇 **HiLink**；其他數據機則選擇 **傳統型（PPP）**。
+3. 使用傳統型數據機時，請將 **存取點名稱（可選）** 留空。UAVcast-Pro 會找出您 SIM 卡的 APN 並記住它。
+4. 在 **數據機資訊** 下，等待電信業者與 IPv4 位址出現。
+5. 前往 **網路**，並選擇 **數據機優先（戶外模式）**，使流量即使在附近有 Wi-Fi 時，仍經由數據機傳送。
+
+</Steps>
+
+詳細說明：[行動數據機](../uavcast-pro/connectivity/cellular-modem.mdx)。若數據機已連線但無法載入任何內容：[數據機已連線，但無網際網路](../troubleshooting/modem-no-internet.mdx)。
+
+## 3. 在 Fleet Manager 中開啟 VPN {/* #3-turn-on-the-vpn-in-fleet-manager */}
+
+在 Fleet Manager 中開啟 **Network**（網路）。若畫面顯示 **Enable VPN Network**，請選取它。這會建立您組織的私有網路。請參閱 [Network 與 VPN](../fleet-manager/network/index.mdx)。
+
+## 4. 配對無人機並將其加入 VPN {/* #4-pair-the-drone-and-put-it-on-the-vpn */}
+
+<Steps>
+
+1. 在 UAVcast-Pro 中，前往 **Management → Fleet Management**，並選取 **Connect to Fleet Manager**。記下 8 位數代碼。
+2. 在 Fleet Manager 中，前往 **Fleet → Pair Device**，輸入代碼並確認裝置。
+3. 在 **VPN Connection** 步驟中，保持勾選 **Enable VPN for this UAV**，然後選取 **Complete Pairing**。
+4. 無人機會出現在 **Network → Connected Devices** 下，類型為 **UAV**，並帶有 `100.x.y.z` 位址。
+
+</Steps>
+
+完整流程請參閱[將第一台無人機加入 Fleet Manager](../fleet-manager/pair-uav.mdx)。
+
+## 5. 將筆電加入 VPN {/* #5-put-the-laptop-on-the-vpn */}
+
+<Steps>
+
+1. 在筆電上安裝 Tailscale。您不需要 Tailscale 帳號：Fleet Manager 會自行運作 VPN 伺服器。
+2. 在 Fleet Manager 中，前往 **Network → Devices**，在 **Connect a Device** 下複製 **GCS Connection Command**，並以系統管理員身分在筆電上執行（macOS 與 Linux 請使用 `sudo`）。
+3. 筆電會出現在 **Connected Devices** 中。在 **Type** 欄位中，選擇 **Configure**，選擇 **Ground Control Station (GCS)**，然後選取 **Complete Setup**。
+4. 測試：在筆電上執行 `ping <drone VPN IP>`。之後您即可在 `http://<drone VPN IP>/` 開啟無人機的網頁介面。
+
+</Steps>
+
+詳細說明與螢幕截圖：[連接地面站](../fleet-manager/connect-gcs.mdx)。
+
+## 6. 將遙測與視訊傳送到筆電 {/* #6-send-telemetry-and-video-to-the-laptop */}
+
+<Steps>
+
+1. 在 Fleet Manager 中，前往 **Network → Stream Bindings**，然後選取 **Add Binding**。
+2. 選擇無人機與筆電，然後選取 **Create Binding**。Fleet Manager 會將目的地傳送給無人機；它會出現在無人機的 **地面控制站** 頁面中，並帶有雲端圖示。
+3. 在 **Ports** 欄位中查看此綁定的視訊與遙測連接埠。若是筆電上的第一台無人機，預設為 `5600` 與 `14550`。
+4. 在筆電上，於防火牆中允許這些連接埠的傳入 UDP（指令請見[沒有視訊，檢查 3](../troubleshooting/no-video-in-gcs.mdx#check-3)）。
+
+</Steps>
+
+## 7. 啟動攝影機 {/* #7-start-the-camera */}
+
+<Steps>
+
+1. 開啟 **攝影機 → 攝影機設定**，將 **啟用攝影機？** 設為 **是**，並在 **選擇攝影機** 中選擇攝影機。
+2. 使用 LTE 時，建議從 **解析度** 1280×720、**選擇 FPS** 15–20 與 **位元率：** 約 1000–1500 kbps 開始。
+3. 設定會在您變更時自動儲存。若攝影機尚未執行，請按下 **啟動**。
+
+</Steps>
+
+## 8. 開啟地面站 {/* #8-open-the-ground-station */}
+
+- **QGroundControl** 會自行連線至 UDP 14550。若要取得視訊，請在視訊設定中將 **Source** 設為綁定之視訊連接埠上的 **UDP h.264 Video Stream**。
+- **Mission Planner**：選擇 **UDP**，按下 **Connect**，並輸入綁定的遙測連接埠。若要取得視訊，請依照 [Mission Planner](../uavcast-pro/ground-stations/mission-planner.mdx) 頁面所述設定 GStreamer 來源。
+
+## 9. 飛行前在 4G 上測試 {/* #9-test-on-4g-before-you-fly */}
+
+<Steps>
+
+1. 關閉伴隨電腦的 Wi-Fi，或將無人機移離 Wi-Fi 範圍，使唯一的路徑為數據機。
+2. 檢查儀表板：**Cellular** 已連線、**VPN** 已連線、**Ground station** 顯示 *Sending*、**Video** 執行中。
+3. 在地面上觀察連結 10 分鐘，最好是在起飛地點。留意視訊凍結與遙測中斷。
+4. 在 **飛行控制器 → 連線** 中，檢查 **GCS Failsafe Information**。若顯示 **Warning - Failsafe Disabled**，請在飛行控制器上啟用地面站故障保護（ArduPilot：Plane 為 `FS_GCS_ENABL`，Copter 為 `FS_GCS_ENABLE`；PX4：`NAV_DLL_ACT`），並選擇其動作，使無人機在連線中斷時能自行應對。
+
+</Steps>
+
+:::tip 錄製每一次飛行
+在 **攝影機 → 錄製 → 設定** 下開啟 **解鎖時自動錄製**。您將取得每次飛行的視訊與遙測記錄，供日後回放檢視：[錄製飛行並回放檢視](./recording-flight-review.mdx)。
+:::
+
+:::note UAVnet 即將停止服務
+UAVnet 是 UAVmatrix 的託管 ZeroTier 控制器，目前正在停止服務，改由 Fleet Manager 取代。若您的無人機目前使用 UAVnet 網路，請依上文所述將它們移至 Fleet Manager VPN。
+:::
+
+## 後續步驟 {/* #next-steps */}
+
+- [透過多個地面站串流](./multiple-ground-stations.mdx)
+- [從 NTRIP 基準站加入 RTK 校正資料](./rtk-ntrip-caster.mdx)
+- 要管理多台無人機？[使用 Fleet Manager 完成機隊上線](./fleet-onboarding.mdx)

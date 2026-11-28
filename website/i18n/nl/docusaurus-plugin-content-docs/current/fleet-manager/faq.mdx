@@ -1,0 +1,88 @@
+---
+title: Fleet Manager FAQ - veelgestelde vragen over vlootbeheer van drones
+sidebar_label: FAQ
+description: "Antwoorden op veelgestelde vragen over Fleet Manager: drone-limieten, licenties, VPN, grondstations, ArduPilot en PX4, bewaring van gegevens en het verplaatsen van drones."
+sidebar_position: 18
+---
+
+# Fleet Manager FAQ {/* #fleet-manager-faq */}
+
+### Wat heb ik nodig om Fleet Manager te gebruiken? {/* #what-do-i-need-to-use-fleet-manager */}
+
+Een UAVmatrix-account, en drones met UAVcast-Pro en een geactiveerde licentie. De licentie van elke drone moet eigendom zijn van een gebruiker van uw organisatie. Zie [Licenties en plaatsen](./licenses.mdx).
+
+### Kost Fleet Manager extra? {/* #does-fleet-manager-cost-extra */}
+
+Nee. Fleet Manager is inbegrepen bij uw UAVcast-Pro-licentie. Er is geen apart abonnement en teamleden zijn gratis.
+
+### Hoeveel drones kan ik beheren? {/* #how-many-drones-can-i-manage */}
+
+Fleet Manager zelf stelt geen limiet. Elke drone heeft een eigen UAVcast-Pro-licentieactivering nodig, dus het aantal drones volgt de licenties en apparaatplaatsen die u bezit.
+
+### Hebben teamleden een licentie nodig? {/* #do-team-members-need-a-license */}
+
+Nee. Nodig zoveel Admins en Viewers uit als u nodig hebt. Zie [Uw team uitnodigen](./team/index.mdx).
+
+### Welke rollen zijn er? {/* #which-roles-are-there */}
+
+**Owner**, **Admin** en **Viewer**. Er is geen rol "Member". Zie [Rollen en rechten](./team/roles-and-permissions.mdx).
+
+### Waar komt de koppelcode vandaan? {/* #where-does-the-pairing-code-come-from */}
+
+De koppelcode komt van de drone. In UAVcast-Pro opent u **Fleet Management → Connect to Fleet Manager**. Daar verschijnt een 8-cijferige code die 5 minuten geldig is. U voert die in Fleet Manager in onder **Fleet → Pair Device**. Zie [Uw eerste drone toevoegen](./pair-uav.mdx).
+
+### Werkt Fleet Manager via 4G/LTE? {/* #does-fleet-manager-work-over-4glte */}
+
+Ja. De drone maakt een verbinding naar buiten met Fleet Manager op TCP 8883, dus het werkt achter carrier-NAT zonder publiek IP-adres. De provider mag poort 8883 niet blokkeren.
+
+### Heb ik de VPN nodig? {/* #do-i-need-the-vpn */}
+
+Alleen om video en telemetrie van drones via Fleet Manager naar grondstations te sturen. De kaart, telemetrie, commando's, missies, terminal en externe toegang tot UAVcast-Pro werken allemaal zonder VPN. Zie [Netwerk en VPN](./network/index.mdx).
+
+### Kan één grondstation meerdere drones ontvangen? {/* #can-one-ground-station-receive-several-drones */}
+
+Ja. Elke [streamkoppeling](./network/stream-bindings.mdx) krijgt een eigen blok poorten op dat grondstation, met ruimte voor een tweede camera en audio. De eerste drone gebruikt 5600 / 14550. {/* PENDING-RELEASE: port-blocks */}
+
+### Kan ik mijn eigen ZeroTier- of Tailscale-netwerk blijven gebruiken? {/* #can-i-keep-using-my-own-zerotier-or-tailscale-network */}
+
+Ja, als u geen streamkoppelingen van Fleet Manager nodig hebt. U kunt de VPN weigeren bij het koppelen. Als u accepteert, wordt een drone die al op een Tailscale-netwerk zit, verplaatst naar het netwerk van uw organisatie. Een drone op ZeroTier behoudt zijn ZeroTier-netwerk en sluit zich naast dat netwerk ook aan op het netwerk van de organisatie. ZeroTier wordt alleen verlaten wanneer u de drone ontkoppelt.
+
+### Werkt het met ArduPilot en PX4? {/* #does-it-work-with-ardupilot-and-px4 */}
+
+Fleet Manager werkt met elke MAVLink-vluchtcontroller waarmee UAVcast-Pro communiceert, ArduPilot of PX4. Live kaart, telemetrie, status, de terminal en streamkoppelingen zijn hetzelfde. De vluchtmodusbediening gebruikt de ArduPilot-modi voor Copter, Plane, Rover en Sub, en de lijst met missiecommando's volgt de ArduPilot-naamgeving. Op PX4 wijzigt u daarom modi en plant u missies vanaf uw grondstation.
+
+### Kan ik een drone alleen vanuit Fleet Manager vliegen? {/* #can-i-fly-a-drone-from-fleet-manager-alone */}
+
+Fleet Manager kan modi wijzigen, motoren armen, en missies starten, pauzeren en stoppen. Het is niet gebouwd voor handmatige besturing met de stick. Houd altijd een piloot met een grondstation of RC-zender in controle en volg de plaatselijke regelgeving.
+
+### Hoe lang wordt de vlucthistorie bewaard? {/* #how-long-is-flight-history-kept */}
+
+Standaard tot 1 jaar. Owners en Admins kunnen dit verkorten tot 7, 14, 30, 60 of 90 dagen, of tot 6 maanden. Zie [Vlucthistorie](./map/flight-history.mdx#how-long-history-is-kept).
+
+### Kan ik vluchtlogs exporteren? {/* #can-i-export-flight-logs */}
+
+Nog niet. Fleet Manager speelt vluchten af op de kaart, maar exporteert geen bestanden en slaat geen `.tlog`, DataFlash of video op.
+
+### Stuurt Fleet Manager meldingen per e-mail? {/* #does-fleet-manager-send-alerts-by-email */}
+
+Nog niet. De status wordt live getoond op de kaart, in de vlootlijst en op de UAV-pagina's. Zie [Statusindicatoren en meldingen](./alerts-and-status.mdx).
+
+### Wat gebeurt er als een drone de verbinding verliest? {/* #what-happens-when-a-drone-loses-its-connection */}
+
+Na 20 seconden zonder gegevens wordt de drone als **OFFLINE** getoond. De drone maakt automatisch weer verbinding zodra de link terugkomt. De eigen failsafes van de vluchtcontroller bepalen wat het toestel doet. Fleet Manager geeft bij verbindingsverlies geen commando's.
+
+### Hoe verplaats ik een drone naar een andere organisatie? {/* #how-do-i-move-a-drone-to-another-organization */}
+
+Verwijder de drone uit de huidige organisatie (dit verwijdert de geschiedenis daar) en koppel hem daarna aan de nieuwe organisatie. Zie [Een drone opnieuw koppelen, verwijderen of overdragen](./fleet/remove-or-transfer.mdx).
+
+### Ik heb licenties gekocht met een ander e-mailadres. Wat nu? {/* #i-bought-licenses-with-a-different-email-what-now */}
+
+Nodig dat e-mailadres uit voor de organisatie, of vraag support om het als extra licentie-e-mailadres aan uw account toe te voegen. Zie [Licenties gekocht met een ander e-mailadres](./licenses.mdx#licenses-bought-with-another-email).
+
+### Is er een mobiele app? {/* #is-there-a-mobile-app */}
+
+Er is een telefoonvriendelijke [Lite view](./lite-view.mdx) in de browser.
+
+### Zijn mijn gegevens veilig? {/* #is-my-data-safe */}
+
+Elke drone heeft een eigen TLS-clientcertificaat, elke organisatie heeft een eigen versleutelde VPN en rollen worden op de server afgedwongen. Zie [Beveiliging en privacy](./security.mdx).

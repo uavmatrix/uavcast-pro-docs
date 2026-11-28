@@ -1,0 +1,1218 @@
+{
+  "doc.readingTime": {
+    "message": "{n} мин. чтения"
+  },
+  "doc.copyPageTitle": {
+    "message": "Скопировать эту страницу в Markdown для заметок или ИИ-ассистента"
+  },
+  "doc.copied": {
+    "message": "Скопировано"
+  },
+  "doc.copyFailed": {
+    "message": "Не удалось скопировать"
+  },
+  "doc.copyPage": {
+    "message": "Копировать страницу"
+  },
+  "doc.edit": {
+    "message": "Редактировать"
+  },
+  "feedback.question": {
+    "message": "Была ли эта страница полезной?"
+  },
+  "feedback.yes": {
+    "message": "Да"
+  },
+  "feedback.no": {
+    "message": "Нет"
+  },
+  "feedback.thanks": {
+    "message": "Спасибо, что сообщили нам."
+  },
+  "feedback.what": {
+    "message": "Что отсутствовало или было неверным? Мы читаем каждое сообщение."
+  },
+  "feedback.placeholder": {
+    "message": "Например: в моей версии эта настройка называется иначе"
+  },
+  "feedback.send": {
+    "message": "Отправить отзыв"
+  },
+  "feedback.or": {
+    "message": "или"
+  },
+  "feedback.issue": {
+    "message": "создать задачу на GitHub"
+  },
+  "feedback.or2": {
+    "message": "/"
+  },
+  "feedback.email": {
+    "message": "написать в поддержку"
+  },
+  "q.mp": {
+    "message": "Видео в Mission Planner"
+  },
+  "q.qgc": {
+    "message": "Видео в QGroundControl"
+  },
+  "q.gstWin": {
+    "message": "GStreamer в Windows"
+  },
+  "q.pairing": {
+    "message": "Код сопряжения"
+  },
+  "q.apn": {
+    "message": "Настройки APN"
+  },
+  "q.heartbeat": {
+    "message": "Нет heartbeat MAVLink"
+  },
+  "goal.first.tag": {
+    "message": "Начните здесь"
+  },
+  "goal.first.title": {
+    "message": "Я настраиваю первый дрон"
+  },
+  "goal.first.body": {
+    "message": "Установите UAVcast-Pro на бортовой компаньон, подключите полётный контроллер и получите видео в реальном времени на наземной станции."
+  },
+  "goal.first.quick": {
+    "message": "Быстрый старт"
+  },
+  "goal.first.mp": {
+    "message": "Видео в Mission Planner"
+  },
+  "goal.first.qgc": {
+    "message": "Видео в QGroundControl"
+  },
+  "goal.first.gcs": {
+    "message": "Добавьте наземную станцию"
+  },
+  "goal.first.license": {
+    "message": "Активируйте лицензию"
+  },
+  "goal.first.hw": {
+    "message": "Требования к оборудованию"
+  },
+  "goal.fleet.tag": {
+    "message": "Владельцы и администраторы"
+  },
+  "goal.fleet.title": {
+    "message": "Я управляю парком"
+  },
+  "goal.fleet.body": {
+    "message": "Объедините дроны, наземные станции и лицензии в одной организации, отслеживайте каждый полёт на карте в реальном времени и откройте команде нужный доступ."
+  },
+  "goal.fleet.org": {
+    "message": "Создайте организацию"
+  },
+  "goal.fleet.pair": {
+    "message": "Сопрягите дрон по коду"
+  },
+  "goal.fleet.team": {
+    "message": "Роли Owner, Admin и Viewer"
+  },
+  "goal.fleet.overview": {
+    "message": "Обзор Fleet Manager"
+  },
+  "goal.api.tag": {
+    "message": "HTTP · UDP · MAVLink"
+  },
+  "goal.api.title": {
+    "message": "Я интегрирую через API"
+  },
+  "goal.api.body": {
+    "message": "Передавайте собственные значения датчиков в поток MAVLink, принимайте видео в своём ПО и направляйте телеметрию в другие инструменты."
+  },
+  "goal.api.injectors": {
+    "message": "Инжекторы телеметрии (HTTP, UDP, serial)"
+  },
+  "goal.api.video": {
+    "message": "Приём видео с GStreamer в Windows"
+  },
+  "goal.api.ports": {
+    "message": "Порты и протоколы"
+  },
+  "goal.api.streams": {
+    "message": "Панели Потоков данных"
+  },
+  "goal.broken.tag": {
+    "message": "Начните с симптома"
+  },
+  "goal.broken.title": {
+    "message": "Что-то не работает"
+  },
+  "goal.broken.body": {
+    "message": "Каждое решение перечисляет проверки в порядке, который устраняет большинство проблем, с указанием нужной настройки."
+  },
+  "goal.broken.video": {
+    "message": "Нет видео на наземной станции"
+  },
+  "goal.broken.hb": {
+    "message": "Нет heartbeat MAVLink"
+  },
+  "goal.broken.logs": {
+    "message": "Соберите логи для поддержки"
+  },
+  "goal.broken.all": {
+    "message": "Все способы устранения неполадок"
+  },
+  "feat.video": {
+    "message": "Видеопоток"
+  },
+  "feat.video.desc": {
+    "message": "H.264 по UDP, две камеры, запись"
+  },
+  "feat.gcs": {
+    "message": "Телеметрия и GCS"
+  },
+  "feat.gcs.desc": {
+    "message": "Mission Planner, QGroundControl и другие"
+  },
+  "feat.modem": {
+    "message": "Сотовые модемы"
+  },
+  "feat.modem.desc": {
+    "message": "Модемы HiLink и USB-стики, автоматический APN"
+  },
+  "feat.vpn": {
+    "message": "VPN"
+  },
+  "feat.vpn.desc": {
+    "message": "Доступ к дрону без проброса портов"
+  },
+  "feat.rtk": {
+    "message": "RTK / NTRIP"
+  },
+  "feat.rtk.desc": {
+    "message": "Сантиметровое позиционирование через сотовую связь"
+  },
+  "feat.inj": {
+    "message": "Инжекторы"
+  },
+  "feat.inj.desc": {
+    "message": "Ваши датчики как штатные значения MAVLink"
+  },
+  "pl.u.install": {
+    "message": "Установка"
+  },
+  "pl.u.camera": {
+    "message": "Видеопоток"
+  },
+  "pl.u.modem": {
+    "message": "Сотовые модемы"
+  },
+  "pl.u.rtk": {
+    "message": "RTK / NTRIP"
+  },
+  "pl.f.org": {
+    "message": "Настройте организацию"
+  },
+  "pl.f.pair": {
+    "message": "Сопрягите первый дрон"
+  },
+  "pl.f.map": {
+    "message": "Карта в реальном времени и телеметрия"
+  },
+  "pl.f.team": {
+    "message": "Участники и роли"
+  },
+  "start.quick.meta": {
+    "message": "Руководство · Raspberry Pi"
+  },
+  "start.quick.title": {
+    "message": "Быстрый старт"
+  },
+  "start.quick.desc": {
+    "message": "От чистой SD-карты до видео в реальном времени и телеметрии на наземной станции."
+  },
+  "start.quick.step0": {
+    "message": "Запишите 64-битную ОС"
+  },
+  "start.quick.step1": {
+    "message": "Запустите установщик"
+  },
+  "start.quick.step2": {
+    "message": "Подключите полётный контроллер"
+  },
+  "start.quick.step3": {
+    "message": "Добавьте наземную станцию"
+  },
+  "start.hw.meta": {
+    "message": "Справочник"
+  },
+  "start.hw.title": {
+    "message": "Требования к оборудованию"
+  },
+  "start.hw.desc": {
+    "message": "Бортовые компьютеры, полётные контроллеры, камеры и модемы. Проверьте это перед покупкой комплектующих."
+  },
+  "start.hw.b0": {
+    "message": "Raspberry Pi, NVIDIA Jetson, Orange Pi"
+  },
+  "start.hw.b1": {
+    "message": "Любой компьютер с Linux на arm64 или amd64"
+  },
+  "start.hw.b2": {
+    "message": "Любой полётный контроллер с MAVLink (ArduPilot, PX4)"
+  },
+  "start.hw.b3": {
+    "message": "USB-модемы и LTE-модемы HiLink"
+  },
+  "start.license.meta": {
+    "message": "Лицензирование"
+  },
+  "start.license.title": {
+    "message": "Активируйте лицензию"
+  },
+  "start.license.desc": {
+    "message": "Активируйте ключ на устройстве, перенесите его на новое оборудование и узнайте, как работают слоты устройств."
+  },
+  "start.license.step0": {
+    "message": "Купите ключ в магазине UAVmatrix"
+  },
+  "start.license.step1": {
+    "message": "Откройте Приложение › Менеджер лицензий"
+  },
+  "start.license.step2": {
+    "message": "Введите ключ при подключении к интернету"
+  },
+  "pop.mp": {
+    "message": "Mission Planner: телеметрия и видео"
+  },
+  "pop.mp.desc": {
+    "message": "Телеметрия по UDP 14550 и источник видео GStreamer для HUD."
+  },
+  "pop.qgc": {
+    "message": "QGroundControl: телеметрия и видео"
+  },
+  "pop.qgc.desc": {
+    "message": "Телеметрия и видео H.264 по UDP 5600 на компьютерах и Android."
+  },
+  "pop.gstwin": {
+    "message": "Приём видео с GStreamer в Windows"
+  },
+  "pop.gstwin.desc": {
+    "message": "Установите подходящую сборку GStreamer и воспроизведите поток с дрона."
+  },
+  "pop.4g": {
+    "message": "Полёты за пределами прямой видимости по 4G"
+  },
+  "pop.4g.desc": {
+    "message": "Модем, VPN Fleet Manager, телеметрия и видео для QGroundControl или Mission Planner."
+  },
+  "pop.pair": {
+    "message": "Сопрягите дрон с Fleet Manager"
+  },
+  "pop.pair.desc": {
+    "message": "Введите 8-значный код, который показывает UAVcast-Pro, в Fleet Manager."
+  },
+  "pop.modem": {
+    "message": "Настройте сотовый модем"
+  },
+  "pop.modem.desc": {
+    "message": "Модем HiLink или USB-стик, APN и автоматическое подключение."
+  },
+  "pop.gcs": {
+    "message": "Подключите Mission Planner или QGroundControl"
+  },
+  "pop.gcs.desc": {
+    "message": "Телеметрия по UDP 14550 и видео по UDP 5600 на каждую наземную станцию."
+  },
+  "pop.rtk": {
+    "message": "RTK через 4G с NTRIP-кастером"
+  },
+  "pop.rtk.desc": {
+    "message": "Поправки RTCM3 от кастера на полётный контроллер для RTK Fixed."
+  },
+  "pop.bind": {
+    "message": "Привязка потоков и назначение портов"
+  },
+  "pop.bind.desc": {
+    "message": "Как несколько дронов используют одну наземную станцию."
+  },
+  "pop.rec": {
+    "message": "Записывайте полёты и просматривайте их"
+  },
+  "pop.rec.desc": {
+    "message": "Видео и телеметрия на дроне, воспроизводимые на одной временной шкале."
+  },
+  "pop.ts": {
+    "message": "Удалённый доступ через Tailscale"
+  },
+  "pop.ts.desc": {
+    "message": "Доступ к дрону в вашей tailnet через LTE без проброса портов."
+  },
+  "pop.multi": {
+    "message": "Передача на несколько наземных станций"
+  },
+  "pop.multi.desc": {
+    "message": "Пилот, оператор полезной нагрузки и наблюдатели на одном дроне."
+  },
+  "pop.onboard": {
+    "message": "Подключение парка через Fleet Manager"
+  },
+  "pop.onboard.desc": {
+    "message": "Лицензии, именование, сопряжение, VPN и привязки потоков для множества дронов."
+  },
+  "ts.video": {
+    "message": "Нет видео в QGroundControl или Mission Planner"
+  },
+  "ts.hb": {
+    "message": "Нет heartbeat MAVLink от полётного контроллера"
+  },
+  "ts.telemetry": {
+    "message": "Нет телеметрии на наземной станции"
+  },
+  "ts.license": {
+    "message": "Ключ лицензии не активируется"
+  },
+  "ts.modem": {
+    "message": "Модем подключён, но интернета нет"
+  },
+  "ts.web": {
+    "message": "Веб-интерфейс не открывается"
+  },
+  "ts.offline": {
+    "message": "Дрон отображается как Offline в Fleet Manager"
+  },
+  "ts.power": {
+    "message": "Пониженное напряжение и троттлинг"
+  },
+  "recent.2026-11-24": {
+    "message": "Лицензии, купленные на другой адрес электронной почты, можно привязать к вашей учётной записи."
+  },
+  "recent.2026-11-21": {
+    "message": "Исправления камеры: больше нет ошибки «Insufficient permissions», а видео продолжает работать при выключенном предварительном просмотре."
+  },
+  "recent.2026-11-16": {
+    "message": "Запись с камеры, управление хранилищем и плеер для разбора полёта."
+  },
+  "recent.2026-11-09": {
+    "message": "Звук с камеры по Opus и более быстрое восстановление NTRIP/RTK после разрыва соединения."
+  },
+  "area.getStarted": {
+    "message": "Начало работы"
+  },
+  "area.getStarted.blurb": {
+    "message": "Установка, активация и первый полёт"
+  },
+  "area.uavcastPro": {
+    "message": "UAVcast-Pro"
+  },
+  "area.uavcastPro.blurb": {
+    "message": "ПО для бортового компаньона дрона"
+  },
+  "area.fleetManager": {
+    "message": "Fleet Manager"
+  },
+  "area.fleetManager.blurb": {
+    "message": "Дроны, наземные станции и люди в одном месте"
+  },
+  "area.guides": {
+    "message": "Руководства"
+  },
+  "area.guides.blurb": {
+    "message": "Пошаговые инструкции по задачам"
+  },
+  "area.troubleshooting": {
+    "message": "Устранение неполадок"
+  },
+  "area.troubleshooting.blurb": {
+    "message": "Начните с симптома"
+  },
+  "area.reference": {
+    "message": "Справочник"
+  },
+  "area.reference.blurb": {
+    "message": "Порты, настройки, поддерживаемое оборудование"
+  },
+  "nav.getStarted": {
+    "message": "Начало работы"
+  },
+  "nav.guides": {
+    "message": "Руководства"
+  },
+  "nav.troubleshooting": {
+    "message": "Устранение неполадок"
+  },
+  "nav.reference": {
+    "message": "Справочник"
+  },
+  "nav.changelog": {
+    "message": "Список изменений"
+  },
+  "product.uavcast": {
+    "message": "UAVcast-Pro"
+  },
+  "product.uavcast.sub": {
+    "message": "ПО для бортового компаньона дрона"
+  },
+  "product.fleet": {
+    "message": "Fleet Manager"
+  },
+  "product.fleet.sub": {
+    "message": "Дроны, лицензии и люди в одном месте"
+  },
+  "product.all": {
+    "message": "Вся документация"
+  },
+  "product.all.sub": {
+    "message": "Стартовая страница, руководства и справочник"
+  },
+  "home.eyebrow": {
+    "message": "Документация UAVmatrix · UAVcast-Pro {version}"
+  },
+  "home.title": {
+    "message": "Создавайте, летайте и управляйте подключёнными дронами."
+  },
+  "home.sub": {
+    "message": "Руководства и справочник по UAVcast-Pro на бортовом компаньоне дрона и по Fleet Manager в браузере: от первого запуска до парка, который передаёт видео и телеметрию по 4G."
+  },
+  "home.searchPlaceholder": {
+    "message": "Поиск по руководствам, настройкам и сообщениям об ошибках"
+  },
+  "home.popular": {
+    "message": "Популярное:"
+  },
+  "home.goals.kicker": {
+    "message": "Начните с вашей цели"
+  },
+  "home.goals.title": {
+    "message": "Выберите путь, который соответствует вашей задаче"
+  },
+  "home.products.kicker": {
+    "message": "Продукты"
+  },
+  "home.products.title": {
+    "message": "Выберите продукт"
+  },
+  "home.uavcast.kicker": {
+    "message": "На дроне"
+  },
+  "home.uavcast.body": {
+    "message": "Работает на бортовом компаньоне дрона, например на Raspberry Pi. Передаёт видео H.264 с низкой задержкой и телеметрию MAVLink в Mission Planner или QGroundControl по 4G/5G, Wi-Fi или VPN."
+  },
+  "home.uavcast.go": {
+    "message": "Подробнее о UAVcast-Pro"
+  },
+  "home.fleet.kicker": {
+    "message": "В браузере"
+  },
+  "home.fleet.badge": {
+    "message": "Новая документация"
+  },
+  "home.fleet.body": {
+    "message": "Единое место для вашей организации: сопрягайте дроны по 8-значному коду, следите за каждым полётом на карте в реальном времени, привязывайте видео и телеметрию к наземным станциям и управляйте командой."
+  },
+  "home.fleet.go": {
+    "message": "Подробнее о Fleet Manager"
+  },
+  "home.start.kicker": {
+    "message": "Начните здесь"
+  },
+  "home.start.title": {
+    "message": "Впервые с UAVcast-Pro?"
+  },
+  "home.popular.kicker": {
+    "message": "Популярные статьи"
+  },
+  "home.popular.filter": {
+    "message": "Фильтр статей"
+  },
+  "home.popular.all": {
+    "message": "Все"
+  },
+  "home.popular.allGuides": {
+    "message": "Все руководства"
+  },
+  "home.trouble.title": {
+    "message": "Что-то не работает?"
+  },
+  "home.trouble.all": {
+    "message": "Все решения"
+  },
+  "home.trouble.foot": {
+    "message": "Обращаетесь в поддержку? Прикрепите архив логов из {path} в UAVcast-Pro."
+  },
+  "home.trouble.path": {
+    "message": "Приложение › Логирование",
+    "description": "Menu path in the UAVcast-Pro web app; use the app’s own translated labels"
+  },
+  "home.trouble.how": {
+    "message": "Как"
+  },
+  "home.copy": {
+    "message": "Копировать {value}"
+  },
+  "home.support.kicker": {
+    "message": "Связаться с поддержкой"
+  },
+  "home.support.title": {
+    "message": "Всё ещё нужна помощь? Напишите тем, кто создаёт продукт."
+  },
+  "home.support.body": {
+    "message": "Поддержку ведут разработчики UAVcast-Pro. Укажите версию UAVcast-Pro и архив логов, и мы обычно отвечаем в одном сообщении."
+  },
+  "home.support.email": {
+    "message": "Эл. почта"
+  },
+  "home.support.emailBody": {
+    "message": "Вопросы по лицензии, установке и полётам. Прикрепите файлы логов."
+  },
+  "home.support.discord": {
+    "message": "Сообщество в Discord"
+  },
+  "home.support.discordBody": {
+    "message": "Общайтесь с другими пилотами, делитесь конфигурациями и первыми узнавайте о новых версиях."
+  },
+  "home.support.join": {
+    "message": "Присоединиться к серверу"
+  },
+  "home.support.fm": {
+    "message": "В Fleet Manager"
+  },
+  "home.support.fmBody": {
+    "message": "Владельцы и администраторы получают помощь от FleetBot и тикеты поддержки прямо в приложении."
+  },
+  "home.support.fmLink": {
+    "message": "Поддержка Fleet Manager"
+  },
+  "home.recent.kicker": {
+    "message": "Последние изменения"
+  },
+  "home.recent.all": {
+    "message": "Полный список изменений"
+  },
+  "home.metaTitle": {
+    "message": "Документация UAVmatrix: UAVcast-Pro и Fleet Manager"
+  },
+  "home.metaDescription": {
+    "message": "Установите UAVcast-Pro, передавайте видео с дрона и телеметрию MAVLink по 4G/LTE в Mission Planner или QGroundControl и управляйте парком в UAVmatrix Fleet Manager."
+  },
+  "searchPage.title": {
+    "message": "Поиск по документации"
+  },
+  "search.placeholder": {
+    "message": "Поиск по руководствам, настройкам и сообщениям об ошибках"
+  },
+  "search.dialog": {
+    "message": "Поиск по документации"
+  },
+  "search.all": {
+    "message": "Все"
+  },
+  "search.noIndex": {
+    "message": "Поисковый индекс создаётся при сборке для продакшена. Выполните npm run build, затем npm run serve."
+  },
+  "searchPage.count": {
+    "message": "Результатов: {n} по запросу «{q}»"
+  },
+  "searchPage.metaTitle": {
+    "message": "Поиск"
+  },
+  "searchPage.metaDescription": {
+    "message": "Поиск по документации UAVmatrix."
+  },
+  "home.schematic": {
+    "message": "Схема передачи данных: UAVcast-Pro на бортовом компаньоне отправляет статус в Fleet Manager по MQTT с TLS на порту 8883, а видео и телеметрия MAVLink передаются на наземную станцию по UDP-портам 5600 и 14550, напрямую или через VPN WireGuard."
+  },
+  "home.schematic.aircraft": {
+    "message": "ЛЕТАТЕЛЬНЫЙ АППАРАТ"
+  },
+  "home.schematic.companion": {
+    "message": "Бортовой компаньон"
+  },
+  "home.schematic.modem": {
+    "message": "LTE-модем · 4G/5G"
+  },
+  "home.schematic.cloud": {
+    "message": "ОБЛАКО"
+  },
+  "home.schematic.cloudBody": {
+    "message": "Статус, позиция, лицензии"
+  },
+  "home.schematic.ground": {
+    "message": "НАЗЕМНАЯ ЧАСТЬ"
+  },
+  "home.schematic.gcs": {
+    "message": "Наземная станция"
+  },
+  "home.schematic.gcsVpn": {
+    "message": "Напрямую или через VPN WireGuard"
+  },
+  "home.schematic.link": {
+    "message": "КАНАЛ · СОТОВАЯ СВЯЗЬ / WI-FI / ETHERNET"
+  },
+  "home.mini.temp": {
+    "message": "Темп."
+  },
+  "home.mini.uplink": {
+    "message": "Восходящий канал · последние 60 с"
+  },
+  "home.mini.armed": {
+    "message": "ВЗВЕДЁН"
+  },
+  "home.mini.online": {
+    "message": "ОНЛАЙН"
+  },
+  "home.mini.ago": {
+    "message": "4 ч назад"
+  },
+  "search.other": {
+    "message": "Другое"
+  },
+  "search.close": {
+    "message": "Закрыть поиск"
+  },
+  "search.scope": {
+    "message": "Ограничить результаты"
+  },
+  "search.recent": {
+    "message": "Недавние"
+  },
+  "search.try": {
+    "message": "Попробуйте"
+  },
+  "search.none": {
+    "message": "Нет результатов по запросу «{q}»."
+  },
+  "search.noneHint": {
+    "message": "Попробуйте название настройки или точный текст ошибки либо спросите в Discord."
+  },
+  "search.loading": {
+    "message": "Загрузка поискового индекса…"
+  },
+  "search.navigate": {
+    "message": "перейти"
+  },
+  "search.open": {
+    "message": "открыть"
+  },
+  "search.toClose": {
+    "message": "закрыть"
+  },
+  "search.offline": {
+    "message": "офлайн-индекс"
+  },
+  "shot.close": {
+    "message": "Закрыть"
+  },
+  "shot.placeholder": {
+    "message": "Место для скриншота: {id}"
+  },
+  "shot.soon": {
+    "message": "Скриншот скоро появится"
+  },
+  "shot.enlarge": {
+    "message": "Увеличить скриншот: {alt}"
+  },
+  "symptom.check": {
+    "message": "Проверка {n}"
+  },
+  "symptom.step": {
+    "message": "Шаг {n}"
+  },
+  "symptom.go": {
+    "message": "Перейти"
+  },
+  "symptom.see": {
+    "message": "Что вы видите"
+  },
+  "symptom.cause": {
+    "message": "Вероятная причина"
+  },
+  "symptom.start": {
+    "message": "Начните с"
+  },
+  "sketch.alt.mpConnect": {
+    "message": "Иллюстрация Mission Planner: в правом верхнем углу тип подключения UDP и кнопка Connect, затем диалог с запросом порта прослушивания, в котором введено 14550."
+  },
+  "sketch.alt.mpGstreamer": {
+    "message": "Иллюстрация Mission Planner: контекстное меню на HUD с выделенным пунктом Video и подпунктом Set GStreamer Source."
+  },
+  "sketch.alt.qgcVideo": {
+    "message": "Иллюстрация настроек приложения QGroundControl: страница Video, Source — UDP h.264 Video Stream, адрес UDP 0.0.0.0:5600 и включён Low Latency Mode."
+  },
+  "sketch.tag": {
+    "message": "Иллюстрация"
+  },
+  "footer.store": {
+    "message": "Магазин UAVmatrix"
+  },
+  "footer.quickStart": {
+    "message": "Быстрый старт"
+  },
+  "footer.guides": {
+    "message": "Руководства"
+  },
+  "footer.troubleshooting": {
+    "message": "Устранение неполадок"
+  },
+  "footer.reference": {
+    "message": "Справочник"
+  },
+  "footer.changelog": {
+    "message": "Список изменений"
+  },
+  "footer.contact": {
+    "message": "Связаться с поддержкой"
+  },
+  "nav.brandDocs": {
+    "message": "Документация"
+  },
+  "footer.tagline": {
+    "message": "ПО для подключения профессиональных операторов дронов: UAVcast-Pro на летательном аппарате, Fleet Manager в браузере."
+  },
+  "footer.products": {
+    "message": "Продукты"
+  },
+  "footer.resources": {
+    "message": "Ресурсы"
+  },
+  "footer.community": {
+    "message": "Сообщество"
+  },
+  "footer.language": {
+    "message": "Язык"
+  },
+  "nav.languageSoon": {
+    "message": "Скоро"
+  },
+  "footer.privacy": {
+    "message": "Конфиденциальность"
+  },
+  "footer.terms": {
+    "message": "Условия"
+  },
+  "footer.source": {
+    "message": "Исходный код документации на GitHub"
+  },
+  "search.button": {
+    "message": "Поиск по документации…"
+  },
+  "toc.feedback": {
+    "message": "Оставить отзыв"
+  },
+  "theme.common.editThisPage": {
+    "message": "Отредактировать эту страницу",
+    "description": "The link label to edit the current page"
+  },
+  "toc.top": {
+    "message": "Наверх"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "Содержание этой страницы",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "Скопировано",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "Скопировать в буфер обмена",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "Скопировать",
+    "description": "The copy button label on code blocks"
+  },
+  "codeblock.code": {
+    "message": "Код"
+  },
+  "doc.lastUpdated": {
+    "message": "Последнее обновление: {date}"
+  },
+  "doc.reportIssue": {
+    "message": "Сообщить о проблеме"
+  },
+  "nav.homeAria": {
+    "message": "Главная страница документации UAVmatrix"
+  },
+  "product.allShort": {
+    "message": "Все продукты"
+  },
+  "product.menuLabel": {
+    "message": "Продукты"
+  },
+  "nav.language": {
+    "message": "Язык"
+  },
+  "nav.languageLabel": {
+    "message": "Язык · как в приложении UAVcast-Pro"
+  },
+  "nav.languageFoot": {
+    "message": "Переводы в процессе. Интерфейс продукта уже доступен на всех этих языках."
+  },
+  "nav.theme": {
+    "message": "Переключить тёмную и светлую тему"
+  },
+  "nav.openMenu": {
+    "message": "Открыть навигацию"
+  },
+  "nav.primary": {
+    "message": "Основная"
+  },
+  "nav.openFleet": {
+    "message": "Открыть Fleet Manager"
+  },
+  "notFound.kicker": {
+    "message": "Страница не найдена"
+  },
+  "theme.NotFound.title": {
+    "message": "Страница не найдена",
+    "description": "The title of the 404 page"
+  },
+  "theme.NotFound.p1": {
+    "message": "К сожалению, мы не смогли найти запрашиваемую вами страницу.",
+    "description": "The first paragraph of the 404 page"
+  },
+  "breadcrumbs.docs": {
+    "message": "Документация"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "Боковая панель документации",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "sidebar.filter": {
+    "message": "Фильтр страниц"
+  },
+  "sidebar.noMatch": {
+    "message": "Ни один заголовок страницы не совпадает. Попробуйте поиск (⌘K)."
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "Закрыть панель навигации",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "drawer.areas": {
+    "message": "Документация"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← Перейти к главному меню",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "На странице произошёл сбой.",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "Прокрутка к началу",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "Архив",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "Архив",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "Навигация по странице списка блогов",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "Следующие записи",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "Предыдущие записи",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "Навигация по странице поста блога",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "Следующий пост",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "Предыдущий пост",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "Посмотреть все теги",
+    "description": "The label of the link targeting the tag list page"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "системный режим",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "Светлый режим",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "Тёмный режим",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "Переключение между темным и светлым режимом (сейчас используется {mode})",
+    "description": "The ARIA label for the color mode toggle"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "Навигационная цепочка текущей страницы",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "Страница документа",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "Предыдущая страница",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Следующая страница",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "Одна страница|{count} страницы|{count} страниц",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged} с тегом \"{tagName}\"",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "Версия: {versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "Это документация для будущей версии {siteTitle} {versionLabel}.",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "Это документация {siteTitle} для версии {versionLabel}, которая уже не поддерживается.",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "Актуальная документация находится на странице {latestVersionLink} ({versionLabel}).",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "последней версии",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "Прямая ссылка на {heading}",
+    "description": "Title for link to heading"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": " {date}",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": " от {user}",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "Последнее обновление{atDate}{byUser}",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "Версии",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "Теги:",
+    "description": "The label alongside a tag list"
+  },
+  "theme.admonition.caution": {
+    "message": "предупреждение",
+    "description": "The default label used for the Caution admonition (:::caution)"
+  },
+  "theme.admonition.danger": {
+    "message": "осторожно",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "к сведению",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.note": {
+    "message": "примечание",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "подсказка",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.warning": {
+    "message": "Внимание",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "Закрыть",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "Навигация по последним постам в блоге",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "Развернуть категорию боковой панели «{label}»",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "Свернуть категорию боковой панели «{label}»",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.IconExternalLink.ariaLabel": {
+    "message": "(откроется в новой вкладке)",
+    "description": "The ARIA label for the external link icon"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "Основная",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.NotFound.p2": {
+    "message": "Пожалуйста, обратитесь к владельцу сайта, с которого вы перешли на эту ссылку, чтобы сообщить ему, что ссылка не работает.",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "Языки",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.blog.post.readMore": {
+    "message": "Читать дальше",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "Подробнее о {title}",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "{readingTime} мин. чтения|{readingTime} мин. чтения|{readingTime} мин. чтения",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "Переключить перенос по строкам",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Главная страница",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "Свернуть сайдбар",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Свернуть сайдбар",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "Переключить навигационную панель",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
+    "message": "Развернуть выпадающее меню",
+    "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
+    "message": "Свернуть выпадающее меню",
+    "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Развернуть сайдбар",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "Развернуть сайдбар",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.blog.post.plurals": {
+    "message": "{count} запись|{count} записи|{count} записей",
+    "description": "Pluralized label for \"{count} posts\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.blog.tagTitle": {
+    "message": "{nPosts} с тегом \"{tagName}\"",
+    "description": "The title of the page for a blog tag"
+  },
+  "theme.blog.author.pageTitle": {
+    "message": "{authorName} - {nPosts}",
+    "description": "The title of the page for a blog author"
+  },
+  "theme.blog.authorsList.pageTitle": {
+    "message": "Авторы",
+    "description": "The title of the authors page"
+  },
+  "theme.blog.authorsList.viewAll": {
+    "message": "Все авторы",
+    "description": "The label of the link targeting the blog authors page"
+  },
+  "theme.blog.author.noPosts": {
+    "message": "Этот автор ещё не написал ни одной записи.",
+    "description": "The text for authors with 0 blog post"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "Скрытая страница",
+    "description": "The unlisted content banner title"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "Эта страница скрыта. Поисковые системы её не индексируют, а открыть её могут только пользователи, у которых есть прямая ссылка.",
+    "description": "The unlisted content banner message"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "Черновик",
+    "description": "The draft content banner title"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "Эта страница является черновиком. Она видна только в режиме разработки и исключена из сборки для продакшена.",
+    "description": "The draft content banner message"
+  },
+  "theme.docs.DocCard.categoryDescription.plurals": {
+    "message": "{count} элемент|{count} элемента|{count} элементов",
+    "description": "The default description for a category card in the generated index about how many items this category includes"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "Попробуйте ещё раз",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Перейти к основному содержимому",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "Теги",
+    "description": "The title of the tag list page"
+  },
+  "install.copied": {
+    "message": "Скопировано"
+  },
+  "install.copyAria": {
+    "message": "Скопировать команду установки"
+  },
+  "install.copy": {
+    "message": "Копировать"
+  },
+  "install.oneCommand": {
+    "message": "Установка одной командой"
+  },
+  "install.docNote": {
+    "message": "Выполните её на бортовом компьютере (64-битная Raspberry Pi OS, Debian или Ubuntu с доступом в интернет). Шаги ниже объясняют, что она делает и как подготовить устройство."
+  },
+  "install.heroLabel": {
+    "message": "Установить UAVcast-Pro"
+  },
+  "install.moreLink": {
+    "message": "Другие способы и требования"
+  },
+  "footer.install": {
+    "message": "Установить UAVcast-Pro"
+  },
+  "nav.installTitle": {
+    "message": "Установка UAVcast-Pro: команда установки в одну строку"
+  },
+  "nav.install": {
+    "message": "Установка"
+  },
+  "drawer.install": {
+    "message": "Установить UAVcast-Pro"
+  },
+  "drawer.installGuide": {
+    "message": "Руководство по установке"
+  }
+}

@@ -1,0 +1,127 @@
+---
+title: "購買、啟動與移轉 UAVcast-Pro 許可證"
+description: "如何購買 UAVcast-Pro 許可證、在無人機上啟動、查看裝置名額、續約，以及透過註銷舊裝置將許可證移至新的 Raspberry Pi 或 SD 卡。"
+sidebar_position: 5
+sidebar_label: "許可證與啟動"
+---
+
+# 許可證與啟動 {/* #licensing--activation */}
+
+UAVcast-Pro 需要在每台無人機上啟動有效的許可證金鑰。您可在 UAVmatrix 商店購買許可證，然後將金鑰貼入無人機上的**應用程式 → 許可證管理器**，並選擇**驗證**。每份許可證有若干台裝置名額。啟動一台無人機會使用一個名額；註銷後即可釋出名額，供另一台無人機使用。
+
+## 購買許可證 {/* #buy-a-license */}
+
+許可證於 [uavmatrix.com/products](https://uavmatrix.com/products/) 銷售。每份許可證涵蓋整個期間的更新，以及 [Fleet Manager](../fleet-manager/index.mdx)（包括透過 4G 連線到無人機所用的 VPN）。
+
+| 方案 | 裝置名額 | 有效期限 |
+|---|---|---|
+| Basic | 1 | 1 年 |
+| Silver | 2 | 1 年 |
+| Gold | 4 | 2 年 |
+
+商店頁面一律顯示目前的方案與價格。目前沒有免費試用的許可證。
+
+付款後，您會收到一封訂單確認郵件，內含**許可證金鑰**，由五組、每組四個字元組成。
+
+金鑰也會顯示在您的商店帳戶中的 **Licenses** 下，並附有裝置名額與到期日。
+
+:::info 許可證期限自首次啟動起算
+今天購買、下個月才啟動的許可證，會在啟動日期之後的一個期間結束時到期，而非購買日期。
+:::
+
+## 在無人機上啟動許可證 {/* #activate-the-license-on-a-drone */}
+
+啟動期間，無人機需要連上網際網路（Wi-Fi、乙太網路或數據機）。
+
+<Steps>
+
+1. 開啟 UAVcast-Pro 網頁介面。未授權的裝置一律會開啟**應用程式**頁面。
+2. 在**許可證管理器**中，將金鑰貼入**輸入許可證密鑰**。
+3. 選擇**驗證**。您會看到 *License activated successfully*，側邊欄其餘功能隨即解鎖。
+
+</Steps>
+
+<Screenshot id="uavcast-pro/application--license-activated" alt="UAVcast-Pro 許可證管理器，顯示已啟動的許可證，包括註冊名稱、允許與剩餘裝置數、到期日，以及已啟動設備表格" caption="啟動後的應用程式 → 許可證管理器。目前的裝置在「已啟動設備」中標示為「當前」。" />
+
+**許可證詳情**顯示以下資訊：
+
+| 欄位 | 說明 |
+|---|---|
+| **註冊名稱** | 許可證所屬的商店帳戶。 |
+| **許可證狀態** | **有效**、**未啟動**或**已過期**。 |
+| **允許設備數** | 裝置名額總數。 |
+| **剩餘設備數** | 可用的空閒名額。 |
+| **啟動日期** / **過期日期** | 許可證期限開始與結束的時間。 |
+
+**已啟動設備**列出此授權上的每台無人機，包括其**設備名稱**、**主機名**與**啟動日期**。您目前所在的無人機會標示為**當前**。選擇**編輯**可為裝置命名，方便辨識。
+
+### 啟動錯誤 {/* #activation-errors */}
+
+| 訊息 | 處理方式 |
+|---|---|
+| *Maximum activations reached. Please deactivate another device first or upgrade your license.* | 所有名額皆已使用。請[註銷一台裝置](#unregister-a-device)或增加名額。 |
+| *Invalid license key* | 請檢查是否有錯字或多餘空格。請從您的商店帳戶複製金鑰。 |
+| *License already activated on this device* | 無須處理。此裝置已有名額（例如在同一張 SD 卡上重新安裝後）。 |
+| *Network error! Could not fetch license details…* | 裝置無法連上網際網路。請檢查**網路**並重試。 |
+
+## 授權檢查方式 {/* #how-the-license-is-checked */}
+
+- 無人機每 **4 小時**向 UAVmatrix 授權伺服器檢查一次授權。
+- 若無法連上伺服器，無人機會保留最後已知的狀態。您完全可以在沒有網路連線的情況下飛行；離線時不會鎖定任何功能。
+- 裝置以 CPU 序號與開機磁碟（SD 卡或 SSD）的序號來識別。在同一台 Pi 與同一張卡上重新安裝，會保留相同的識別與名額。新的 SD 卡或 SSD 會被視為**新裝置**。
+- 無人機上的授權資料會以該裝置識別加密，因此若將[資料庫備份](../uavcast-pro/application-settings.mdx#database)還原到其他硬體，需要再次啟動許可證。
+
+## 註銷裝置 {/* #unregister-a-device */}
+
+註銷會立即釋出一個名額。您可以從授權處於啟動狀態的**任何**無人機上，註銷該授權上的**任何**裝置，不限於您目前所在的無人機。
+
+<Steps>
+
+1. 前往**應用程式 → 許可證管理器 → 已啟動設備**。
+2. 找到該裝置並選擇**註銷**。您會看到 *Device unregistered successfully*。
+
+</Steps>
+
+若您註銷的是目前操作中的無人機，該無人機將變為未授權狀態，網頁介面會鎖定在**應用程式**頁面，直到您再次啟動金鑰為止。
+
+:::note 無法在商店中註銷
+商店會顯示已註冊的裝置，但無法移除它們。請在該授權的其中一台 UAVcast-Pro 裝置上進行註銷。若授權上的所有裝置皆已遺失或清除，請將您的許可證金鑰以電子郵件寄至 support@uavmatrix.com。
+:::
+
+## 移至新硬體 {/* #move-to-new-hardware */}
+
+當您更換 Pi、更換 SD 卡，或將無人機從測試台移到機身上時，請使用此流程。
+
+<Steps>
+
+1. 在**舊**裝置上，前往**應用程式 → 許可證管理器**，並選擇其旁的**註銷**。請在清除記憶卡之前完成此步驟。
+2. 在新硬體上安裝 UAVcast-Pro。請參閱[安裝](./installation.mdx)。
+3. 在新裝置上啟動相同的金鑰。
+
+</Steps>
+
+若舊裝置已損壞，請從同一授權上的另一台無人機將其註銷，或聯絡支援。
+
+## 續約或升級 {/* #renew-or-upgrade */}
+
+在您的商店帳戶中開啟該許可證，並選擇 **Upgrade Options**：
+
+- **Extend subscription** 會增加一個期間。若許可證仍有效，新期間會加在目前的到期日之後；若已過期，則從續約日起算。金鑰維持不變。
+- **Add devices** 會為許可證增加名額。已過期的許可證必須先續約。
+- **Upgrade tier** 會將許可證改為名額更多的方案。
+
+無人機會在下一次檢查（4 小時內）時套用新的到期日與名額。若要立即更新，請在**許可證管理器**中選擇**更改**，輸入相同的金鑰，然後選擇**驗證**。
+
+## 許可證過期時 {/* #when-a-license-expires */}
+
+:::danger 許可證過期會鎖定 UAVcast-Pro
+許可證過期後，UAVcast-Pro 將無法在其任何無人機上使用。它不會繼續在已安裝的版本上運作。
+:::
+
+當授權伺服器回報許可證已過期，無人機會將自身標示為未授權：網頁介面只會開啟**應用程式**頁面，而遙測、影像、NTRIP 與動態DNS 會在其服務下次重新啟動時停止。請於到期日之前續約以避免中斷，並在無人機上重新驗證金鑰（或等待其在 4 小時內的下一次檢查），即可解除鎖定。
+
+## 許可證與 Fleet Manager {/* #licenses-and-fleet-manager */}
+
+Fleet Manager 包含於您的 UAVcast-Pro 許可證中，並使用相同的許可證。只有當無人機的許可證屬於某組織的成員時，才能將無人機與該組織配對。若您購買許可證時使用的電子郵件，與您登入 Fleet Manager 所用的不同，請在 Fleet Manager 中新增該電子郵件（請參閱 [Fleet Manager 中的許可證](../fleet-manager/licenses.mdx)）。請參閱[將無人機與 Fleet Manager 配對](../uavcast-pro/fleet-pairing.mdx)。
+
+許可證啟動問題，請參閱[許可證啟動失敗](../troubleshooting/license-activation-failed.mdx)。

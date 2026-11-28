@@ -1,0 +1,65 @@
+---
+title: "Fleet Manager 配对码无效或已过期"
+sidebar_label: 配对码无效或已过期
+description: "修复将无人机与 Fleet Manager 配对时出现的 Invalid pairing code、This pairing code has expired 和 License is not owned by any member of this organization 错误。"
+sidebar_position: 15
+---
+
+# 配对码无效或已过期 {/* #pairing-code-invalid-or-expired */}
+
+您在 Fleet Manager 的 **Pair Device** 向导中输入了来自 UAVcast-Pro 的代码，但该代码被拒绝了。
+
+配对的方向如下：**UAVcast-Pro 显示代码，您将其输入到 Fleet Manager 中**。代码为 8 位数字，有效期为 5 分钟。
+
+<Screenshot id="fleet-manager/pair-device--code-expired" alt="Fleet Manager 配对无人机向导，显示错误提示 This pairing code has expired" caption="Fleet Manager 拒绝代码：错误以提示框的形式显示在 Pairing Code 步骤中，此处为 This pairing code has expired。" />
+
+| Fleet Manager 中的错误 | 原因 | 解决方法 |
+|---|---|---|
+| **Pairing code must be 8 digits** / **Please enter a valid 8-digit code** | 位数不足，或包含字母 | [检查 1](#check-1) |
+| **Invalid pairing code** | 输入有误，或代码从未存在 | [检查 1](#check-1) |
+| **This pairing code has expired** | 已超过 5 分钟 | [检查 2](#check-2) |
+| **This pairing code has already been used** | 该代码已被使用过一次 | [检查 2](#check-2) |
+| **License is not owned by any member of this organization** | 无人机的许可证属于组织之外的账户 | [检查 3](#check-3) |
+| **Invalid license key** / **License has expired** / **License has been refunded** | 无人机的许可证在商店中无效 | [检查 4](#check-4) |
+| **This UAV is already paired to an organization** | 已与其他组织配对 | [检查 5](#check-5) |
+| **Too many attempts. Please wait a minute and try again.** | 重复尝试后触发速率限制 | 等待一分钟 |
+
+## 检查 1：输入当前代码 {/* #check-1 */}
+
+<Steps>
+
+1. 在 UAVcast-Pro 中前往 **Fleet Management**，然后点击 **Connect to Fleet Manager**。
+2. 复制 **Pairing Code** 下显示的 8 位数字。
+3. 在 Fleet Manager 中，前往 **Fleet → Pair Device**，选择组织，并在 **Enter Pairing Code** 下输入代码。
+
+</Steps>
+
+## 检查 2：获取新代码 {/* #check-2 */}
+
+代码有效期为 5 分钟，且只能使用一次。当 **Expires in** 倒计时归零时，请在 UAVcast-Pro 中再次点击 **Connect to Fleet Manager**，以获取新代码。如果 UAVcast-Pro 完全无法获取代码，它会显示 *Unable to connect to Fleet Manager. Please check your internet connection.*：请先修复无人机的互联网连接。
+
+## 检查 3：许可证属于组织之外的人员 {/* #check-3 */}
+
+Fleet Manager 只接受 UAVcast-Pro 许可证由您所配对组织的成员购买的无人机。匹配依据是拥有该许可证的商店账户的电子邮件地址。
+
+可通过以下任一方式解决：
+
+- 邀请购买许可证的账户加入组织（**Team**），然后重新配对。
+- 配对到许可证所有者是其成员的组织中。
+- 如果许可证是用您的另一个电子邮件地址购买的，请联系 **support@uavmatrix.com**，将该地址添加为您 Fleet Manager 用户的许可证电子邮件。
+
+请参阅 [Fleet Manager 中的许可证](../fleet-manager/licenses.mdx)。
+
+## 检查 4：许可证无效 {/* #check-4 */}
+
+在无人机上打开 **应用程序 → 许可证管理器**，检查 **许可证状态**。过期或已退款的许可证必须在 [uavmatrix.com](https://uavmatrix.com) 上续订。如果 UAVcast-Pro 本身没有有效的许可证，它将无法请求代码（*No valid license found. Please activate your license first.*）：请参阅 [无法激活许可证](./license-activation-failed.mdx)。
+
+## 检查 5：已在其他地方配对 {/* #check-5 */}
+
+一台无人机只能属于一个组织。要迁移它，请先将其从原组织中移除。重新配对到同一组织是允许的，并且会保留无人机的历史记录。请参阅 [移除或转移无人机](../fleet-manager/fleet/remove-or-transfer.mdx)。
+
+## 仍然被拒绝？ {/* #still-refused */}
+
+请将确切的错误文本、无人机的主机名和组织名称发送至 **support@uavmatrix.com**。
+
+相关链接：[UAVcast-Pro 中的 Fleet Manager 配对](../uavcast-pro/fleet-pairing.mdx) · [配对您的第一架无人机](../fleet-manager/pair-uav.mdx)

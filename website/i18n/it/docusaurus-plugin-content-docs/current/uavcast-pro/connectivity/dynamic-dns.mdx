@@ -1,0 +1,44 @@
+---
+title: "DNS dinamico per un drone: No-IP, DynDNS e DuckDNS"
+description: "Mantieni un hostname puntato sull'IP pubblico variabile del drone con il DNS dinamico di UAVcast-Pro (No-IP, DynDNS, DuckDNS o un URL generico), e scopri quando una VPN è la scelta migliore."
+sidebar_position: 3
+sidebar_label: "DNS dinamico"
+---
+
+# DNS dinamico {/* #dynamic-dns */}
+
+Il DNS dinamico mantiene un hostname, come `mydrone.ddns.net`, puntato sull'indirizzo IP pubblico attuale del drone. UAVcast-Pro controlla l'IP pubblico ogni 5 minuti e aggiorna il tuo provider DNS quando cambia. Apri **DNS Dinamico** nella barra laterale.
+
+:::note La maggior parte dei collegamenti cellulari richiede invece una VPN
+Il DNS dinamico è utile solo se l'IP pubblico del drone può ricevere connessioni in entrata. La maggior parte degli operatori mobili mette le SIM dietro un NAT a livello operatore (carrier-grade NAT), quindi l'IP pubblico appartiene all'operatore, non al drone. Usa una [VPN](./vpn.mdx), a meno che la tua SIM non abbia un indirizzo IP pubblico (spesso "statico" o "M2M").
+:::
+
+Il DNS dinamico non cambia dove UAVcast-Pro invia telemetria e video: quelli vanno sempre agli indirizzi IP delle [Stazioni di Controllo a Terra](../ground-stations/index.mdx). Serve per raggiungere dall'esterno l'interfaccia web o SSH del drone.
+
+## Come configurarlo {/* #set-it-up */}
+
+<Steps>
+
+1. Crea un hostname presso il tuo provider DNS (No-IP, DynDNS o DuckDNS).
+2. In UAVcast-Pro, vai su **DNS Dinamico**. Imposta **Attivare DNS Dinamico?** su **Sì**.
+3. Scegli il tuo **Sistema DNS**.
+4. Inserisci il tuo nome utente dell'account, la tua **Password** e l'hostname in **Alias**. Per DuckDNS, inserisci il token nel campo nome utente e un valore qualsiasi in **Password** (il modulo lo richiede, ma DuckDNS lo ignora). I campi si salvano quando esci da ciascuno di essi.
+5. Seleziona **Connetti** per avviare l'aggiornamento. Invia subito l'IP attuale, poi controlla ogni 5 minuti. **Disconnetti** lo ferma.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/dynamic-dns" alt="Gestore DNS Dinamico con Attivare DNS Dinamico? impostato su No, campi nome utente, password e alias vuoti, e Sistema DNS noip" caption="Gestore DNS Dinamico prima di attivarlo." />
+
+## Riferimento impostazioni {/* #settings-reference */}
+
+| Impostazione | Predefinito | Valori | Note |
+|---|---|---|---|
+| **Attivare DNS Dinamico?** | **No** | **Sì**, **No** | |
+| **Sistema DNS** | **No-IP** | **No-IP**, **DynDNS**, **DuckDNS**, **Generic** | |
+| **URL DNS** | vuoto | URL di aggiornamento | Solo per **Generic**. L'URL di aggiornamento compatibile con DynDNS del provider. |
+| **Nome utente** | vuoto | | Il nome utente del tuo account DNS, oppure il token per DuckDNS. L'interfaccia etichetta questo campo in modo poco chiaro: è il nome utente. |
+| **Password** | vuoto | | La password del tuo account DNS. Richiesta dal modulo; ignorata per DuckDNS. |
+| **Alias** | vuoto | hostname | L'hostname da aggiornare, ad esempio `mydrone.ddns.net`. |
+| Intervallo di aggiornamento | 5 minuti | fisso | |
+
+La riga **DNS Dinamico** della [Dashboard](../dashboard.mdx) mostra se l'aggiornamento è in esecuzione. I **Registro Azioni** mostrano ogni aggiornamento e la risposta del provider.

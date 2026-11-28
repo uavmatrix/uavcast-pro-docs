@@ -1,0 +1,1218 @@
+{
+  "doc.readingTime": {
+    "message": "{n} min lezen"
+  },
+  "doc.copyPageTitle": {
+    "message": "Kopieer deze pagina als Markdown, voor notities of een AI-assistent"
+  },
+  "doc.copied": {
+    "message": "Gekopieerd"
+  },
+  "doc.copyFailed": {
+    "message": "Kopiëren mislukt"
+  },
+  "doc.copyPage": {
+    "message": "Pagina kopiëren"
+  },
+  "doc.edit": {
+    "message": "Bewerken"
+  },
+  "feedback.question": {
+    "message": "Was deze pagina nuttig?"
+  },
+  "feedback.yes": {
+    "message": "Ja"
+  },
+  "feedback.no": {
+    "message": "Nee"
+  },
+  "feedback.thanks": {
+    "message": "Bedankt dat u ons dat laat weten."
+  },
+  "feedback.what": {
+    "message": "Wat ontbrak of klopte er niet? Wij lezen elke melding."
+  },
+  "feedback.placeholder": {
+    "message": "Bijvoorbeeld: de instelling heet in mijn versie anders"
+  },
+  "feedback.send": {
+    "message": "Feedback versturen"
+  },
+  "feedback.or": {
+    "message": "of"
+  },
+  "feedback.issue": {
+    "message": "open een GitHub-issue"
+  },
+  "feedback.or2": {
+    "message": "/"
+  },
+  "feedback.email": {
+    "message": "mail naar support"
+  },
+  "q.mp": {
+    "message": "Mission Planner-video"
+  },
+  "q.qgc": {
+    "message": "QGroundControl-video"
+  },
+  "q.gstWin": {
+    "message": "GStreamer op Windows"
+  },
+  "q.pairing": {
+    "message": "Koppelcode"
+  },
+  "q.apn": {
+    "message": "APN-instellingen"
+  },
+  "q.heartbeat": {
+    "message": "Geen MAVLink-heartbeat"
+  },
+  "goal.first.tag": {
+    "message": "Begin hier"
+  },
+  "goal.first.title": {
+    "message": "Ik zet mijn eerste drone op"
+  },
+  "goal.first.body": {
+    "message": "Installeer UAVcast-Pro op de companion computer, koppel de vluchtcontroller en ontvang live video in uw grondstation."
+  },
+  "goal.first.quick": {
+    "message": "Snelstart"
+  },
+  "goal.first.mp": {
+    "message": "Video in Mission Planner"
+  },
+  "goal.first.qgc": {
+    "message": "Video in QGroundControl"
+  },
+  "goal.first.gcs": {
+    "message": "Voeg uw grondstation toe"
+  },
+  "goal.first.license": {
+    "message": "Activeer uw licentie"
+  },
+  "goal.first.hw": {
+    "message": "Hardwarevereisten"
+  },
+  "goal.fleet.tag": {
+    "message": "Eigenaren en beheerders"
+  },
+  "goal.fleet.title": {
+    "message": "Ik beheer een vloot"
+  },
+  "goal.fleet.body": {
+    "message": "Breng drones, grondstations en licenties in één organisatie samen, volg elke vlucht op een live kaart en geef uw team de juiste toegang."
+  },
+  "goal.fleet.org": {
+    "message": "Maak een organisatie aan"
+  },
+  "goal.fleet.pair": {
+    "message": "Koppel een drone met een code"
+  },
+  "goal.fleet.team": {
+    "message": "Owner-, Admin- en Viewer-rollen"
+  },
+  "goal.fleet.overview": {
+    "message": "Overzicht van Fleet Manager"
+  },
+  "goal.api.tag": {
+    "message": "HTTP · UDP · MAVLink"
+  },
+  "goal.api.title": {
+    "message": "Ik integreer via de API"
+  },
+  "goal.api.body": {
+    "message": "Stuur uw eigen sensorwaarden naar de MAVLink-stream, ontvang de video in uw eigen software en routeer telemetrie naar meer tools."
+  },
+  "goal.api.injectors": {
+    "message": "Telemetrie-injectors (HTTP, UDP, serieel)"
+  },
+  "goal.api.video": {
+    "message": "Video ontvangen met GStreamer op Windows"
+  },
+  "goal.api.ports": {
+    "message": "Poorten en protocollen"
+  },
+  "goal.api.streams": {
+    "message": "Dashboards voor datastromen"
+  },
+  "goal.broken.tag": {
+    "message": "Begin bij het symptoom"
+  },
+  "goal.broken.title": {
+    "message": "Er werkt iets niet"
+  },
+  "goal.broken.body": {
+    "message": "Elke oplossing somt de controles op in de volgorde die in de meeste gevallen werkt, met de exacte instelling om te bekijken."
+  },
+  "goal.broken.video": {
+    "message": "Geen video in het grondstation"
+  },
+  "goal.broken.hb": {
+    "message": "Geen MAVLink-heartbeat"
+  },
+  "goal.broken.logs": {
+    "message": "Logboeken verzamelen voor support"
+  },
+  "goal.broken.all": {
+    "message": "Alle probleemoplossing"
+  },
+  "feat.video": {
+    "message": "Videostreaming"
+  },
+  "feat.video.desc": {
+    "message": "H.264 over UDP, twee camera's, opnemen"
+  },
+  "feat.gcs": {
+    "message": "Telemetrie & GCS"
+  },
+  "feat.gcs.desc": {
+    "message": "Mission Planner, QGroundControl en meer"
+  },
+  "feat.modem": {
+    "message": "Mobiele modems"
+  },
+  "feat.modem.desc": {
+    "message": "HiLink- en stick-modems, automatische APN"
+  },
+  "feat.vpn": {
+    "message": "VPN"
+  },
+  "feat.vpn.desc": {
+    "message": "Bereik de drone zonder port forwarding"
+  },
+  "feat.rtk": {
+    "message": "RTK / NTRIP"
+  },
+  "feat.rtk.desc": {
+    "message": "Centimeternauwkeurige positionering via de mobiele verbinding"
+  },
+  "feat.inj": {
+    "message": "Injectors"
+  },
+  "feat.inj.desc": {
+    "message": "Uw sensoren als native MAVLink-waarden"
+  },
+  "pl.u.install": {
+    "message": "Installatie"
+  },
+  "pl.u.camera": {
+    "message": "Videostreaming"
+  },
+  "pl.u.modem": {
+    "message": "Mobiele modems"
+  },
+  "pl.u.rtk": {
+    "message": "RTK / NTRIP"
+  },
+  "pl.f.org": {
+    "message": "Stel uw organisatie in"
+  },
+  "pl.f.pair": {
+    "message": "Koppel uw eerste UAV"
+  },
+  "pl.f.map": {
+    "message": "Live kaart & telemetrie"
+  },
+  "pl.f.team": {
+    "message": "Leden & rollen"
+  },
+  "start.quick.meta": {
+    "message": "Handleiding · Raspberry Pi"
+  },
+  "start.quick.title": {
+    "message": "Snelstart"
+  },
+  "start.quick.desc": {
+    "message": "Van een lege SD-kaart naar live video en telemetrie in uw grondstation."
+  },
+  "start.quick.step0": {
+    "message": "Flash een 64-bits besturingssysteem"
+  },
+  "start.quick.step1": {
+    "message": "Start het installatieprogramma"
+  },
+  "start.quick.step2": {
+    "message": "Sluit de vluchtcontroller aan"
+  },
+  "start.quick.step3": {
+    "message": "Voeg uw grondstation toe"
+  },
+  "start.hw.meta": {
+    "message": "Referentie"
+  },
+  "start.hw.title": {
+    "message": "Hardwarevereisten"
+  },
+  "start.hw.desc": {
+    "message": "Companion computers, vluchtcontrollers, camera's en modems. Controleer dit voordat u onderdelen koopt."
+  },
+  "start.hw.b0": {
+    "message": "Raspberry Pi, NVIDIA Jetson, Orange Pi"
+  },
+  "start.hw.b1": {
+    "message": "Elke arm64- of amd64-Linux-computer"
+  },
+  "start.hw.b2": {
+    "message": "Elke MAVLink-vluchtcontroller (ArduPilot, PX4)"
+  },
+  "start.hw.b3": {
+    "message": "USB- en HiLink LTE-modems"
+  },
+  "start.license.meta": {
+    "message": "Licenties"
+  },
+  "start.license.title": {
+    "message": "Activeer uw licentie"
+  },
+  "start.license.desc": {
+    "message": "Activeer een sleutel op een apparaat, verplaats hem naar nieuwe hardware en bekijk hoe apparaatslots werken."
+  },
+  "start.license.step0": {
+    "message": "Koop een sleutel in de UAVmatrix-winkel"
+  },
+  "start.license.step1": {
+    "message": "Open Applicatie › Licentie Beheer"
+  },
+  "start.license.step2": {
+    "message": "Voer de sleutel in terwijl u online bent"
+  },
+  "pop.mp": {
+    "message": "Mission Planner: telemetrie en video"
+  },
+  "pop.mp.desc": {
+    "message": "Telemetrie op UDP 14550 en de GStreamer-videobron voor de HUD."
+  },
+  "pop.qgc": {
+    "message": "QGroundControl: telemetrie en video"
+  },
+  "pop.qgc.desc": {
+    "message": "Telemetrie en H.264-video op UDP 5600, op desktop en Android."
+  },
+  "pop.gstwin": {
+    "message": "Video ontvangen met GStreamer op Windows"
+  },
+  "pop.gstwin.desc": {
+    "message": "Installeer de juiste GStreamer-build en speel de stream van de drone af."
+  },
+  "pop.4g": {
+    "message": "Vliegen buiten zicht over 4G"
+  },
+  "pop.4g.desc": {
+    "message": "Modem, Fleet Manager-VPN, telemetrie en video naar QGroundControl of Mission Planner."
+  },
+  "pop.pair": {
+    "message": "Koppel een drone met Fleet Manager"
+  },
+  "pop.pair.desc": {
+    "message": "Voer de 8-cijferige code in die UAVcast-Pro toont in Fleet Manager."
+  },
+  "pop.modem": {
+    "message": "Stel een mobiel modem in"
+  },
+  "pop.modem.desc": {
+    "message": "HiLink- of stick-modem, APN en automatische verbinding."
+  },
+  "pop.gcs": {
+    "message": "Verbind Mission Planner of QGroundControl"
+  },
+  "pop.gcs.desc": {
+    "message": "Telemetrie op UDP 14550 en video op UDP 5600 naar elk grondstation."
+  },
+  "pop.rtk": {
+    "message": "RTK over 4G met een NTRIP-caster"
+  },
+  "pop.rtk.desc": {
+    "message": "RTCM3-correcties van een caster naar de vluchtcontroller voor RTK Fixed."
+  },
+  "pop.bind": {
+    "message": "Streambindingen en poorttoewijzing"
+  },
+  "pop.bind.desc": {
+    "message": "Hoe meerdere drones één grondstation delen."
+  },
+  "pop.rec": {
+    "message": "Vluchten opnemen en terugkijken"
+  },
+  "pop.rec.desc": {
+    "message": "Video en telemetrie op de drone, afgespeeld op één tijdlijn."
+  },
+  "pop.ts": {
+    "message": "Toegang op afstand met Tailscale"
+  },
+  "pop.ts.desc": {
+    "message": "Bereik de drone op uw tailnet via LTE, zonder port forwarding."
+  },
+  "pop.multi": {
+    "message": "Stream naar meerdere grondstations"
+  },
+  "pop.multi.desc": {
+    "message": "Piloot, payloadoperator en waarnemers op één drone."
+  },
+  "pop.onboard": {
+    "message": "Een vloot toevoegen met Fleet Manager"
+  },
+  "pop.onboard.desc": {
+    "message": "Licenties, naamgeving, koppelen, VPN en streambindingen voor vele drones."
+  },
+  "ts.video": {
+    "message": "Geen video in QGroundControl of Mission Planner"
+  },
+  "ts.hb": {
+    "message": "Geen MAVLink-heartbeat van de vluchtcontroller"
+  },
+  "ts.telemetry": {
+    "message": "Geen telemetrie in het grondstation"
+  },
+  "ts.license": {
+    "message": "Licentiesleutel wordt niet geactiveerd"
+  },
+  "ts.modem": {
+    "message": "Modem maakt verbinding maar krijgt geen internet"
+  },
+  "ts.web": {
+    "message": "Webinterface opent niet"
+  },
+  "ts.offline": {
+    "message": "Drone toont Offline in Fleet Manager"
+  },
+  "ts.power": {
+    "message": "Onderspanning en throttling"
+  },
+  "recent.2026-11-24": {
+    "message": "Licenties die met een ander e-mailadres zijn gekocht, kunnen aan uw account worden gekoppeld."
+  },
+  "recent.2026-11-21": {
+    "message": "Camerafixes: geen “Insufficient permissions” meer, en de video blijft doorlopen als de live voorvertoning uit staat."
+  },
+  "recent.2026-11-16": {
+    "message": "Camera-opnamen, opslagbeheer en de afspeler voor vluchtreview."
+  },
+  "recent.2026-11-09": {
+    "message": "Cameraaudio via Opus en snellere NTRIP/RTK-herstel na een verbroken verbinding."
+  },
+  "area.getStarted": {
+    "message": "Aan de slag"
+  },
+  "area.getStarted.blurb": {
+    "message": "Installeren, activeren en voor de eerste keer vliegen"
+  },
+  "area.uavcastPro": {
+    "message": "UAVcast-Pro"
+  },
+  "area.uavcastPro.blurb": {
+    "message": "Software voor de companion computer van de drone"
+  },
+  "area.fleetManager": {
+    "message": "Fleet Manager"
+  },
+  "area.fleetManager.blurb": {
+    "message": "Drones, grondstations en mensen op één plek"
+  },
+  "area.guides": {
+    "message": "Handleidingen"
+  },
+  "area.guides.blurb": {
+    "message": "Taakgerichte handleidingen"
+  },
+  "area.troubleshooting": {
+    "message": "Probleemoplossing"
+  },
+  "area.troubleshooting.blurb": {
+    "message": "Begin bij het symptoom"
+  },
+  "area.reference": {
+    "message": "Referentie"
+  },
+  "area.reference.blurb": {
+    "message": "Poorten, instellingen, ondersteunde hardware"
+  },
+  "nav.getStarted": {
+    "message": "Aan de slag"
+  },
+  "nav.guides": {
+    "message": "Handleidingen"
+  },
+  "nav.troubleshooting": {
+    "message": "Probleemoplossing"
+  },
+  "nav.reference": {
+    "message": "Referentie"
+  },
+  "nav.changelog": {
+    "message": "Wijzigingslogboek"
+  },
+  "product.uavcast": {
+    "message": "UAVcast-Pro"
+  },
+  "product.uavcast.sub": {
+    "message": "Software voor de companion computer van de drone"
+  },
+  "product.fleet": {
+    "message": "Fleet Manager"
+  },
+  "product.fleet.sub": {
+    "message": "Drones, licenties en mensen op één plek"
+  },
+  "product.all": {
+    "message": "Alle documentatie"
+  },
+  "product.all.sub": {
+    "message": "Startpagina, handleidingen en referentie"
+  },
+  "home.eyebrow": {
+    "message": "UAVmatrix-documentatie · UAVcast-Pro {version}"
+  },
+  "home.title": {
+    "message": "Bouw, vlieg en beheer verbonden drones."
+  },
+  "home.sub": {
+    "message": "Handleidingen en referentie voor UAVcast-Pro op de companion computer van de drone en Fleet Manager in de browser, van de eerste start tot een vloot die video en telemetrie over 4G streamt."
+  },
+  "home.searchPlaceholder": {
+    "message": "Zoek in handleidingen, instellingen en foutmeldingen"
+  },
+  "home.popular": {
+    "message": "Populair:"
+  },
+  "home.goals.kicker": {
+    "message": "Begin met uw doel"
+  },
+  "home.goals.title": {
+    "message": "Kies het pad dat past bij wat u doet"
+  },
+  "home.products.kicker": {
+    "message": "Producten"
+  },
+  "home.products.title": {
+    "message": "Blader per product"
+  },
+  "home.uavcast.kicker": {
+    "message": "Op de drone"
+  },
+  "home.uavcast.body": {
+    "message": "Draait op de companion computer van de drone, zoals een Raspberry Pi. Streamt H.264-video met lage latentie en MAVLink-telemetrie naar Mission Planner of QGroundControl over 4G/5G, Wi-Fi of een VPN."
+  },
+  "home.uavcast.go": {
+    "message": "Ontdek UAVcast-Pro"
+  },
+  "home.fleet.kicker": {
+    "message": "In de browser"
+  },
+  "home.fleet.badge": {
+    "message": "Nieuwe documentatie"
+  },
+  "home.fleet.body": {
+    "message": "Eén plek voor uw organisatie: koppel drones met een 8-cijferige code, volg elke vlucht op de live kaart, koppel video en telemetrie aan grondstations en beheer uw team."
+  },
+  "home.fleet.go": {
+    "message": "Ontdek Fleet Manager"
+  },
+  "home.start.kicker": {
+    "message": "Begin hier"
+  },
+  "home.start.title": {
+    "message": "Nieuw bij UAVcast-Pro?"
+  },
+  "home.popular.kicker": {
+    "message": "Populaire artikelen"
+  },
+  "home.popular.filter": {
+    "message": "Artikelen filteren"
+  },
+  "home.popular.all": {
+    "message": "Alle"
+  },
+  "home.popular.allGuides": {
+    "message": "Alle handleidingen"
+  },
+  "home.trouble.title": {
+    "message": "Werkt er iets niet?"
+  },
+  "home.trouble.all": {
+    "message": "Alle oplossingen"
+  },
+  "home.trouble.foot": {
+    "message": "Support contacteren? Voeg het logboekarchief toe uit {path} in UAVcast-Pro."
+  },
+  "home.trouble.path": {
+    "message": "Applicatie › Logboekregistratie",
+    "description": "Menu path in the UAVcast-Pro web app; use the app’s own translated labels"
+  },
+  "home.trouble.how": {
+    "message": "Hoe"
+  },
+  "home.copy": {
+    "message": "Kopieer {value}"
+  },
+  "home.support.kicker": {
+    "message": "Contact met support"
+  },
+  "home.support.title": {
+    "message": "Nog steeds vastgelopen? Praat met de mensen die het bouwen."
+  },
+  "home.support.body": {
+    "message": "Support wordt verzorgd door de ontwikkelaars van UAVcast-Pro. Vermeld uw UAVcast-Pro-versie en het logboekarchief, dan kunnen we meestal in één antwoord helpen."
+  },
+  "home.support.email": {
+    "message": "E-mail"
+  },
+  "home.support.emailBody": {
+    "message": "Problemen met licentie, installatie en vluchten. Voeg uw logbestanden toe."
+  },
+  "home.support.discord": {
+    "message": "Discord-community"
+  },
+  "home.support.discordBody": {
+    "message": "Vraag andere piloten, deel opstellingen en ontvang nieuws over releases als eerste."
+  },
+  "home.support.join": {
+    "message": "Word lid van de server"
+  },
+  "home.support.fm": {
+    "message": "In Fleet Manager"
+  },
+  "home.support.fmBody": {
+    "message": "Eigenaren en beheerders krijgen hulp van FleetBot en supporttickets in de app."
+  },
+  "home.support.fmLink": {
+    "message": "Fleet Manager-support"
+  },
+  "home.recent.kicker": {
+    "message": "Recente wijzigingen"
+  },
+  "home.recent.all": {
+    "message": "Volledig wijzigingslogboek"
+  },
+  "home.metaTitle": {
+    "message": "UAVmatrix-documentatie: UAVcast-Pro- en Fleet Manager-documentatie"
+  },
+  "home.metaDescription": {
+    "message": "Installeer UAVcast-Pro, stream drone-video en MAVLink-telemetrie over 4G/LTE naar Mission Planner of QGroundControl, en beheer uw vloot met UAVmatrix Fleet Manager."
+  },
+  "searchPage.title": {
+    "message": "Doorzoek de documentatie"
+  },
+  "search.placeholder": {
+    "message": "Zoek in handleidingen, instellingen en foutmeldingen"
+  },
+  "search.dialog": {
+    "message": "Documentatie doorzoeken"
+  },
+  "search.all": {
+    "message": "Alle"
+  },
+  "search.noIndex": {
+    "message": "De zoekindex wordt gemaakt door de productiebuild. Voer npm run build uit en start daarna npm run serve."
+  },
+  "searchPage.count": {
+    "message": "{n} resultaten voor “{q}”"
+  },
+  "searchPage.metaTitle": {
+    "message": "Zoeken"
+  },
+  "searchPage.metaDescription": {
+    "message": "Doorzoek de UAVmatrix-documentatie."
+  },
+  "home.schematic": {
+    "message": "Gegevensstroom: UAVcast-Pro op de companion computer stuurt status naar Fleet Manager via MQTT met TLS op poort 8883, en video en MAVLink-telemetrie naar het grondstation op UDP-poorten 5600 en 14550, rechtstreeks of via een WireGuard-VPN."
+  },
+  "home.schematic.aircraft": {
+    "message": "LUCHTVAARTUIG"
+  },
+  "home.schematic.companion": {
+    "message": "Companion computer"
+  },
+  "home.schematic.modem": {
+    "message": "LTE-modem · 4G/5G"
+  },
+  "home.schematic.cloud": {
+    "message": "CLOUD"
+  },
+  "home.schematic.cloudBody": {
+    "message": "Status, positie, licenties"
+  },
+  "home.schematic.ground": {
+    "message": "GROND"
+  },
+  "home.schematic.gcs": {
+    "message": "Grondstation"
+  },
+  "home.schematic.gcsVpn": {
+    "message": "Rechtstreeks, of via een WireGuard-VPN"
+  },
+  "home.schematic.link": {
+    "message": "VERBINDING · MOBIEL / WI-FI / ETHERNET"
+  },
+  "home.mini.temp": {
+    "message": "Temp"
+  },
+  "home.mini.uplink": {
+    "message": "Uplink · laatste 60 s"
+  },
+  "home.mini.armed": {
+    "message": "ACTIEF"
+  },
+  "home.mini.online": {
+    "message": "ONLINE"
+  },
+  "home.mini.ago": {
+    "message": "4 uur geleden"
+  },
+  "search.other": {
+    "message": "Overig"
+  },
+  "search.close": {
+    "message": "Zoeken sluiten"
+  },
+  "search.scope": {
+    "message": "Resultaten beperken tot"
+  },
+  "search.recent": {
+    "message": "Recent"
+  },
+  "search.try": {
+    "message": "Probeer"
+  },
+  "search.none": {
+    "message": "Geen resultaten voor “{q}”."
+  },
+  "search.noneHint": {
+    "message": "Probeer de naam van een instelling of de exacte foutmelding, of vraag het op Discord."
+  },
+  "search.loading": {
+    "message": "Zoekindex laden…"
+  },
+  "search.navigate": {
+    "message": "om te navigeren"
+  },
+  "search.open": {
+    "message": "om te openen"
+  },
+  "search.toClose": {
+    "message": "om te sluiten"
+  },
+  "search.offline": {
+    "message": "offline index"
+  },
+  "shot.close": {
+    "message": "Sluiten"
+  },
+  "shot.placeholder": {
+    "message": "Plaatsaanduiding schermafbeelding: {id}"
+  },
+  "shot.soon": {
+    "message": "Schermafbeelding volgt binnenkort"
+  },
+  "shot.enlarge": {
+    "message": "Schermafbeelding vergroten: {alt}"
+  },
+  "symptom.check": {
+    "message": "Controle {n}"
+  },
+  "symptom.step": {
+    "message": "Stap {n}"
+  },
+  "symptom.go": {
+    "message": "Ga"
+  },
+  "symptom.see": {
+    "message": "Wat u ziet"
+  },
+  "symptom.cause": {
+    "message": "Waarschijnlijke oorzaak"
+  },
+  "symptom.start": {
+    "message": "Begin bij"
+  },
+  "sketch.alt.mpConnect": {
+    "message": "Illustratie van Mission Planner: rechtsboven het verbindingstype ingesteld op UDP en de knop Connect, daarnaast een dialoog die om de luisterpoort vraagt, met 14550 ingevuld."
+  },
+  "sketch.alt.mpGstreamer": {
+    "message": "Illustratie van Mission Planner: contextmenu op de HUD met Video gemarkeerd en het submenu-item Set GStreamer Source."
+  },
+  "sketch.alt.qgcVideo": {
+    "message": "Illustratie van de QGroundControl-applicatie-instellingen: de pagina Video met Source ingesteld op UDP h.264 Video Stream, het UDP-adres 0.0.0.0:5600 en Low Latency Mode."
+  },
+  "sketch.tag": {
+    "message": "Illustratie"
+  },
+  "footer.store": {
+    "message": "UAVmatrix-winkel"
+  },
+  "footer.quickStart": {
+    "message": "Snelstart"
+  },
+  "footer.guides": {
+    "message": "Handleidingen"
+  },
+  "footer.troubleshooting": {
+    "message": "Probleemoplossing"
+  },
+  "footer.reference": {
+    "message": "Referentie"
+  },
+  "footer.changelog": {
+    "message": "Wijzigingslogboek"
+  },
+  "footer.contact": {
+    "message": "Support contacteren"
+  },
+  "nav.brandDocs": {
+    "message": "Documentatie"
+  },
+  "footer.tagline": {
+    "message": "Verbindingssoftware voor professionele dronepiloten: UAVcast-Pro aan boord, Fleet Manager in de browser."
+  },
+  "footer.products": {
+    "message": "Producten"
+  },
+  "footer.resources": {
+    "message": "Bronnen"
+  },
+  "footer.community": {
+    "message": "Community"
+  },
+  "footer.language": {
+    "message": "Taal"
+  },
+  "nav.languageSoon": {
+    "message": "Binnenkort"
+  },
+  "footer.privacy": {
+    "message": "Privacy"
+  },
+  "footer.terms": {
+    "message": "Voorwaarden"
+  },
+  "footer.source": {
+    "message": "Broncode van de documentatie op GitHub"
+  },
+  "search.button": {
+    "message": "Documentatie doorzoeken…"
+  },
+  "toc.feedback": {
+    "message": "Feedback geven"
+  },
+  "theme.common.editThisPage": {
+    "message": "Bewerk deze pagina",
+    "description": "The link label to edit the current page"
+  },
+  "toc.top": {
+    "message": "Terug naar boven"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "Op deze pagina",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "Gekopieerd",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "Kopieer code naar klembord",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "Kopieer",
+    "description": "The copy button label on code blocks"
+  },
+  "codeblock.code": {
+    "message": "Code"
+  },
+  "doc.lastUpdated": {
+    "message": "Laatst bijgewerkt op {date}"
+  },
+  "doc.reportIssue": {
+    "message": "Een probleem melden"
+  },
+  "nav.homeAria": {
+    "message": "Startpagina van de UAVmatrix-documentatie"
+  },
+  "product.allShort": {
+    "message": "Alle producten"
+  },
+  "product.menuLabel": {
+    "message": "Producten"
+  },
+  "nav.language": {
+    "message": "Taal"
+  },
+  "nav.languageLabel": {
+    "message": "Taal · dezelfde als in de UAVcast-Pro-app"
+  },
+  "nav.languageFoot": {
+    "message": "Vertalingen zijn onderweg. De productinterface is al in al deze talen beschikbaar."
+  },
+  "nav.theme": {
+    "message": "Schakel tussen donkere en lichte modus"
+  },
+  "nav.openMenu": {
+    "message": "Navigatie openen"
+  },
+  "nav.primary": {
+    "message": "Primair"
+  },
+  "nav.openFleet": {
+    "message": "Fleet Manager openen"
+  },
+  "notFound.kicker": {
+    "message": "Pagina niet gevonden"
+  },
+  "theme.NotFound.title": {
+    "message": "Pagina niet gevonden",
+    "description": "The title of the 404 page"
+  },
+  "theme.NotFound.p1": {
+    "message": "We kunnen niet vinden waar je naar op zoek bent.",
+    "description": "The first paragraph of the 404 page"
+  },
+  "breadcrumbs.docs": {
+    "message": "Documentatie"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "Docs zijbalk",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "sidebar.filter": {
+    "message": "Pagina's filteren"
+  },
+  "sidebar.noMatch": {
+    "message": "Geen paginatitels gevonden. Probeer zoeken (⌘K)."
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "Sluit navigatiebalk",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "drawer.areas": {
+    "message": "Documentatie"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← Terug naar het hoofdmenu",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "Deze pagina is gecrasht.",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "Scroll naar boven",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "Archief",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "Archief",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "Paginanavigatie blog",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "Nieuwere items",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "Oudere items",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "Paginanavigatie blog",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "Nieuwer bericht",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "Ouder bericht",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "Laat alle tags zien",
+    "description": "The label of the link targeting the tag list page"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "system mode",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "lichte modus",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "donkere modus",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "Schakel tussen donkere en lichte modus (momenteel {mode})",
+    "description": "The ARIA label for the color mode toggle"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "Broodkruimels",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "Documentatie pagina",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "Vorige",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Volgende",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "Een artikel getagd|{count} artikelen getagd",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged} met \"{tagName}\"",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "Versie: {versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "Dit is nog niet uitgegeven documentatie voor {siteTitle}, versie {versionLabel}",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "Dit is de documentatie voor {siteTitle} {versionLabel}, welke niet langer actief wordt onderhouden.",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "Voor de huidige documentatie, zie de {latestVersionLink} ({versionLabel}).",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "laatste versie",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "Direct link naar {heading}",
+    "description": "Title for link to heading"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": " op {date}",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": " door {user}",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "Laatst bijgewerkt{atDate}{byUser}",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "Versies",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "Tags:",
+    "description": "The label alongside a tag list"
+  },
+  "theme.admonition.caution": {
+    "message": "pas op",
+    "description": "The default label used for the Caution admonition (:::caution)"
+  },
+  "theme.admonition.danger": {
+    "message": "gevaar",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "info",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.note": {
+    "message": "notitie",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "tip",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.warning": {
+    "message": "waarschuwing",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "Sluiten",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "Navigatie recente blogitems",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "Categorie zijbalk uitklappen '{label}'",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "Categorie zijbalk inklappen '{label}'",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.IconExternalLink.ariaLabel": {
+    "message": "(opent in nieuw tabblad)",
+    "description": "The ARIA label for the external link icon"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "Hoofdnavigatie",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "Talen",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.NotFound.p2": {
+    "message": "Neem contact op met de eigenaar van de website die naar de originele URL heeft geleid en laat weten dat de link niet meer werkt.",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.blog.post.readMore": {
+    "message": "Lees meer",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "Lees meer over {title}",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "Een minuut leestijd|{readingTime} minuten leestijd",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "Tekstterugloop in-/uitschakelen",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Homepagina",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "Zijbalk inklappen",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Zijbalk inklappen",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "Navigatiebalk schakelen",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
+    "message": "Dropdown uitklappen",
+    "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
+    "message": "Dropdown inklappen",
+    "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Zijbalk uitklappen",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "Zijbalk uitklappen",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.blog.post.plurals": {
+    "message": "Een bericht|{count} berichten",
+    "description": "Pluralized label for \"{count} posts\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.blog.tagTitle": {
+    "message": "{nPosts} getagd met \"{tagName}\"",
+    "description": "The title of the page for a blog tag"
+  },
+  "theme.blog.author.pageTitle": {
+    "message": "{authorName} - {nPosts}",
+    "description": "The title of the page for a blog author"
+  },
+  "theme.blog.authorsList.pageTitle": {
+    "message": "Auteurs",
+    "description": "The title of the authors page"
+  },
+  "theme.blog.authorsList.viewAll": {
+    "message": "Bekijk alle auteurs",
+    "description": "The label of the link targeting the blog authors page"
+  },
+  "theme.blog.author.noPosts": {
+    "message": "Deze auteur heeft nog geen berichten geschreven.",
+    "description": "The text for authors with 0 blog post"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "Verborgen page",
+    "description": "The unlisted content banner title"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "Deze pagina is verborgen. Zoekmachines indexeren deze niet en alleen gebruikers met een directe link kunnen deze openen.",
+    "description": "The unlisted content banner message"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "Concept pagina",
+    "description": "The draft content banner title"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "Deze pagina is een concept. Deze zal alleen zichtbaar zijn in de ontwikkelomgeving en uitgesloten worden van de productie build.",
+    "description": "The draft content banner message"
+  },
+  "theme.docs.DocCard.categoryDescription.plurals": {
+    "message": "1 artikel|{count} artikelen",
+    "description": "The default description for a category card in the generated index about how many items this category includes"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "Probeer opnieuw",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Ga naar hoofdinhoud",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "Tags",
+    "description": "The title of the tag list page"
+  },
+  "install.copied": {
+    "message": "Gekopieerd"
+  },
+  "install.copyAria": {
+    "message": "Kopieer het installatiecommando"
+  },
+  "install.copy": {
+    "message": "Kopiëren"
+  },
+  "install.oneCommand": {
+    "message": "Installeren met één commando"
+  },
+  "install.docNote": {
+    "message": "Voer het uit op de companion computer (64-bit Raspberry Pi OS, Debian of Ubuntu, met internet). De stappen hieronder leggen uit wat het doet en hoe u het apparaat voorbereidt."
+  },
+  "install.heroLabel": {
+    "message": "UAVcast-Pro installeren"
+  },
+  "install.moreLink": {
+    "message": "Andere methoden en vereisten"
+  },
+  "footer.install": {
+    "message": "UAVcast-Pro installeren"
+  },
+  "nav.installTitle": {
+    "message": "UAVcast-Pro installeren: het installatiecommando van één regel"
+  },
+  "nav.install": {
+    "message": "Installeren"
+  },
+  "drawer.install": {
+    "message": "UAVcast-Pro installeren"
+  },
+  "drawer.installGuide": {
+    "message": "Installatiegids"
+  }
+}

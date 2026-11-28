@@ -1,0 +1,41 @@
+---
+title: "UAVcast-Pro 與 Fleet Manager 疑難排解"
+description: "解決無視訊、沒有 MAVLink 心跳、數據機與 VPN 問題、授權錯誤，以及 Fleet Manager 配對問題。請從您看到的症狀開始，並依照檢查步驟操作。"
+sidebar_position: 1
+---
+
+# 疑難排解 {/* #troubleshooting */}
+
+請從症狀開始排查。以下每個頁面都依現場實際發生的順序列出可能的原因，並提供編號的檢查步驟，使用 UAVcast-Pro 與 Fleet Manager 介面中的確切標籤。
+
+:::tip 先檢查儀表板
+請在 UAVcast-Pro 中開啟**儀表板**。狀態卡會以一行摘要說明無人機狀態（**All systems normal**，或問題與警告的數量），並分別列出 **Flight controller**、**Ground station**、**Cellular**、**VPN**、**RTK corrections**、**Video** 與 **Power supply** 各一列。通常第一個紅色的列就是開始排查的地方。
+:::
+
+<Screenshot id="uavcast-pro/dashboard" alt="UAVcast-Pro 儀表板，狀態卡顯示 2 個問題：GPS 無定位與 VPN 未連線" caption="儀表板 → 狀態卡。有問題的列會變成紅色，並計入問題徽章，此處為 GPS（無定位）與 VPN（未連線）。" />
+
+## 依症狀查詢 {/* #match-your-symptom */}
+
+| 您看到的情況 | 可能原因 | 前往 |
+|---|---|---|
+| 遙測正常，但 QGroundControl 或 Mission Planner 中的視訊區域為黑色 | **啟用視訊**已為該地面站關閉、IP 錯誤，或防火牆 | [地面站無視訊](./no-video-in-gcs.mdx) |
+| 視訊凍結、出現灰色色塊或落後數秒 | 位元率對連線而言過高，或關鍵影格間隔過遠 | [視訊卡頓或延遲](./choppy-or-delayed-video.mdx) |
+| 飛行控制器頁面顯示 **No heartbeat**、**Waiting for device** 或 **Detecting baud rate** | 線材、接線、連接埠或鮑率 | [沒有 MAVLink 心跳](./no-mavlink-heartbeat.mdx) |
+| UAVcast-Pro 將飛行控制器顯示為**已連接**，但地面站仍在等待連線 | 遙測未發送至地面站，或地面站未在監聽 | [地面站沒有遙測](./no-telemetry-in-gcs.mdx) |
+| **選擇攝影機**中顯示**沒有可用的攝影機** | CSI 攝影機驅動程式堆疊缺失、排線問題，或未識別 USB 攝影機 | [未偵測到攝影機](./camera-not-detected.mdx) |
+| **Invalid license key**、**Maximum activations reached** 或 **License activation failed** | 金鑰錯誤、沒有可用的裝置名額，或沒有網際網路 | [授權無法啟用](./license-activation-failed.mdx) |
+| 數據機顯示訊號與電信業者，但無法載入任何內容 | APN、網路優先順序或 SIM 卡數據 | [數據機已連線但無網路](./modem-no-internet.mdx) |
+| 安裝後，瀏覽器無法連至 `http://<device-ip>/` | 位址錯誤、服務未執行，或連接埠已變更 | [網頁介面無法開啟](./web-interface-wont-open.mdx) |
+| 安裝程式因錯誤而停止 | 32 位元作業系統、沒有網際網路，或磁碟空間不足 | [安裝失敗](./installation-fails.mdx) |
+| ZeroTier 或 Tailscale 顯示已連線，但無法 ping 或開啟無人機 | 成員未獲授權、網路錯誤，或地面站不在 VPN 上 | [VPN 已連線但無法連到無人機](./vpn-cant-reach-drone.mdx) |
+| NTRIP 狀態不是**正在傳輸校正資料**，或定位始終無法達到 **RTK 固定** | Caster 設定、GGA，或接收器無法使用 RTK | [RTK 校正資料未送達](./rtk-corrections-not-arriving.mdx) |
+| **Voltage too low - use a stronger power supply** 或 **Slowed down (heat or power)** | 電源供應或電線不足、過熱 | [欠壓與降速](./undervoltage-and-throttling.mdx) |
+| 無人機在 Fleet Manager 中顯示 **Offline** | 無人機沒有網際網路、MQTT 連接埠被封鎖，或需要重新配對 | [Fleet Manager 中無人機離線](./drone-offline-fleet-manager.mdx) |
+| **Invalid pairing code**、**This pairing code has expired** 或 **License is not owned by any member of this organization** | 配對碼輸入錯誤或過舊，或授權由組織以外的人擁有 | [配對碼無效或已過期](./pairing-code-invalid.mdx) |
+
+## 仍然無法解決？ {/* #still-stuck */}
+
+1. [收集日誌檔案](./collect-logs.mdx)。下載內容包含您的設定與硬體的 `diagnostics.txt` 快照，因此支援人員無需再向您詢問這些資訊。
+2. 將日誌寄送至 **support@uavmatrix.com**，並附上您的 UAVcast-Pro 版本、所使用的硬體，以及您已嘗試過的步驟。您也可以在 [UAVmatrix Discord](https://discord.gg/xwqMTXh) 中提問。
+
+常見問題的簡短解答請參閱[常見問題](./faq.mdx)。

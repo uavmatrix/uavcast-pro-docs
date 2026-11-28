@@ -1,0 +1,99 @@
+---
+title: "UAVcast-Pro Uçuş Haritası: canlı harita, HUD, arm ve uçuş modları"
+description: "Dronunuzu UAVcast-Pro Uçuş Haritası üzerinde canlı izleyin: kokpit HUD'u, video pencereleri, arm/disarm, uçuş modları, RTL, loiter, GCS failsafe ve uçuş kontrolcüsü mesajları."
+sidebar_position: 1
+sidebar_label: "Harita görünümü"
+---
+
+# Uçuş Haritası {/* #flight-map */}
+
+Uçuş Haritası, UAVcast-Pro'ya yerleşik, tarayıcı tabanlı bir yer kontrol istasyonudur. Dronu izi, aktif görevi ve ev konumuyla birlikte haritada gösterir; ayrıca kokpit HUD'unu, canlı videoyu ve uçuş kontrolcüsünün mesajlarını sunar. Arm ve disarm yapabilir, uçuş modunu değiştirebilir, bir görevi başlatabilir ve RTL ya da loiter tetikleyebilirsiniz. Tüm bu işlemler onay pencerelerinin arkasındadır. **Uçuş Haritası → Harita görünümü** sayfasını açın.
+
+Bu sayfa, herhangi bir telefon, tablet veya dizüstü bilgisayardan izleme ve basit komutlar vermek için tasarlanmıştır. Tam görev planlaması ve parametre işleri için Mission Planner veya QGroundControl'ü kullanmaya devam edin.
+
+<Screenshot id="uavcast-pro/flight-map" alt="Haritanın, sağda kokpit HUD'unun ve link, batarya, uçuş kontrolcüsü, telemetri, GPS ve attitude kartlarını içeren Durum sekmesinin bulunduğu Uçuş Haritası" caption="GPS kilidi olmayan bir tezgah ünitesinde Uçuş Haritası → Harita görünümü; bu nedenle harita üzerinde drone konumu görünmüyor." />
+
+## Düzen {/* #layout */}
+
+- **Harita** (solda): başlığı, izi, ev işaretçisi ve görevi olan drone. **Sats** uydu sayısını gösterir; **Auto-Pan** dronu merkezde tutar. Katman düğmesiyle katmanları değiştirin (**Street Map**, **Satellite** ve diğerleri). Dronun konum kilidi yoksa **No GPS Lock** mesajını görürsünüz: *En az 4 uydu gerekli*.
+- **Üst çubuk**: **Kayıt** düğmeleri (**Telemetry**, **CAM 1**, **CAM 2**), boş kayıt alanı, telemetri güncelleme hızı (**1 Hz** ile **10 Hz** arası), mevcut veri hızı ve haritayı kendi penceresinde açan bir düğme.
+- **Kokpit** (sağda): hız ve irtifa şeritleri olan bir attitude HUD'u, aktif uçuş modu, arm durumu, batarya voltajı ve en son pre-arm mesajı.
+- **Yan sekmeler**: **Durum**, **Göstergeler**, **Actions**, **Mesajlar** ve **Kayıtlar**. Panelin kenarını sürükleyerek boyutunu değiştirin; sıfırlamak için tutamaca çift tıklayın.
+- **Video pencereleri**: etkin her kamera akışı için bir pencere. Pencereleri sürükleyin, büyütün, küçültün veya gizleyin; gizlenen pencereler haritanın altında sekme olarak yerleşir.
+
+Her sayfanın üst çubuğunda ayrıca **FC Connected**, **Arm edildi**/**Disarm edildi**, araç tipi, uçuş modu ve **GCS Failsafe Enabled** veya **GCS Failsafe Disabled** durumu görünür.
+
+## Arm et ve disarm et {/* #arm-and-disarm */}
+
+<Steps>
+
+1. **Actions** sekmesini açın veya kokpitin altındaki arm denetimini kullanın.
+2. **Arm et** seçin. İletişim kutusu şu uyarıyı gösterir: *Pervaneler dönmeye başlayabilir. Drone'a kimsenin yaklaşmadığından ve çevresinin boş olduğundan emin olun.*
+3. **Arm et** ile onaylayın.
+
+</Steps>
+
+Uçuş kontrolcüsünün kendi pre-arm kontrolleri yine de belirleyicidir. Arm işlemini reddederse şu mesajı görürsünüz: *Drone arm edilmeyi reddetti. Ekrandaki PreArm mesajını kontrol edin.* Nedeni kokpitin altında ve **Mesajlar** içinde görünür.
+
+**Disarm et** motorları hemen durdurur. Drone uçuyorken uçuş kontrolcüsü bu komutu reddeder.
+
+## Uçuş modunu değiştirme {/* #change-flight-mode */}
+
+Uçuş modu denetiminden bir mod seçin. Liste, araç tipine (Copter, Plane, Rover, Sub) göre değişir ve **Safe Modes** (konum tutma ve stabilizasyon), **Navigation** (otonom modlar) ve **Advanced** (manuel ve acil durum modları) olarak gruplanır. Riski daha yüksek modlar uyarı simgesiyle işaretlenir ve komut gönderilmeden önce onay ister.
+
+## Actions sekmesi {/* #actions-tab */}
+
+| Grup | Düğmeler | Ne olur |
+|---|---|---|
+| **Görev** | **Oku**, **Gizle**, **Başlat**, **Temizle** | **Oku**, görevi uçuş kontrolcüsünden haritaya yükler. **Başlat**, görevi başlatır (onay ile). **Temizle**, görevi uçuş kontrolcüsünden siler ve onayını bekler. |
+| **Modlar** | **Loiter Unl**, **RTL** | Hızlı mod değişiklikleri. |
+| **Uçuş Öncesi** | **Uçuş Öncesi Kalibrasyon**, **Görev Yükle**, **Görevi Temizle** | Kalibrasyon, uçuş kontrolcüsünün yer kalibrasyonunu (gyro, baro) çalıştırır. Yalnızca yerdeyken kullanın. |
+| **Acil Durum Komutları** | **Kalkış Noktasına Dön**, **Sınırsız Loiter** | Onay arkasında. RTL, uçuş kontrolcüsünün ayarlarına göre geri döner ve iniş yapar ya da loiter yapar. Sınırsız Loiter, mevcut konumda daire çizer. |
+| **Failsafe** | **GCS failsafe** anahtarı | Uçuş kontrolcüsüne `FS_GCS_ENABLE` (Copter) ve `FS_GCS_ENABL` (Plane) değerlerini yazar. |
+
+:::danger Hücresel uçuşlar için GCS failsafe'i etkinleştirin
+GCS failsafe, uçuş kontrolcüsü bir yer kontrol istasyonundan MAVLink heartbeat almayı bıraktığında devreye girer. 4G/LTE üzerinde bağlantı her an kopabilir. Failsafe'e güvenmeden önce yer kontrol istasyonunuzda ne yapacağını (`FS_GCS_ENABLE` eylemi, `FS_GCS_TIMEOUT`) yapılandırın.
+:::
+
+Yalnızca okuma yetkisi olan kullanıcılar Actions sekmesini görür ancak kullanamaz (*Read Only kullanıcılar drone'u kontrol edemez*).
+
+## Mesajlar {/* #messages */}
+
+**Mesajlar**, uçuş kontrolcüsünden gelen her metin mesajını listeler. **Aktif uyarılar**, mevcut sorunları (örneğin pre-arm hataları) **Mesaj günlüğü**nden ayrı olarak gösterir. Rutin mesajları gizlemek için **Yalnızca sorunlar**'ı, yeni bir başlangıç için **Günlüğü temizle**'yi etkinleştirin. Sekmede aktif uyarı sayısını gösteren bir rozet bulunur.
+
+## Durum ve Göstergeler sekmeleri {/* #status-and-gauge-tabs */}
+
+- **Durum**: **BAĞLANTI** (paket kaybı, bağlı), **UÇUŞ KONTROLCÜSÜ** (arm, mod, araç), telemetri veri hızı, konum, **GPS** (kilit, uydu, **İRTİFA (AGL)**, **İRTİFA (AMSL)**) ve **BATARYA** kartları.
+- **Göstergeler**: aynı veriler için yuvarlak göstergeler.
+
+AGL, kalkış noktasının üzerindeki yüksekliktir; AMSL ise deniz seviyesinin üzerindeki yüksekliktir.
+
+## Map Settings {/* #map-settings */}
+
+| Ayar | Ne yapar |
+|---|---|
+| **Auto-Pan** | Dronu haritanın ortasında tutar. |
+| **Show Aircraft Heading** | Dronun yönünden bir yön çizgisi çizer. |
+| **Trail Length** | Uçuş yolu izinde tutulan nokta sayısı. |
+| **Trail Color** | İzin rengi. **Clear Trail Path** izi kaldırır. |
+| **Show Distance from Home** | Ev işaretçisine olan mesafeyi gösterir. |
+| **Reset to Defaults** | Tüm harita ayarlarını geri yükler. |
+
+## Ayrı pencereler {/* #pop-out-windows */}
+
+- **Uçuş haritası penceresi**: üst çubuğun sağındaki düğme, haritayı tek başına yeni bir pencerede açar (`/flightmapwindow`). İkinci bir monitöre göre boyutlandırılmıştır.
+- **HUD penceresi**: kokpitten HUD'u kendi penceresinde açın (`/hud`).
+
+<Screenshot id="uavcast-pro/hud" alt="Attitude göstergesi, hız ve irtifa şeritleri, yön ve uçuş modu içeren kokpit HUD'u" caption="/hud adresindeki kokpit HUD'u. Bu tezgah ünitesinin uçuş kontrolcüsü ters monte edildiği için ufuk burada ters görünüyor." />
+
+## Telemetri güncelleme hızı {/* #telemetry-update-rate */}
+
+Üst çubuktaki hız seçici (**1 Hz**, **2 Hz**, **5 Hz**, **10 Hz**), UAVcast-Pro'nun telemetriyi tarayıcıya ne sıklıkla gönderdiğini belirler. Yer kontrol istasyonlarınızın aldıklarını değiştirmez. Web arayüzüne yavaş bir bağlantıdan erişiyorsanız düşük bir hız seçin.
+
+## İlgili sayfalar {/* #related */}
+
+- [Görev Planlayıcı sekmesi](./mission-planner.mdx)
+- [Radyo (RC kanalları)](./radio.mdx)
+- [MAVLink Denetçisi](./inspector.mdx)
+- [Uçuş Analizi](./flight-analytics.mdx)
+- [Kayıtlar ve uçuş incelemesi](../camera/recordings.mdx)

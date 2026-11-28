@@ -1,0 +1,66 @@
+---
+title: "Verbinding maken met uw drone over 4G met Tailscale"
+sidebar_label: Externe toegang met Tailscale
+description: "Bereik uw drone via LTE met Tailscale en UAVcast-Pro, zonder portdoorstuur: inloggen via URL of authenticatiesleutel, de laptop als GCS toevoegen en sleutelverval uitschakelen."
+sidebar_position: 3
+---
+
+# Externe toegang met Tailscale {/* #remote-access-with-tailscale */}
+
+Tailscale is een op WireGuard gebaseerde VPN. Als uw team die al gebruikt, is het de snelste manier om via 4G bij een drone te komen: de drone en uw laptop treden toe tot hetzelfde tailnet en communiceren via hun `100.x.y.z`-adressen.
+
+Geen tailnet? De Fleet Manager-VPN, inbegrepen bij uw licentie, doet hetzelfde zonder Tailscale-account: zie [Vliegen buiten zichtafstand over 4G](./bvlos-4g.mdx) en [Een vloot onboarden](./fleet-onboarding.mdx).
+
+**U hebt nodig:** UAVcast-Pro met internet op de drone (wifi of modem), een Tailscale-account en de Tailscale-client op uw laptop.
+
+## 1. De drone aanmelden bij Tailscale {/* #1-log-the-drone-in-to-tailscale */}
+
+<Steps>
+
+1. Open in UAVcast-Pro **Virtueel Privénetwerk**.
+2. Zet **VPN Inschakelen** op **Ja** en **Diensten** op **Tailscale**.
+3. Kies hoe u wilt inloggen:
+   - **Web Login**: druk op **Login-URL genereren**, daarna op **Authenticeer dit apparaat** en meld u aan met uw Tailscale-account op de pagina die opent.
+   - **Authenticatiesleutel**: maak een authenticatiesleutel aan in de Tailscale-beheerconsole, plak die in het veld **Authenticatiesleutel**, stel optioneel **Hostnaam (Optioneel)** in en druk op **Verbind met Authenticatiesleutel**. Gebruik dit als u drones voor iemand anders instelt, of veel tegelijk.
+4. Wacht op **Verbonden**. Noteer het **IPv4 Adres** (100.x.y.z).
+
+</Steps>
+
+<Screenshot id="uavcast-pro/private-network" alt="Pagina Virtueel Privénetwerk met VPN Inschakelen op Ja, Diensten op Tailscale, de tabbladen Fleet Manager, Web Login en Authenticatiesleutel, en VPN Informatie met Niet Verbonden" caption="Virtueel Privénetwerk met Diensten op Tailscale, voordat de drone is aangemeld (Niet Verbonden). Na het inloggen toont VPN Informatie de verbindingsgegevens." />
+
+:::tip Schakel sleutelverval uit voor drones
+Tailscale-apparaatsleutels verlopen. Een drone met een verlopen sleutel valt van het tailnet af totdat iemand hem opnieuw aanmeldt. Het veld **Verloopt** toont wanneer dat is. Schakel in de Tailscale-beheerconsole sleutelverval uit voor drones die u uitrolt.
+:::
+
+## 2. De laptop op hetzelfde tailnet zetten {/* #2-put-the-laptop-on-the-same-tailnet */}
+
+Installeer Tailscale op de laptop en meld u aan met hetzelfde account of tailnet. Voer `tailscale status` uit: de drone moet in de lijst staan. Daarna:
+
+```bash
+ping <drone tailscale ip>
+```
+
+Open de webinterface van de drone op `http://<drone tailscale ip>/`.
+
+## 3. Telemetrie en video naar de laptop sturen {/* #3-send-telemetry-and-video-to-the-laptop */}
+
+<Steps>
+
+1. Ga in UAVcast-Pro naar **Grondcontrolestations** en druk op **Bestemming Toevoegen**.
+2. Vul bij **Bestemmings-IP of Host** het IPv4-adres van de **laptop** in (Tailscale; voer op de laptop `tailscale ip -4` uit).
+3. Zet **Telemetrie Inschakelen** en **Video Inschakelen** aan.
+4. Sta op de firewall van de laptop inkomend UDP 14550 en 5600 toe. Windows behandelt de Tailscale-adapter vaak als openbaar netwerk.
+
+</Steps>
+
+Open QGroundControl of Mission Planner. Telemetrie komt binnen op UDP 14550 en video op UDP 5600.
+
+## 4. De verbindingskwaliteit controleren {/* #4-check-the-connection-quality */}
+
+Het veld **Relay** op de pagina **Virtueel Privénetwerk** toont of het verkeer via een Tailscale-relay loopt. Een relaypad werkt, maar voegt vertraging toe. Sommige mobiele providers staan geen directe verbindingen toe, dus test met de provider waarmee u vliegt.
+
+## Probleemoplossing {/* #troubleshooting */}
+
+- Kan de drone niet pingen: [VPN verbonden maar de drone is niet bereikbaar](../troubleshooting/vpn-cant-reach-drone.mdx)
+- Ping werkt, geen telemetrie: [Geen telemetrie in het grondstation](../troubleshooting/no-telemetry-in-gcs.mdx)
+- Als de drone later wordt gekoppeld aan Fleet Manager en u kiest **Replace existing VPN with Fleet Manager network**, verlaat hij uw tailnet en treedt hij toe tot het netwerk van de organisatie.

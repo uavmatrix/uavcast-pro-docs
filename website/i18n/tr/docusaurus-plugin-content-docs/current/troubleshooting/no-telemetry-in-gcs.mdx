@@ -1,0 +1,69 @@
+---
+title: "QGroundControl veya Mission Planner'da telemetri yok"
+sidebar_label: Yer istasyonunda telemetri yok
+description: "Uçuş kontrolcüsü UAVcast-Pro'da bağlı ama QGroundControl veya Mission Planner hâlâ bekliyor mu? Telemetriyi Etkinleştir, IP, UDP 14550 ve VPN'i kontrol edin."
+sidebar_position: 5
+---
+
+# QGroundControl veya Mission Planner'da telemetri yok {/* #no-telemetry-in-qgroundcontrol-or-mission-planner */}
+
+UAVcast-Pro uçuş kontrolcüsünü **Connected** olarak gösterir, ancak QGroundControl *Waiting for vehicle connection* yazar veya Mission Planner *No heartbeat packets received* mesajıyla zaman aşımına uğrar. Drone uçuş kontrolcüsünü duyuyor; yalnızca telemetri yer kontrol istasyonunuza ulaşmıyor.
+
+UAVcast-Pro'nun kendisi **No heartbeat** gösteriyorsa, önce bunu düzeltin: [MAVLink heartbeat yok](./no-mavlink-heartbeat.mdx).
+
+<SymptomTable rows={[
+  {symptom: 'Kontrol paneli: Ground station None set up veya Not sending', cause: 'Hedef yok veya Telemetriyi Etkinleştir kapalı', start: '#check-1'},
+  {symptom: 'Kontrol paneli Sending diyor, GCS hiçbir şey görmüyor', cause: 'Yanlış IP, güvenlik duvarı veya GCS başka bir portu dinliyor', start: '#check-2'},
+  {symptom: 'Wi-Fi üzerinde çalışıyordu, 4G üzerinde hiçbir şey yok', cause: 'Hedef, VPN IP adresi yerine yerel bir IP adresi', start: '#check-3'},
+  {symptom: 'TCP 5760 üzerinden bağlanıyordu, güncellemeden sonra durdu', cause: 'TCP 5760, v6.5.0 sürümünde kapatıldı', start: '#check-4'},
+  {symptom: 'Telemetri görünüyor, ama komutlar ve mod değişiklikleri etkisiz', cause: 'Bu hedef için Read Only açık', start: '#check-5'},
+]} />
+
+## Kontrol 1: Telemetri gönderiliyor mu? {/* #check-1 */}
+
+<Steps>
+
+1. **Kontrol Paneli**'ni açın ve durum kartındaki **Ground station** satırını okuyun.
+   - **None set up**: hedef yok. 2. adımda bir tane ekleyin.
+   - **Not sending**: bir hedef var ama hiçbir şey gönderilmiyor.
+   - **Sending to … · n packets/s**: telemetri drone'dan çıkıyor. 2. kontrole geçin.
+2. **Yer Kontrol İstasyonları** sayfasına gidin. Liste boşsa **Hedef Ekle** düğmesine basın.
+3. Bilgisayarınızın kartında **Uç Noktayı Etkinleştir** ve **Telemetriyi Etkinleştir** seçeneklerini açın. Yeni bir hedefte hem video hem telemetri kapalıdır.
+4. Bilgisayarın IPv4 adresini **Hedef IP veya Sunucu** alanına girin ve **Telemetri Portu** değerini `14550` olarak bırakın.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/ground-control--telemetry-enabled" alt="Hedefin telemetri bölümü: Telemetriyi Etkinleştir açık, Read Only kapalı" caption="Yer Kontrol İstasyonları: Telemetriyi Etkinleştir açık bir hedef." />
+
+:::note Geçersiz adresler atlanır
+UAVcast-Pro yalnızca `192.168.1.10` gibi IPv4 adreslerini kabul eder. Bir sunucu adı kaydetmeye çalışırsanız *Enter a valid IPv4 address, for example 192.168.1.10.* mesajını görürsünüz. Eksik veya geçersiz bir adres telemetri yönlendiricisinden çıkarılır ve Uçuş Kontrolcüsü sayfasındaki **Bağlantı kontrolü** bunu listeler.
+:::
+
+## Kontrol 2: Yer istasyonunun dinlediğinden emin olun {/* #check-2 */}
+
+UAVcast-Pro, ayarladığınız adrese ve porta UDP üzerinden MAVLink gönderir. Yer istasyonu bu portu dinlemelidir.
+
+- **QGroundControl** varsayılan olarak UDP 14550 portunu dinler. **Telemetri Portu** değerini değiştirdiyseniz, **Application Settings → Comm Links** bölümünde aynı porta bir UDP comm link ekleyin.
+- **Mission Planner**: sağ üstteki bağlantı açılır listesinden **UDP** seçin, **Connect** düğmesine basın ve `14550` portunu kabul edin.
+- Bir portu yalnızca bir program dinleyebilir. MAVProxy, ikinci bir QGroundControl veya 14550 portunu tutabilecek başka bir aracı kapatın.
+- Güvenlik duvarında gelen UDP 14550 trafiğine izin verin. Komutlar için [Video yok, kontrol 3](./no-video-in-gcs.mdx#check-3) sayfasına bakın.
+
+## Kontrol 3: 4G üzerinde VPN adresini kullanın {/* #check-3 */}
+
+4G üzerinden drone, `192.168.1.20` gibi yerel bir adrese ulaşamaz. Bilgisayarınızın VPN adresini (Fleet Manager VPN, Tailscale veya ZeroTier) **Hedef IP veya Sunucu** alanına yazın.
+
+Bilgisayardan drone'un VPN adresine ping atın. Ping başarısızsa sorun VPN'dedir: [VPN bağlı ama drone'a ulaşılamıyor](./vpn-cant-reach-drone.mdx) sayfasına bakın.
+
+## Kontrol 4: TCP 5760 artık çalışmıyor {/* #check-4 */}
+
+v6.5.0 sürümünden itibaren telemetri yönlendiricisi 5760 portunda TCP bağlantılarını kabul etmez. Bu nedenle yalnızca eklediğiniz ve açtığınız yer istasyonları veri alır. Mission Planner'ı daha önce TCP 5760 üzerinden bağlıyorsanız, bilgisayarınızı hedef olarak ekleyin ve bunun yerine UDP üzerinden bağlanın.
+
+## Kontrol 5: Komutlar yok sayılıyor {/* #check-5 */}
+
+Telemetri görünüyor ama arm etme, mod değişiklikleri veya görev yüklemeleri hiçbir şey yapmıyorsa, o hedefteki **Read Only** ayarını kontrol edin. Read Only, araçta değişiklik yapacak her şeyi (komutlar, mod değişiklikleri, parametre ve görev yazmaları) engeller; böylece yer istasyonu yalnızca izleyebilir. {/* PENDING-RELEASE: read-only */} Bazı yer istasyonları bu modda uyarı gösterir, çünkü bazı istekleri yanıtsız kalır.
+
+## Hâlâ bir sonuç yok mu? {/* #still-nothing */}
+
+**Mavlink Yöneticisi** seçiliyken [günlükleri indirin](./collect-logs.mdx) ve **support@uavmatrix.com** adresine gönderin. Hangi yer istasyonunu kullandığınızı ve IP adresini belirtin.
+
+İlgili: [Yer Kontrol İstasyonları](../uavcast-pro/ground-stations/index.mdx) · [Portlar ve protokoller](../reference/ports-and-protocols.mdx)

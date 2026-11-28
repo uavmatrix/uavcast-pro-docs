@@ -1,0 +1,85 @@
+---
+title: "Poszarpane, opóźnione lub szare wideo przez 4G"
+sidebar_label: Poszarpane lub opóźnione wideo
+description: "Napraw zacinanie się obrazu, szare zakłócenia i opóźnienia w wideo UAVcast-Pro przez LTE lub VPN, dopasowując bitrate, rozdzielczość, FPS i Szybkość Odzyskiwania Strumienia do łącza."
+sidebar_position: 3
+---
+
+# Poszarpane, opóźnione lub szare wideo przez 4G {/* #choppy-laggy-or-grey-video-over-4g */}
+
+Obraz dociera, ale się zacina, zamraża, pokrywa szarymi blokami albo ma kilka sekund opóźnienia. Prawie zawsze strumień wymaga więcej, niż łącze może przenieść, albo enkoder wysyła klatki kluczowe zbyt rzadko, by odzyskać obraz po utraconych pakietach.
+
+<SymptomTable rows={[
+  {symptom: 'Szare lub zielone zakłócenia, które znikają po sekundzie lub dwóch', cause: 'Utracone pakiety i zbyt mało klatek kluczowych do odzyskania obrazu', start: '#check-2'},
+  {symptom: 'Płynnie przez Wi-Fi, ale zacina się lub zamraża przez LTE', cause: 'Bitrate wyższy niż to, co przenosi łącze komórkowe', start: '#check-1'},
+  {symptom: 'Zacina się nawet w sieci lokalnej', cause: 'Limit CPU w dronie lub stacja naziemna nie nadąża z dekodowaniem', start: '#check-3'},
+  {symptom: 'Wideo jest o kilka sekund za dronem', cause: 'Oglądasz podgląd w przeglądarce lub stacja naziemna buforuje', start: '#check-4'},
+]} />
+
+## Sprawdzenie 1: Obniż bitrate i rozdzielczość {/* #check-1 */}
+
+Łącze wysyłania w sieci komórkowej jest wielokrotnie wolniejsze niż pobieranie i zmienia się, gdy dron przelatuje między komórkami. Zacznij od niskich wartości i stopniowo je zwiększaj.
+
+<Steps>
+
+1. Przejdź do **Kamera → Ustawienia kamery**.
+2. Ustaw **Rozdzielczość** na 1280×720 lub mniej.
+3. Ustaw **Wybierz FPS** na 15 lub 20.
+4. Przesuń suwak **Bitrate:** na około 1000–1500 kbps. `0` oznacza tryb automatyczny.
+5. Ustawienia zapisują się w trakcie zmian, a kamera je od razu przejmuje.
+6. Poleć lub przejedź trasę, na której Ci zależy. Jeśli wszystko działa, zwiększaj po jednej wartości naraz.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera--settings" alt="Karta Ustawienia Kamery z polami Rozdzielczość, Wybierz FPS, Bitrate i Szybkość Odzyskiwania Strumienia" caption="Kamera → Ustawienia Kamery: Rozdzielczość, Wybierz FPS, Bitrate i Szybkość Odzyskiwania Strumienia to wartości do dostrojenia pod łącze." />
+
+:::tip Ile przenosi łącze?
+**Panel Główny → Ruch Sieciowy** pokazuje bieżącą szybkość TX dla każdego interfejsu. Jeśli interfejs modemu trzyma się tego samego pułapu, niezależnie od ustawionego bitrate, ten pułap to Twoje łącze wysyłania.
+:::
+
+## Sprawdzenie 2: Ustaw wyższą Szybkość Odzyskiwania Strumienia {/* #check-2 */}
+
+Szare nakładki pojawiają się przez utracone pakiety. Dekoder może naprawić obraz dopiero przy następnej klatce kluczowej. **Szybkość Odzyskiwania Strumienia** określa, jak często wysyłane są klatki kluczowe.
+
+<Steps>
+
+1. W **Kamera → Ustawienia kamery** znajdź **Szybkość Odzyskiwania Strumienia**.
+2. Przesuń suwak z **Auto** w stronę **Ultra Fast**: mniej klatek między klatkami kluczowymi szybciej naprawia obraz, ale zużywa więcej pasma. W stronę **Bandwidth Saver** oszczędza pasmo, ale odzyskuje obraz wolno. Podpowiedź pod suwakiem (na przykład *VPN/WiFi Friendly*) mówi, do jakiej sytuacji pasuje dana pozycja.
+3. Zapisz i porównaj. Jeśli łącze jest bardzo wolne, połącz szybsze odzyskiwanie z niższym bitrate (sprawdzenie 1).
+
+</Steps>
+
+Na **Auto** UAVcast-Pro wysyła jedną klatkę kluczową na sekundę (co *FPS* klatek, albo co 30 klatek, gdy FPS jest na auto).
+
+## Sprawdzenie 3: Sprawdź obciążenie CPU {/* #check-3 */}
+
+UAVcast-Pro koduje H.264 programowo. Na Raspberry Pi Zero 2 W albo przy dwóch kamerach strumieniujących naraz procesor może się przeciążyć.
+
+<Steps>
+
+1. Otwórz **Kamera → Ustawienia kamery** i spójrz na kartę **Obciążenie systemu**.
+2. Jeśli karta pokazuje **CPU is near its limit. Lower the resolution or bitrate.**, obniż rozdzielczość lub bitrate.
+3. Przy włączonym **Podwójny strumień** obniż rozdzielczość lub bitrate jednego strumienia albo wyłącz drugi.
+4. Sprawdź **Panel Główny** pod kątem **Slowed down (heat or power)** w **Power supply**. Zdławiony procesor koduje wolniej. Zobacz [Podnapięcie i throttling](./undervoltage-and-throttling.mdx).
+
+</Steps>
+
+## Sprawdzenie 4: Wiedz, który strumień oglądasz {/* #check-4 */}
+
+**Podgląd na Żywo** w przeglądarce i okno wideo na **Mapie Lotu** korzystają z wbudowanego serwera mediów, który dodaje opóźnienie. Służą do konfiguracji, a nie do lotu. Strumień do stacji naziemnej idzie bezpośrednio przez UDP i ma znacznie mniejsze opóźnienie.
+
+Jeśli sama stacja naziemna opóźnia obraz:
+
+- W QGroundControl sprawdź, czy tryb niskiego opóźnienia jest włączony w ustawieniach wideo.
+- W potokach GStreamer użyj `sync=false` na video sink, jak w [poleceniu testowym](./no-video-in-gcs.mdx#check-5).
+- Przez VPN upewnij się, że ZeroTier lub Tailscale łączy się z dronem bezpośrednio, a nie przez relay. Tailscale pokazuje używany relay w sekcji **Relay** na stronie **Sieć Prywatna VPN**.
+
+## Sprawdzenie 5: Sprawdź sygnał komórkowy {/* #check-5 */}
+
+Wejdź do **Modem** i spójrz na **Signal Quality** oraz **Technology** w sekcji **Informacje o Modemie**. Słaby sygnał albo spadek z LTE na 3G ogranicza łącze wysyłania. Przesuń modem z dala od kontrolera lotu, regulatorów ESC i przewodów zasilających albo użyj modemu z zewnętrznymi antenami.
+
+## Nadal zacina się? {/* #still-choppy */}
+
+[Pobierz logi](./collect-logs.mdx) (**Camera Server**, ostatnie 30 minut) i wyślij je na **support@uavmatrix.com** wraz z modelem kamery, rozdzielczością, FPS, bitrate i rodzajem łącza, na którym latasz.
+
+Powiązane: [Ustawienia kamery](../uavcast-pro/camera/index.mdx) · [Modem komórkowy](../uavcast-pro/connectivity/cellular-modem.mdx)

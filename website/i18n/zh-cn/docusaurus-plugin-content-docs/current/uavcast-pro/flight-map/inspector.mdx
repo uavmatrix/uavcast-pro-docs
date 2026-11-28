@@ -1,0 +1,34 @@
+---
+title: "在 UAVcast-Pro Web UI 中检查实时 MAVLink 消息"
+description: "使用 UAVcast-Pro MAVLink 检查器查看飞行控制器发出的每条消息及其速率、系统 ID 和组件 ID，并调试遥测和注入器。"
+sidebar_position: 4
+sidebar_label: "检查器"
+---
+
+# MAVLink 检查器 {/* #mavlink-inspector */}
+
+检查器会列出 UAVcast-Pro 接收到的每条 MAVLink 消息，按飞行器分组，并显示其速率和最新字段值。可用它来确认飞行控制器发送了预期的内容、查找消息的确切字段名，或确认 [注入器](../flight-controller/injectors.mdx) 能够生成 `NAMED_VALUE_FLOAT` 消息。打开 **飞行地图 → 检查器**。
+
+<Screenshot id="uavcast-pro/flight-map--inspector" alt="MAVLink 检查器，显示连接状态以及系统 1 的消息列表，包括消息名称、以 Hz 表示的速率和计数" caption="飞行地图 → 检查器，显示来自飞行控制器（系统 1）的消息，并已展开 ATTITUDE。" />
+
+## 显示内容 {/* #what-you-see */}
+
+**MAVLink 连接状态** 位于顶部：**连接**、**飞行器**、**GPS 卫星**、**总消息数** 和 **系统 ID**。
+
+下方是 **消息检查器**：每个飞行器一组（*飞行器（系统 ID：1）*），每组中每条消息占一行，包括：
+
+- 消息名称，
+- **COMP**：发送该消息的组件 ID（1 = 自动驾驶仪，194 = 注入器的默认值），
+- 速率（单位 **Hz**）以及接收到的消息数量。
+
+打开某条消息即可查看其字段和当前值。
+
+## 常见检查 {/* #typical-checks */}
+
+| 问题 | 查看内容 |
+|---|---|
+| GPS 是否在发送数据？ | `GPS_RAW_INT` 速率为 2 至 10 Hz；如果使用 [RTK](../flight-controller/ntrip-rtk.mdx)，还需查看 `GPS_RTK`。 |
+| 为什么地面站中的遥测很慢？ | `ATTITUDE`、`VFR_HUD` 或 `GLOBAL_POSITION_INT` 的速率较低。请在飞行控制器的 MAVLink 端口上提高 `SRx_` 流速率。 |
+| 我的注入器是否正常工作？ | COMP 194（或您设置的 compid）下的 `NAMED_VALUE_FLOAT`。 |
+
+如果列表显示 *等待消息...*，说明飞行控制器链路未连接。请参阅 [飞行控制器](../flight-controller/index.mdx)。

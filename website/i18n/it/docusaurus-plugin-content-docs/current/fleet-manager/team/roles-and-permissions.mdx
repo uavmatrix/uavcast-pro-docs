@@ -1,0 +1,85 @@
+---
+title: Ruoli e permessi di Fleet Manager (Owner, Admin, Viewer)
+sidebar_label: Ruoli e permessi
+description: "La matrice dei permessi esatta per i ruoli Owner, Admin e Viewer di Fleet Manager: accoppiamento, comandi di volo, terminale, missioni, VPN e team."
+sidebar_position: 2
+---
+
+# Ruoli e permessi {/* #roles-and-permissions */}
+
+Fleet Manager ha tre ruoli, impostati per organizzazione. Una persona può essere Admin in un'organizzazione e Viewer in un'altra.
+
+| Ruolo | In breve |
+|---|---|
+| **Owner** | Tutto ciò che può fare un Admin, più l'eliminazione dell'organizzazione e il trasferimento della proprietà. Ce n'è esattamente uno per organizzazione: la persona che l'ha creata, oppure quella a cui è stata trasferita la proprietà. |
+| **Admin** | Gestisce la flotta: accoppia e rimuove droni, invia comandi, apre il terminale, pianifica e carica missioni, gestisce la VPN e le associazioni dei flussi, e gestisce il team. |
+| **Viewer** | Sola lettura. Vede la dashboard, la flotta, la mappa in tempo reale, la cronologia dei voli, le missioni, la rete e il team, ma non può modificare né comandare nulla. |
+
+I nuovi membri vengono invitati come Admin o Viewer. Il ruolo Owner passa di mano solo tramite il [trasferimento della proprietà](./index.mdx#transfer-ownership).
+
+## Matrice dei permessi {/* #permission-matrix */}
+
+La matrice deriva dalle regole dei permessi che Fleet Manager applica sul server, quindi un pulsante nascosto non è mai l'unico ostacolo.
+
+| Azione | Owner | Admin | Viewer |
+|---|:---:|:---:|:---:|
+| **Flotta e droni** | | | |
+| Vedere dashboard, elenco della flotta, pagine UAV e mappa in tempo reale | ✓ | ✓ | ✓ |
+| Riprodurre la cronologia dei voli | ✓ | ✓ | ✓ |
+| Salvare, rinominare ed eliminare i voli con nome | ✓ | ✓ | – |
+| Accoppiare un drone (**Pair Device**) | ✓ | ✓ | – |
+| Rinominare un drone, cambiarne il colore sulla mappa | ✓ | ✓ | – |
+| Rimuovere un drone | ✓ | ✓ | – |
+| **Comandi** | | | |
+| Cambiare modalità di volo, RTL, Loiter, Circle | ✓ | ✓ | – |
+| Armare, disarmare, armare forzatamente | ✓ | ✓ | – |
+| Calibrazione pre-volo | ✓ | ✓ | – |
+| Avviare, arrestare e leggere le missioni su un drone | ✓ | ✓ | – |
+| Riavviare o spegnere il computer di bordo | ✓ | ✓ | – |
+| **Terminal** SSH nella pagina UAV | ✓ | ✓ | – |
+| **Open via Proxy** (interfaccia web di UAVcast-Pro tramite Fleet Manager) | ✓ | ✓ | – |
+| **Missioni** | | | |
+| Visualizzare le missioni salvate | ✓ | ✓ | ✓ |
+| Creare, modificare ed eliminare missioni | ✓ | ✓ | – |
+| **Upload to Drone** | ✓ | ✓ | – |
+| **Rete e VPN** | | | |
+| Vedere la pagina Network, i dispositivi e le associazioni dei flussi | ✓ | ✓ | ✓ |
+| Vedere la chiave di autenticazione VPN e il **GCS Connection Command** | ✓ | ✓ | – |
+| Attivare la VPN, generare chiavi di autenticazione, **Push to Drone** | ✓ | ✓ | – |
+| Rinominare, cambiare tipo di, o rimuovere dispositivi VPN | ✓ | ✓ | – |
+| Aggiungere, mettere in pausa o rimuovere associazioni dei flussi | ✓ | ✓ | – |
+| Eliminare la rete VPN | ✓ | ✓ | – |
+| **Team** | | | |
+| Vedere membri e ruoli | ✓ | ✓ | ✓ |
+| Invitare membri (come Admin o Viewer) | ✓ | ✓ | – |
+| Cambiare il ruolo di un membro (tranne quello dell'Owner) | ✓ | ✓ | – |
+| Rimuovere membri (tranne l'Owner), revocare inviti | ✓ | ✓ | – |
+| Trasferire la proprietà | ✓ | – | – |
+| **Organizzazione e impostazioni** | | | |
+| Rinominare l'organizzazione, modificarne la descrizione | ✓ | ✓ | – |
+| Cambiare la conservazione della telemetria, eliminare o pulire la cronologia | ✓ | ✓ | – |
+| Eliminare l'organizzazione | ✓ | – | – |
+| **Tutti** | | | |
+| Usare FleetBot, creare e chiudere i propri ticket di supporto | ✓ | ✓ | ✓ |
+| Modificare il proprio profilo (nell'account UAVmatrix) | ✓ | ✓ | ✓ |
+
+:::note Gli Admin possono gestire altri Admin
+Un Admin può invitare nuovi Admin, retrocedere un altro Admin a Viewer e rimuovere altri Admin. Assegna il ruolo Admin solo a persone di cui ti fidi per l'intera flotta. L'Owner è l'unico membro che un Admin non può modificare.
+:::
+
+:::info Cosa vedono i Viewer
+I Viewer ottengono le stesse pagine, senza i controlli. Il pannello di controllo UAV mostra al Viewer lo stato in tempo reale e i log, ma nessun pulsante di modalità di volo, missione o armamento e nessuna scheda Terminal. In **Network**, i Viewer non vedono la chiave di autenticazione VPN: *Only Owners and Admins can see the VPN auth key.* Fleet Manager verifica inoltre ogni comando sul server, quindi un Viewer non può inviarne uno in nessun altro modo.
+:::
+
+## Scegliere i ruoli per una flotta aziendale {/* #choosing-roles-for-a-business-fleet */}
+
+| Persona | Ruolo suggerito |
+|---|---|
+| Responsabile della flotta o delle operazioni | Owner (una sola persona) |
+| Piloti, tecnici, la persona che accoppia i nuovi velivoli | Admin |
+| Clienti che seguono il proprio lavoro in tempo reale, dirigenza, revisori | Viewer |
+| Collaboratori esterni che devono far volare i tuoi droni | Admin, rimosso alla fine del lavoro |
+
+## Non un ruolo: super admin {/* #not-a-role-super-admin */}
+
+Il personale UAVmatrix dispone di un ruolo di supporto separato su tutte le organizzazioni. Viene usato per attività di supporto, come [aggiungere email extra per le licenze](../licenses.mdx#licenses-bought-with-another-email) a un account. Non fa parte della tua organizzazione e non può essere assegnato.

@@ -1,0 +1,69 @@
+---
+title: "VPN connessa ma nessun accesso al drone"
+sidebar_label: La VPN non raggiunge il drone
+description: "VPN di Fleet Manager, Tailscale o ZeroTier dice connesso ma non puoi fare ping al drone? Controlla l'autorizzazione, la rete o tailnet, internet e l'IP della stazione di terra."
+sidebar_position: 11
+---
+
+# VPN connessa ma nessun accesso al drone {/* #vpn-connected-but-cant-reach-the-drone */}
+
+Sia il drone sia il tuo laptop dichiarano di essere sulla VPN, ma `ping` all'indirizzo VPN del drone va in timeout, l'interfaccia web non si apre tramite la VPN, oppure telemetria e video non arrivano.
+
+<SymptomTable rows={[
+  {symptom: 'La rete ZeroTier mostra ACCESS_DENIED, oppure nessun indirizzo IP', cause: 'Il drone non è autorizzato sulla rete', start: '#check-1'},
+  {symptom: 'Il drone va bene, il laptop non ottiene indirizzo o ne ottiene uno errato', cause: 'Il laptop è entrato in un’altra rete o tailnet', start: '#check-2'},
+  {symptom: 'Tailscale funzionava per settimane, poi si è fermato', cause: 'La chiave del dispositivo è scaduta', start: '#check-3'},
+  {symptom: 'La VPN sul drone non si connette mai sul campo', cause: 'Il drone non ha internet tramite il modem', start: '#check-4'},
+  {symptom: 'Il ping funziona, ma non arrivano telemetria o video', cause: 'La destinazione della stazione di terra usa l’IP sbagliato', start: '#check-5'},
+]} />
+
+## Controllo 1: autorizza il drone sulla rete {/* #check-1 */}
+
+**ZeroTier:**
+
+<Steps>
+
+1. In UAVcast-Pro, apri **Rete Privata Virtuale**. Controlla che **Attiva VPN** sia **Sì**, che **Servizi** sia **ZeroTier** e che **ID Rete** corrisponda a quello del tuo controller ZeroTier.
+2. Guarda la tua rete in **Reti Connesse**. Se il suo badge di stato indica **ACCESS_DENIED**, il drone è entrato ma non è autorizzato.
+3. Nel tuo controller ZeroTier, apri la rete e autorizza il membro con l'ID nodo del drone.
+4. Torna in UAVcast-Pro e attendi che la rete mostri lo stato `OK` e un indirizzo IP. Quello è l'indirizzo da usare dal laptop.
+
+</Steps>
+
+Su una rete ZeroTier privata, ogni dispositivo che entra (drone, laptop, tablet) deve essere autorizzato una volta nel controller prima di ottenere un indirizzo. (Anche le reti UAVnet sono private; UAVnet è in dismissione, quindi passa alla VPN di Fleet Manager.)
+
+**Tailscale:** il drone mostra **Connesso** con un **Indirizzo IPv4** (100.x.y.z) quando è entrato. Se indica **Non Connesso**, usa **Login Web → Genera URL di login**, oppure la scheda **Chiave di Autenticazione** con una chiave presa dalla console di amministrazione di Tailscale.
+
+## Controllo 2: porta il laptop sulla stessa rete {/* #check-2 */}
+
+Entrambe le estremità devono trovarsi sulla stessa rete ZeroTier o sulla stessa tailnet.
+
+- **ZeroTier**: sul laptop, unisciti allo stesso ID Rete e autorizza anche il laptop nel tuo controller. Su Windows, controlla l'icona ZeroTier nella barra delle applicazioni; su Linux esegui `sudo zerotier-cli listnetworks`. Lo stato deve essere `OK`.
+- **Tailscale**: un client Tailscale appartiene a una sola tailnet alla volta. Sul laptop, esegui `tailscale status`. Il drone deve comparire nell'elenco. In caso contrario, il laptop è collegato a un altro account o a un'altra tailnet.
+- **VPN di Fleet Manager**: se il drone è stato accoppiato con Fleet Manager e VPN, si trova nella rete della tua organizzazione, non nella tua Tailscale personale. Collega il laptop con il comando che Fleet Manager mostra sotto **Network** (`tailscale up --login-server=… --authkey=…`) ed eseguilo **sul laptop, mai sul drone**. Vedi [Collegare una stazione di terra](../fleet-manager/connect-gcs.mdx).
+
+:::warning L'accoppiamento può sostituire la VPN del drone
+Quando accoppi un drone in Fleet Manager con **Replace existing VPN with Fleet Manager network**, il drone lascia la sua attuale rete Tailscale e entra nella rete dell'organizzazione. I laptop sulla vecchia tailnet non possono più raggiungerlo.
+:::
+
+## Controllo 3: chiave Tailscale scaduta {/* #check-3 */}
+
+Le chiavi dei dispositivi Tailscale scadono. Quando la chiave del drone scade, il drone esce dalla tailnet finché non effettua di nuovo l'accesso. Il campo **Scade** nella pagina **Rete Privata Virtuale** mostra la data. Nella console di amministrazione di Tailscale puoi disattivare la scadenza della chiave per il drone, così non esce dalla rete durante un progetto.
+
+## Controllo 4: il drone deve prima avere internet {/* #check-4 */}
+
+La VPN passa attraverso la connessione internet propria del drone. Se il modem non ha internet, la VPN risulta disconnessa oppure non ottiene mai un indirizzo. Sistema prima la connessione: [Modem connesso, ma senza internet](./modem-no-internet.mdx).
+
+## Controllo 5: raggiungibile, ma senza dati {/* #check-5 */}
+
+Se `ping <ip-vpn-drone>` funziona:
+
+- **Interfaccia web**: apri `http://<ip-vpn-drone>/`. L'anteprima dal vivo richiede anche che la porta 8889 sia raggiungibile tramite la VPN.
+- **Telemetria e video**: vengono inviati *dal* drone *verso* l'indirizzo impostato in **Stazioni di Controllo a Terra → IP o Host di Destinazione**. Deve essere l'indirizzo VPN del laptop, non quello del drone, e non l'indirizzo Wi-Fi del laptop. Poi consulta [Nessuna telemetria](./no-telemetry-in-gcs.mdx) oppure [Nessun video](./no-video-in-gcs.mdx).
+- **Lenta, ma funzionante**: Tailscale mostra il **Relay** in uso. Una connessione tramite relay funziona ma aggiunge ritardo. Alcune reti cellulari non consentono connessioni dirette, quindi un relay può essere il massimo ottenibile con quell'operatore.
+
+## Ancora irraggiungibile? {/* #still-unreachable */}
+
+[Scarica i log](./collect-logs.mdx) con **VPN Manager** selezionato e inviali a **support@uavmatrix.com**, insieme all'output di `zerotier-cli listnetworks` o `tailscale status` sia dal drone sia dal laptop.
+
+Correlati: [Impostazioni VPN](../uavcast-pro/connectivity/vpn.mdx) · [Rete di Fleet Manager](../fleet-manager/network/index.mdx)

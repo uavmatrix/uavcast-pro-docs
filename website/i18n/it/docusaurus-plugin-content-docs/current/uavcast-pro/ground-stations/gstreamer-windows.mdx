@@ -1,0 +1,132 @@
+---
+title: "Ricevi il video del drone con GStreamer su Windows"
+description: "Installa GStreamer su Windows (MSVC 64-bit, Complete), aggiungilo al PATH e riproduci il video H.264 e l'audio Opus di UAVcast-Pro con gst-launch-1.0 in PowerShell o cmd. Firewall e soluzioni."
+sidebar_position: 4
+sidebar_label: "GStreamer su Windows"
+---
+
+# GStreamer su Windows {/* #gstreamer-on-windows */}
+
+GStreamer riproduce il flusso video di UAVcast-Pro in una finestra propria, senza bisogno di un programma per la stazione di terra. Usalo per verificare se il video arriva al PC, per guardare una seconda telecamera accanto a Mission Planner o QGroundControl, o per sentire la traccia audio. La configurazione richiede circa cinque minuti.
+
+## Prima di iniziare {/* #before-you-begin */}
+
+Sul drone, aggiungi una destinazione in [Stazioni di Controllo a Terra](./index.mdx) con l'indirizzo IP di questo PC (`ipconfig` lo mostra; usa l'indirizzo VPN via 4G) e **Attiva Video** attivo.
+
+## Passo 1: Installa GStreamer {/* #step-1-install-gstreamer */}
+
+<Steps>
+
+1. Vai su [gstreamer.freedesktop.org/download](https://gstreamer.freedesktop.org/download/) e scarica l'installer **runtime** di Windows per **MSVC 64-bit** (non l'installer di sviluppo, né MinGW).
+2. Eseguilo e scegli **Complete** quando ti viene chiesto il tipo di installazione.
+3. Annota la cartella di installazione. Gli installer più recenti usano `C:\Program Files\gstreamer\1.0\msvc_x86_64`, quelli più vecchi `C:\gstreamer\1.0\msvc_x86_64`.
+
+</Steps>
+
+:::warning Scegli Complete, non Typical
+L'installazione **Typical** esclude il decoder H.264 (`avdec_h264`). Il comando sotto fallisce quindi con *no element "avdec_h264"*. Esegui di nuovo l'installer e scegli **Complete**.
+:::
+
+## Passo 2: Aggiungi GStreamer al PATH {/* #step-2-add-gstreamer-to-path */}
+
+Per eseguire `gst-launch-1.0` da qualsiasi cartella, aggiungi la sua cartella `bin` al PATH utente. In PowerShell (non servono diritti di amministratore), con la tua cartella di installazione:
+
+```powershell title="PowerShell"
+$bin = "C:\Program Files\gstreamer\1.0\msvc_x86_64\bin"
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+[Environment]::SetEnvironmentVariable("Path", "$userPath;$bin", "User")
+```
+
+Chiudi e riapri il terminale, poi verifica:
+
+```powershell
+gst-launch-1.0 --version
+```
+
+Oppure usa le impostazioni di Windows: cerca **Modifica le variabili di ambiente per il tuo account**, seleziona **Path** → **Modifica** → **Nuovo** e incolla la cartella `bin`.
+
+## Passo 3: Riproduci il video {/* #step-3-play-the-video */}
+
+<Tabs groupId="win-shell">
+<TabItem value="powershell" label="PowerShell" default>
+
+```powershell title="Camera 1, porta 5600"
+gst-launch-1.0 -v udpsrc port=5600 'caps=application/x-rtp,media=video,clock-rate=90000,encoding-name=H264,payload=96' ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+Mantieni le virgolette singole attorno a `caps=…`: senza di esse PowerShell divide il valore alle virgole.
+
+</TabItem>
+<TabItem value="cmd" label="Prompt dei comandi (cmd)">
+
+```bat title="Camera 1, porta 5600"
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+</TabItem>
+</Tabs>
+
+Una finestra si apre non appena arriva il primo keyframe. Chiudila, oppure premi **Ctrl+C** nel terminale, per fermarti.
+
+:::tip Cosa dovresti vedere
+
+1. Il terminale stampa `Setting pipeline to PLAYING ...` e attende il video.
+2. Quando arrivano i primi pacchetti, `-v` stampa righe contenenti `caps = application/x-rtp`.
+3. Si apre una finestra video con l'immagine della telecamera.
+
+Se si ferma al passaggio 1, nessun video raggiunge questo computer: vedi la tabella di risoluzione dei problemi qui sotto.
+:::
+
+Per la camera 2 in [doppio flusso](../camera/multi-camera.mdx), esegui lo stesso comando in un secondo terminale con `port=5601`.
+
+### Variante a latenza ridotta {/* #lower-latency-variant */}
+
+Su un buon collegamento, riduci il ritardo del jitter buffer:
+
+```powershell title="PowerShell, latenza ridotta"
+gst-launch-1.0 udpsrc port=5600 'caps=application/x-rtp,media=video,clock-rate=90000,encoding-name=H264,payload=96' ! rtpjitterbuffer latency=0 ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+Su 4G, mantieni il jitter buffer predefinito (il primo comando): nasconde i pacchetti in ritardo.
+
+### Una scorciatoia con doppio clic {/* #a-double-click-shortcut */}
+
+Salva questo file come `uavcast-video.cmd` sul desktop e fai doppio clic:
+
+```bat title="uavcast-video.cmd"
+@echo off
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+pause
+```
+
+Se GStreamer non è nel PATH, aggiungi `cd /d "C:\Program Files\gstreamer\1.0\msvc_x86_64\bin"` come seconda riga.
+
+## Ascolta l'audio {/* #hear-the-audio */}
+
+Attiva **Audio** e **Invia audio alle stazioni di terra** nella pagina **Telecamera** del drone. L'audio arriva sulla Porta Video + 2:
+
+```powershell title="PowerShell, audio sulla porta 5602"
+gst-launch-1.0 udpsrc port=5602 'caps=application/x-rtp,media=audio,encoding-name=OPUS,clock-rate=48000,payload=97' ! rtpjitterbuffer ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+## Consenti il traffico nel firewall {/* #allow-it-through-the-firewall */}
+
+La prima volta che `gst-launch-1.0` si mette in ascolto, Windows chiede se consentirlo. Spunta **Privata** e **Pubblica** (gli adattatori VPN sono spesso Pubblici). Per aprire le porte per qualsiasi programma, in una PowerShell come amministratore:
+
+```powershell title="PowerShell come amministratore"
+New-NetFirewallRule -DisplayName "UAVcast-Pro video and audio" -Direction Inbound -Protocol UDP -LocalPort 5600-5602 -Action Allow
+```
+
+## Risoluzione dei problemi {/* #troubleshooting */}
+
+| Messaggio o sintomo | Soluzione |
+|---|---|
+| *'gst-launch-1.0' is not recognized…* | GStreamer non è nel PATH. Esegui il passo 2 e apri un nuovo terminale, oppure eseguilo dalla cartella `bin`. |
+| *WARNING: erroneous pipeline: no element "avdec_h264"* | Installazione Typical. Reinstalla con **Complete**. |
+| *no element "rtph264depay"* o *"udpsrc"* | Stessa causa: i set di plugin non sono stati installati. Reinstalla con **Complete**. |
+| Si avvia, ma non si apre nessuna finestra | Non arriva nulla. Controlla l'IP di destinazione sul drone (IP VPN via 4G), **Attiva Video**, la telecamera e il firewall. Con `-v`, una riga con `caps = application/x-rtp` compare quando arrivano i pacchetti. |
+| *Could not get/set settings from/on resource* o un errore di bind | Un altro programma (Mission Planner, QGroundControl, un secondo GStreamer) è già in ascolto su quella porta. Chiudilo. |
+| L'immagine diventa grigia o si blocca | Perdita di pacchetti. Abbassa il bitrate sul drone e imposta **Tasso di Recupero del Stream** a 15–30 fotogrammi. |
+| *erroneous pipeline: could not parse caps* in PowerShell | Mancano le virgolette attorno a `caps=…`, oppure ci sono virgolette doppie con spazi. Usa il comando PowerShell esattamente come mostrato. |
+
+Su Linux o Mac? Vedi [GStreamer su Linux](./gstreamer-linux.mdx) o [GStreamer su macOS](./gstreamer-macos.mdx).

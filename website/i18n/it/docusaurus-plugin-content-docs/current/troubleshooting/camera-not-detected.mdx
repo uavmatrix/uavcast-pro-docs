@@ -1,0 +1,74 @@
+---
+title: "Telecamera non rilevata in UAVcast-Pro (CSI e USB)"
+sidebar_label: Telecamera non rilevata
+description: "UAVcast-Pro mostra No cameras available? Controlla il cavo a nastro CSI, rpicam-hello, il supporto alle telecamere su Ubuntu e v4l2-ctl per le telecamere USB."
+sidebar_position: 6
+---
+
+# Telecamera non rilevata {/* #camera-not-detected */}
+
+**Telecamera → Impostazioni telecamera** mostra **No cameras available** in **Seleziona Telecamera**, la telecamera che ti serve manca dall'elenco, oppure il **Registro Azioni** riporta *No camera detected*.
+
+<SymptomTable rows={[
+  {symptom: "Una telecamera CSI di Raspberry Pi (cavo a nastro) manca", cause: "Cavo, connettore o stack della telecamera", start: '#check-1'},
+  {symptom: "Telecamera CSI su Ubuntu", cause: "Ubuntu non include di default lo stack delle telecamere Raspberry Pi", start: '#check-2'},
+  {symptom: "Una telecamera USB manca", cause: "Non vista da Linux, oppure non è un dispositivo di acquisizione video", start: '#check-3'},
+  {symptom: "Telecamera elencata, ma il video non parte mai", cause: "Risoluzione non supportata o un altro programma la sta usando", start: '#check-4'},
+]} />
+
+## Verifica 1: telecamera CSI su Raspberry Pi {/* #check-1 */}
+
+<Steps>
+
+1. Spegni il Pi. Reinserisci il cavo a nastro a entrambe le estremità, con i contatti rivolti nel verso giusto, e chiudi le linguette del connettore. Un Pi 5 e un Pi Zero 2 W richiedono il cavo più stretto a 22 pin.
+2. Avvia il Pi ed esegui questo comando sul Pi:
+
+   ```bash
+   rpicam-hello --list-cameras
+   ```
+
+   Sulle immagini di Raspberry Pi OS più vecchie il comando è `libcamera-hello --list-cameras`.
+3. Se la telecamera non compare qui, Linux non la vede. Prova un altro cavo o un'altra telecamera prima di modificare qualsiasi cosa in UAVcast-Pro.
+4. Se compare, riavvia la telecamera dalla pagina Telecamera (**Riavvia**, oppure **Ferma** e poi **Avvia**) e apri di nuovo **Seleziona Telecamera**. Ogni telecamera CSI compare come voce separata, ad esempio *CSI Camera 0 - imx708 (libcamera)*.
+
+</Steps>
+
+:::tip Due telecamere CSI
+Con due telecamere il driver richiede più memoria. Dalla v6.2.2 l'installer aumenta automaticamente la memoria CMA in `config.txt` per le configurazioni con più telecamere. Riavvia dopo l'installazione se hai aggiunto la seconda telecamera in un secondo momento.
+:::
+
+## Verifica 2: telecamera CSI su Ubuntu o Debian {/* #check-2 */}
+
+UAVcast-Pro usa `rpicam-vid` per le telecamere CSI. L'installer installa `rpicam-apps` (o `rpicam-apps-core`) su Raspberry Pi OS e Debian. Su Ubuntu lo stack delle telecamere Raspberry Pi non è disponibile come pacchetto, e il log riporta *CSI camera not available: Ubuntu requires building libcamera from source. USB cameras are supported.*
+
+Usa Raspberry Pi OS a 64 bit se ti serve una telecamera CSI, oppure una telecamera USB su Ubuntu.
+
+## Verifica 3: telecamera USB {/* #check-3 */}
+
+<Steps>
+
+1. Collega la telecamera direttamente al computer di bordo, non tramite un hub senza alimentazione.
+2. Esegui:
+
+   ```bash
+   v4l2-ctl --list-devices
+   ```
+
+3. Se la telecamera manca, Linux non la vede. Controlla `lsusb` e prova un'altra porta e un altro cavo.
+4. Se compare, riavvia la telecamera con **Riavvia** nella pagina Telecamera e apri di nuovo **Seleziona Telecamera**.
+
+</Steps>
+
+La maggior parte delle webcam UVC funziona, ad esempio Logitech C920 e C615. Le telecamere che emettono solo un formato che il codificatore non può accettare, oppure i dispositivi che non sono dispositivi di acquisizione video (alcune schede di acquisizione), non vengono elencate.
+
+## Verifica 4: elencata, ma il video non parte {/* #check-4 */}
+
+- Se il log riporta *Camera … does not support …x… - streaming at …x… instead*, scegli in **Risoluzione** una risoluzione supportata dalla telecamera.
+- Chiudi gli altri programmi che usano la telecamera. Un solo programma alla volta può aprirla.
+- Se **Attivare la Telecamera?** mostra *Insufficient permissions*, aggiorna alla v6.5.2 o successiva, che ha risolto il problema.
+
+## Ancora non rilevata? {/* #still-not-detected */}
+
+[Scarica i log](./collect-logs.mdx) con **Tutti i Log** selezionato, aggiungi l'output di `rpicam-hello --list-cameras` o `v4l2-ctl --list-devices`, e invia tutto a **support@uavmatrix.com**.
+
+Correlati: [Impostazioni telecamera](../uavcast-pro/camera/index.mdx) · [Hardware supportato](../reference/supported-hardware.mdx)

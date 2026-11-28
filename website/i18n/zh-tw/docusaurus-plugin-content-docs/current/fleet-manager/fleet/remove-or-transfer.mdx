@@ -1,0 +1,89 @@
+---
+title: 在 Fleet Manager 中重新配對、移除或轉移無人機
+sidebar_label: 重新配對、移除或轉移
+description: 在 Fleet Manager 要求時重新配對無人機，將其從組織中移除、移到另一個組織，或更換伴隨電腦。
+sidebar_position: 5
+---
+
+# 重新配對、移除或轉移無人機 {/* #re-pair-remove-or-transfer-a-drone */}
+
+無人機一次只屬於一個組織。本頁說明您對既有無人機可以進行的三項操作：重新配對、移除，以及移到其他地方。
+
+## 重新配對無人機 {/* #re-pair-a-drone */}
+
+重新配對會更新無人機的連線憑證。無人機在 Fleet Manager 中的紀錄會保留：名稱、遙測歷史、已儲存的飛行與串流綁定都維持不變。
+
+以下情況需要重新配對：
+
+- Fleet Manager 在無人機上顯示 **Re-pair required**，或在其頁面上顯示橫幅 **This UAV must be re-paired**。Fleet Manager 已改用較新且較嚴格的憑證，而此無人機仍使用舊憑證。
+- 有人在 UAVcast-Pro 中選擇了 **Disconnect from Fleet**。
+
+<Screenshot id="fleet-manager/drone-detail--repair-required" alt="UAV page 上顯示 This UAV must be re-paired 橫幅" caption="UAV page 上的 This UAV must be re-paired 橫幅，說明 Disconnect 與 Connect to Fleet Manager 步驟。" />
+
+<Steps>
+
+1. 在無人機的 UAVcast-Pro 介面中，開啟 **Fleet Management** 並選擇 **Disconnect from Fleet**。確認 **Disconnect from Fleet?**。若頁面已顯示 **Connect to Fleet Manager**，請略過此步驟。
+2. 選擇 **Connect to Fleet Manager**，取得新的 8 位數代碼。
+3. 在 Fleet Manager 中前往 **Fleet → Pair Device**，選擇**同一個組織**，並輸入代碼。依照精靈操作，與[新增您的第一架無人機](../pair-uav.mdx)相同。
+
+</Steps>
+
+請勿先在 Fleet Manager 中移除無人機。移除會刪除其歷史紀錄；重新配對則會保留。
+
+## 移除無人機 {/* #remove-a-drone */}
+
+當無人機報廢、出售，或即將移到另一個組織時，請使用此操作。僅限 Owner 與 Admin。
+
+<Steps>
+
+1. 開啟無人機的 [UAV page](./uav-details.mdx)，然後選擇 **Remove**。
+2. 確認 **Delete UAV**。
+
+</Steps>
+
+若無人機在線上，Fleet Manager 會先通知 UAVcast-Pro 取消配對，並最多等待 5 秒以取得回應。接著 UAVcast-Pro 會再次顯示 **Connect to Fleet Manager**，並離開組織的 VPN。
+
+若無人機離線或未回應，**UAVcast Not Responding** 會詢問是否繼續。**Delete Anyway** 只會從 Fleet Manager 移除它。之後，當您能夠連到無人機時，請自行在 UAVcast-Pro 中選擇 **Disconnect from Fleet**。在此之前，它仍會以為自己已配對。
+
+<Screenshot id="fleet-manager/drone-detail--delete" alt="Delete UAV 確認對話框，警告遙測與指令歷史將被移除" caption="Delete UAV 對話框（報廢機身），警告所有遙測資料與指令歷史將被永久移除。" />
+
+### 移除時會刪除什麼 {/* #what-removing-deletes */}
+
+| 已刪除 | 保留 |
+|---|---|
+| 無人機紀錄及其名稱 | **Recent Activity** 中的項目 |
+| 所有已儲存的遙測與飛行歷史，包括已儲存的飛行 | 已儲存的任務（它們屬於組織） |
+| 指令歷史與串流綁定 | UAVcast-Pro 授權，它會在無人機上保持啟動 |
+| 無人機的 VPN 裝置 | |
+
+:::warning 此操作無法撤銷
+移除無人機前無法匯出飛行歷史。若您需要這些資料，請先在[飛行歷史](../map/flight-history.mdx)中重播或錄下所需內容。
+:::
+
+## 將無人機移到另一個組織 {/* #move-a-drone-to-another-organization */}
+
+Fleet Manager 沒有單獨移轉無人機的「轉移」按鈕，因為歷史紀錄會保留在記錄它的組織中。若要移動無人機：
+
+<Steps>
+
+1. 在目前的組織中[移除無人機](#remove-a-drone)。該組織中的歷史紀錄會被刪除。
+2. 確認無人機的 UAVcast-Pro 授權由新組織的成員擁有。請參閱[授權](../licenses.mdx)。
+3. 在新組織中[配對無人機](../pair-uav.mdx)。
+
+</Steps>
+
+若您嘗試配對仍屬於其他組織的無人機，Fleet Manager 會停止並顯示 **This UAV is already paired to an organization**。只有該組織的 Owner 或 Admin 才能釋放它。
+
+若要連同歷史紀錄一起交接**整個機群**（例如公司出售時），請保留組織，並將[轉移擁有權](../team/index.mdx#transfer-ownership)給新的擁有者。
+
+## 更換伴隨電腦 {/* #replace-the-companion-computer */}
+
+Fleet Manager 會以 UAVcast-Pro 根據伴隨電腦的 CPU 序號及其開機磁碟（SD 卡或 SSD）計算出的裝置 ID 來辨識無人機。新的伴隨電腦，或同一台電腦上的新 SD 卡或 SSD，會顯示為**新的**無人機。在相同的主機板與磁碟上重新安裝 UAVcast-Pro，會保留相同的裝置 ID。
+
+<Steps>
+
+1. 在 Fleet Manager 中移除舊的無人機（或保留它，直到您不再需要其歷史紀錄）。
+2. 在新電腦上安裝 UAVcast-Pro，並啟動授權。請參閱[啟動您的授權](../../get-started/license-activation.mdx)。
+3. 以新的無人機身分配對，並重新建立其串流綁定。
+
+</Steps>

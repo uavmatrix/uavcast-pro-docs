@@ -1,0 +1,72 @@
+---
+title: Invita il tuo team a Fleet Manager
+description: Invita piloti, operatori e clienti nella tua organizzazione Fleet Manager via email, cambia i ruoli, revoca gli inviti e trasferisci la proprietà.
+sidebar_position: 1
+---
+
+# Invita il tuo team {/* #invite-your-team */}
+
+Ogni persona accede con il proprio account UAVmatrix e ottiene un ruolo nella tua organizzazione: **Admin** o **Viewer** (c'è esattamente un **Owner**). Fleet Manager non limita il numero di membri, e i membri non consumano licenze. Vedi [Ruoli e permessi](./roles-and-permissions.mdx) per sapere esattamente cosa può fare ciascun ruolo.
+
+Tutto avviene in **Team** (titolo della pagina **Team Management**). Owner e Admin possono gestire i membri. I Viewer vedono solo l'elenco dei membri.
+
+<Screenshot id="fleet-manager/team" alt="Pagina Team Management che elenca i membri di un'organizzazione con ruoli e inviti in sospeso" caption="Team Management per un operatore con 13 membri: un Owner, quattro Admin e otto Viewer." />
+
+## Invita un membro {/* #invite-a-member */}
+
+<Steps>
+
+1. In **Team**, seleziona **Invite Member**.
+2. In **Invite Team Member**, inserisci l'**Email Address** della persona, scegli l'**Organization** (se ne gestisci più di una) e il **Role**: **Admin** o **Viewer**.
+3. Seleziona **Send Invitation**.
+
+</Steps>
+
+<Screenshot id="fleet-manager/team--invite" alt="Finestra di dialogo Invite Team Member con i campi email, organizzazione e ruolo" caption="Finestra di dialogo Invite Team Member con Role impostato su Viewer per un contatto cliente." />
+
+Fleet Manager invia via email un link di invito. L'invito compare sotto **Pending Invitations** finché non viene accettato, e scade dopo **7 giorni**. Non puoi inviare un secondo invito a un'email che ne ha già uno in sospeso: revoca prima quello precedente.
+
+:::tip Invita con l'email con cui hanno acquistato le licenze
+Se questa persona possiede licenze UAVcast-Pro per droni che vuoi accoppiare, invitala con la stessa email usata nello store UAVmatrix. Fleet Manager associa i proprietari delle licenze ai membri tramite email. Vedi [Licenze](../licenses.mdx).
+:::
+
+## Accetta un invito {/* #accept-an-invitation */}
+
+La persona invitata apre il link dall'email. La pagina di invito mostra l'organizzazione, **Invitation sent to** e **Your role** con una breve descrizione del ruolo.
+
+- Se hai già effettuato l'accesso: seleziona **Accept Invitation**.
+- Se non hai effettuato l'accesso: seleziona **Sign In** sotto **Sign in to accept this invitation**. I nuovi utenti selezionano **Create Account**, che apre la registrazione UAVmatrix con l'email già compilata, e poi tornano all'invito.
+
+<Screenshot id="fleet-manager/invite" alt="Pagina di invito con nome dell'organizzazione, email invitata, descrizione del ruolo e pulsante Accept Invitation" caption="Pagina di invito come la vede l'invitato: Your role Viewer, accesso di sola visualizzazione a droni e dati della flotta, e Accept Invitation." />
+
+Se la pagina mostra **Invitation Expired**, **Invitation Already Used** o **Already a Member**, chiedi a un Owner o a un Admin un nuovo invito, oppure accedi semplicemente.
+
+## Cambia il ruolo di un membro {/* #change-a-members-role */}
+
+Apri il menu accanto a un membro e seleziona **Change Role → Admin** o **Viewer**. La modifica ha effetto subito; potrebbe essere necessario ricaricare la pagina per vederla. Gli Admin possono cambiare il ruolo di altri Admin. Nessuno può cambiare il ruolo dell'Owner: usa invece il [trasferimento della proprietà](#transfer-ownership).
+
+<Screenshot id="fleet-manager/team--member-menu" alt="Menu delle azioni del membro con Change Role, Transfer Ownership e Remove Member" caption="Menu del membro aperto dall'Owner, con Change Role, Transfer Ownership e Remove Member." />
+
+## Rimuovi un membro o revoca un invito {/* #remove-a-member-or-revoke-an-invitation */}
+
+- **Rimuovere un membro:** apri il menu del membro e seleziona **Remove Member**. La persona perde subito l'accesso. L'Owner non può essere rimosso.
+- **Revocare un invito:** in **Pending Invitations**, seleziona **Revoke**. Il link smette di funzionare.
+
+:::warning Nessun passaggio di conferma
+**Remove Member** e **Transfer Ownership** agiscono appena li selezioni. Controlla il nome prima di fare clic.
+:::
+
+Rimuovere un membro non tocca i droni. Ma se quella persona possiede le licenze di droni che vuoi accoppiare in seguito, l'accoppiamento di quei droni non riuscirà finché non tornerà membro.
+
+## Trasferisci la proprietà {/* #transfer-ownership */}
+
+Solo l'Owner può farlo. Apri il menu del membro che deve subentrare e seleziona **Transfer Ownership**. Quel membro diventa **Owner**, e tu diventi **Admin**.
+
+Usalo quando la persona che ha configurato l'organizzazione lascia, oppure prima di eliminare il tuo account UAVmatrix: Fleet Manager non elimina un account che possiede ancora un'organizzazione.
+
+## Lavorare con clienti e partner {/* #working-with-customers-and-partners */}
+
+Un utente può essere membro di un numero qualsiasi di organizzazioni, con un ruolo diverso in ciascuna. Configurazioni tipiche:
+
+- **Fornitore di servizi:** il tuo personale è Admin nella tua organizzazione. Ogni cliente riceve il ruolo Viewer per seguire i propri voli in diretta sulla mappa.
+- **Subappaltatore:** un partner invita il tuo pilota come Admin nella sua organizzazione. Il pilota passa dall'una all'altra con il selettore delle organizzazioni.

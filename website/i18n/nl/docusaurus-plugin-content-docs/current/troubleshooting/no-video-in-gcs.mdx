@@ -1,0 +1,153 @@
+---
+title: "Geen video in QGroundControl of Mission Planner"
+sidebar_label: Geen video in het grondstation
+description: "Telemetrie werkt, maar de video blijft zwart in QGroundControl of Mission Planner? Controleer de camera, Video Inschakelen, het bestemmings-IP, UDP 5600 en het grondstation."
+sidebar_position: 2
+---
+
+# Geen video in QGroundControl of Mission Planner {/* #no-video-in-qgroundcontrol-or-mission-planner */}
+
+Telemetrie komt binnen en de drone staat op de kaart, maar het videogebied blijft zwart, of het videovenster van QGroundControl toont **WAITING FOR VIDEO**. Werk de controles in volgorde af. In de meeste gevallen lost controle 2 of 3 het op.
+
+<Screenshot id="gcs/qgroundcontrol--fly-view" url="QGroundControl" alt="QGroundControl Fly view verbonden met een ArduPilot-voertuig: werkbalk met Not Ready en Stabilize, een missie van vijf waypoints op de kaart met No GPS Lock for Vehicle, en het videovenster linksonder met WAITING FOR VIDEO" caption="Het symptoom in QGroundControl: telemetrie komt binnen (Not Ready, Stabilize in de werkbalk; No GPS Lock omdat deze testopstelling geen GPS heeft), maar het videovenster linksonder toont WAITING FOR VIDEO." />
+
+<SymptomTable rows={[
+  {symptom: 'Video is zwart in het grondstation en in de live voorvertoning van UAVcast-Pro', cause: 'De camera draait niet op de drone', start: '#check-1'},
+  {symptom: 'Live voorvertoning werkt, het grondstation blijft zwart', cause: 'Video Inschakelen staat uit voor dit grondstation, of het IP-adres is onjuist', start: '#check-2'},
+  {symptom: 'Werkte thuis op Wi-Fi, zwart via 4G', cause: 'De bestemming gebruikt een lokaal IP-adres in plaats van het VPN-IP', start: '#check-2'},
+  {symptom: 'Alles lijkt goed, toch zwart op Windows', cause: 'De firewall blokkeert inkomend UDP op poort 5600', start: '#check-3'},
+  {symptom: 'QGroundControl toont video, Mission Planner niet', cause: 'Mission Planner heeft geen GStreamer-bron ingesteld', start: '#check-4'},
+]} />
+
+## Controle 1: Bevestig dat de camera op de drone streamt {/* #check-1 */}
+
+Als de drone geen video produceert, helpt geen enkele instelling van het grondstation.
+
+<Steps>
+
+1. Open de webinterface van UAVcast-Pro en ga naar **Camera → Camera-instellingen**.
+2. Controleer dat **Camera Inschakelen?** op **Ja** staat en dat er een camera is gekozen bij **Selecteer Camera**.
+3. Controleer of de camera draait: de rij **Video** op het dashboard moet **Running** tonen. Staat hij stil, druk dan op **Starten** op de pagina Camera (de knop leest **Herstarten** terwijl de camera draait).
+4. Zet **Live Voorvertoning Inschakelen?** aan en kijk naar **Live Voorvertoning**. Als u een beeld ziet, werkt de camera en kunt u naar controle 2 gaan.
+5. Als bij **Selecteer Camera** **No cameras available** staat, ga dan naar [Camera niet gedetecteerd](./camera-not-detected.mdx).
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera" alt="Instellingenpagina Camera van UAVcast-Pro met CAM 1 ingeschakeld en het paneel Live Voorvertoning met Geen Video Beschikbaar" caption="Camera → Camera-instellingen met CAM 1 ingeschakeld. Live Voorvertoning toont Geen Video Beschikbaar totdat Live Voorvertoning Inschakelen? is aangevinkt." />
+
+:::note De voorvertoning is niet de stream naar het grondstation
+De browservoorvertoning gaat via de ingebouwde mediaserver (WebRTC op poort 8889). Het grondstation krijgt een aparte H.264-stream via UDP. Een werkende voorvertoning bewijst dat de camera werkt, niet dat de UDP-stream uw laptop bereikt.
+:::
+
+Als het **Actielogboek** op de pagina Camera melden dat een camera een resolutie *niet ondersteunt*, kies dan een andere waarde bij **Resolutie**. UAVcast-Pro valt terug op het grootste ondersteunde formaat en logt welk formaat het heeft gebruikt.
+
+## Controle 2: Controleer de bestemming van het grondstation {/* #check-2 */}
+
+UAVcast-Pro stuurt video alleen naar bestemmingen waar video is ingeschakeld. Telemetrie en video hebben aparte schakelaars, en **beide staan uit bij een nieuwe bestemming**.
+
+<Steps>
+
+1. Ga naar **Grondcontrolestations** en zoek de kaart van de computer waarop uw grondstation draait.
+2. Zorg dat **Eindpunt Inschakelen** en **Video Inschakelen** allebei aan staan.
+3. Controleer **Bestemmings-IP of Host**. Dit moet het IPv4-adres van de computer van het grondstation zijn, gezien vanaf de drone. Hostnamen worden niet geaccepteerd.
+4. Controleer dat **Videopoort** `5600` is, of de poort waarop uw grondstation luistert.
+5. Velden worden opgeslagen wanneer u ze verlaat of op Enter drukt. Een groen vinkje bevestigt het opslaan.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/ground-control--video-enabled" alt="Videopoort 5600 en de schakelaar Video Inschakelen aan" caption="Grondcontrolestations: een bestemming met Video Inschakelen aan en Videopoort 5600." />
+
+:::warning Vliegen via 4G? Gebruik het VPN-IP
+Via een mobiele verbinding kan de drone het lokale adres van uw laptop niet bereiken (zoals `192.168.1.20`). Gebruik het adres dat uw laptop op de VPN heeft (Fleet Manager VPN, Tailscale of ZeroTier). Voer op Windows `ipconfig` uit en zoek naar de Tailscale- of ZeroTier-adapter.
+:::
+
+Fleet Manager in gebruik? Bestemmingen worden voor u aangemaakt wanneer u een streamkoppeling toevoegt, en elke extra drone op hetzelfde grondstation krijgt eigen poorten. Controleer de videopoort die bij de koppeling wordt getoond, niet 5600. {/* PENDING-RELEASE: port-blocks */} Zie [Streamkoppelingen](../fleet-manager/network/stream-bindings.mdx).
+
+## Controle 3: Sta UDP 5600 toe in de firewall {/* #check-3 */}
+
+Video komt binnen als inkomend UDP-verkeer. Op Windows wordt dit standaard geblokkeerd, ook als telemetrie wel doorkomt, doordat het grondstation om een uitzondering heeft gevraagd.
+
+<Tabs>
+<TabItem value="windows" label="Windows" default>
+
+Open **PowerShell als beheerder** en voer uit:
+
+```powershell title="PowerShell (als beheerder)"
+New-NetFirewallRule -DisplayName "UAV Video" -Direction Inbound -Protocol UDP -LocalPort 5600 -Action Allow
+New-NetFirewallRule -DisplayName "MAVLink Telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+```
+
+De ZeroTier- en Tailscale-adapters worden vaak als *Openbaar* netwerk ingedeeld. Een regel die op deze manier is aangemaakt, geldt voor alle profielen.
+
+</TabItem>
+<TabItem value="linux" label="Linux">
+
+```bash title="UFW"
+sudo ufw allow 5600/udp comment 'UAV Video'
+sudo ufw allow 14550/udp comment 'MAVLink Telemetry'
+```
+
+</TabItem>
+<TabItem value="macos" label="macOS">
+
+De firewall van macOS staat inkomend UDP toe voor apps die u goedkeurt. Als u bij de eerste start van QGroundControl op *Deny* hebt geklikt, sta het dan opnieuw toe via **System Settings → Network → Firewall → Options**.
+
+</TabItem>
+</Tabs>
+
+## Controle 4: Stel video in uw grondstation in {/* #check-4 */}
+
+<Tabs>
+<TabItem value="qgc" label="QGroundControl" default>
+
+<Steps>
+
+1. Klik op het **Q**-pictogram en daarna op **Application Settings**.
+2. Open de video-instellingen (**Video**, of **General → Video** in oudere versies).
+3. Stel **Source** in op **UDP h.264 Video Stream** en controleer dat het UDP-adres poort `5600` gebruikt (**UDP URL** `0.0.0.0:5600` in huidige versies, **UDP Port** `5600` in oudere).
+4. Ga terug naar de Fly view. De videotegel moet binnen enkele seconden een beeld tonen.
+
+</Steps>
+
+</TabItem>
+<TabItem value="mp" label="Mission Planner">
+
+Mission Planner toont video in de HUD. Blijft het zwart, stel de bron dan handmatig in:
+
+<Steps>
+
+1. Klik met de rechtermuisknop op de HUD en kies **Video → Set GStreamer Source**.
+2. Plak deze pipeline en bevestig:
+
+</Steps>
+
+```text title="Mission Planner GStreamer-bron"
+udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+```
+
+</TabItem>
+</Tabs>
+
+## Controle 5: Test de stream zonder grondstation {/* #check-5 */}
+
+Hiermee wordt de grondstationsoftware buiten beschouwing gelaten. Als er een venster met video opent, werken de drone, het netwerk en de firewall, en zit het probleem in de instellingen van het grondstation.
+
+```bash title="Windows, Linux en macOS"
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+:::warning Windows: kies de volledige installatie
+Kies bij het installeren van GStreamer (MSVC 64-bit runtime) **Complete**. De Typical-installatie laat de H.264-decoder weg, en het commando faalt dan met `no element "avdec_h264"`.
+:::
+
+Sluit de test voordat u uw grondstation weer opent: er kan maar één programma tegelijk op poort 5600 luisteren. Stapsgewijze instructies voor de ontvanger: [Mission Planner](../uavcast-pro/ground-stations/mission-planner.mdx), [QGroundControl](../uavcast-pro/ground-stations/qgroundcontrol.mdx), en GStreamer op [Windows](../uavcast-pro/ground-stations/gstreamer-windows.mdx), [Linux](../uavcast-pro/ground-stations/gstreamer-linux.mdx) of [macOS](../uavcast-pro/ground-stations/gstreamer-macos.mdx).
+
+:::tip Nu video, maar haperend via 4G?
+Zie [Haperende of vertraagde video](./choppy-or-delayed-video.mdx).
+:::
+
+## Nog steeds geen video? {/* #still-no-video */}
+
+[Download de logboeken](./collect-logs.mdx) met **Camera Server** geselecteerd in de logboeklijst en stuur ze naar **support@uavmatrix.com**, samen met uw UAVcast-Pro-versie, het cameramodel en het grondstation dat u gebruikt.
+
+Gerelateerd: [Camera-instellingen](../uavcast-pro/camera/index.mdx) · [Grondcontrolestations](../uavcast-pro/ground-stations/index.mdx)

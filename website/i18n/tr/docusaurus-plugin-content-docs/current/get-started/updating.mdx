@@ -1,0 +1,67 @@
+---
+title: "UAVcast-Pro'yu en son sürüme güncelleyin"
+description: "UAVcast-Pro'yu web arayüzünden veya komut satırından güncelleyin, eski bir sürümü kurun; ayarlarınıza, sunucu portunuza ve kayıtlarınıza ne olduğunu öğrenin."
+sidebar_position: 6
+sidebar_label: "Güncelleme"
+---
+
+# UAVcast-Pro'yu güncelleyin {/* #update-uavcast-pro */}
+
+UAVcast-Pro'yu web arayüzünde **Uygulama → Uygulamayı Güncelle** bölümünden veya SSH üzerinden yükleyiciyi yeniden çalıştırarak güncelleyebilirsiniz. İkisi de ayarlarınızı, kullanıcılarınızı, lisansınızı ve kayıtlarınızı korur. Drone'un internet erişimi olmalı ve güncelleme bittiğinde yeniden başlatmanız gerekir.
+
+:::warning Uçuştan önce asla güncellemeyin
+Bir güncelleme, telemetri ve video dahil tüm UAVcast-Pro servislerini durdurur ve yeniden başlatma gerektirir. Güncellemeyi yerde, drone disarm edilmişken yapın.
+:::
+
+## Web arayüzünden güncelleyin {/* #update-from-the-web-interface */}
+
+<Steps>
+
+1. **Uygulama** sayfasına gidin. **Uygulamayı Güncelle** kartı **Mevcut Sürüm** ve **En Son Sürüm** değerlerini gösterir. Daha yeni bir sürüm olduğunda yeşil bir *New version … available* şeridi belirir.
+2. **Güncellenecek sürümü seçin** alanını en son sürümde bırakın veya başka bir sürüm seçin.
+3. **Update to …** (veya **Şimdi Güncelle**) seçin. **Progress**, indirme ve kurulum adımlarını gösterir. Bu işlem birkaç dakika sürer; Pi Zero 2 W veya Pi 3'te daha uzun sürebilir.
+4. **Yeniden Başlatma Bekliyor** şeridi göründüğünde **Şimdi Yeniden Başlat**'ı seçin. Cihaz yeniden başlar.
+5. Web arayüzünü yeniden açın ve **Mevcut Sürüm** değerini kontrol edin.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/application--update-available" alt="Mevcut ve en son sürümü, yeni sürüm mevcut şeridini ve Güncelle düğmesini gösteren Uygulamayı Güncelle kartı" caption="Uygulama → Uygulamayı Güncelle, daha yeni bir sürüm mevcutken." />
+
+## Komut satırından güncelleyin {/* #update-from-the-command-line */}
+
+Yükleyiciyi yeniden çalıştırın. Program dosyalarını değiştirir ve veritabanını korur:
+
+```bash title="On the drone"
+curl -fsSL https://install.uavmatrix.com | sudo bash
+sudo reboot
+```
+
+Belirli bir sürümü kurmak için önce sürümleri listeleyin (root yetkisi gerekmez), ardından `-b` ile birini kurun:
+
+```bash title="On the drone"
+# List the versions available for this device
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l
+
+# Install a specific version
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.1
+```
+
+## Eski bir sürüme dönün {/* #go-back-to-an-older-version */}
+
+**Güncellenecek sürümü seçin** alanından eski sürümü seçip normal şekilde güncelleyin ya da komut satırında `-b` kullanın. Daha yeni bir sürümde yapılmış ayarlar eski sürümde bulunmayabilir.
+
+## Güncelleme neyi korur, neyi değiştirir {/* #what-an-update-keeps-and-replaces */}
+
+| Korunanlar | Değiştirilenler |
+|---|---|
+| Ayar veritabanı (`/opt/uavcast-pro/uavcast.db`): yer kontrol istasyonları, kamera, modem, VPN, kullanıcılar, lisans | `/opt/uavcast-pro` içindeki program dosyaları (`build`, `dist`, `factory`, `install`) |
+| Kayıtlar ve telemetri günlükleri | systemd servis dosyaları |
+| ZeroTier ve Tailscale üyelikleri | UAVcast-Pro'nun bağlı olduğu sistem paketleri (apt tarafından güncellenir) |
+
+{/* PENDING-RELEASE: port-persist */}
+
+Uygulama sayfasında ayarlanan özel bir **Sunucu Portu**, güncellemeler boyunca korunur.
+
+## Neyin değiştiğini görün {/* #see-what-changed */}
+
+Her sürüm, değişiklikleriyle birlikte [değişiklik günlüğünde](../reference/changelog.mdx) listelenir. Operasyonel olarak uçan bir drone'u güncellemeden önce bunu okuyun.

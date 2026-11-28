@@ -1,0 +1,86 @@
+---
+title: "Transmisja wideo o niskim opóźnieniu z drona Raspberry Pi do stacji naziemnej"
+description: "Skonfiguruj kamerę Raspberry Pi lub kamerę internetową USB w UAVcast-Pro i nadawaj wideo H.264 o niskim opóźnieniu przez UDP do QGroundControl lub Mission Planner. Rozdzielczość, FPS i bitrate."
+sidebar_position: 1
+sidebar_label: "Ustawienia kamery"
+---
+
+# Ustawienia kamery {/* #camera-settings */}
+
+UAVcast-Pro przechwytuje wideo z kamery CSI Raspberry Pi lub kamery internetowej USB, koduje je jako H.264 i wysyła jako RTP przez UDP do każdej stacji naziemnej z włączonym **Włącz Wideo**. Mission Planner i QGroundControl odtwarzają je bezpośrednio na porcie 5600. Kopia strumienia zasila podgląd na żywo w interfejsie webowym oraz rejestrator na dronie. Otwórz **Kamera → Ustawienia kamery**.
+
+<Screenshot id="uavcast-pro/camera" alt="Panel Sterowania Kamerą z CAM 1 ustawionym na kamerę Raspberry Pi, ustawieniami kamery dla rozdzielczości, FPS, bitrate i szybkości odzyskiwania strumienia oraz panelem Podglądu na Żywo" caption="Kamera → Ustawienia kamery z kamerą Raspberry Pi jako CAM 1, w rozdzielczości 1536×864 i 30 FPS, bitrate Auto. Podgląd na żywo jest tutaj wyłączony." />
+
+## Konfiguracja kamery {/* #set-up-the-camera */}
+
+<Steps>
+
+1. Podłącz kamerę i przejdź do **Kamera → Ustawienia kamery**.
+2. Ustaw **Włączyć Kamerę?** na **Tak**.
+3. Kliknij slot **CAM 1** i wybierz kamerę. Kamery CSI pojawiają się jako *Raspberry Pi Camera - imx708 (CSI)* lub podobnie; kamery USB pod swoją nazwą.
+4. W sekcji **Ustawienia Kamery** wybierz **Rozdzielczość** obsługiwaną przez kamerę. Nieobsługiwane rozmiary są oznaczone.
+5. Na początek pozostaw **Wybierz FPS** na **Auto**, a **Bitrate** na `0` (auto).
+6. W sekcji **Ustawienia Strumienia** zaznacz **Włączyć Podgląd na Żywo?** i wybierz **Uruchom**.
+7. Na [Stacjach Naziemnych](../ground-stations/index.mdx) włącz **Włącz Wideo** dla każdej stacji, która ma otrzymywać wideo.
+
+</Steps>
+
+Jeśli kamery nie ma na liście, zajrzyj do **Dziennika Działań** na dole strony. Pokazuje on każde urządzenie sprawdzone przez detektor kamer i powód jego pominięcia.
+
+## Opis ustawień {/* #settings-reference */}
+
+| Ustawienie | Domyślnie | Wartości | Uwagi |
+|---|---|---|---|
+| **Włączyć Kamerę?** | **Tak** | **Tak**, **Nie** | **Nie** całkowicie zatrzymuje wideo. |
+| **CAM 1** | Kamera Raspberry Pi | Wykryte kamery, **Wprowadź niestandardowy pipeline** | Wybierz **Wprowadź niestandardowy pipeline**, aby napisać własny pipeline GStreamer. Zobacz [Niestandardowy pipeline](./custom-pipeline.mdx). |
+| **Rozdzielczość** | `640x480` | Rozmiary zgłaszane przez kamerę | Jeśli kamera nie może dostarczyć danego rozmiaru, UAVcast-Pro przełącza się na największy obsługiwany i zapisuje w logu, którego użył. |
+| **Wybierz FPS** | **Auto** | **Auto** lub wartości obsługiwane przez kamerę przy tej rozdzielczości | **Auto** pozwala kamerze wybrać. |
+| **Bitrate** | `0` (**Auto**) | 0–10000 kbps, co 100 | Dla łączy komórkowych ustaw stałą wartość. |
+| **Szybkość Odzyskiwania Strumienia** | **Auto** | **Auto** (0), 1, 5, 10, 15, 30, 60, 90, 120 klatek | Interwał klatek kluczowych. Niższe wartości szybciej odzyskują obraz po utracie pakietów i usuwają szare zamazania przez VPN, kosztem przepustowości. |
+| **Ustawienia Odbicia** | Wyłączone | **Odbicie Pionowe**, **Odbicie Poziome** | Kamery CSI. |
+| **Obrót** | `0°` | 0°, 90°, 180°, 270° | Kamery USB i inne niż CSI. |
+| **Włączyć Podgląd na Żywo?** | Włączony | Włączony, wyłączony | Podgląd na tej stronie i na Mapie Lotu. Nagrywanie też korzysta z tej kopii strumienia. |
+
+Ustawienia zapisują się w trakcie zmiany. Jeśli działający strumień nie uwzględni zmiany, wybierz **Uruchom Ponownie** w sekcji **Ustawienia Strumienia**.
+
+## Dobór ustawień do łącza {/* #pick-settings-for-your-link */}
+
+Nie ma jednego właściwego ustawienia: bitrate musi mieścić się w najwolniejszym odcinku łącza, z zapasem na telemetrię. Punkty wyjścia dla jednej kamery:
+
+| Łącze | Rozdzielczość | FPS | Bitrate | Szybkość Odzyskiwania Strumienia |
+|---|---|---|---|---|
+| Lokalne Wi-Fi lub Ethernet | 1920x1080 | 30 | 4000–6000 kbps | Auto |
+| Dobre 4G/LTE | 1280x720 | 30 | 1500–2500 kbps | 30 klatek |
+| Słabe 4G lub duży zasięg | 1280x720 lub 854x480 | 15–20 | 800–1200 kbps | 15 klatek |
+
+Jeśli obraz zamarza lub szaro się zamazuje po utracie pakietów, najpierw zmniejsz bitrate, a potem **Szybkość Odzyskiwania Strumienia**, aby klatki kluczowe pojawiały się częściej.
+
+### Obciążenie procesora {/* #cpu-load */}
+
+Wskaźnik **Obciążenie systemu** pokazuje, jak mocno pracuje koder. Na Raspberry Pi 5 każdy strumień jest kodowany programowo (Pi 5 nie ma sprzętowego kodera H.264), więc wysokie rozdzielczości lub dwa strumienie mogą obciążyć procesor do maksimum. Gdy pojawi się ostrzeżenie *Procesor jest blisko limitu. Zmniejsz rozdzielczość lub bitrate.*, zmniejsz je jeszcze przed lotem.
+
+## Podgląd na żywo {/* #live-preview */}
+
+**Podgląd na Żywo** odtwarza strumień w przeglądarce przez wbudowany serwer mediów (WebRTC na porcie **8889**). Opóźnienie względem strumienia UDP, który odbiera stacja naziemna, wynosi kilkaset milisekund, zależnie od sieci. Użyj przycisku otwarcia w nowej karcie, aby oglądać na pełnym ekranie. Przeglądarki uruchamiają podgląd wyciszony; odcisz go w odtwarzaczu, jeśli używasz [dźwięku](./audio.mdx).
+
+Podgląd wymaga, aby przeglądarka mogła połączyć się z portem 8889 drona bezpośrednio. Działa w sieci lokalnej i przez VPN, ale nie przez **Open via Proxy** w Fleet Manager, które przenosi tylko interfejs webowy. Do podglądu użyj **Open via VPN**.
+
+## Jak wysyłany jest strumień {/* #how-the-stream-is-sent */}
+
+| Strumień | Transport | Port na stacji naziemnej |
+|---|---|---|
+| Wideo kamery 1 | H.264, RTP przez UDP | **Port Wideo** (domyślnie `5600`) |
+| Wideo kamery 2 (podwójny strumień) | H.264, RTP przez UDP | **Port Wideo (Kamera 2)**, domyślnie Port Wideo + 1 (`5601`) |
+| Dźwięk (opcjonalnie) | Opus, RTP przez UDP | Port Wideo + 2 (`5602`) |
+| Podgląd | WebRTC | Przeglądarka do drona, port 8889 |
+
+Dron wysyła strumień do stacji naziemnej. Stacja naziemna nie musi o niego prosić, a dron nie nasłuchuje przychodzących połączeń wideo.
+
+## Powiązane {/* #related */}
+
+- [Dwie kamery: przełączanie RC i podwójny strumień](./multi-camera.mdx)
+- [Dźwięk](./audio.mdx)
+- [Nagrania i przegląd lotu](./recordings.mdx)
+- [Niestandardowy pipeline GStreamer](./custom-pipeline.mdx)
+- [Rozwiązywanie problemów: kamera nie wykryta](../../troubleshooting/camera-not-detected.mdx)
+- [Rozwiązywanie problemów: przerywane lub opóźnione wideo](../../troubleshooting/choppy-or-delayed-video.mdx)

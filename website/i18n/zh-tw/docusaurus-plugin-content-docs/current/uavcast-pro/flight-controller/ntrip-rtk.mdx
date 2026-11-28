@@ -1,0 +1,78 @@
+---
+title: "透過 4G 的 RTK GPS：使用 UAVcast-Pro 的 NTRIP 校正"
+description: "透過 4G/LTE 將 RTCM3 校正資料從 NTRIP Caster 串流至飛行控制器，以達成 RTK Fixed 定位。包含 Caster、掛載點、VRS 與 GGA 設定。"
+sidebar_position: 2
+sidebar_label: "NTRIP / RTK"
+---
+
+# NTRIP / RTK 校正 {/* #ntrip--rtk-corrections */}
+
+UAVcast-Pro 內建 NTRIP 用戶端。它會透過無人機的網際網路連線，連接至 NTRIP v1 或 v2 Caster，接收 RTCM3 校正資料，並以 MAVLink `GPS_RTCM_DATA` 的形式轉送給飛行控制器。其作法與 Mission Planner 的「Inject GPS」相同，但由無人機本身執行。您不需要現場的地面站或基地台。請在 **Flight Controller → NTRIP / RTK**（飛行控制器 → NTRIP / RTK）下開啟。
+
+## 開始之前 {/* #before-you-begin */}
+
+- 飛行控制器上需有支援 RTK 的 GPS：多頻、載波相位接收器，例如 u-blox F9P、Holybro H-RTK、CUAV C-RTK、Here3+ 或 Septentrio Mosaic。一般的 M8／M10 GPS 會忽略校正資料。
+- 需要一個 NTRIP Caster 帳戶：國家 CORS 網路、商業服務（Trimble、Hexagon、Topcon 等），或 [RTK2go](http://rtk2go.com)。您需要主機、連接埠、掛載點，通常還需要使用者名稱與密碼。
+- 無人機需連上網際網路，且飛行控制器已連接。
+
+## 設定 NTRIP 用戶端 {/* #set-up-the-ntrip-client */}
+
+<Steps>
+
+1. 前往 **Flight Controller → NTRIP / RTK**（飛行控制器 → NTRIP / RTK）。
+2. 在 **Caster** 下，輸入 **Caster host**（Caster 主機，例如 `ntrip.example.com`）以及 **Port**（連接埠，大多數 Caster 為 `2101`）。
+3. 在 **Authentication**（驗證）下輸入 **Username**（使用者名稱）與 **Password**（密碼）。選擇 **Test connection**（測試連線）以檢查：*Caster accepted the credentials.*（Caster 已接受憑證。）
+4. 選擇 **Browse mountpoints**（瀏覽掛載點），挑選清單中最近的掛載點並選擇 **Select**（選擇）。或直接在 **Mountpoint**（掛載點）中輸入。
+5. 若掛載點為 VRS 或「最近基地台」串流（**NMEA** 欄顯示 **Required**（必要）），請保持 **Send GGA upstream**（上行傳送 GGA）為開啟。
+6. 開啟 **Enable NTRIP client**（啟用 NTRIP 用戶端）。
+
+</Steps>
+
+**Status**（狀態）卡片會變更為 **Streaming corrections**（正在傳輸校正資料），並顯示 **Total received**（總接收量）、**Throughput**（吞吐量）、**Last RTCM frame**（最新 RTCM 框架）與 **Recent message types**（最近的訊息類型）。在視野開闊的情況下，**Flight controller RTK fix**（飛行控制器 RTK 定位）通常會在一到兩分鐘內從 **3D fix**（3D 定位）變為 **RTK Float**（RTK 浮動），再變為 **RTK Fixed**（RTK 固定）。
+
+<Screenshot id="uavcast-pro/flight-controller--ntrip" alt="NTRIP / RTK 分頁，狀態面板顯示 Disabled 與歸零的計數器，以及 GPS 品質卡片" caption="尚未設定 Caster 之前的飛行控制器 → NTRIP / RTK：狀態為 Disabled，計數器歸零，且沒有 GPS 定位。" />
+
+## 設定參考 {/* #settings-reference */}
+
+| 設定 | 預設值 | 可用值 | 說明 |
+|---|---|---|---|
+| **Enable NTRIP client**（啟用 NTRIP 用戶端） | 關閉 | 開啟、關閉 | |
+| **Caster host**（Caster 主機） | 空白 | 主機名稱或 IP | 必填。 |
+| **Port**（連接埠） | `2101` | 1–65535 | 部分 TLS Caster 使用 2102 或 443。 |
+| **Mountpoint**（掛載點） | 空白 | Caster 的掛載點名稱 | 必填。使用 **Browse mountpoints** 可讀取 Caster 的 sourcetable。 |
+| **Use TLS (HTTPS)**（使用 TLS（HTTPS）） | 關閉 | 開啟、關閉 | 適用於需要 TLS 的 Caster。大多數公開 Caster 使用純 TCP。 |
+| **Username**（使用者名稱）／**Password**（密碼） | 空白 | | 匿名 Caster 請留空。RTK2go 需要以真實電子郵件地址作為使用者名稱，且不需要密碼。 |
+| **Send GGA upstream**（上行傳送 GGA） | 開啟 | 開啟、關閉 | 將您的位置以 NMEA `$GPGGA` 格式送出，讓 VRS 與最近掛載點 Caster 能為您的位置產生校正資料。 |
+| **Send interval (seconds)**（傳送間隔（秒）） | `10` | 秒 | GGA 的傳送頻率。 |
+| **Position source**（位置來源） | **Live position from flight controller**（來自飛行控制器的即時位置） | **Live position from flight controller**、**Fixed manual position**（固定的手動位置） | |
+| **Latitude**（緯度）／**Longitude**（經度）／**Altitude (m)**（高度（公尺）） | `0` | | 手動位置。在飛行控制器取得 GPS 定位之前，也會作為備用值。 |
+
+## 閱讀 GPS 品質卡片 {/* #read-the-gps-quality-card */}
+
+**GPS quality**（GPS 品質）會顯示飛行控制器的即時定位，以及一項不依賴接收器自身估計的測量值：
+
+- **Fix type**（定位類型）與 **Satellites**（衛星數）。
+- **Horizontal accuracy**（水平精度）與 **Vertical accuracy**（垂直精度）：接收器自身的估計值。
+- **Position stability (1σ)**（位置穩定性 (1σ)）：在無人機靜止時，位置實際移動的幅度，以短時間視窗測量。飛行中會顯示 **Moving**（移動中）。
+- **Last correction**（最新校正）：距離上次轉送 RTCM 框架所經過的時間。若此數值持續增加，表示校正資料已停止。
+
+若您看到 **No RTK status from receiver**（接收器未回報 RTK 狀態），表示飛行控制器從未回報 RTK 狀態，通常是因為該 GPS 不支援 RTK。校正資料仍會被轉送。
+
+## 透過行動網路 {/* #over-a-cellular-link */}
+
+校正資料很小（通常為 1 至 5 kbit/s），可輕易與遙測及視訊共用頻寬。網際網路短暫中斷後，用戶端會在數秒內重新連線。若 Caster 連線靜默，系統會在 15 秒內偵測到並重新開啟。
+
+[儀表板](../dashboard.mdx)的 **RTK corrections**（RTK 校正）列會顯示用戶端的狀態。
+
+## 疑難排解 {/* #troubleshooting */}
+
+| 症狀 | 檢查項目 |
+|---|---|
+| 狀態為 **Error**（錯誤），**Caster response**（Caster 回應）顯示 `401` | 使用者名稱或密碼錯誤，或此帳戶不允許存取該掛載點。 |
+| 顯示 **Connected**（已連接），但沒有 RTCM 框架 | 該掛載點需要 GGA。請開啟 **Send GGA upstream**，並確認飛行控制器已取得 3D 定位，或設定手動位置。 |
+| 收到 RTCM，但定位停留在 **3D fix** | GPS 不支援 RTK，或掛載點的 GNSS 系統與您的接收器不相符。請檢查 sourcetable 中的 **GNSS** 欄。 |
+| 為 **RTK Float**，從未變為 **Fixed** | 基地台距離太遠（建議在 20 至 30 公里以內）、天空視野不佳或多路徑干擾。請嘗試較近的掛載點。 |
+
+頁面底部的 **NTRIP service log**（NTRIP 服務記錄）會顯示每一次連線、重新連線與 Caster 回應。
+
+更多檢查：[RTK 校正資料未送達](../../troubleshooting/rtk-corrections-not-arriving.mdx)。

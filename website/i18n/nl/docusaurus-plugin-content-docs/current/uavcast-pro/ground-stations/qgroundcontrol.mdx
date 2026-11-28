@@ -1,0 +1,66 @@
+---
+title: "UAVcast-Pro-video en telemetrie naar QGroundControl streamen"
+description: "Krijg UAVcast-Pro-telemetrie en live H.264-video in QGroundControl op Windows, macOS of Linux: automatisch verbinden via UDP 14550, Video Source UDP h.264 op poort 5600, modus voor lage latentie en oplossingen."
+sidebar_position: 3
+sidebar_label: "QGroundControl"
+---
+
+# QGroundControl {/* #qgroundcontrol */}
+
+QGroundControl luistert standaard naar MAVLink op UDP-poort 14550, dus een UAVcast-Pro-drone verschijnt zodra de telemetrie binnenkomt. Voor video stelt u de videobron één keer in op **UDP h.264 Video Stream** op poort 5600. QGroundControl heeft GStreamer ingebouwd, dus er hoeft niets anders te worden geïnstalleerd. Dit werkt hetzelfde op Windows, macOS en Linux; voor tablets zie [Android](./android.mdx).
+
+## Voordat u begint {/* #before-you-begin */}
+
+- Op de drone een bestemming op [Grondcontrolestations](./index.mdx) met het IP-adres van deze computer (het VPN-adres via 4G), **Telemetrie Inschakelen** aan, en **Video Inschakelen** aan voor video.
+- De camera die streamt via **Camera → Camera-instellingen**.
+- QGroundControl van [qgroundcontrol.com](https://qgroundcontrol.com/).
+
+## Telemetrie {/* #telemetry */}
+
+Start QGroundControl. Binnen enkele seconden na het eerste pakket verschijnt het voertuig en toont de werkbalk de vluchtmodus en de batterij.
+
+<Screenshot id="gcs/qgroundcontrol--fly-view" url="QGroundControl" alt="QGroundControl Fly view verbonden met een ArduPilot-voertuig: werkbalk met Not Ready en Stabilize, een missie van vijf waypoints op de kaart met No GPS Lock for Vehicle, en het videovenster linksonder met WAITING FOR VIDEO" caption="Telemetrie werkt: de werkbalk toont de status en vluchtmodus van het voertuig (Not Ready, Stabilize). Dit is een opstelling op de werkbank zonder GPS, vandaar No GPS Lock for Vehicle. Het videovenster (linksonder) toont WAITING FOR VIDEO totdat video hieronder is ingesteld." />
+
+Ziet u niets? Controleer of de automatische UDP-verbinding aan staat: **Q**-icoon → **Application Settings**, en daarna **AutoConnect to the following devices** → **UDP** aangevinkt (de standaard). Afhankelijk van uw QGroundControl-versie staat de AutoConnect-lijst op de pagina **Comm Links** of op de pagina **General**. Als u op de drone een **Telemetriepoort** anders dan 14550 hebt ingesteld, voeg dan in plaats daarvan een link toe: **Application Settings** → **Comm Links** → **Add**, typ **UDP**, de poort die u hebt gekozen, en daarna **Connect**.
+
+## Video {/* #video */}
+
+<Steps>
+
+1. Klik op het **Q**-icoon (linksboven) → **Application Settings**.
+2. Open de pagina **Video**. In oudere versies is video een sectie **Video** op de pagina **General**.
+3. Stel **Source** in op **UDP h.264 Video Stream**.
+4. Controleer het UDP-adres. De standaardwaarde `0.0.0.0:5600` luistert op poort 5600, wat overeenkomt met de standaard **Videopoort** van de drone. Als u **Videopoort** op de drone hebt gewijzigd, gebruik dan hier die poort. Huidige versies noemen het veld **UDP URL**; oudere versies tonen een getal bij **UDP Port**.
+5. Ga terug naar de **Fly**-weergave. De video verschijnt in het kleine venster in de hoek. Klik erop om video en kaart te wisselen.
+
+</Steps>
+
+<UiSketch variant="qgc-video-settings" caption="QGroundControl, vereenvoudigd. (1) Q-icoon → Application Settings, (2) Video, (3) Source UDP h.264 Video Stream, (4) UDP URL met poort 5600." />
+
+### Modus voor lage latentie {/* #low-latency-mode */}
+
+Schakel in dezelfde videoinstellingen **Low Latency Mode** in. QGroundControl laat dan late frames vallen in plaats van ze te bufferen, wat de vertraging merkbaar verkleint op een goede verbinding. Op een zwakke 4G-verbinding kan het beeld gaan haperen; zet het dan weer uit.
+
+## Firewall {/* #firewall */}
+
+- **Windows**: sta QGroundControl toe op de netwerken **Private** en **Public** wanneer Windows daarom vraagt. VPN-adapters (ZeroTier, Tailscale) worden vaak als Public geclassificeerd. Om de poorten handmatig te openen, zie [Mission Planner: Windows-firewall](./mission-planner.mdx#allow-mission-planner-through-the-windows-firewall); dezelfde regels gelden.
+- **macOS**: sta inkomende verbindingen voor QGroundControl toe wanneer macOS daarom vraagt.
+- **Linux**: als `ufw` actief is, voer `sudo ufw allow 14550/udp` en `sudo ufw allow 5600:5602/udp` uit.
+
+## Tweede camera en audio {/* #second-camera-and-audio */}
+
+QGroundControl speelt één videostream af. Met [dubbele stream](../camera/multi-camera.mdx) ingeschakeld gaat camera 2 naar poort 5601: wijzig de UDP-poort naar `5601` om die te bekijken, of open camera 2 in een GStreamer-venster ([Windows](./gstreamer-windows.mdx), [Linux](./gstreamer-linux.mdx), [macOS](./gstreamer-macos.mdx)) naast QGroundControl.
+
+QGroundControl negeert audio. Speel audio af met GStreamer op Videopoort + 2 (`5602`).
+
+## Veelvoorkomende problemen {/* #common-problems */}
+
+| Symptoom | Oorzaak en oplossing |
+|---|---|
+| *Waiting For Vehicle Connection* | Er bereikt geen telemetrie deze computer. Controleer het bestemmings-IP (VPN-IP via 4G), **Telemetrie Inschakelen** en de firewall. |
+| Telemetrie werkt, maar het videovenster meldt geen video | **Video Inschakelen** staat uit, de camera draait niet, de bron is niet **UDP h.264 Video Stream**, of UDP 5600 is geblokkeerd. |
+| Video verschijnt en bevriest daarna over 4G | Pakketverlies. Verlaag de bitsnelheid op de drone, stel **Stream Herstelsnelheid** in op 15–30 frames, en zet **Low Latency Mode** uit. |
+| Het voertuig verschijnt twee keer | Twee bestemmingen wijzen naar deze computer, of een tweede link dupliceert de automatische verbinding. Verwijder er een. |
+| Video stopt wanneer u een GStreamer-test start | Slechts één programma kan op een UDP-poort luisteren. Sluit er een van. |
+
+Meer controles: [Geen video in QGroundControl of Mission Planner](../../troubleshooting/no-video-in-gcs.mdx).

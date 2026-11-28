@@ -1,0 +1,78 @@
+---
+title: "4G üzerinden RTK GPS: UAVcast-Pro ile NTRIP düzeltmeleri"
+description: "4G/LTE üzerinden NTRIP caster'dan RTCM3 düzeltmelerini uçuş kontrolcünüze aktarın ve RTK Sabit konumlandırma elde edin. Caster, mountpoint, VRS ve GGA ayarları."
+sidebar_position: 2
+sidebar_label: "NTRIP / RTK"
+---
+
+# NTRIP / RTK düzeltmeleri {/* #ntrip--rtk-corrections */}
+
+UAVcast-Pro'da yerleşik bir NTRIP istemcisi bulunur. Drone'un internet bağlantısı üzerinden bir NTRIP v1 veya v2 caster'a bağlanır, RTCM3 düzeltmelerini alır ve bunları MAVLink `GPS_RTCM_DATA` olarak uçuş kontrolcüsüne iletir. Bu, Mission Planner'ın "Inject GPS" özelliğiyle aynı şekilde çalışır; ancak düzeltmeler drone'un kendisinden gönderilir. Sahada bir yer istasyonuna veya baz istasyonuna ihtiyacınız yoktur. **Uçuş Kontrolcüsü → NTRIP / RTK** altında açın.
+
+## Başlamadan önce {/* #before-you-begin */}
+
+- Uçuş kontrolcüsünde RTK destekli bir GPS: u-blox F9P, Holybro H-RTK, CUAV C-RTK, Here3+ veya Septentrio Mosaic gibi çok frekanslı, taşıyıcı faz alıcısı. Standart bir M8/M10 GPS düzeltmeleri yok sayar.
+- Bir NTRIP caster hesabı: ulusal bir CORS ağı, ticari bir hizmet (Trimble, Hexagon, Topcon ve diğerleri) veya [RTK2go](http://rtk2go.com). Ana bilgisayarı, portu, mountpoint'i ve genellikle bir kullanıcı adı ile parolayı bilmeniz gerekir.
+- Drone'da internet ve bağlı bir uçuş kontrolcüsü.
+
+## NTRIP istemcisini ayarlama {/* #set-up-the-ntrip-client */}
+
+<Steps>
+
+1. **Uçuş Kontrolcüsü → NTRIP / RTK** bölümüne gidin.
+2. **Caster** altında **Caster ana bilgisayarı** (örneğin `ntrip.example.com`) ve **Port** (çoğu caster için `2101`) değerlerini girin.
+3. **Kimlik Doğrulama** altında **Kullanıcı adı** ve **Şifre** alanlarını doldurun. Bunları kontrol etmek için **Bağlantıyı test et** seçeneğini seçin: *Caster kimlik bilgilerini kabul etti.*
+4. **Mountpoint'lere göz at** seçeneğini seçin, listeden en yakın olanı seçip **Seç** düğmesine basın. Ya da **Mountpoint** alanına yazın.
+5. Mountpoint bir VRS veya "en yakın baz" akışıysa (**NMEA** sütununda **Gerekli** yazar), **GGA upstream gönder** seçeneğini açık tutun.
+6. **NTRIP istemcisini etkinleştir** seçeneğini açın.
+
+</Steps>
+
+**Durum** kartı **Düzeltmeler aktarılıyor** olarak değişir ve **Toplam alınan**, **Aktarım hızı**, **Son RTCM çerçevesi** ve **Son mesaj türleri** değerlerini gösterir. Açık gökyüzü altında **Uçuş kontrolcüsü RTK düzeltmesi**, **3D konum** durumundan **RTK Float** ve sonra **RTK Fixed** durumuna geçer; genellikle bir veya iki dakika içinde.
+
+<Screenshot id="uavcast-pro/flight-controller--ntrip" alt="Durumu Devre dışı ve sayaçları sıfır olan NTRIP / RTK sekmesi ile GPS kalite kartı" caption="Bir caster ayarlanmadan önce Uçuş Kontrolcüsü → NTRIP / RTK: durum Devre dışı, sayaçlar sıfır ve GPS kilidi yok." />
+
+## Ayar başvurusu {/* #settings-reference */}
+
+| Ayar | Varsayılan | Değerler | Notlar |
+|---|---|---|---|
+| **NTRIP istemcisini etkinleştir** | Kapalı | Açık, kapalı | |
+| **Caster ana bilgisayarı** | boş | ana bilgisayar adı veya IP | Zorunlu. |
+| **Port** | `2101` | 1–65535 | Bazı TLS caster'lar 2102 veya 443 kullanır. |
+| **Mountpoint** | boş | caster'ın mountpoint adı | Zorunlu. Caster'ın kaynak tablosunu okumak için **Mountpoint'lere göz at** seçeneğini kullanın. |
+| **TLS kullan (HTTPS)** | Kapalı | Açık, kapalı | TLS gerektiren caster'lar için. Çoğu genel caster düz TCP kullanır. |
+| **Kullanıcı adı** / **Şifre** | boş | | Anonim caster'lar için boş bırakın. RTK2go, kullanıcı adı olarak gerçek bir e-posta adresi ister ve parola istemez. |
+| **GGA upstream gönder** | Açık | Açık, kapalı | Konumunuzu NMEA `$GPGGA` olarak gönderir; böylece VRS ve en yakın mountpoint caster'ları konumunuz için düzeltme üretebilir. |
+| **Gönderim aralığı (saniye)** | `10` | saniye | GGA'nın ne sıklıkla gönderileceği. |
+| **Konum kaynağı** | **Uçuş kontrol cihazından canlı konum** | **Uçuş kontrol cihazından canlı konum**, **Sabit manuel konum** | |
+| **Enlem** / **Boylam** / **Yükseklik (m)** | `0` | | Manuel konum. Uçuş kontrolcüsü GPS kilidi alana kadar yedek olarak da kullanılır. |
+
+## GPS kalite kartını okuma {/* #read-the-gps-quality-card */}
+
+**GPS kalitesi**, uçuş kontrolcüsünden gelen canlı kilidi ve alıcının kendi tahminine dayanmayan bir ölçümü gösterir:
+
+- **Kilit türü** ve **Uydular**.
+- **Yatay hassasiyet** ve **Dikey hassasiyet**: alıcının kendi tahmini.
+- **Konum stabilitesi (1σ)**: Drone hareketsiz dururken konumun gerçekte ne kadar hareket ettiği, kısa bir pencere boyunca ölçülür. Uçuşta **Hareketli** gösterir.
+- **Son düzeltme**: Son RTCM çerçevesinin iletilmesinden bu yana geçen süre. Bu değer sürekli artıyorsa düzeltmeler durmuştur.
+
+**Alıcıdan RTK durumu yok** yazıyorsa uçuş kontrolcüsü hiç RTK durumu bildirmemiştir. Genellikle GPS RTK destekli değildir. Düzeltmeler yine de iletilir.
+
+## Hücresel bağlantı üzerinden {/* #over-a-cellular-link */}
+
+Düzeltmeler küçüktür (genellikle saniyede 1 ila 5 kbit), bu yüzden telemetri ve video yanında rahatça sığarlar. Kısa bir internet kesintisinden sonra istemci saniyeler içinde yeniden bağlanır. Sessiz kalan bir caster bağlantısı 15 saniye içinde algılanır ve yeniden açılır.
+
+[Kontrol Paneli](../dashboard.mdx), istemcinin durumunu **RTK düzeltmeleri** satırında gösterir.
+
+## Sorun giderme {/* #troubleshooting */}
+
+| Belirti | Kontrol edin |
+|---|---|
+| Durum **Hata**, **Caster yanıtı** `401` gösteriyor | Kullanıcı adı veya parola yanlış ya da hesabın bu mountpoint'e izni yok. |
+| **Bağlandı**, ancak RTCM çerçevesi yok | Mountpoint GGA gerektiriyor. **GGA upstream gönder** seçeneğini açın ve uçuş kontrolcüsünde 3D kilit olduğundan emin olun ya da manuel bir konum ayarlayın. |
+| RTCM geliyor, kilit **3D konum** olarak kalıyor | GPS RTK destekli değil veya mountpoint'in GNSS sistemleri alıcınızla uyuşmuyor. Kaynak tablosundaki **GNSS** sütununu kontrol edin. |
+| **RTK Float**, hiç **Fixed** olmuyor | Baz çok uzakta (20 ila 30 km'nin altı hedefleyin), gökyüzü görüşü zayıf veya çok yollu yansıma var. Daha yakın bir mountpoint deneyin. |
+
+Sayfanın altındaki **NTRIP servis günlüğü**, her bağlantıyı, yeniden bağlanmayı ve caster yanıtını gösterir.
+
+Daha fazla kontrol için bkz. [RTK düzeltmeleri gelmiyor](../../troubleshooting/rtk-corrections-not-arriving.mdx).

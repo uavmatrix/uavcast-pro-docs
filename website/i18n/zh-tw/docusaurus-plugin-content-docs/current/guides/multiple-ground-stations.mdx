@@ -1,0 +1,66 @@
+---
+title: "將 MAVLink 與視訊串流至多個地面站"
+sidebar_label: 多個地面站
+description: "使用 UAVcast-Pro 將一台無人機的遙測與即時視訊傳送至多個 QGroundControl 或 Mission Planner 地面站，並可設定唯讀觀察者。"
+sidebar_position: 4
+---
+
+# 將串流傳送至多個地面站 {/* #stream-to-multiple-ground-stations */}
+
+一台無人機，多個螢幕：Mission Planner 上的飛行員、QGroundControl 上的酬載操作員，以及在辦公室監看的主管。UAVcast-Pro 會將遙測與視訊傳送給您新增的每個目的地，且每個目的地都有各自的開關。
+
+## 運作方式 {/* #how-it-works */}
+
+**地面控制站** 下的每個項目都是一個目的地：一組 IPv4 位址，加上一個遙測連接埠與一個視訊連接埠。UAVcast-Pro 會傳送：
+
+- 當 **啟用遙測** 開啟時，MAVLink 遙測會以 UDP 傳送至 **遙測連接埠**（預設 14550），
+- 當 **啟用視訊** 開啟時，H.264 視訊會以 RTP/UDP 傳送至 **視訊連接埠**（預設 5600），
+- 當 **啟用終端** 關閉時，則完全不傳送任何內容。
+
+來自每個目的地的指令都會送達飛行控制器，除非該目的地為 **Read Only**（唯讀）。
+
+## 1. 為每個地面站新增目的地 {/* #1-add-a-destination-per-station */}
+
+<Steps>
+
+1. 開啟 **地面控制站**，並為每個地面站各按一次 **新增目標位址**。
+2. 為每個目的地設定一個在欄位中容易辨識的 **名稱**，例如 *飛行員 – Mission Planner* 與 *酬載 – QGC*。
+3. 將每台電腦的 IPv4 位址輸入 **目標IP或主機**。透過 4G 連線時，請使用 VPN 位址。
+4. 在需要的地方開啟 **啟用遙測** 與 **啟用視訊**。只需要遙測的地面站可關閉視訊以節省頻寬。
+
+</Steps>
+
+<Screenshot id="uavcast-pro/ground-control" alt="地面控制站頁面，包含兩張目的地卡片與新增目標位址按鈕" caption="地面控制站，含兩張目的地卡片。每按一次新增目標位址，即會新增一張卡片給一個地面站。" />
+
+## 2. 將觀察者設為唯讀 {/* #2-make-observers-read-only */}
+
+對於只需觀看、絕不操控飛行的人員，請在其目的地上開啟 **Read Only**。該地面站仍會接收即時遙測，但無法變更無人機上的任何設定：來自該站的指令、模式變更、解鎖、參數寫入、任務寫入與 RC 覆寫都會被阻擋。{/* PENDING-RELEASE: read-only */} 在此模式下，地面站軟體可能會顯示警告，因為它的部分請求（例如下載參數或任務）將得不到回應。
+
+:::warning 兩位飛行員，一台無人機
+若未設定 Read Only，每個地面站都能操控無人機。請事先約定由誰駕駛，並將其他所有地面站設為唯讀。
+:::
+
+## 3. 同一台電腦上的兩個地面站 {/* #3-two-stations-on-one-computer */}
+
+同一台電腦上的兩個程式無法監聽相同的連接埠。請新增兩個使用相同 IP、但連接埠不同的目的地，例如：
+
+| 目的地 | 遙測連接埠 | 視訊連接埠 |
+|---|---|---|
+| Mission Planner | 14550 | 5600 |
+| QGroundControl | 14551 | 5603 |
+
+接著將第二個程式設定為監聽這些連接埠（在 QGroundControl 中，新增一條監聽 14551 的 UDP 通訊連結，並將視訊 UDP 連接埠設為 5603）。
+
+請將視訊連接埠間隔 **3**（5600、5603、5606 …）。每個目的地會使用其視訊連接埠，另加上視訊連接埠 + 1 供[雙路串流](./dual-camera-rc-switching.mdx)的第二台攝影機使用，以及視訊連接埠 + 2 供[音訊](../uavcast-pro/camera/audio.mdx)使用。連接埠若彼此太近，一旦開啟雙路串流或音訊就會發生衝突。
+
+## 4. 注意上行頻寬 {/* #4-mind-the-uplink */}
+
+每個視訊目的地都是串流的一份獨立副本。三個視訊目的地各以 1500 kbps 傳送時，無人機需要約 4.5 Mbit/s 的上行頻寬。透過 4G 時，請只將視訊傳送給需要的地面站，或在 **攝影機 → 攝影機設定** 中降低位元率。**儀表板 → 網路流量** 會顯示數據機實際傳送的流量。
+
+## 5. 確認每個地面站都收到資料 {/* #5-check-that-every-station-gets-data */}
+
+在 **儀表板** 上，**Ground station** 列會顯示 *Sending to n · x packets/s*。**飛行控制器 → 連線** 中的 **Connection check** 會列出每個地面站的輸出，以及因位址無效而被略過的任何目的地。
+
+## 搭配 Fleet Manager {/* #with-fleet-manager */}
+
+在 Fleet Manager 中，地面站會加入組織的 VPN，您可在 **Network** 頁面上透過 **Stream Bindings** 將它們連接到無人機。每台額外綁定到同一地面站的無人機，都會取得自己的一組連接埠。{/* PENDING-RELEASE: port-blocks */} 請參閱[串流綁定](../fleet-manager/network/stream-bindings.mdx)。

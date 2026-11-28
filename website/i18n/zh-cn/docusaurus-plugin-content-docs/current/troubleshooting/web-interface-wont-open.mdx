@@ -1,0 +1,80 @@
+---
+title: "安装后无法打开 UAVcast-Pro 网页界面"
+sidebar_label: 网页界面无法打开
+description: "安装后无法在 http://device-ip 打开 UAVcast-Pro？请找到正确的地址，检查 uavcast-web 服务、服务器端口和 80 端口。"
+sidebar_position: 9
+---
+
+# 网页界面无法打开 {/* #web-interface-wont-open */}
+
+安装程序已完成，但 `http://<device-ip>/` 超时、连接被拒绝，或显示了其他程序的页面。
+
+<SymptomTable rows={[
+  {symptom: '超时，或页面始终无法加载', cause: '地址错误，或您的电脑位于其他网络中', start: '#check-1'},
+  {symptom: '连接被拒绝', cause: 'Web 服务未运行', start: '#check-2'},
+  {symptom: '显示其他网页，例如 nginx 或 Apache', cause: '其他程序占用了 80 端口', start: '#check-3'},
+  {symptom: '之前可以正常使用，修改设置后失效', cause: '服务器端口已被更改', start: '#check-4'},
+  {symptom: '页面可以加载，但每个页面都跳转到应用程序', cause: '尚未激活许可证', start: '#check-5'},
+]} />
+
+## 检查 1：使用正确的地址 {/* #check-1 */}
+
+网页界面默认运行在 **80 端口**，因此地址就是 `http://<device-ip>/`。
+
+<Steps>
+
+1. 查找设备 IP。安装程序会在结束时显示该 IP。您也可以在设备上运行 `hostname -I`。
+2. 对于使用默认主机名的 Raspberry Pi，可以尝试 `http://raspberrypi.local/`。
+3. 请使用 `http://`，而不是 `https://`。网页界面不提供 HTTPS 服务。
+4. 确保您的电脑与设备位于同一网络，或同一 VPN 中。通过 4G 连接时，必须使用无人机的 VPN 地址。
+
+</Steps>
+
+## 检查 2：Web 服务是否正在运行？ {/* #check-2 */}
+
+在设备上运行：
+
+```bash
+sudo systemctl status uavcast-web
+```
+
+状态应显示 **active (running)**。如果不是，请启动服务并查看其停止的原因：
+
+```bash
+sudo systemctl restart uavcast-web
+journalctl -u uavcast-web --since "1 hour ago"
+```
+
+网页界面同样依赖后台服务。请以相同方式检查：`uavcast-factory`、`mavlink-manager`、`uavcast-camera` 和 `redis-server`。完整列表参见 [服务与文件](../reference/services-and-files.mdx)。
+
+## 检查 3：80 端口已被占用 {/* #check-3 */}
+
+如果设备上安装了另一个 Web 服务器，它可能占用了 80 端口。请查明哪个程序正在监听：
+
+```bash
+sudo ss -ltnp | grep ':80 '
+```
+
+停止并禁用另一个服务器（例如执行 `sudo systemctl disable --now nginx`），然后重启 `uavcast-web`。
+
+## 检查 4：服务器端口已被更改 {/* #check-4 */}
+
+**应用程序 → 设置 → 服务器端口** 会将网页界面移至另一个端口，此时地址变为 `http://<device-ip>:<port>/`。如果您不记得端口号，可以在设备上读取：
+
+```bash
+grep SERVER_PORT /etc/systemd/system/uavcast-web.service
+```
+
+## 检查 5：所有页面都跳转到应用程序 {/* #check-5 */}
+
+在设备上激活许可证之前，这属于正常现象。请在 **应用程序 → 许可证管理器** 下激活许可证。如果激活失败，请参阅 [无法激活许可证](./license-activation-failed.mdx)。
+
+## 检查 6：安装程序未完成 {/* #check-6 */}
+
+如果 `uavcast-web` 不存在（`Unit uavcast-web.service could not be found`），说明安装提前中断了。请参阅 [安装失败](./installation-fails.mdx)。
+
+## 仍然没有头绪？ {/* #still-no-luck */}
+
+请将 `systemctl status uavcast-web` 和 `journalctl -u uavcast-web --since yesterday` 的输出，以及 `/opt/uavcast-pro/installer.log`，发送至 **support@uavmatrix.com**。
+
+相关链接：[安装 UAVcast-Pro](../get-started/installation.mdx) · [应用程序设置](../uavcast-pro/application-settings.mdx)

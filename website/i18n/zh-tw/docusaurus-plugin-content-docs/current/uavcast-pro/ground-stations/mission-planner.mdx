@@ -1,0 +1,89 @@
+---
+title: "將 UAVcast-Pro 影像與遙測串流至 Mission Planner"
+description: "將 Mission Planner 連接至 UAVcast-Pro 無人機：透過 UDP 14550 傳送 MAVLink，並以精確的 GStreamer 來源在 HUD 中顯示即時 H.264 影像，同時涵蓋 Windows 防火牆、第二台攝影機與常見錯誤。"
+sidebar_position: 2
+sidebar_label: "Mission Planner"
+---
+
+# Mission Planner {/* #mission-planner */}
+
+Mission Planner 會透過 UDP 連接埠 14550 接收 UAVcast-Pro 遙測，並透過連接埠 5600 上的 GStreamer 來源，在其 HUD 中顯示即時影像。遙測只需點擊一次即可連線；影像則需要貼上一次管線（pipeline），之後 Mission Planner 會記住它。
+
+## 開始之前 {/* #before-you-begin */}
+
+- 在無人機上，於[地面控制站](./index.mdx)新增一個目標，填入此電腦的 IP 位址（透過 4G 時使用 VPN 位址），開啟**啟用遙測**，若需要影像則開啟**啟用視訊**。
+- 攝影機已在**攝影機 → 攝影機設定**中開始串流。
+- 最新版的 Windows 版 Mission Planner。請在命令提示字元中以 `ipconfig` 查看此電腦的 IP。
+
+## 連接遙測 {/* #connect-telemetry */}
+
+<Steps>
+
+1. 在 Mission Planner 右上角的連線下拉選單中，選擇 **UDP**。鮑率會被忽略。
+2. 選擇 **Connect**。
+3. 系統詢問監聽連接埠時，保留 `14550`（或您在無人機上設定的**遙測連接埠**），然後選擇 **OK**。
+4. Mission Planner 會下載參數，無人機也會出現在地圖上。
+
+</Steps>
+
+<Screenshot id="gcs/mission-planner--connected" url="Mission Planner" alt="Mission Planner 飛行資料檢視以 UDP 連線：右上角的連線方塊顯示 UDP、連結 UDP14550-1-QUADRO 與 DISCONNECT 按鈕；HUD 顯示 DISARMED、Unhealthy AHRS 與 GPS: No Fix" caption="已連線。右上角方塊顯示 UDP 與連結 UDP14550-1-QUADRO，按鈕現在顯示 DISCONNECT。這是沒有 GPS 的測試設定，因此 HUD 顯示 DISARMED、Unhealthy AHRS 與 GPS: No Fix。" />
+
+## 在 HUD 中顯示影像 {/* #show-the-video-in-the-hud */}
+
+<Steps>
+
+1. 在 HUD（人工地平儀）上按滑鼠右鍵，並選擇 **Video → Set GStreamer Source**。
+2. 貼上此管線並選擇 **OK**：
+
+   ```text title="攝影機 1，連接埠 5600"
+   udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+   ```
+
+3. 影像會在數秒內取代 HUD 背景。飛行資料仍會顯示在影像上方。
+
+</Steps>
+
+<UiSketch variant="mission-planner-gstreamer" caption="Mission Planner，已簡化。（1）在 HUD 上按滑鼠右鍵，（2）Video，（3）Set GStreamer Source，然後貼上管線。" />
+
+Mission Planner 為 HUD 使用其自己的 GStreamer 副本，因此您不需要為此另外安裝[Windows 上的 GStreamer](./gstreamer-windows.mdx)。若 Mission Planner 詢問是否要下載 GStreamer，請允許。
+
+請保留管線結尾的寫法：Mission Planner 需要 `video/x-raw,format=BGRA ! appsink name=outsink` 才能繪製畫面。只需變更連接埠。
+
+### 低延遲 {/* #lower-latency */}
+
+`rtpjitterbuffer` 會平滑處理晚抵達的封包，代價是約 200 ms 的延遲。若連線品質良好，可以縮短它：
+
+```text title="低延遲，連接埠 5600"
+udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer latency=0 ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink sync=false
+```
+
+在較弱的 4G 連線上，請保留預設的抖動緩衝區，畫面較不容易破碎。
+
+## 允許 Mission Planner 通過 Windows 防火牆 {/* #allow-mission-planner-through-the-windows-firewall */}
+
+Windows 會在 Mission Planner 第一次監聽網路時詢問。請在**私人**與**公用**網路上都允許。ZeroTier 或 Tailscale 介面卡通常被歸類為**公用**，因此只勾選私人會封鎖 VPN。
+
+若您已關閉該提示，請在系統管理員 PowerShell 中開啟連接埠：
+
+```powershell title="系統管理員 PowerShell"
+New-NetFirewallRule -DisplayName "UAVcast-Pro telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+New-NetFirewallRule -DisplayName "UAVcast-Pro video" -Direction Inbound -Protocol UDP -LocalPort 5600-5602 -Action Allow
+```
+
+## 第二台攝影機（雙路串流） {/* #second-camera-dual-stream */}
+
+開啟[雙路串流](../camera/multi-camera.mdx)後，攝影機 2 會傳送至**視訊連接埠（攝影機 2）**，預設為 `5601`。Mission Planner 的 HUD 只顯示一個來源。需要攝影機 2 時，可將 HUD 來源切換為連接埠 5601，或在獨立的 GStreamer 視窗中觀看攝影機 2：請參閱[Windows 上的 GStreamer](./gstreamer-windows.mdx)。
+
+音訊（視訊連接埠 + 2）會被 Mission Planner 忽略。請使用 GStreamer 播放。
+
+## 常見問題 {/* #common-problems */}
+
+| 現象 | 原因與解決方式 |
+|---|---|
+| 透過 Wi-Fi 可連線，但 4G 無法連線 | 目標使用的是區域網路 IP。請改用此電腦的 VPN IP。 |
+| *No heartbeat packets received* | 無人機沒有傳送至此電腦：IP 錯誤、**啟用遙測**已關閉，或防火牆封鎖了 UDP 14550。 |
+| 遙測正常，但 HUD 保持黑畫面 | 此目標的**啟用視訊**已關閉、攝影機未執行，或 UDP 5600 被封鎖。可使用 [Windows 上的 GStreamer](./gstreamer-windows.mdx) 進行測試。 |
+| 影像凍結或出現灰色殘影 | 封包遺失。請降低無人機上的位元率，並將**串流恢復速率**設為 15–30 個影格。 |
+| 其他程式開啟時影像停止 | 一個 UDP 連接埠只能由一個程式監聽。請關閉同樣使用 5600 的 GStreamer 視窗或 QGroundControl。 |
+
+更多檢查項目：[QGroundControl 或 Mission Planner 沒有影像](../../troubleshooting/no-video-in-gcs.mdx)與[地面站沒有遙測](../../troubleshooting/no-telemetry-in-gcs.mdx)。

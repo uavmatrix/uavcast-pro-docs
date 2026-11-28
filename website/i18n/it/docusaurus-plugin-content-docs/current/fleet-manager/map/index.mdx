@@ -1,0 +1,85 @@
+---
+title: Mappa in tempo reale - traccia più droni in tempo reale
+description: Traccia ogni drone della flotta su un'unica mappa in tempo reale, con anelli di stato, linee di rotta, scie di 5 minuti, modalità di inseguimento e livelli OpenAIP dello spazio aereo.
+sidebar_position: 1
+---
+
+# Mappa in tempo reale {/* #live-map */}
+
+**Fleet Map** (barra laterale **Overview → Fleet Map**) mostra ogni drone dell'organizzazione selezionata su un'unica mappa, aggiornata in tempo reale man mano che arriva la telemetria. È pensata per una sala di controllo: lasciala aperta e vedrai a colpo d'occhio quali velivoli sono in volo, dove si dirigono e quali richiedono attenzione.
+
+<Screenshot id="fleet-manager/map" alt="Mappa della flotta con molti marcatori colorati di droni, linee di rotta e scie di volo su una regione" caption="Fleet Map nello stile Dark sopra il porto di Rotterdam: ogni drone con il proprio colore, linea di rotta e scia, e marcatori grigi offline con l'indicazione di quanto tempo fa sono stati visti." />
+
+## Leggere un marcatore {/* #reading-a-marker */}
+
+Ogni drone è disegnato con il proprio colore, con un'icona per il tipo di velivolo: quadricottero, esacottero, aereo, VTOL, rover, barca o sottomarino. Anelli e badge intorno al marcatore segnalano i problemi:
+
+| Sul marcatore | Significato |
+|---|---|
+| Colore proprio del drone, senza anello | Online e funzionante. |
+| Marcatore grigio, anello grigio tratteggiato e badge con orologio | **Offline**: nessun dato ricevuto da 20 secondi. |
+| Anello arancione con badge **!** | **NO MAVLINK**: UAVcast-Pro è online ma da 10 secondi non riceve telemetria dal controllore di volo. Controlla la connessione con il controllore di volo. |
+| Anello rosso tratteggiato | **GPS lost**: nessun satellite o nessun fix. |
+| Anello giallo tratteggiato | **GPS weak**: meno di 6 satelliti o solo un fix 2D. |
+| Marcatore **H** | La posizione home del drone, impostata al momento dell'armamento. Passa sopra per vedere la sua quota (AMSL). |
+
+L'armamento o il disarmo non sono mostrati dal marcatore stesso. Apri il popup, oppure usa il [pannello di controllo](../fleet/remote-control.mdx), per vedere **Armed**.
+
+L'etichetta accanto al marcatore riporta `Name • FLIGHTMODE`, con **NO MAVLINK**, **NO GPS** o **WEAK GPS** aggiunti quando si applicano, oppure `Name • OFFLINE • 5 mins ago` per un drone offline.
+
+### Linea di rotta e scia {/* #heading-line-and-trail */}
+
+- La **linea di rotta** è una linea tratteggiata del colore del drone che indica dove punta il muso. È nascosta quando il drone è offline.
+- La **scia di volo** mostra gli ultimi **5 minuti** del percorso, come linea tratteggiata del colore del drone (grigia quando offline). Viene aggiunto un nuovo punto ogni circa 11 m di spostamento.
+
+## Popup del drone {/* #drone-popup */}
+
+Seleziona un marcatore per aprire il suo popup: nome, organizzazione e stato, poi **Battery**, **Altitude**, **Mode**, **Armed**, **GPS** (satelliti e tipo di fix: No Fix, 2D, 3D, DGPS o RTK), **Signal** e, se offline, **Last seen**. Compare anche l'ultimo messaggio di stato dal controllore di volo, spesso il modo più rapido per capire un errore di pre-armamento.
+
+**Signal** è il tempo di andata e ritorno tra Fleet Manager e il drone, misurato ogni 10 secondi: eccellente sotto 100 ms, buono sotto 300 ms, discreto sotto 600 ms, scarso oltre questo valore o dopo tre ping mancati.
+
+<Screenshot id="fleet-manager/map--popup" alt="Popup di un drone sulla mappa con righe di batteria, quota, modalità, armamento, GPS e segnale e i pulsanti Follow, History e Controls" caption="Popup di un drone da rilievo armato in AUTO: Battery 71%, Altitude 85.5 m, GPS 20 sats (3D), Signal 61 ms (Excellent), con Follow, History e Controls." />
+
+Tre pulsanti:
+
+- **Follow** mantiene il drone nella vista. Vedi sotto.
+- **History** apre la [cronologia di volo](./flight-history.mdx) di questo drone.
+- **Controls** apre il [pannello di controllo UAV](../fleet/remote-control.mdx).
+
+## Seguire un drone {/* #follow-a-drone */}
+
+Seleziona **Follow** nel popup. La mappa si ingrandisce (almeno al livello di zoom 14) e si centra sul drone, poi si sposta solo quando il drone si avvicina al bordo dello schermo, così la mappa non trema. Compare un banner **Following *name***: seleziona la sua **X**, oppure **Unfollow**, per interrompere. Aprire **History** interrompe anche l'inseguimento.
+
+<Screenshot id="fleet-manager/map--follow" alt="Mappa che segue un drone con il banner Following in alto" caption="Modalità di inseguimento su un'ala fissa che mappa un corridoio, con il banner Following e la scia alle sue spalle." />
+
+## Droni senza GPS {/* #drones-without-gps */}
+
+I droni online ma senza ancora una posizione sono elencati in un riquadro **drones without GPS** sulla mappa. Seleziona uno di essi per aprire il suo pannello di controllo. Il contatore **n drones on map** indica quanti sono tracciati.
+
+## Impostazioni mappa {/* #map-settings */}
+
+Seleziona il pulsante a ingranaggio in alto a destra per aprire **Map Settings**. Le tue scelte vengono salvate in questo browser.
+
+| Sezione | Opzione | Predefinito |
+|---|---|---|
+| **Overlays** | **Airspace Layers**: spazio aereo riservato, aeroporti, eliporti | Disattivato |
+| **Drone Filter** | **All Drones**, **Online Only** o **Offline Only** | All Drones |
+| **Marker Options** | **Heading Line** | Attivato |
+| | **Marker Tooltip**: etichetta con il nome sui marcatori | Attivato |
+| | **Always Visible**: mostra l'etichetta sempre invece che al passaggio del mouse | Attivato |
+| | **Flight Trail**: percorso di volo recente (ultimi 5 min) | Attivato |
+| **Map Style** | **Satellite**, **Light** o **Dark** | Dark |
+
+<Screenshot id="fleet-manager/map--settings" alt="Pannello Map Settings con livelli, filtro droni, opzioni dei marcatori e stile della mappa" caption="Pannello Map Settings con Airspace Layers attivo, Drone Filter impostato su Online Only e Map Style Satellite." />
+
+:::tip Per una mappa affollata
+Con 20 o più droni in una stessa zona, disattiva **Always Visible** così le etichette compaiono solo al passaggio del mouse, e usa **Online Only** per nascondere i velivoli fermi.
+:::
+
+## Livelli dello spazio aereo {/* #airspace-layers */}
+
+**Airspace Layers** disegna sopra la mappa lo spazio aereo riservato, gli aeroporti e gli eliporti forniti da OpenAIP. Il livello compare dal livello di zoom 7 in su. È un unico livello combinato: non puoi attivare o disattivare le categorie separatamente.
+
+:::warning Non sostituisce i controlli ufficiali sullo spazio aereo
+Il livello dello spazio aereo serve come supporto alla consapevolezza della situazione. Controlla i NOTAM e la mappa nazionale dei droni o il servizio UTM prima di ogni volo.
+:::

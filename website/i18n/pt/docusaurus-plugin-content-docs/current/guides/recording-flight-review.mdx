@@ -1,0 +1,68 @@
+---
+title: "Grave voos de drone e revise-os com telemetria"
+sidebar_label: Gravar e revisar voos
+description: "Grave vídeo da câmera e telemetria no drone automaticamente ao armar, armazene em USB ou SSD e reproduza vídeo, mapa e dados de voo em uma única linha do tempo."
+sidebar_position: 8
+---
+
+# Grave voos e revise-os {/* #record-flights-and-review-them */}
+
+Desde a v6.5.1, o UAVcast-Pro grava no próprio drone: vídeo da câmera mais um registro de telemetria, com um clique no mapa de voo ou automaticamente toda vez que você arma. A gravação reutiliza o fluxo que já está codificado, então não custa CPU extra e nunca interrompe o vídeo ao vivo para a estação de controle terrestre. Depois, o player de revisão de voo mostra o vídeo, o trajeto no mapa, a visão de cabine e os dados de voo em uma única linha do tempo.
+
+## 1. Escolha onde as gravações serão salvas {/* #1-choose-where-recordings-go */}
+
+<Steps>
+
+1. Conecte um pendrive USB ou um SSD se quiser gravar neles. As gravações enchem o armazenamento rapidamente, e um SSD USB é mais robusto que um cartão SD.
+2. Abra **Câmera → Gravações** e a aba **Configurações**.
+3. Em **Local de armazenamento**, escolha o disco ou **Armazenamento interno**. Clique em **Procurar discos novamente** se o drive foi conectado depois que a página abriu. **Ou outra pasta** permite digitar um caminho e confirmar com **Usar esta pasta**.
+4. Defina **Manter livre** (padrão 2 GB). A gravação nunca ocupa o disco além deste valor.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera--recordings-settings" alt="Aba Configurações de Gravações com local de armazenamento, manter livre, excluir gravações mais antigas, excluir gravações anteriores a e gravar automaticamente ao armar" caption="Câmera → Gravações → Configurações com Armazenamento interno selecionado e Gravar automaticamente ao armar ativado." />
+
+## 2. Decida quando gravar {/* #2-decide-when-to-record */}
+
+| Configuração | Padrão | O que faz |
+|---|---|---|
+| **Gravar automaticamente ao armar** | Ativado | Inicia quando os motores armam e para quando desarmam. Se o link cair em voo, a gravação continua. |
+| **Gravar câmera 1** / **Gravar câmera 2** | Ativado | A câmera 2 só grava quando a transmissão dupla está ativa. |
+| **Excluir as gravações mais antigas quando o espaço acabar** | Ativado | Funciona como uma dashcam: a gravação nunca para por falta de espaço. Quando desativado, a gravação para em vez disso. |
+| **Excluir gravações mais antigas que** | 0 dias | 0 mantém as gravações até que o espaço seja necessário. |
+| **Duração do arquivo** | 1 min | As gravações são salvas em partes de 1 a 30 minutos. Partes menores perdem menos dados após uma queda de energia. |
+| **Gravar telemetria** | **Enquanto armado** | **Sempre que conectado** também registra no solo, iniciando um novo arquivo a cada armamento, desarmamento e hora. **Desligado** grava somente o vídeo. |
+
+## 3. Grave manualmente {/* #3-record-by-hand */}
+
+No **Mapa de Voo**, os botões de **Gravação** iniciam e param cada câmera (**Gravar câmera 1**, **Parar gravação da câmera 1**) e o registro de telemetria. Usuários somente leitura podem acompanhar, mas não podem iniciar gravações.
+
+## 4. Encontre um voo {/* #4-find-a-flight */}
+
+Abra **Câmera → Gravações → Biblioteca**. Cada voo aparece listado com seu vídeo, uma miniatura e sua telemetria. Uma gravação em andamento mostra um selo **Rec**.
+
+<Screenshot id="uavcast-pro/camera--recordings" alt="Biblioteca de gravações com uma barra de armazenamento e dois voos gravados, cada um com os selos CAM 1 e Telemetria e um botão Reproduzir" caption="Câmera → Gravações → Biblioteca com dois voos gravados, cada um com vídeo de câmera e telemetria." />
+
+A partir da biblioteca, você pode:
+
+- **Reproduzir** um voo no player de revisão de voo,
+- **Baixar** trechos de vídeo em MP4,
+- **Excluir** uma gravação: **Excluir somente o vídeo** ou **Excluir vídeo e telemetria**.
+
+## 5. Revise o voo {/* #5-review-the-flight */}
+
+O player de revisão de voo reproduz o vídeo ao lado do trajeto no mapa, da visão de cabine e dos dados de voo (**Altitude**, **Velocidade**, **Bateria**, **Satélites**, **Modo**) em uma única linha do tempo.
+
+<Screenshot id="uavcast-pro/camera--flight-review" alt="Player de revisão de voo com a área de vídeo, o mapa, a visão de cabine e uma linha do tempo com controles de reprodução" caption="Player de revisão de voo: vídeo, mapa e visão de cabine acima de uma única linha do tempo." />
+
+- A linha do tempo marca as mudanças de armamento, desarmamento e modo de voo, para que você possa pular até o momento que importa.
+- Use **Voltar 10 segundos** e **Avançar 10 segundos**, e **Velocidade de reprodução** de 0,5× a 4×.
+- Com duas câmeras, **Mudar layout do vídeo** alterna entre **Picture-in-picture** e **Lado a lado**; **Mostrar esta câmera em destaque** troca as duas.
+- Se uma gravação não tiver telemetria, o player mostra *Não há registro de telemetria para esta gravação. A telemetria é registrada enquanto o drone está armado.*
+
+## Bom saber {/* #good-to-know */}
+
+- As gravações ficam armazenadas no drone. Baixe o que precisa manter antes que **Excluir as gravações mais antigas quando o espaço acabar** as remova.
+- O cartão **Armazenamento** do painel e o resumo de **Armazenamento de gravações** mostram o espaço livre.
+- A gravação continua com **Ativar Pré-visualização ao Vivo?** desativado.
+- Se o serviço de gravação parar de responder, a página exibe *O serviço de gravação não está respondendo.* Reinicie o serviço da câmera em **Câmera → Configurações da câmera** e [colete os registros](../troubleshooting/collect-logs.mdx) se isso acontecer de novo.

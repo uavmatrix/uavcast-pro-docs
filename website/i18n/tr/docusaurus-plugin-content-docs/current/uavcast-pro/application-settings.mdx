@@ -1,0 +1,87 @@
+---
+title: "UAVcast-Pro uygulama ayarları, günlükler ve veritabanı yedekleri"
+description: "UAVcast-Pro web portunu ve dilini değiştirin, destek için hata ayıklama moduyla günlükleri indirin ve Uygulama sayfasından ayar veritabanını yedekleyin, geri yükleyin veya sıfırlayın."
+sidebar_position: 11
+sidebar_label: "Uygulama ayarları ve günlükler"
+---
+
+# Uygulama ayarları, günlükler ve yedeklemeler {/* #application-settings-logs-and-backups */}
+
+**Uygulama** sayfası, UAVcast-Pro'nun kendisiyle ilgili her şeyi barındırır: lisans, güncellemeler, arayüz ayarları, günlük indirmeleri ve ayar veritabanı. Yalnızca yöneticilere görünür ve cihaz lisanslanmadan önce de çalışan tek sayfadır. **Yönetim → Uygulama** yolunu açın.
+
+<Screenshot id="uavcast-pro/application" alt="Sol tarafta Lisans Yöneticisi ve Uygulamayı Güncelle, sağ tarafta Ayarlar, Günlük Kaydı ve Veritabanı kartları bulunan Uygulama sayfası" caption="Yönetim → Uygulama." />
+
+| Kart | Ayrıntılar |
+|---|---|
+| **Lisans Yöneticisi** | [Lisanslama ve etkinleştirme](../get-started/license-activation.mdx) |
+| **Uygulamayı Güncelle** | [UAVcast-Pro'yu güncelleme](../get-started/updating.mdx) |
+| **Ayarlar**, **Günlük Kaydı**, **Veritabanı** | Bu sayfa |
+
+## Ayarlar {/* #settings */}
+
+| Ayar | Varsayılan | Değerler | Notlar |
+|---|---|---|---|
+| **Tur At** | | | Arayüzün kılavuzlu turunu yeniden başlatır. |
+| **Karanlık Tema** | Açık | Açık, kapalı | Tarayıcı başına kaydedilir. Üst çubuktaki tema düğmesinde de bulunur. |
+| **Sunucu Portu** | `80` | 1–65535 | Web arayüzünün portu. Aşağıya bakın. |
+| **Dil** | Tarayıcı dili, yoksa İngilizce | English, Español, 简体中文, 繁體中文, Italiano, Nederlands, Polski, Português, Русский, Türkçe | Ayrıca kenar çubuğunun altındaki kullanıcı menüsünde de bulunur. |
+
+### Web arayüzü portunu değiştirme {/* #change-the-web-interface-port */}
+
+<Steps>
+
+1. Yeni portu **Sunucu Portu** alanına girin.
+2. **Gönder ve sunucuyu yeniden başlat** seçeneğini seçin. Bir iletişim kutusu **Yeni URL** adresini gösterir, örneğin `http://192.168.1.50:8080`.
+3. Birkaç saniye bekleyin ve yeni URL'yi açın.
+
+</Steps>
+
+Yer imleri ve eski adrese yapılan bağlantılar çalışmayı durdurur. Port varsayılan 80'den değiştirildiğinde *Sunucu portu varsayılan 80 portundan değiştirildi.* uyarısı gösterilir. Port, güncellemeler boyunca korunur. {/* PENDING-RELEASE: port-persist */}
+
+## Günlük Kaydı {/* #logging */}
+
+UAVcast-Pro her hizmetin günlüklerini ayrı ayrı tutar. Bir sorun oluştuğunda bunları indirip desteğe gönderin.
+
+<Steps>
+
+1. Daha fazla ayrıntı için **Hata Ayıklama Modu**'nu açın. Sorunu yeniden oluşturun.
+2. **İndirilecek günlükleri seçin** alanında **Tüm Günlükler**'i bırakın veya tek bir hizmet seçin.
+3. **Zaman aralığı seçin** alanında sorunu kapsayan bir aralık seçin (**Son 10 dakika** ile **Tüm Zamanlar** arası).
+4. **İndir** seçeneğini seçin. Bir zip dosyası alırsınız.
+5. Ne olduğunu kısaca açıklayarak dosyayı support@uavmatrix.com adresine e-posta ile gönderin. Ardından **Hata Ayıklama Modu**'nu tekrar kapatın.
+
+</Steps>
+
+İndirme, ayarları, seri portları, güç ve USB olaylarını içeren bir `diagnostics.txt` anlık görüntüsü de içerir; bu, desteğin işini hızlandırır.
+
+| Günlük | Kapsam |
+|---|---|
+| **Mavlink Yöneticisi**, **Mavlink Yayıncısı** | Uçuş kontrolcüsü bağlantısı, yer kontrol istasyonlarına yönlendirme |
+| **Kamera Sunucusu**, **Kamera Algılayıcı** | Video pipeline'ı, kamera algılama |
+| **Modem Yöneticisi**, **Modem Algılayıcı** | Modem bağlantısı, APN denemeleri |
+| **VPN Yöneticisi** | ZeroTier ve Tailscale |
+| **NTRIP İstemcisi** | RTK düzeltmeleri |
+| **DNS Yöneticisi** | Dinamik DNS güncellemeleri |
+| **Lisans Yöneticisi** | Etkinleştirme ve 4 saatte bir yapılan lisans kontrolü |
+| **Uygulama Güncelleyici**, **Uygulama Yükleyici** | Güncellemeler ve kurulumlar |
+| **Backend API Sunucusu** | Dahili API |
+
+**Tüm Günlükleri Temizle** tüm günlük dosyalarını siler. Bu işlem geri alınamaz; temiz bir günlük istiyorsanız sorunu yeniden oluşturmadan önce yapın. Drone üzerinde günlükler `/opt/uavcast-pro/logs` dizinindedir.
+
+Her sayfada ayrıca, o sayfanın hizmetinin canlı günlüğünü gösteren bir **İşlem Kayıtları** konsolu bulunur.
+
+## Veritabanı {/* #database */}
+
+Tüm ayarlar (yer kontrol istasyonları, uçuş kontrolcüsü, kamera, modem, VPN, NTRIP, kullanıcılar, paneller, enjektörler ve lisans verileri), `/opt/uavcast-pro/uavcast.db` dosyasındaki tek bir SQLite veritabanında saklanır.
+
+| İşlem | Ne yapar |
+|---|---|
+| **Veritabanını Yedekle** | Veritabanını `uavcast_backup.db` olarak indirir. |
+| **Veritabanını Geri Yükle** | Bir `.db` yedeği yükler ve kullanıcılar dahil mevcut ayarların yerine geçer. |
+| **Veritabanını Sıfırla** | Yer kontrol istasyonları, uçuş kontrolcüsü, kamera, VPN ve Dinamik DNS ayarlarını varsayılanlara döndürür. Kullanıcılar, lisans, modem, NTRIP, kayıt ayarları, paneller, enjektörler ve Fleet Manager eşleştirmesi korunur. Geri alınamaz. |
+
+Değişikliklerden önce bilinen iyi bir yapılandırmayı korumak veya ikinci bir drone'u aynı şekilde kurmak için yedek alın. Geri yükledikten sonra her hizmetin geri yüklenen ayarlarla başlaması için yeniden başlatın.
+
+:::note Farklı donanımda geri yükleme
+Veritabanındaki lisans verileri, geldiği cihaza bağlıdır. Yedeği başka bir Pi veya SD kartta geri yükledikten sonra lisansı yeni cihazda etkinleştirin. Geri yükleme, yedekteki kullanıcıları ve parolaları da getirir.
+:::

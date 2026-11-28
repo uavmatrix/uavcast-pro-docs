@@ -1,0 +1,88 @@
+---
+title: "A licença do UAVcast-Pro não ativa"
+sidebar_label: Licença não ativa
+description: "Corrija erros de chave inválida, limite de ativações atingido e falha na ativação no UAVcast-Pro: a chave, a internet, as vagas livres e o hardware trocado."
+sidebar_position: 7
+---
+
+# A licença do UAVcast-Pro não ativa {/* #uavcast-pro-license-wont-activate */}
+
+Você digita a chave em **Aplicação → Gerenciador de Licença**, pressiona **Validar** e recebe um erro em vez de **Licença ativada com sucesso**. Enquanto não houver uma licença ativa neste dispositivo, todas as páginas mandam você de volta para **Aplicação**.
+
+<Screenshot id="uavcast-pro/application--license-activated" alt="Página Aplicação com o Gerenciador de Licença, campo da chave de licença, Detalhes da Licença e a tabela de Dispositivos Ativados" caption="Aplicação → Gerenciador de Licença em um dispositivo ativado: Detalhes da Licença e a tabela de Dispositivos Ativados, com este dispositivo marcado como Atual." />
+
+<SymptomTable rows={[
+  {symptom: 'Chave de licença inválida, ou formato de chave inválido', cause: 'Erro de digitação, espaços extras ou chave de outro produto', start: '#check-1'},
+  {symptom: 'Número máximo de ativações atingido', cause: 'Todas as vagas de dispositivo da chave estão em uso', start: '#check-2'},
+  {symptom: 'Funcionou antes, mas pede de novo após trocar o cartão SD ou a placa', cause: 'O dispositivo conta como um dispositivo novo', start: '#check-3'},
+  {symptom: 'Falha na ativação da licença, ou nada acontece', cause: 'Sem internet, ou hora errada no dispositivo', start: '#check-4'},
+  {symptom: 'Não é possível conectar ao serviço de licença', cause: 'O serviço em segundo plano do UAVcast-Pro não está em execução', start: '#check-5'},
+  {symptom: 'Status da Licença: Expirada', cause: 'Uma licença com prazo chegou ao fim', start: '#check-6'},
+]} />
+
+## Verificação 1: a própria chave {/* #check-1 */}
+
+<Steps>
+
+1. Copie a chave do e-mail do pedido ou da sua conta em [uavmatrix.com](https://uavmatrix.com) e cole no campo **Chave de Licença**. Digitar à mão é a fonte mais comum de erros.
+2. Confirme que não há espaços antes ou depois da chave.
+3. Pressione **Validar**.
+
+</Steps>
+
+## Verificação 2: libere uma vaga de dispositivo {/* #check-2 */}
+
+Cada licença permite um número fixo de dispositivos (**Dispositivos Permitidos**). Quando **Dispositivos Restantes** é 0, a ativação falha com a mensagem *Número máximo de ativações atingido. Desative outro dispositivo primeiro ou atualize sua licença.*
+
+<Steps>
+
+1. Em qualquer dispositivo onde a licença esteja ativa, abra **Aplicação → Gerenciador de Licença → Dispositivos Ativados**.
+2. Encontre o dispositivo que você não usa mais e pressione **Desregistrar**. A vaga é liberada na hora.
+3. Ative o novo dispositivo.
+
+</Steps>
+
+Se você não conseguir acessar nenhum dispositivo ativado, entre em contato com **support@uavmatrix.com** com a chave da licença, e eles podem liberar uma vaga. Para adicionar vagas, compre mais dispositivos para a licença em [uavmatrix.com](https://uavmatrix.com).
+
+## Verificação 3: você trocou o cartão SD ou a placa {/* #check-3 */}
+
+A licença é vinculada ao hardware, incluindo o dispositivo de armazenamento. Um cartão SD novo, um SSD novo ou uma placa nova contam como um dispositivo novo e ocupam uma nova vaga. Desregistre a entrada antiga em **Dispositivos Ativados** antes ou depois de mudar, como na verificação 2. A mensagem *Licença já ativada neste dispositivo* não é um erro: a chave já estava ativa aqui.
+
+## Verificação 4: acesso à internet e hora {/* #check-4 */}
+
+A ativação contata o servidor de licenças da UAVmatrix por HTTPS (porta 443), então o dispositivo precisa de internet funcionando naquele momento.
+
+<Steps>
+
+1. No dispositivo, execute `curl -I https://uavmatrix.com`. Você deve receber uma resposta HTTP, não um timeout.
+2. Se você estiver em um modem celular, verifique se ele tem internet de fato: [Modem conectado, sem internet](./modem-no-internet.mdx).
+3. Verifique a data com `date`. Um dispositivo com relógio errado não consegue abrir conexões HTTPS. Placas sem relógio de tempo real definem a hora pela internet depois da inicialização, então espere um minuto após ligar e tente de novo.
+
+</Steps>
+
+## Verificação 5: não é possível conectar ao serviço de licença {/* #check-5 */}
+
+Esta mensagem significa que a interface web não consegue alcançar o serviço em segundo plano do próprio UAVcast-Pro, não a internet. Reinicie o serviço e tente de novo:
+
+```bash
+sudo systemctl restart uavcast-factory
+sudo systemctl status uavcast-factory
+```
+
+Se ele não permanecer em **active (running)**, [colete os logs](./collect-logs.mdx) com **Gerenciador de Licença** selecionado.
+
+## Verificação 6: licença expirada {/* #check-6 */}
+
+Os detalhes da licença mostram **Status da Licença:** e **Data de Expiração:**. Uma licença expirada precisa ser renovada em [uavmatrix.com](https://uavmatrix.com).
+
+:::note Sistema operacional de 64 bits
+O UAVcast-Pro v6 só roda em SO de 64 bits. Se você chegou até aqui, o SO está correto; em um SO de 32 bits, o instalador já para com *No installation candidate*.
+:::
+
+## Ainda falhando? {/* #still-failing */}
+
+[Baixe os logs](./collect-logs.mdx) com **Gerenciador de Licença** selecionado. Eles contêm o código de resposta do servidor de licenças, por exemplo `code 550` para vagas livres inexistentes. Envie-os, junto com os quatro primeiros e os quatro últimos caracteres da sua chave, para **support@uavmatrix.com**.
+
+Usando o Fleet Manager? Uma licença que ativa normalmente ainda pode ser recusada no pareamento. Veja [Código de pareamento inválido ou expirado](./pairing-code-invalid.mdx).
+
+Relacionado: [Ative sua licença](../get-started/license-activation.mdx)

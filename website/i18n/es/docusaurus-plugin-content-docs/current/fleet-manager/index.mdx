@@ -1,0 +1,58 @@
+---
+title: Fleet Manager - software de gestión de flotas de drones
+description: UAVmatrix Fleet Manager muestra cada dron UAVcast-Pro en un único mapa en vivo, con control remoto, misiones, VPN para transmitir a estaciones de control en tierra y roles de equipo.
+sidebar_position: 1
+---
+
+# Fleet Manager {/* #fleet-manager */}
+
+UAVmatrix Fleet Manager es una aplicación web en [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com) para operar muchos drones desde un solo lugar. Cada dron que ejecuta UAVcast-Pro puede vincularse a tu organización. Después, lo verás en un mapa en vivo, podrás abrir su terminal, enviarle comandos, subir misiones y enrutar su video y su telemetría a las estaciones de control en tierra que usan tus pilotos.
+
+<Screenshot id="fleet-manager/dashboard" alt="Panel de Fleet Manager con tarjetas de estadísticas, lista de estado de UAV y actividad reciente" caption="Panel: tarjetas de estadísticas, la lista **UAV Status** y **Recent Activity** de varios miembros del equipo." />
+
+## Qué puedes hacer con ella {/* #what-you-can-do-with-it */}
+
+<CardGrid>
+  <Card href="/fleet-manager/pair-uav/" title="Añade tu primer dron" description="Vincula un dron UAVcast-Pro con un código de 8 dígitos en unos dos minutos." />
+  <Card href="/fleet-manager/map/" title="Sigue la flota en vivo" description="Cada dron en un solo mapa, con anillos de estado, una estela de 5 minutos y modo de seguimiento." />
+  <Card href="/fleet-manager/fleet/remote-control/" title="Controla drones a distancia" description="Modos de vuelo, armar y desarmar, misiones y calibración de prevuelo desde el navegador." />
+  <Card href="/fleet-manager/network/stream-bindings/" title="Transmite a estaciones de control en tierra" description="Envía video y MAVLink de muchos drones a QGroundControl o Mission Planner por VPN." />
+  <Card href="/fleet-manager/team/" title="Invita a tu equipo" description="Roles Owner, Admin y Viewer por organización." />
+  <Card href="/fleet-manager/missions/" title="Planifica misiones" description="Dibuja puntos de ruta, guarda misiones para la organización y súbelas a cualquier dron." />
+</CardGrid>
+
+## Cómo encaja todo {/* #how-it-fits-together */}
+
+Fleet Manager nunca se comunica directamente con el controlador de vuelo. Eso lo hace UAVcast-Pro en la computadora de a bordo del dron, que mantiene una única conexión cifrada con Fleet Manager:
+
+1. **Emparejamiento.** UAVcast-Pro pide a Fleet Manager un código de emparejamiento. Tú escribes el código en Fleet Manager. Luego, Fleet Manager entrega al dron su propio certificado de cliente.
+2. **Canal de control.** El dron se conecta al broker MQTT de Fleet Manager sobre TLS, en el puerto **8883**, autenticado con ese certificado. La telemetría, los latidos (heartbeats), los comandos, las sesiones de terminal y el acceso remoto a la interfaz web de UAVcast-Pro viajan por esta conexión. Funciona a través de NAT y de redes celulares porque el dron siempre se conecta hacia afuera.
+3. **Canal de datos (opcional).** El video y MAVLink hacia una estación de control en tierra viajan de punto a punto por la VPN privada de tu organización, una red WireGuard que gestiona Fleet Manager. Sin VPN, Fleet Manager sigue mostrando y controlando el dron, pero no enruta los streams.
+
+## Conceptos {/* #concepts */}
+
+| Término | Qué significa en Fleet Manager |
+|---|---|
+| **Organization** | Tu empresa o equipo. Los drones, las misiones, la red VPN y los miembros pertenecen a una organización. Cada usuario puede ser propietario de una organización y miembro de cualquier número de otras. |
+| **UAV** | Un dron (o rover, bote u otro vehículo) que ejecuta UAVcast-Pro, vinculado a una organización a la vez. Fleet Manager lo identifica con un ID de dispositivo que UAVcast-Pro deriva del número de serie de la CPU y del disco de arranque de la computadora de a bordo, así que conserva su identidad tras los reinicios y los cambios de red. |
+| **Pairing** | Vincular un UAV con una organización mediante un código de 8 dígitos que muestra UAVcast-Pro. El código es válido durante 5 minutos. |
+| **Ground station (GCS)** | Una laptop o PC que ejecuta QGroundControl, Mission Planner o similar, unida a la VPN de tu organización para poder recibir streams. |
+| **Stream binding** | Una regla que dice "envía el video y la telemetría de este UAV a esa estación de control en tierra". Cada vinculación obtiene sus propios puertos UDP, así que una misma estación puede recibir muchos drones a la vez. |
+| **Roles** | **Owner**, **Admin** o **Viewer**, asignados por organización. Los Viewers pueden observar; los Admins y el Owner pueden vincular, controlar y configurar. Consulta [Roles y permisos](./team/roles-and-permissions.mdx). |
+| **Licenses and seats** | Cada UAV vinculado necesita una licencia activa de UAVcast-Pro que pertenezca a un miembro de la organización. Los miembros del equipo no consumen plazas. Consulta [Licencias](./licenses.mdx). |
+| **Status and alerts** | Avisos de en línea, fuera de línea, sin MAVLink y de GPS en el mapa y en la lista de flota, además de anuncios del sistema. Consulta [Indicadores de estado y notificaciones](./alerts-and-status.mdx). |
+
+## Qué necesitas {/* #what-you-need */}
+
+Fleet Manager está incluido con tu licencia de UAVcast-Pro: no hay suscripción aparte ni plazas adicionales.
+
+- Una cuenta de UAVmatrix (la misma que usas en [uavmatrix.com](https://uavmatrix.com) para comprar licencias).
+- Al menos una computadora de a bordo con UAVcast-Pro instalado y su licencia activada. Consulta [Instalación](../get-started/installation.mdx) y [Activa tu licencia](../get-started/license-activation.mdx).
+- Conexión a internet en el dron, con HTTPS saliente (443) y TCP **8883** abiertos.
+
+## Empieza aquí {/* #start-here */}
+
+1. [Configura tu organización](./set-up-organization.mdx)
+2. [Añade tu primer dron](./pair-uav.mdx)
+3. [Conecta una estación de control en tierra](./connect-gcs.mdx)
+4. [Invita a tu equipo](./team/index.mdx)

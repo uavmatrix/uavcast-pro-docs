@@ -1,0 +1,68 @@
+---
+title: "La instalación de UAVcast-Pro falla"
+description: "Corrige errores del instalador de UAVcast-Pro como No installation candidate found o failed dependencies: revisa el SO de 64 bits, internet, el disco y el registro del instalador."
+sidebar_position: 10
+---
+
+# La instalación falla {/* #installation-fails */}
+
+Ejecutaste `curl -fsSL https://install.uavmatrix.com | sudo bash` y se detuvo con un error, se quedó colgado o terminó sin una interfaz web funcional.
+
+<SymptomTable rows={[
+  {symptom: 'No installation candidate for … found!', cause: 'SO de 32 bits o arquitectura no compatible', start: '#check-1'},
+  {symptom: 'Failed to update package lists, o Failed to install dependencies', cause: 'Sin internet, o una configuración de apt rota', start: '#check-2'},
+  {symptom: 'Se queda colgado mucho tiempo en una Pi Zero 2 W', cause: 'Poca memoria y almacenamiento lento', start: '#check-3'},
+  {symptom: 'Service failed to start', cause: 'Un componente no pudo iniciar después de la instalación', start: '#check-4'},
+]} />
+
+## Comprobación 1: sistema operativo de 64 bits {/* #check-1 */}
+
+UAVcast-Pro v6 necesita un SO de 64 bits: arm64 o amd64 (PC x86). En arm64, las placas que no son Raspberry Pi (Jetson y otras placas ARM) necesitan {/* PENDING-RELEASE: non-pi-arm64 version */}la próxima versión de UAVcast-Pro o una posterior; los instaladores anteriores se detienen con *Device is not a Raspberry Pi*.
+
+```bash
+dpkg --print-architecture   # debe mostrar arm64 o amd64
+uname -m                    # aarch64 o x86_64
+```
+
+Si ves `armhf`, `armv7l` o `i686`, estás en un SO de 32 bits. Graba **Raspberry Pi OS (64-bit)** con Raspberry Pi Imager e instala de nuevo. Los sistemas compatibles son Raspberry Pi OS, Debian y Ubuntu; consulta [Hardware compatible](../reference/supported-hardware.mdx).
+
+## Comprobación 2: internet y apt {/* #check-2 */}
+
+El instalador descarga UAVcast-Pro y los paquetes del sistema, e instala ZeroTier y Tailscale.
+
+<Steps>
+
+1. Verifica el acceso a internet: `curl -I https://install.uavmatrix.com`.
+2. Ejecuta `sudo apt update` manualmente y corrige los errores que muestre, por ejemplo un repositorio de terceros con una clave vencida.
+3. Vuelve a ejecutar el instalador. Es seguro ejecutarlo más de una vez.
+
+</Steps>
+
+## Comprobación 3: placas de bajo consumo {/* #check-3 */}
+
+En una Raspberry Pi Zero 2 W la instalación tarda mucho más que en una Pi 4 o 5, y el instalador muestra una estimación de tiempo. Déjalo terminar. Usa una tarjeta SD rápida y una fuente de alimentación estable: un reinicio por subtensión durante la instalación deja una instalación a medias.
+
+## Comprobación 4: lee el registro del instalador {/* #check-4 */}
+
+El instalador escribe todo en `/opt/uavcast-pro/installer.log`.
+
+```bash
+sudo tail -n 100 /opt/uavcast-pro/installer.log
+```
+
+Revisa las últimas líneas de error. Si el instalador falla antes de poder crear `/opt/uavcast-pro`, el registro está en `/tmp/uavcast-installer.log`.
+
+## Instalar una versión específica {/* #install-a-specific-version */}
+
+Para listar las versiones disponibles para tu arquitectura, o para instalar una de ellas:
+
+```bash
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l          # listar versiones
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.2  # instalar 6.5.2
+```
+
+## ¿Sigue fallando? {/* #still-failing */}
+
+Envía `/opt/uavcast-pro/installer.log`, la salida de `cat /etc/os-release` y `dpkg --print-architecture`, y el modelo de tu placa a **support@uavmatrix.com**.
+
+Relacionado: [Instalar UAVcast-Pro](../get-started/installation.mdx)

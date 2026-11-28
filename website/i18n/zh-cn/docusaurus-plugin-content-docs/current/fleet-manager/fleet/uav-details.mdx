@@ -1,0 +1,68 @@
+---
+title: 无人机详情 - 实时遥测、SSH 终端与日志
+sidebar_label: 无人机详情
+description: Fleet Manager 中的无人机页面显示实时遥测和伴随计算机健康状况、SSH 终端和 MAVLink 日志，并可重启或移除无人机。
+sidebar_position: 2
+---
+
+# 无人机详情 {/* #uav-details */}
+
+每架无人机都有自己的页面。您可以通过 [Fleet](./index.mdx) 卡片上的 **Details**、仪表盘，或配对结束时的 **View UAV** 打开它。
+
+页眉显示名称、实时状态徽章、需要时显示的 **Re-pair required**、所属组织、设备 **ID** 以及 **Last seen**。Owner 和 Admin 还可以使用 **Rename** 和 **Remove**。
+
+页面包含四个标签页：**Overview**、**Terminal**、**Logs** 和 **Actions**。
+
+## 概览 {/* #overview */}
+
+实时数据，随数据到达实时推送到浏览器。
+
+<Screenshot id="fleet-manager/drone-detail" alt="无人机详情的 Overview 标签页，包含 UAVcast Application 卡片和 MAVLink / Flight Controller 卡片" caption="处于 AUTO 模式、已解锁的 VTOL 的 Overview 标签页：UAVcast Application 卡片显示 CPU Temp、CPU、Memory 和 Disk，MAVLink / Flight Controller 卡片显示电池、GPS、高度和航向。" />
+
+**UAVcast Application** 用于描述伴随计算机：连接状态（**Connected**、**Waiting for data...** 或 **Connecting...**）、**Hostname**、**Uptime**、**CPU Temp**、**CPU**、**Memory** 和 **Disk** 使用情况、UAVcast-Pro 的各项服务及其状态，以及无人机的网络地址（局域网和 VPN）。该卡片还提供[远程打开 UAVcast-Pro](./remote-uavcast.mdx) 的按钮：**Open via Proxy**，以及在无人机接入 VPN 时显示的 **Open via VPN**。
+
+**MAVLink / Flight Controller** 显示飞控报告的信息：**ARMED** 或 **DISARMED**、**FAILSAFE** 和 **GCS FAILSAFE** 标志、**Battery**、**GPS**（卫星数和定位类型）、**Altitude** 和 **Heading**。
+
+:::tip 炎热天气下关注 CPU 温度
+树莓派过热时会降频，而视频是最先受影响的部分。如果飞行期间 **CPU Temp** 持续升高，请参见[欠压与降频](../../troubleshooting/undervoltage-and-throttling.mdx)。
+:::
+
+### 已连接的地面控制站 {/* #connected-ground-stations */}
+
+在卡片下方，**Connected Ground Stations** 列出接收该无人机数据流的地面控制站，并提供 **Video** 和 **Telemetry** 开关以及 **Pause** / **Resume** 按钮。**Add GCS**（仅限 Owner 和 Admin）可为此无人机绑定另一台地面控制站。它会在该地面控制站上使用下一组可用端口创建与 **Network → Stream Bindings** 中相同的流绑定，并将新的目标地址发送给无人机。参见[流绑定](../network/stream-bindings.mdx)。
+
+## 终端 {/* #terminal */}
+
+通过 Fleet Manager 的加密连接，在浏览器中对伴随计算机进行 SSH 会话。无需端口转发，也无需 VPN。仅限 Owner 和 Admin。无人机必须处于在线状态。
+
+选择 **Connect** 打开命令行。快捷命令按钮可为您运行常用检查：`df -h`、`free -h`、`top -bn1`、`ip a`、`ip r`、`uptime`、`dmesg` 和 `ps aux`。**Disconnect** 用于关闭会话。
+
+<Screenshot id="fleet-manager/drone-detail--terminal" alt="Terminal 标签页，显示 SSH 会话中的 df -h 输出以及快捷命令按钮" caption="连接到外场无人机的 Terminal 标签页，已运行 df -h 快捷命令。" />
+
+:::warning 这是飞行器上的实时命令行
+终端是伴随计算机上的真实 shell。在无人机飞行时重启服务或网络，可能会中断遥测和视频。除非您清楚命令的作用，否则请仅在地面上使用。
+:::
+
+## 日志 {/* #logs */}
+
+实时查看无人机发送给 Fleet Manager 的遥测和心跳消息，提供 **Telemetry** 和 **Heartbeat** 筛选器、**Auto-scroll**、**Pause** 以及清除功能。**Download logs** 会将屏幕上的内容保存为文本文件（`mavlink-log-<id>-<time>.txt`），便于连同工单号通过电子邮件发送给支持团队（工单只接受图片）。
+
+这是实时日志，而不是飞行日志存档。Fleet Manager 会为[飞行历史](../map/flight-history.mdx)存储遥测数据，但不会存储或导出 DataFlash 或 `.tlog` 文件。这些文件保存在飞控和地面控制软件中。
+
+<Screenshot id="fleet-manager/drone-detail--logs" alt="Logs 标签页，显示滚动的遥测和心跳条目列表，以及 Telemetry、Heartbeat 和 Auto-scroll 开关" caption="Logs 标签页实时显示 TELEMETRY 和 HEARTBEAT 条目，Telemetry、Heartbeat 和 Auto-scroll 均已开启。" />
+
+## 操作 {/* #actions */}
+
+**System Actions** 包含 **Reboot**（重启伴随计算机）和 **Shutdown**（关闭伴随计算机电源）。两者都要求无人机处于在线状态。确认时，您需要输入操作名称。
+
+这些操作仅作用于伴随计算机，不会影响飞控。远程关机无法撤销：必须有人对无人机进行断电重启。
+
+<Screenshot id="fleet-manager/drone-detail--actions" alt="Actions 标签页，包含 System Actions 卡片以及 Reboot 和 Shutdown 按钮" caption="Actions 标签页，已打开 Confirm Reboot 对话框，要求输入 reboot 以确认。" />
+
+## 重命名 {/* #rename */}
+
+选择 **Rename**，在 **Edit UAV** 中输入新名称并保存。无人机在线时，名称会同步到 UAVcast-Pro。
+
+## 移除 {/* #remove */}
+
+**Remove** 会将无人机从组织中删除并取消配对。参见[移除或转移无人机](./remove-or-transfer.mdx)。

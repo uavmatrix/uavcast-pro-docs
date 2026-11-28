@@ -1,0 +1,192 @@
+---
+title: "Installa UAVcast-Pro su Raspberry Pi, Debian o Ubuntu"
+description: "Installa UAVcast-Pro con un solo comando su un sistema Raspberry Pi OS, Debian o Ubuntu a 64 bit (arm64 o amd64), poi apri l'interfaccia web e crea un utente admin."
+sidebar_position: 4
+sidebar_label: "Installazione"
+keywords: [installare, come installare, link di installazione, comando di installazione, installer, installazione in una riga, installazione curl, script di installazione, scaricare UAVcast-Pro]
+---
+
+# Installa UAVcast-Pro {/* #install-uavcast-pro */}
+
+<InstallCommand />
+
+UAVcast-Pro si installa con un solo comando su qualsiasi sistema Linux a 64 bit basato su Debian: Raspberry Pi OS, Debian o Ubuntu, su arm64 o amd64. L'installer scarica l'ultima release, installa le dipendenze e i servizi e mostra l'indirizzo dell'interfaccia web al termine. Richiede circa 10 minuti, o circa 30 minuti su un Raspberry Pi Zero 2 W, 2 o 3.
+
+## Prima di iniziare {/* #before-you-begin */}
+
+- Un sistema operativo a 64 bit sul computer di bordo. Verifica con `uname -m`: deve restituire `aarch64` o `x86_64`.
+- Almeno 500 MB liberi sul disco root (`df -h /`).
+- Accesso a internet sul dispositivo durante l'installazione.
+- SSH oppure tastiera e schermo sul dispositivo, e un utente con diritti `sudo`.
+
+## Passaggio 1: scrivi il sistema operativo {/* #step-1-flash-the-operating-system */}
+
+<Tabs groupId="os">
+<TabItem value="rpi" label="Raspberry Pi" default>
+
+<Steps>
+
+1. Apri [Raspberry Pi Imager](https://www.raspberrypi.com/software/) e scegli il modello di Pi.
+2. Scegli **Raspberry Pi OS (64-bit)**. La versione **Lite** è sufficiente e lascia più CPU per il video.
+3. Apri le impostazioni di personalizzazione del sistema operativo. Imposta un hostname, un nome utente e una password, la rete Wi-Fi e il paese, e attiva SSH.
+4. Scrivi la scheda, inseriscila nel Pi e accendilo.
+
+</Steps>
+
+Anche Ubuntu Server 64-bit per Raspberry Pi funziona.
+
+</TabItem>
+<TabItem value="other" label="Altre schede arm64">
+
+Scrivi l'immagine a 64 bit Ubuntu o Debian del produttore (ad esempio JetPack Ubuntu su NVIDIA Jetson), completa la configurazione al primo avvio e attiva SSH.
+
+Le schede arm64 diverse da Raspberry Pi richiedono {/* PENDING-RELEASE: non-pi-arm64 version */}la prossima release o una successiva; gli installer precedenti si interrompono con *Device is not a Raspberry Pi*.
+
+</TabItem>
+<TabItem value="amd64" label="PC x86-64">
+
+Installa Debian o Ubuntu a 64 bit (Server o Desktop). L'installer non verifica la versione della release, quindi usa una release attuale e supportata, ad esempio Ubuntu 22.04 LTS o successiva.
+
+</TabItem>
+</Tabs>
+
+Poi accedi via SSH e aggiorna il sistema:
+
+```bash
+sudo apt update && sudo apt full-upgrade -y
+```
+
+## Passaggio 2: esegui l'installer {/* #step-2-run-the-installer */}
+
+Sul drone:
+
+<InstallCommand variant="step" />
+
+L'installer:
+
+1. Rileva l'architettura e scarica la release corrispondente in `/opt/uavcast-pro`.
+2. Installa i pacchetti di sistema necessari: NetworkManager, ModemManager, GStreamer, v4l-utils, Redis, Python e altri.
+3. Su un Raspberry Pi libera la UART GPIO per il controllore di volo (rimuove la console seriale da `cmdline.txt` e sposta il Bluetooth lontano dalla UART) e aumenta il pool di memoria della telecamera per le configurazioni a due telecamere. I file originali `config.txt` e `cmdline.txt` vengono prima salvati come backup.
+4. Installa ZeroTier, Tailscale, mavlink-router e MediaMTX.
+5. Installa e avvia i servizi di UAVcast-Pro.
+6. Verifica che gli strumenti principali siano presenti e mostra l'indirizzo web.
+
+Al termine vedrai:
+
+```text
+✅ Installation completed successfully!
+
+Please reboot your device to complete the installation.
+
+To access the UAVcast-Pro web interface, open your browser and navigate to:
+http://192.168.1.50
+```
+
+Riavvia così le modifiche a UART e telecamera hanno effetto:
+
+```bash
+sudo reboot
+```
+
+:::tip Lascia terminare le schede lente
+Su un Pi Zero 2 W la barra di avanzamento può restare ferma per minuti mentre apt lavora. Non avviare una seconda installazione: l'installer si rifiuta di girare due volte e una seconda copia rallenta solo la prima. Il log completo è in `/opt/uavcast-pro/installer.log`.
+:::
+
+### Installare una versione specifica {/* #install-a-specific-version */}
+
+Elenca le versioni disponibili per la tua architettura:
+
+```bash
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l
+```
+
+Installane una con `-b`:
+
+```bash
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.2
+```
+
+Puoi anche cambiare versione in seguito dall'interfaccia web. Vedi [Aggiorna UAVcast-Pro](./updating.mdx).
+
+## Passaggio 3: apri l'interfaccia web {/* #step-3-open-the-web-interface */}
+
+Su un computer della stessa rete, apri un browser e vai all'indirizzo mostrato dall'installer, ad esempio `http://192.168.1.50`. L'interfaccia web gira sulla porta **80**.
+
+Se non conosci l'indirizzo:
+
+- Prova l'hostname impostato in Raspberry Pi Imager, ad esempio `http://raspberrypi.local`. Serve mDNS, che funziona sulla maggior parte delle reti domestiche e su macOS, Linux e Windows 10 o successivi.
+- Cerca il dispositivo nell'elenco dei client connessi del router.
+- Sul dispositivo, esegui `hostname -I`.
+
+La prima pagina che vedi è **Applicazione**, perché UAVcast-Pro non ha ancora una licenza. La barra laterale resta grigia (*Funzionalità richiede licenza*) finché il dispositivo non ha una licenza attiva.
+
+## Passaggio 4: attiva la licenza {/* #step-4-activate-your-license */}
+
+In **Applicazione → Gestore Licenze**, incolla la chiave in **Inserisci Chiave di Licenza** e seleziona **Convalida**. Il dispositivo deve avere accesso a internet. Il processo completo, gli slot dei dispositivi e lo spostamento di una licenza sono descritti in [Licenze e attivazione](./license-activation.mdx).
+
+## Passaggio 5: crea un utente admin {/* #step-5-create-an-admin-user */}
+
+Un'installazione appena fatta non ha **utenti né accesso**: chiunque possa raggiungere l'interfaccia web ha pieni diritti di amministrazione. Crea un account admin prima di collegare il drone a una rete condivisa o a internet.
+
+<Steps>
+
+1. Vai su **Users** nella barra laterale (sotto **Gestione**).
+2. Seleziona **Add User**.
+3. Inserisci un **Username** (almeno 3 caratteri) e una **Password** (almeno 6 caratteri). Il primo utente è sempre **Admin**.
+4. Seleziona **Create User**.
+
+</Steps>
+
+Da ora in poi l'interfaccia web richiede un accesso. Le sessioni durano 7 giorni. Vedi [Utenti e accesso](../uavcast-pro/users.mdx) per gli account **Read Only**.
+
+## Cosa viene installato {/* #what-gets-installed */}
+
+| Elemento | Posizione |
+|---|---|
+| Applicazione, binari, database (`uavcast.db`), log | `/opt/uavcast-pro` |
+| Log dell'installer | `/opt/uavcast-pro/installer.log` |
+| Servizi systemd | `uavcast-web`, `uavcast-factory`, `mavlink-manager`, `uavcast-camera`, `uavcast-ntrip`, `uavcast-dns`, `mediamtx`, `internet-check` |
+| Configurazione MAVLink router | `/etc/mavlink-router/main.conf` (generato da UAVcast-Pro, non modificarlo) |
+
+Verifica che il servizio web sia in esecuzione:
+
+```bash
+sudo systemctl status uavcast-web
+```
+
+## Disinstallazione {/* #uninstall */}
+
+Il binario dell'installer ha una modalità di disinstallazione. Arresta e rimuove tutti i servizi di UAVcast-Pro, elimina `/opt/uavcast-pro` (impostazioni e registrazioni incluse) e rimuove i pacchetti ZeroTier, Tailscale e Redis che ha installato. I pacchetti generali come NetworkManager, ModemManager e GStreamer restano.
+
+```bash
+sudo /opt/uavcast-pro/factory/ApplicationInstaller --uninstall
+```
+
+{/* PENDING-RELEASE: uninstall */}
+
+:::warning Disattiva prima la licenza
+La disinstallazione non libera lo slot della licenza. Disattiva il dispositivo in **Applicazione → Gestore Licenze** prima di cancellarlo, altrimenti potrai liberare lo slot solo da un altro dispositivo. Vedi [Licenze e attivazione](./license-activation.mdx#unregister-a-device).
+:::
+
+## Passaggio da UAVcast-Pro 4.x o 5.x {/* #upgrading-from-uavcast-pro-4x-or-5x */}
+
+La versione 6 è una riscrittura completa e non può importare le impostazioni dalla 4.x o dalla 5.x. Annota le impostazioni di stazioni di terra, telecamera e modem, scrivi un sistema operativo a 64 bit pulito e installa la versione 6.
+
+Se l'installer segnala *An older version of UAVcast-Pro has been detected at /opt/UAVcast-Pro*, rimuovila prima. Questo elimina le vecchie impostazioni:
+
+```bash
+sudo rm -rf /opt/UAVcast-Pro
+```
+
+## Se l'installazione fallisce {/* #if-the-install-fails */}
+
+| Messaggio o sintomo | Soluzione |
+|---|---|
+| *No installation candidate for … found!* | Il sistema è a 32 bit o l'architettura non è supportata. Controlla `uname -m` e riscrivi la scheda con un'immagine a 64 bit. |
+| *Not enough free space. … need 500MB* | Libera spazio o usa una scheda più grande. |
+| *Another process is currently using the system package manager* | È in corso un aggiornamento automatico. Attendi qualche minuto e riesegui l'installer. |
+| *Another installer is already running* | Attendi che la prima installazione termini. |
+| *Installation completed with errors* con una ✗ rossa | Riesegui l'installer. Se si ripete, invia `/opt/uavcast-pro/installer.log` a support@uavmatrix.com. |
+| La pagina web non si carica | Controlla `sudo systemctl status uavcast-web`, prova l'IP al posto dell'hostname e assicurati che nessun altro programma usi la porta 80. |
+
+Altre soluzioni: [L'installazione fallisce](../troubleshooting/installation-fails.mdx) e [L'interfaccia web non si apre](../troubleshooting/web-interface-wont-open.mdx).

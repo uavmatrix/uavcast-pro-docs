@@ -1,0 +1,62 @@
+---
+title: Historia lotów drona i odtwarzanie w Fleet Manager
+sidebar_label: Historia lotów
+description: Odtwórz zarejestrowany lot drona na mapie Fleet Manager, sprawdź czas trwania, maksymalną wysokość i prędkość, zapisz nazwane loty i ustaw czas przechowywania telemetrii.
+sidebar_position: 2
+---
+
+# Historia lotów {/* #flight-history */}
+
+Fleet Manager zapisuje telemetrię każdego drona raz na sekundę, gdy jest połączony: pozycję, wysokość, prędkość, kurs, baterię, tryb lotu, stan uzbrojenia i GPS. **Flight history** odtwarza ten zapis na mapie.
+
+## Otwieranie historii drona {/* #open-a-drones-history */}
+
+Na **Fleet Map** wybierz znacznik drona, a następnie **History** w wyskakującym okienku. Szuflada **_name_ - Flight History** otworzy się na dole mapy.
+
+<Screenshot id="fleet-manager/map--history" alt="Szuflada historii lotów pod mapą z wyborem sesji, sterowaniem odtwarzaniem, statystykami i odtwarzaną trasą lotu" caption="Historia lotów drona inspekcyjnego: wybrany zapisany lot Turbine blade inspection, odtwarzanie 4x oraz Duration, Max Alt, Max Speed i Avg Battery." />
+
+## Wybór sesji {/* #pick-a-session */}
+
+**Select flight session** pokazuje:
+
+1. najpierw **Saved flights** (z ikoną zakładki), czyli loty nazwane przez twój zespół.
+2. Następnie jeden wpis na **dzień** z zapisaną telemetrią, z ostatnich 30 dni.
+
+Dzień grupuje całą telemetrię z tej daty, więc kilka lotów z jednego dnia pojawia się jako jedna sesja. Zapisz interesujący cię fragment jako nazwany lot, aby szybko go odnaleźć.
+
+## Odtwarzanie {/* #play-it-back */}
+
+- Odtwarzaj i wstrzymuj, cofaj lub przewijaj do przodu o 5 % sesji albo przeskakuj na początek lub koniec. Przeciągnij oś czasu, aby przewijać.
+- Prędkości: **0.5x**, **1x** (czas rzeczywisty), **2x**, **4x**, **8x**, **10x** i **20x**.
+- Klawiatura: **Space** odtwarzanie/pauza, **←** / **→** krok, **Esc** zamknij.
+
+Na mapie zielony znacznik **Start** i czerwony **End** wyznaczają lot. Już odtworzona część jest rysowana na cyjanowo, pozostała przerywaną linią w kolorze szarym, a ikona drona z podpisem wysokości porusza się po trasie.
+
+Panel statystyk pokazuje **Duration**, **Max Alt**, **Max Speed** i **Avg Battery**, a **Current Position** pokazuje **Alt**, **Speed**, **Heading** i **Mode** w punkcie odtwarzania.
+
+## Zapisywanie, zmiana nazwy i usuwanie lotów {/* #save-rename-and-delete-flights */}
+
+Owner i Admin mogą zapisywać, zmieniać nazwę i usuwać nazwane loty. Viewer może je tylko odtwarzać.
+
+- **Save and name this flight** zapisuje bieżący zakres czasu pod nazwą (do 100 znaków), na przykład „Survey over Field A”. Dwa zapisane loty nie mogą się nakładać: **A saved session already exists for this time range**.
+- **Rename flight** zmienia nazwę.
+- **Delete saved flight** usuwa tylko nazwę. **Delete Saved Flight?** wyjaśnia, że sama telemetria nie zostaje usunięta.
+
+## Jak długo przechowywana jest historia {/* #how-long-history-is-kept */}
+
+Owner i Admin ustawiają czas przechowywania dla organizacji w **Settings → History** (**Telemetry History**):
+
+- **Retention:** 7, 14, 30, 60 lub 90 dni, **6 months** lub **1 year**. Domyślnie i maksymalnie jest 1 rok.
+- **Prune Now** natychmiast usuwa dane starsze niż 7, 14, 30, 60 lub 90 dni (domyślnie 30), po potwierdzeniu **Prune Old History**.
+- **Delete Drone History** (ikona kosza przy każdym dronie) lub **Select All** → **Delete Selected (n)** czyści historię wybranych dronów.
+- Karty pokazują **Storage Used**, **Total Records** i **Retention**.
+
+Fleet Manager raz dziennie usuwa dane po upływie okresu przechowywania. Starsze dane są kompresowane po 7 dniach, dzięki czemu roczna historia dla dużej floty pozostaje praktyczna.
+
+<Screenshot id="fleet-manager/settings--history" alt="Karta Settings History z wyborem przechowywania, opcjami czyszczenia i listą historii dla każdego drona" caption="Settings → History dla organizacji z 46 dronami: Storage Used, Total Records, Retention 90 days oraz lista dronów z przyciskami Delete." />
+
+:::note Brak eksportu logów
+Fleet Manager nie eksportuje historii lotów do pliku i nie przechowuje wideo ani logów kontrolera lotu (`.tlog`, DataFlash). Zachowaj je w oprogramowaniu stacji naziemnej lub na karcie SD kontrolera lotu. Informacje o nagraniach wideo na dronie znajdziesz w [Nagrania i przegląd lotu](../../guides/recording-flight-review.mdx).
+:::
+
+Usunięcie drona kasuje całą jego historię, łącznie z zapisanymi lotami. Zobacz [Usuwanie lub przenoszenie drona](../fleet/remove-or-transfer.mdx).

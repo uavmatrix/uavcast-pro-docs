@@ -1,0 +1,47 @@
+---
+title: Fleet Manager kontrol paneli ve etkinlik günlüğü
+sidebar_label: Dashboard
+description: "Fleet Manager kontrol panelini bir bakışta okuyun: toplam ve çevrimiçi UAV sayısı, ekip büyüklüğü, UAV durum listesi, Getting Started kontrol listesi ve son etkinlik günlüğü."
+sidebar_position: 6
+---
+
+# Dashboard {/* #dashboard */}
+
+**Dashboard**, oturum açtıktan sonra açılan ilk sayfadır. Üç soruyu yanıtlar: Şu anda kaç drone çalışıyor, bunlar hangileri ve ekibiniz son zamanlarda neyi değiştirdi?
+
+<Screenshot id="fleet-manager/dashboard" alt="Dört istatistik kartı, UAV Status listesi ve Recent Activity bölümü içeren Fleet Manager kontrol paneli" caption="Dashboard: dört istatistik kartı, drone başına batarya ve GPS bilgisi içeren UAV Status ve ekipten gelen Recent Activity." />
+
+## İstatistik kartları {/* #stats-cards */}
+
+| Kart | Gösterdiği |
+|---|---|
+| **Total UAVs** | Açık olan kuruluşa eşleştirilmiş drone'lar (*In this organization*). |
+| **Online** | Bu kuruluşta şu anda bağlı olan ve son 20 saniye içinde veri alınan drone'lar (*Currently connected*). |
+| **Organizations** | Üyesi olduğunuz kuruluşlar. |
+| **Team Members** | Açık olan kuruluşun üyeleri. |
+
+Başka bir kuruluşun sayılarını görmek için kenar çubuğunda kuruluş değiştirin.
+
+## UAV Status {/* #uav-status */}
+
+En son görülen drone'ların durumu, bataryası ve son bağlantı zamanı listelenir. Bir drone seçerek [UAV sayfasını](./fleet/uav-details.mdx) açın veya tümünü görmek için **View All** seçerek [Fleet](./fleet/index.mdx) sayfasına gidin.
+
+## Getting Started {/* #getting-started */}
+
+Yeni kuruluşlar, iki adım tamamlanana kadar iki adımlı bir kontrol listesi görür:
+
+1. **Create or Join an Organization** (**Go to Team**)
+2. **Pair a UAV (UAVcast)** (**Pair Device**), kuruluşta en az bir drone olduğunda tamamlanır
+
+İkinci adım için [ilk drone'unuzu ekleyin](./pair-uav.mdx) rehberini izleyin.
+
+## Recent Activity {/* #recent-activity */}
+
+Kuruluşunuzdaki son 10 olay ve bunları kimin yaptığı. Fleet Manager, diğerlerinin yanı sıra şunları kaydeder:
+
+- drone'ların eşleştirilmesi, yeniden eşleştirilmesi ve kaldırılması
+- akış bağlamalarının oluşturulması ve kaldırılması, yer kontrol istasyonlarının atanması
+- üyelerin davet edilmesi, kaldırılması ve rol değişiklikleri, sahiplik devirleri
+- VPN'in etkinleştirilmesi veya devre dışı bırakılması
+
+Etkinlik günlüğü, bir drone veya üye kaldırıldığında da korunur; böylece kimin neyi yaptığını yine görebilirsiniz.

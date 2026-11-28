@@ -1,0 +1,22 @@
+---
+title: "透過 UAVcast-Pro 網頁介面檢查 RC 通道與 RSSI"
+description: "在 UAVcast-Pro Radio 分頁中查看飛行控制器的即時 RC 通道 PWM 值與 RSSI，以檢查遙控器開關與 RC 攝影機切換。"
+sidebar_position: 3
+sidebar_label: "Radio"
+---
+
+# Radio 分頁 {/* #radio-tab */}
+
+Radio 分頁會顯示飛行控制器從遙控器接收到的 RC 輸入：每個通道的 PWM 值與 RSSI（訊號強度）。您可以用它檢查開關的指派，例如您用於 [RC 攝影機切換](../camera/multi-camera.mdx) 的通道，而不需要連接地面站。請開啟 **飛行地圖 → Radio**。
+
+<Screenshot id="uavcast-pro/flight-map--radio" alt="Radio 分頁，包含 RSSI 徽章、四個主要通道與輔助通道，數值皆為 0" caption="飛行地圖 → Radio，於沒有 RC 接收器的測試台上執行，因此每個通道都顯示 0。" />
+
+## 畫面說明 {/* #what-you-see */}
+
+- **RSSI**：飛行控制器回報的接收器訊號強度，分級為**無訊號**、**弱**、**一般**、**良好**或**優秀**。需要在飛行控制器上設定 RSSI（ArduPilot 上為 `RSSI_TYPE`）。
+- **主控制**：**通道 1 - 橫滾**、**通道 2 - 俯仰**、**通道 3 - 油門**與**通道 4 - 偏航**，採用 Mission Planner 佈局。
+- **輔助通道**：其餘的通道。
+
+PWM 值通常介於 1000（最小）與 2000（最大）之間。若某個通道從未移動，表示它未在遙控器上對應，或接收器未傳送該通道。
+
+這些數值來自飛行控制器的 `RC_CHANNELS` 訊息，因此只有在飛行控制器連線為**已連接**狀態時才會更新。

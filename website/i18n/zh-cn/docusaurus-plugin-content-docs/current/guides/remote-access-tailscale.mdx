@@ -1,0 +1,66 @@
+---
+title: "通过 4G 和 Tailscale 连接无人机"
+sidebar_label: 通过 Tailscale 远程访问
+description: "借助 Tailscale 和 UAVcast-Pro 通过 LTE 访问无人机，无需端口转发：通过 URL 或认证密钥登录，将笔记本电脑添加为地面站，并停止密钥过期。"
+sidebar_position: 3
+---
+
+# 通过 Tailscale 远程访问 {/* #remote-access-with-tailscale */}
+
+Tailscale 是基于 WireGuard 的 VPN。如果您的团队已在使用它，这是通过 4G 访问无人机最快捷的方式：无人机和笔记本电脑加入同一个 tailnet，并使用各自的 `100.x.y.z` 地址相互通信。
+
+如果您没有 tailnet，随许可证附带的 Fleet Manager VPN 无需 Tailscale 账户即可实现相同功能：请参阅[通过 4G 超视距飞行](./bvlos-4g.mdx)和[批量接入机队](./fleet-onboarding.mdx)。
+
+**所需条件：** 无人机具备互联网连接（Wi-Fi 或调制解调器）的 UAVcast-Pro、一个 Tailscale 账户，以及笔记本电脑上的 Tailscale 客户端。
+
+## 1. 将无人机登录到 Tailscale {/* #1-log-the-drone-in-to-tailscale */}
+
+<Steps>
+
+1. 在 UAVcast-Pro 中打开 **虚拟专用网络**。
+2. 将 **启用 VPN** 设为 **是**，并将 **服务** 设为 **Tailscale**。
+3. 选择登录方式：
+   - **网页登录**：按下 **生成登录 URL**，然后按下 **认证此设备**，并在打开的页面中使用您的 Tailscale 账户登录。
+   - **认证密钥**：在 Tailscale 管理控制台中创建认证密钥，将其粘贴到 **认证密钥** 中，可选择设置 **主机名（可选）**，然后按下 **使用认证密钥连接**。当您需要为他人或批量设置无人机时，请使用此方式。
+4. 等待状态显示 **已连接**。记下 **IPv4 地址**（100.x.y.z）。
+
+</Steps>
+
+<Screenshot id="uavcast-pro/private-network" alt="虚拟专用网络页面，启用 VPN 为是，服务为 Tailscale，包含 Fleet Manager、网页登录和认证密钥标签页，VPN 信息显示未连接" caption="服务设为 Tailscale 且无人机尚未登录（未连接）时的虚拟专用网络页面。登录后，VPN 信息会显示连接详情。" />
+
+:::tip 为无人机关闭密钥过期
+Tailscale 设备密钥会过期，密钥过期的无人机将从 tailnet 中掉线，直到有人重新登录它。**过期时间** 字段会显示过期的时间点。请在 Tailscale 管理控制台中，为您部署的无人机关闭密钥过期。
+:::
+
+## 2. 将笔记本电脑加入同一 tailnet {/* #2-put-the-laptop-on-the-same-tailnet */}
+
+在笔记本电脑上安装 Tailscale，并使用同一账户或 tailnet 登录。运行 `tailscale status`，确认无人机出现在列表中。然后执行：
+
+```bash
+ping <drone tailscale ip>
+```
+
+在 `http://<drone tailscale ip>/` 打开无人机的 Web 界面。
+
+## 3. 将遥测和视频发送到笔记本电脑 {/* #3-send-telemetry-and-video-to-the-laptop */}
+
+<Steps>
+
+1. 在 UAVcast-Pro 中，前往 **地面控制站**，然后按下 **添加目标地址**。
+2. 在 **目标IP或主机** 中，输入**笔记本电脑**的 Tailscale IPv4 地址（在笔记本电脑上运行 `tailscale ip -4`）。
+3. 开启 **启用遥测** 和 **启用视频**。
+4. 在笔记本电脑的防火墙中允许入站 UDP 14550 和 5600。Windows 通常会将 Tailscale 适配器视为公用网络。
+
+</Steps>
+
+打开 QGroundControl 或 Mission Planner。遥测数据将通过 UDP 14550 到达，视频将通过 UDP 5600 到达。
+
+## 4. 检查连接质量 {/* #4-check-the-connection-quality */}
+
+**虚拟专用网络** 页面上的 **中继** 字段会显示流量是否经由 Tailscale 中继。通过中继的路径虽然可用，但会增加延迟。部分蜂窝运营商不允许直接连接，因此请在您飞行时所用的运营商网络上进行测试。
+
+## 故障排除 {/* #troubleshooting */}
+
+- 无法 ping 通无人机：[VPN 已连接，但无法访问无人机](../troubleshooting/vpn-cant-reach-drone.mdx)
+- 可以 ping 通，但没有遥测数据：[地面站中没有遥测数据](../troubleshooting/no-telemetry-in-gcs.mdx)
+- 如果之后将无人机与 Fleet Manager 配对，并选择了 **Replace existing VPN with Fleet Manager network**，它将离开您的 tailnet 并加入组织网络。

@@ -1,0 +1,155 @@
+---
+title: "Varsayılanlarıyla UAVcast-Pro ayar başvurusu"
+sidebar_label: Ayar başvurusu
+description: "Tüm UAVcast-Pro ayarları tek sayfada; tam etiketi, varsayılanı ve aralığıyla: uçuş kontrolcüsü, NTRIP, yer kontrol istasyonları, kamera, kayıt, modem, VPN."
+sidebar_position: 3
+---
+
+# Ayar başvurusu {/* #settings-reference */}
+
+UAVcast-Pro web arayüzündeki her ayar, sayfalara göre gruplandırılmış; etiketi uygulamada gösterildiği gibi ve temiz bir kurulumdaki varsayılan değeriyle birlikte. Canlı olarak değişen sayfalardaki ayarlar, aksi belirtilmedikçe hemen uygulanır. Özellik sayfaları her alanı ayrıntılı olarak anlatır; bu sayfa ise bakmanız içindir.
+
+## Uçuş Kontrolcüsü → Bağlantı {/* #flight-controller--connection */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **Bağlantı etkin** | Açık | Uçuş kontrolcüsü bağlantısını açar veya kapatır. |
+| **Bağlantı türü** | **USB** | **USB** (uçuş kontrolcüsünün kendi USB portu) veya **UART / Serial** (GPIO pinlerindeki TELEM portu veya bir USB-seri kablo). |
+| **Port** | **Otomatik** | Otomatik, uçuş kontrolcüsünü bulur ve aygıt numarası değişirse onu izler. **Özel yol…** `/dev/ttyAMA0` gibi bir aygıt alır. |
+| **Baud hızı** | **Otomatik** | Uçuş kontrolcüsündeki `SERIALx_BAUD` ile eşleşmelidir. Otomatik sırasıyla 57600, 115200, 921600, 1500000, 460800, 230400 ve 500000 değerlerini dener. USB için kullanılmaz. |
+
+Düğmeler: **Otomatik algıla** (tüm portları ve hızları tarar ve sonucu kaydeder), **Bağlan**, **Bağlantıyı yeniden başlat**, **Durdur**. Değişiklikler yeniden başlatmadan hemen uygulanır.
+
+## Uçuş Kontrolcüsü → NTRIP / RTK {/* #flight-controller--ntrip--rtk */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **NTRIP istemcisini etkinleştir** | Kapalı | |
+| **Caster ana bilgisayarı** | boş | NTRIP caster'ının sunucu adı. |
+| **Port** | `2101` | Bazı TLS caster'ları 2102 veya 443 kullanır. |
+| **Mountpoint** | boş | **Mountpoint'lere göz at** ile seçin. |
+| **TLS kullan (HTTPS)** | Kapalı | TLS gerektiren caster'lar için. |
+| **Kullanıcı adı** / **Parola** | boş | rtk2go.com: kullanıcı adı olarak e-posta adresi, parola yok. |
+| **GGA upstream gönder** | Açık | VRS ve en yakın mountpoint caster'ları için gereklidir. |
+| **Gönderim aralığı (saniye)** | `10` | |
+| **Konum kaynağı** | **Uçuş kontrolcüsünden canlı konum** | Ya da **Sabit manuel konum** (**Enlem**, **Boylam**, **İrtifa (m)**); ilk GPS sabitlemesinden önce yedek olarak da kullanılır. |
+
+## Uçuş Kontrolcüsü → Enjektörler {/* #flight-controller--injectors */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **Giriş türü** | | **HTTP**, **UDP** veya **Serial**. Oluşturulduktan sonra değiştirilemez. |
+| **MAVLink sysid** | `1` | Uçuş kontrolcüsüyle aynı. |
+| **MAVLink compid** | `194` | Kullanıcı yükü. |
+| **Ad öneki** | boş | En fazla 8 ASCII karakter; her sinyal adının başına eklenir. |
+| **Hız sınırı (sinyal başına Hz)** | | Sinyal adı başına saniyedeki en yüksek örnek sayısı. |
+| **Protokol** (UDP, Serial) | | **Key=Value (satır sonlu)** veya **JSON** (`{name, value}`). |
+| **Port** / **Bağlanma adresi** (UDP) | | Kullanılmayan bir port seçin, örneğin 14600. `0.0.0.0` = tüm arayüzler, `127.0.0.1` = yalnızca yerel. |
+| **Aygıt yolu** / **Baud hızı** (Serial) | | Örneğin `/dev/ttyUSB0`; baud hızı göndericiyle eşleşmelidir. |
+
+## Yer Kontrol İstasyonları {/* #ground-control-stations */}
+
+Her hedef için bir kart.
+
+| Ayar | Yeni bir hedefte varsayılan | Değerler ve notlar |
+|---|---|---|
+| **Ad** | boş | En fazla 50 karakter. |
+| **Hedef IP veya Sunucu** | boş | Bir IPv4 adresi. Video veya telemetri açılmadan önce gereklidir. |
+| **Telemetri Portu** | `14550` | 1–65535. |
+| **Video Portu** | `5600` | 1–65535. |
+| **Video Portu (Kamera 2)** | boş (= Video Portu + 1) | Yalnızca **Çift akış** açıkken gösterilir. |
+| **Uç Noktayı Etkinleştir** | Açık | Kapalıysa bu hedefe giden her şey durur: telemetri, video ve ses. |
+| **Videoyu Etkinleştir** | **Kapalı** | |
+| **Telemetriyi Etkinleştir** | **Kapalı** | |
+| **Read Only** | Kapalı | Yer kontrol istasyonu telemetri alır ancak araç üzerinde hiçbir şeyi değiştiremez. {/* PENDING-RELEASE: read-only */} |
+
+## Kamera → Kamera ayarları {/* #camera--camera-settings */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **Kamera Etkinleştirilsin mi?** | Evet | |
+| **Kamera Seç** | Raspberry Pi kamerası | Algılanan CSI ve USB kameralar. |
+| **Çözünürlük** | 640×480 | Yalnızca kameranın desteklediği boyutlar sunulur. |
+| **FPS Seç** | **Otomatik** | Kamera değeri kendisi belirler. |
+| **Bit Hızı:** | `0` (otomatik) | 0–10000 kbps. |
+| **Akış Kurtarma Hızı** | **Otomatik** | Anahtar kare aralığı. Otomatik = saniyede bir anahtar kare. Daha hızlı seviyeler paket kaybından daha çabuk toparlanır ama daha fazla bant genişliği kullanır. |
+| **Döndürme:** / **Çevirme Ayarları** | 0°, çevirme yok | **Yatay Çevir**, **Dikey Çevir**. |
+| **Canlı Önizleme Etkinleştirilsin mi?** | Evet | Bu sayfada ve Uçuş Haritası'nda önizleme. |
+| **Özel Pipeline** | test pipeline | Yer Kontrol İstasyonları hedeflerinin yerine geçer. `gst-launch-1.0` önekini yazmayın. |
+| **RC kanalı ile kamera değiştirmeyi etkinleştir** | Kapalı | |
+| **RC Kanalı** | 7 | PWM < 1500 = Kamera 1, PWM > 1500 = Kamera 2. |
+| **Kamera 1 Çözünürlüğüne Eşle** | Kapalı | Kamera 2, kamera 1'in çözünürlüğünde görüntü alır. |
+| **Çift akış** | Kapalı | İki kamerayı aynı anda yayınlar. |
+| **Ses** | Kapalı | Önizlemede Opus ses. |
+| **Ses cihazı** | **Otomatik (varsa kamera mikrofonu)** | Ya da bir yakalama aygıtı veya **Test sesi (mikrofon gerekmez)**. |
+| **Bit hızı** (ses) | 64 kbps | |
+| **Sesi yer kontrol istasyonlarına gönder** | Kapalı | Her video hedefine, Video Portu + 2 üzerinden RTP/Opus. |
+
+## Kamera → Kayıtlar → Ayarlar {/* #camera--recordings--settings */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **Depolama konumu** | **Dahili depolama** | Bir USB sürücü veya SSD ya da **Ya da başka bir klasör**. |
+| **Boş bırakılacak alan** | 2 GB | 0.5–1000 GB. |
+| **Alan azaldığında en eski kayıtları sil** | Açık | Kapalıysa disk dolduğunda kayıt durur. |
+| **Şundan eski kayıtları sil** | 0 gün | 0, alana ihtiyaç duyulana kadar tutar. |
+| **Arm edildiğinde otomatik kaydet** | Açık | |
+| **Kamera 1'i kaydet** / **Kamera 2'yi kaydet** | Açık / Açık | Kamera 2 yalnızca çift akışta. |
+| **Dosya uzunluğu** | 1 dk | Dosya başına 1–30 dakika. |
+| **Telemetriyi kaydet** | **Arm edildiğinde** | **Bağlıyken her zaman** veya **Kapalı**. |
+
+## Modem {/* #modem */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **Hücresel Modem etkinleştirilsin mi?** | Evet | |
+| **Modem tipi** | **Geleneksel (PPP)** | Ya da **HiLink**. |
+| **Erişim Noktası Adı (İsteğe bağlı)** | boş (**Otomatik**) | Otomatik algılamak için boş bırakın. |
+| **Kullanıcı adı (İsteğe bağlı)** / **Parola (İsteğe bağlı)** | boş | Çoğu operatör ikisine de ihtiyaç duymaz. |
+| **PIN kodu (İsteğe bağlı)** | boş | SIM PIN'i; PIN devre dışı bırakılmadıkça. |
+
+## Sanal Özel Ağ {/* #virtual-private-network */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **VPN'i Etkinleştir** | Hayır | |
+| **Hizmetler** | **ZeroTier** | **ZeroTier** veya **Tailscale**. |
+| **Ağ Kimliği** (ZeroTier) | boş | Kendi ZeroTier denetleyicinizden alınır. |
+| **Doğrulama Anahtarı** / **Sunucu Adı (İsteğe Bağlı)** (Tailscale) | boş | Ya da **Web Girişi** ile giriş yapın veya eşleştirmeden sonra **Fleet Manager** sekmesini kullanın. |
+
+## Dinamik DNS {/* #dynamic-dns */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **Dinamik DNS Etkinleştirilsin mi?** | Hayır | |
+| **DNS Sistemi** | `noip` | `generic` (**DNS URL** ile), `noip`, `dyndns`, `duck`. |
+| Kullanıcı adı, **Parola**, **Takma Ad** | boş | DNS sağlayıcınızdan alınır. |
+
+## Ağlar {/* #networks */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **Ağ Önceliği** | sistem yönlendirmesi | **WiFi Önceliği (İç Mekan Modu)**, **Modem Önceliği (Dış Mekan Modu)** veya **Otomatik (Sistem Varsayılanı)**. |
+
+## Fleet Management {/* #fleet-management */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **Device Name** | boş | Fleet Manager'da gösterilir. Yoksa ana bilgisayar adı kullanılır. |
+
+## Users {/* #users */}
+
+| Ayar | Değerler ve notlar |
+|---|---|
+| **Role** | **Admin - Full access** veya **Read Only - View only**. İlk kullanıcı bir yönetici olmalıdır. |
+
+## Uygulama {/* #application */}
+
+| Ayar | Varsayılan | Değerler ve notlar |
+|---|---|---|
+| **Sunucu Portu** | `80` | 80 veya daha yüksek. **Gönder ve sunucuyu yeniden başlat** ile uygulanır; adres `http://<cihaz>:<port>/` olur. |
+| **Dil** | Tarayıcı dili | İngilizce, İspanyolca, Portekizce, İtalyanca, Hollandaca, Lehçe, Türkçe, Rusça, Çince (Basitleştirilmiş ve Geleneksel). |
+| **Karanlık Tema** | | |
+| **Günlük Kaydı**: günlük listesi / zaman aralığı | **Tüm Günlükler** / **Son 2 saat** | Bkz. [Günlükleri toplama](../troubleshooting/collect-logs.mdx). |
+
+**Veritabanı** bölümünde **Veritabanını Yedekle**, **Veritabanını Geri Yükle** (bir `.db` dosyası) ve tüm ayarları silen **Veritabanını Sıfırla** seçenekleri bulunur.

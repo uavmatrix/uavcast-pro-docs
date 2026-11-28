@@ -1,0 +1,80 @@
+---
+title: "Kurulumdan sonra UAVcast-Pro web arayüzü açılmıyor"
+sidebar_label: Web arayüzü açılmıyor
+description: "Kurulumdan sonra http://device-ip adresinde UAVcast-Pro açılmıyor mu? Doğru adresi bulun, uavcast-web servisini, sunucu portunu ve 80 numaralı portu kontrol edin."
+sidebar_position: 9
+---
+
+# Web arayüzü açılmıyor {/* #web-interface-wont-open */}
+
+Kurulum programı tamamlandı, ancak `http://<device-ip>/` zaman aşımına uğruyor, bağlantıyı reddediyor veya başka bir programın sayfasını gösteriyor.
+
+<SymptomTable rows={[
+  {symptom: 'Zaman aşımı veya sayfa hiç yüklenmiyor', cause: 'Yanlış adres veya bilgisayarınız başka bir ağda', start: '#check-1'},
+  {symptom: 'Bağlantı reddedildi', cause: 'Web servisi çalışmıyor', start: '#check-2'},
+  {symptom: 'Başka bir web sayfası, örneğin nginx veya Apache', cause: 'Başka bir şey 80 numaralı portu kullanıyor', start: '#check-3'},
+  {symptom: 'Daha önce çalışıyordu, bir ayar değişikliğinden sonra durdu', cause: 'Sunucu portu değiştirildi', start: '#check-4'},
+  {symptom: 'Yükleniyor, ama her sayfa Uygulama bölümüne yönleniyor', cause: 'Cihazda henüz etkin bir lisans yok', start: '#check-5'},
+]} />
+
+## Kontrol 1: Doğru adresi kullanın {/* #check-1 */}
+
+Web arayüzü varsayılan olarak **80 numaralı portta** çalışır; adres bu yüzden yalnızca `http://<device-ip>/` olur.
+
+<Steps>
+
+1. Cihazın IP adresini bulun. Kurulum programı sonunda yazdırır. Cihazda `hostname -I` komutunu da çalıştırabilirsiniz.
+2. Varsayılan ana bilgisayar adına sahip bir Raspberry Pi'de `http://raspberrypi.local/` adresini deneyin.
+3. `http://` kullanın, `https://` değil. Web arayüzü HTTPS sunmaz.
+4. Bilgisayarınızın cihazla aynı ağda veya aynı VPN'de olduğundan emin olun. 4G üzerinden bağlanıyorsanız drone'un VPN adresini kullanmalısınız.
+
+</Steps>
+
+## Kontrol 2: Web servisi çalışıyor mu? {/* #check-2 */}
+
+Cihazda şu komutu çalıştırın:
+
+```bash
+sudo systemctl status uavcast-web
+```
+
+**active (running)** yazmalıdır. Değilse, servisi başlatın ve neden durduğunu okuyun:
+
+```bash
+sudo systemctl restart uavcast-web
+journalctl -u uavcast-web --since "1 hour ago"
+```
+
+Web arayüzü arka plan servislerine de ihtiyaç duyar. Bunları aynı şekilde kontrol edin: `uavcast-factory`, `mavlink-manager`, `uavcast-camera` ve `redis-server`. Tam liste [Servisler ve dosyalar](../reference/services-and-files.mdx) sayfasındadır.
+
+## Kontrol 3: 80 numaralı port zaten kullanımda {/* #check-3 */}
+
+Cihaza başka bir web sunucusu kuruluysa, 80 numaralı portu tutuyor olabilir. Kimin dinlediğini öğrenin:
+
+```bash
+sudo ss -ltnp | grep ':80 '
+```
+
+Diğer sunucuyu durdurun ve devre dışı bırakın (örneğin `sudo systemctl disable --now nginx`), ardından `uavcast-web` servisini yeniden başlatın.
+
+## Kontrol 4: Sunucu portu değiştirildi {/* #check-4 */}
+
+**Uygulama → Ayarlar → Sunucu Portu** web arayüzünü başka bir porta taşır ve adres `http://<device-ip>:<port>/` olur. Portu hatırlamıyorsanız, cihazda şu komutla okuyun:
+
+```bash
+grep SERVER_PORT /etc/systemd/system/uavcast-web.service
+```
+
+## Kontrol 5: Her sayfa Uygulama bölümüne gidiyor {/* #check-5 */}
+
+Cihazda lisans etkinleşene kadar bu beklenen bir davranıştır. **Uygulama → Lisans Yöneticisi** altında lisansı etkinleştirin. Bu başarısız olursa, [lisans etkinleştirilemiyor](./license-activation-failed.mdx) sayfasına bakın.
+
+## Kontrol 6: Kurulum tamamlanmadı {/* #check-6 */}
+
+`uavcast-web` yoksa (`Unit uavcast-web.service could not be found`), kurulum erken durmuştur. Bkz. [Kurulum başarısız](./installation-fails.mdx).
+
+## Hâlâ bir sonuç yok mu? {/* #still-no-luck */}
+
+`systemctl status uavcast-web` ve `journalctl -u uavcast-web --since yesterday` çıktılarını ve `/opt/uavcast-pro/installer.log` dosyasını **support@uavmatrix.com** adresine gönderin.
+
+İlgili: [UAVcast-Pro'yu kurun](../get-started/installation.mdx) · [Uygulama ayarları](../uavcast-pro/application-settings.mdx)

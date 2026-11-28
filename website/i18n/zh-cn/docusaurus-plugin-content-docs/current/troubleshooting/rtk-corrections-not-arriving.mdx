@@ -1,0 +1,85 @@
+---
+title: "NTRIP RTK 修正数据未到达"
+sidebar_label: RTK 修正数据未到达
+description: "NTRIP 一直停留在连接中、没有转发 RTCM 或无法达到 RTK 固定？请检查 caster 主机、端口、挂载点、凭据、GGA 上行和 GPS 接收机。"
+sidebar_position: 12
+---
+
+# RTK 修正数据未到达 {/* #rtk-corrections-not-arriving */}
+
+在 **飞行控制器 → NTRIP / RTK** 下，状态始终未达到 **Streaming corrections**，**RTCM messages forwarded** 保持为零；或者修正数据已经到达，但飞行控制器始终无法超过 **3D 定位** 或 **RTK 浮点**。
+
+整个链路共有四个环节：互联网 → caster → UAVcast-Pro → 飞行控制器 → GPS 接收机。请找出第一个中断的环节。
+
+<Screenshot id="uavcast-pro/flight-controller--ntrip" alt="NTRIP / RTK 选项卡，包含状态面板、计数器和 caster 响应行，以及 GPS 质量卡片" caption="飞行控制器 → NTRIP / RTK：未配置 caster 的设备，状态为 Disabled，计数器为零，Caster response 为空。正常状态应为 Streaming corrections，caster 响应为 200，且计数器持续增长。" />
+
+<SymptomTable rows={[
+  {symptom: '状态为 Connecting 或 Error，没有 caster 响应', cause: '主机或端口错误、TLS 不匹配，或没有互联网', start: '#check-1'},
+  {symptom: 'Caster response 为 401 Unauthorized', cause: '用户名、密码或挂载点错误', start: '#check-2'},
+  {symptom: '日志显示 caster returned sourcetable', cause: '挂载点名称错误', start: '#check-2'},
+  {symptom: '已连接，但没有 RTCM 数据，每隔几秒重新连接', cause: 'caster 需要先获得 GGA 位置', start: '#check-3'},
+  {symptom: 'RTCM 已转发，但定位始终停留在 3D 定位', cause: '飞行控制器链路中断，或接收机不支持 RTK', start: '#check-4'},
+  {symptom: '显示 RTK 浮点，从未达到 RTK 固定', cause: '天空视野、与基站的距离，或时间', start: '#check-5'},
+]} />
+
+## 检查 1：连接 caster {/* #check-1 */}
+
+<Steps>
+
+1. 检查 **Caster host** 和 **端口**。大多数公共 caster 使用端口 `2101` 上的普通 TCP。
+2. **Use TLS (HTTPS)** 必须与 caster 一致。商业 caster（Trimble、Hexagon、Topcon 等）通常需要 TLS，一般仍使用端口 2101，有时使用 2102 或 443。公共 caster 通常不使用 TLS。
+3. 确保无人机可以访问互联网。**仪表盘 → Cellular** 应显示已连接。如果没有，请参阅 [调制解调器已连接但无互联网](./modem-no-internet.mdx)。
+4. 某些蜂窝套餐会封锁非常规的出站端口。如果 caster 提供端口 443，请尝试使用该端口。
+
+</Steps>
+
+## 检查 2：凭据和挂载点 {/* #check-2 */}
+
+<Steps>
+
+1. 点击 **Test connection**。出现 **Caster accepted the credentials.** 表示用户名和密码正确。
+2. 对于 rtk2go.com，请将真实的电子邮件地址用作 **Username**，并将 **Password** 留空。
+3. 点击 **Browse mountpoints**，从列表中选择挂载点，而不是手动输入名称。建议选择靠近您飞行区域的挂载点。
+
+</Steps>
+
+如果 caster 返回的是 sourcetable 而不是数据，NTRIP 日志会显示 *caster returned sourcetable — check mountpoint*。这说明挂载点名称错误，或该挂载点已不存在。
+
+## 检查 3：向上游发送 GGA {/* #check-3 */}
+
+VRS 和最近挂载点类型的 caster 只有在知道您的位置后才会发送修正数据。挂载点浏览器中，这些挂载点的 **NMEA** 列会显示 **Required**。
+
+<Steps>
+
+1. 开启 **Send GGA upstream**（默认开启）。**Send interval (seconds)** 默认为 10。
+2. **Position source**：飞行时使用 **Live position from flight controller** 是正确的。在飞行控制器报告 GPS 定位之前，UAVcast-Pro 会使用 **Fixed manual position**，因此进行台架测试时，请输入您附近的纬度和经度。
+3. 观察 **Last GGA sent** 是否持续更新。
+
+</Steps>
+
+当 caster 长时间无数据时，UAVcast-Pro 会自动重新连接，日志会显示 *no data from caster for …s — reconnecting*。短暂断网后，修正数据会在几秒钟内恢复。
+
+## 检查 4：从 UAVcast-Pro 到接收机 {/* #check-4 */}
+
+修正数据通过飞行控制器链路以 MAVLink `GPS_RTCM_DATA` 的形式到达 GPS。
+
+<Steps>
+
+1. 飞行控制器必须在 **飞行控制器 → 连接** 中显示为 **Connected**。如果没有，请参阅 [没有 MAVLink 心跳](./no-mavlink-heartbeat.mdx)。
+2. 查看 **GPS quality** 卡片。**No RTK status from receiver** 表示飞行控制器从未报告 RTK 状态。连接的 GPS 通常不支持 RTK：RTK 需要载波相位 RTK 接收机，例如 u-blox F9P、Here3+ 或 Septentrio Mosaic。标准的 M8N 或 M10 导航模块无法实现 RTK。
+3. **Recent message types** 中应包含接收机所使用的卫星星座（例如 1077 GPS、1087 GLONASS、1097 Galileo、1127 BeiDou），以及基站位置消息（1005 或 1006）。
+
+</Steps>
+
+## 检查 5：RTK 浮点，但从未达到 RTK 固定 {/* #check-5 */}
+
+- 让天线拥有开阔的天空。树木、建筑物以及无人机自身的电子设备会产生多径效应和噪声。
+- 请耐心等待。即使在良好条件下，冷启动也可能需要一两分钟。
+- 选择更近的基站。精度和获得定位的概率会随着与基站距离的增加而下降。
+- **GPS quality** 中的 **Last correction** 应保持在几秒钟左右。如果数值持续增长，说明链路上的修正数据正在丢失。
+
+## 仍然无法工作？ {/* #still-not-working */}
+
+选中 **NTRIP Client** 后，[下载日志](./collect-logs.mdx)，并连同您的 caster 服务商和 GPS 型号一起发送至 **support@uavmatrix.com**。完整设置步骤请参阅 [使用 NTRIP caster 设置 RTK](../guides/rtk-ntrip-caster.mdx)。
+
+相关链接：[NTRIP / RTK 设置](../uavcast-pro/flight-controller/ntrip-rtk.mdx)

@@ -1,0 +1,143 @@
+---
+title: "Vliegen buiten zichtafstand over 4G met de Fleet Manager-VPN"
+sidebar_label: Vliegen buiten zichtafstand over 4G
+description: "Vlieg een drone over 4G/LTE met UAVcast-Pro, een mobiel modem en de Fleet Manager-VPN, met telemetrie en live video in QGroundControl of Mission Planner."
+sidebar_position: 2
+---
+
+# Vliegen buiten zichtafstand over 4G {/* #fly-beyond-visual-range-over-4g */}
+
+Deze handleiding brengt een drone van de werkbank naar een vlucht over het mobiele netwerk: telemetrie en live video in QGroundControl of Mission Planner, waar beide uiteinden dekking hebben. Er wordt gebruikgemaakt van de VPN die bij [Fleet Manager](../fleet-manager/index.mdx) hoort en die is inbegrepen bij uw UAVcast-Pro-licentie, zodat geen van beide kanten een publiek IP-adres of portdoorstuur nodig heeft.
+
+**Duur:** ongeveer een uur. **U hebt nodig:**
+
+- Een companion computer (Raspberry Pi 4 of 5, of een ander [ondersteund bord](../reference/supported-hardware.mdx)) met UAVcast-Pro [geïnstalleerd](../get-started/installation.mdx) en de [licentie geactiveerd](../get-started/license-activation.mdx).
+- Een MAVLink-vluchtcontroller (ArduPilot of PX4), een USB-datakabel of TELEM-bedrading.
+- Een USB 4G/LTE-modem en een data-simkaart. Schakel de SIM-pincode eerst op een telefoon uit, dat scheelt problemen.
+- Een camera, als u video wilt.
+- Een laptop met QGroundControl of Mission Planner, en de [Tailscale-client](https://tailscale.com/download).
+- Een [Fleet Manager-organisatie](../fleet-manager/set-up-organization.mdx) waarin u Owner of Admin bent.
+
+:::warning Regels voor vliegen buiten zichtafstand (BVLOS)
+Vliegen buiten de zichtlijn (BVLOS, beyond visual line of sight) vereist in de meeste landen een vergunning. UAVcast-Pro levert de verbinding; de operationele goedkeuring, de risicobeoordeling en de failsafes zijn uw verantwoordelijkheid.
+:::
+
+## Hoe het samenhangt {/* #how-it-fits-together */}
+
+```text
+Flight controller ──USB/UART── UAVcast-Pro ──4G──► internet ──► laptop
+                                    │                               │
+                                    └──── Fleet Manager VPN ────────┘
+                  telemetry and video on the ports of the stream binding
+```
+
+De drone stuurt MAVLink en H.264-video naar het VPN-adres van uw laptop. De VPN maakt de laptop bereikbaar via 4G, alsof beide zich op hetzelfde lokale netwerk bevinden.
+
+:::tip Liever uw eigen VPN gebruiken?
+U kunt in plaats van Fleet Manager uw eigen ZeroTier-netwerk of Tailscale-tailnet gebruiken: zie [VPN](../uavcast-pro/connectivity/vpn.mdx) en [Externe toegang met Tailscale](./remote-access-tailscale.mdx). Stap 1, 2 en 7 tot en met 9 hieronder blijven hetzelfde.
+:::
+
+## 1. De vluchtcontroller verbinden {/* #1-connect-the-flight-controller */}
+
+<Steps>
+
+1. Sluit de vluchtcontroller met USB aan op de companion computer, of bedraad een TELEM-poort (TX→RX, RX→TX, GND→GND) en schakel MAVLink op die poort in (`SERIALx_PROTOCOL = 2` op ArduPilot, `MAV_x_CONFIG` op PX4).
+2. Open in UAVcast-Pro **Vluchtcontroller → Verbinding**. Kies **USB** of **UART / Serial** onder **Linktype**, en laat **Poort** en **Baudrate** op **Automatisch** staan.
+3. Wacht op de status **Verbonden** en een voertuig onder **Voertuig**. Blijft die op **Geen heartbeat** staan, zie [Geen MAVLink-heartbeat](../troubleshooting/no-mavlink-heartbeat.mdx).
+
+</Steps>
+
+## 2. Het modem instellen {/* #2-set-up-the-modem */}
+
+<Steps>
+
+1. Sluit het modem aan en open **Modem**.
+2. Stel **Mobiel modem inschakelen?** in op **Ja** en kies het **Modemtype**: **HiLink** voor modems die als USB-netwerkadapter werken (bijvoorbeeld Huawei E3372h), **Traditioneel (PPP)** voor de rest.
+3. Laat bij een traditioneel modem **Access Point Naam (Optioneel)** leeg. UAVcast-Pro zoekt de APN voor uw simkaart en onthoudt die.
+4. Wacht onder **Modeminformatie** op een provider en een IPv4-adres.
+5. Ga naar **Netwerken** en kies **Modem Prioriteit (Buitenmodus)**, zodat het verkeer via het modem verloopt, ook als er wifi in de buurt is.
+
+</Steps>
+
+Details: [Mobiel modem](../uavcast-pro/connectivity/cellular-modem.mdx). Als het modem verbinding maakt maar niets laadt: [Modem verbonden, geen internet](../troubleshooting/modem-no-internet.mdx).
+
+## 3. De VPN inschakelen in Fleet Manager {/* #3-turn-on-the-vpn-in-fleet-manager */}
+
+In Fleet Manager opent u **Network**. Als er **Enable VPN Network** staat, selecteert u die. Hiermee maakt u het privénetwerk van uw organisatie aan. Zie [Netwerk en VPN](../fleet-manager/network/index.mdx).
+
+## 4. De drone koppelen en op de VPN zetten {/* #4-pair-the-drone-and-put-it-on-the-vpn */}
+
+<Steps>
+
+1. Ga in UAVcast-Pro naar **Beheer → Fleet Management** en selecteer **Connect to Fleet Manager**. Noteer de 8-cijferige koppelcode.
+2. Ga in Fleet Manager naar **Fleet → Pair Device**, voer de code in en bevestig het apparaat.
+3. Laat bij de stap **VPN Connection** de optie **Enable VPN for this UAV** aangevinkt en selecteer **Complete Pairing**.
+4. De drone verschijnt onder **Network → Connected Devices** met het type **UAV** en een adres `100.x.y.z`.
+
+</Steps>
+
+Volledige walkthrough: [Uw eerste drone toevoegen aan Fleet Manager](../fleet-manager/pair-uav.mdx).
+
+## 5. De laptop op de VPN zetten {/* #5-put-the-laptop-on-the-vpn */}
+
+<Steps>
+
+1. Installeer Tailscale op de laptop. U hebt geen Tailscale-account nodig: Fleet Manager draait zijn eigen VPN-server.
+2. Kopieer in Fleet Manager, onder **Network → Devices**, het **GCS Connection Command** onder **Connect a Device** en voer dit uit op de laptop als administrator (`sudo` op macOS en Linux).
+3. De laptop verschijnt onder **Connected Devices**. Selecteer in de kolom **Type** de optie **Configure**, kies **Ground Control Station (GCS)** en selecteer **Complete Setup**.
+4. Test: `ping <drone VPN IP>` vanaf de laptop. U kunt nu de webinterface van de drone openen op `http://<drone VPN IP>/`.
+
+</Steps>
+
+Details en schermafbeeldingen: [Een grondstation verbinden met de Fleet Manager-VPN](../fleet-manager/connect-gcs.mdx).
+
+## 6. Telemetrie en video naar de laptop sturen {/* #6-send-telemetry-and-video-to-the-laptop */}
+
+<Steps>
+
+1. Ga in Fleet Manager naar **Network → Stream Bindings** en selecteer **Add Binding**.
+2. Kies de drone en de laptop, en selecteer daarna **Create Binding**. Fleet Manager stuurt de bestemming naar de drone; die verschijnt op de pagina **Grondcontrolestations** van de drone met een wolkpictogram.
+3. Lees de video- en telemetriepoorten van de binding af in de kolom **Ports**. Voor de eerste drone op een laptop zijn dat de standaardwaarden, `5600` en `14550`.
+4. Sta op de laptop inkomend UDP toe op die poorten in de firewall (commando's in [Geen video, controle 3](../troubleshooting/no-video-in-gcs.mdx#check-3)).
+
+</Steps>
+
+## 7. De camera starten {/* #7-start-the-camera */}
+
+<Steps>
+
+1. Open **Camera → Camera-instellingen**, zet **Camera Inschakelen?** op **Ja** en kies de camera bij **Selecteer Camera**.
+2. Gebruik voor LTE beginnen met **Resolutie** 1280×720, **Selecteer FPS** 15–20 en **Bitsnelheid:** ongeveer 1000–1500 kbps.
+3. Instellingen worden opgeslagen terwijl u ze wijzigt. Druk op **Starten** als de camera nog niet draait.
+
+</Steps>
+
+## 8. Het grondstation openen {/* #8-open-the-ground-station */}
+
+- **QGroundControl** verbindt zelfstandig met UDP 14550. Stel voor video onder de videoinstellingen **Source** in op **UDP h.264 Video Stream** op de videopoort van de binding.
+- **Mission Planner**: kies **UDP**, druk op **Connect** en voer de telemetriepoort van de binding in. Stel voor video de GStreamer-bron in zoals beschreven op de pagina [Mission Planner](../uavcast-pro/ground-stations/mission-planner.mdx).
+
+## 9. Testen op 4G voordat u vliegt {/* #9-test-on-4g-before-you-fly */}
+
+<Steps>
+
+1. Schakel de wifi van de companion computer uit, of breng de drone uit het bereik ervan, zodat het modem de enige route is.
+2. Controleer het dashboard: **Mobiel** verbonden, **VPN** verbonden, **Grondstation** *Verzenden*, **Video** actief.
+3. Bekijk de verbinding 10 minuten op de grond, bij voorkeur op de startlocatie. Let op videostoringen en telemetriegaten.
+4. Controleer onder **Vluchtcontroller → Verbinding** de **GCS Failsafe Informatie**. Staat er **Waarschuwing - Failsafe Uitgeschakeld**, schakel dan de GCS-failsafe in op de vluchtcontroller (ArduPilot: `FS_GCS_ENABL` op Plane, `FS_GCS_ENABLE` op Copter; PX4: `NAV_DLL_ACT`) en kies de actie, zodat de drone zelfstandig handelt wanneer de verbinding wegvalt.
+
+</Steps>
+
+:::tip Leg elke vlucht vast
+Schakel onder **Camera → Opnames → Instellingen** de optie **Automatisch opnemen bij armen** in. U krijgt van elke vlucht de video en een telemetrielog voor later terugkijken: [Vluchten opnemen en terugkijken](./recording-flight-review.mdx).
+:::
+
+:::note UAVnet wordt uitgefaseerd
+UAVnet, de gehoste ZeroTier-controller van UAVmatrix, wordt stopgezet ten gunste van Fleet Manager. Gebruiken uw drones vandaag een UAVnet-netwerk, verplaats ze dan naar de Fleet Manager-VPN zoals hierboven beschreven.
+:::
+
+## Volgende stappen {/* #next-steps */}
+
+- [Streamen naar meerdere grondstations](./multiple-ground-stations.mdx)
+- [RTK-correcties toevoegen vanaf een NTRIP-caster](./rtk-ntrip-caster.mdx)
+- Meerdere drones beheren? [Een vloot onboarden met Fleet Manager](./fleet-onboarding.mdx)

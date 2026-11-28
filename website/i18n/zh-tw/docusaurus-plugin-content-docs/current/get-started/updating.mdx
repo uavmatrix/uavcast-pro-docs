@@ -1,0 +1,67 @@
+---
+title: "將 UAVcast-Pro 更新至最新版本"
+description: "透過網頁介面或命令列更新 UAVcast-Pro、安裝舊版本，以及更新後設定、伺服器連接埠與錄製內容的變化。"
+sidebar_position: 6
+sidebar_label: "更新"
+---
+
+# 更新 UAVcast-Pro {/* #update-uavcast-pro */}
+
+您可以在網頁介面的**應用程式 → 更新應用**中更新 UAVcast-Pro，也可以透過 SSH 重新執行安裝程式。兩種方式都會保留您的設定、使用者、許可證與錄製內容。無人機需要連上網際網路，且更新完成後必須重新開機。
+
+:::warning 飛行前切勿更新
+更新會停止所有 UAVcast-Pro 服務（包括遙測與影像），並需要重新開機。請在地面、飛行器處於上鎖狀態時進行更新。
+:::
+
+## 透過網頁介面更新 {/* #update-from-the-web-interface */}
+
+<Steps>
+
+1. 前往**應用程式**。**更新應用**卡片會顯示**當前版本**與**最新版本**。若有較新的版本，會出現綠色的 *New version … available* 橫幅。
+2. 將**選擇要更新的版本**保持為最新版本，或選擇其他版本。
+3. 選擇**更新到 …**（或**立即更新**）。**Progress** 會顯示下載與安裝步驟。此過程需要數分鐘，在 Pi Zero 2 W 或 Pi 3 上會更久。
+4. 出現**等待重啟**橫幅時，選擇**立即重啟**。裝置會重新開機。
+5. 再次開啟網頁介面，並檢查**當前版本**。
+
+</Steps>
+
+<Screenshot id="uavcast-pro/application--update-available" alt="更新應用卡片，顯示當前版本與最新版本、New version available 橫幅與更新按鈕" caption="應用程式 → 更新應用，有較新版本可用。" />
+
+## 透過命令列更新 {/* #update-from-the-command-line */}
+
+重新執行安裝程式。它會取代程式檔案，並保留資料庫：
+
+```bash title="On the drone"
+curl -fsSL https://install.uavmatrix.com | sudo bash
+sudo reboot
+```
+
+若要安裝特定版本，請先列出版本（不需 root 權限），然後使用 `-b` 安裝其中一個：
+
+```bash title="On the drone"
+# List the versions available for this device
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l
+
+# Install a specific version
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.1
+```
+
+## 回復至舊版本 {/* #go-back-to-an-older-version */}
+
+在**選擇要更新的版本**中選擇舊版本，然後照常更新；或在命令列中使用 `-b`。較新版本中建立的設定，在舊版本中可能不存在。
+
+## 更新會保留與取代的內容 {/* #what-an-update-keeps-and-replaces */}
+
+| 保留 | 取代 |
+|---|---|
+| 設定資料庫（`/opt/uavcast-pro/uavcast.db`）：地面站、攝影機、數據機、VPN、使用者、許可證 | `/opt/uavcast-pro` 中的程式檔案（`build`、`dist`、`factory`、`install`） |
+| 錄製內容與遙測記錄 | systemd 服務檔案 |
+| ZeroTier 與 Tailscale 的成員資格 | UAVcast-Pro 所依賴的系統套件（由 apt 更新） |
+
+{/* PENDING-RELEASE: port-persist */}
+
+在**應用程式**頁面設定的自訂**伺服器連接埠**，在更新後會保留。
+
+## 查看變更內容 {/* #see-what-changed */}
+
+每個版本的變更內容都會列在[更新日誌](../reference/changelog.mdx)中。若您的無人機用於營運飛行，請在更新前先行閱讀。

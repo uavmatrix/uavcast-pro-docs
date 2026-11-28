@@ -1,0 +1,57 @@
+---
+title: "Dron pokazuje Offline w Fleet Manager"
+sidebar_label: Dron offline w Fleet Manager
+description: "Sparowany UAV pokazuje Offline lub Re-pair required w Fleet Manager? Sprawdź internet drona, wychodzący port 8883, Fleet Management w UAVcast-Pro i licencję."
+sidebar_position: 14
+---
+
+# Dron pokazuje Offline w Fleet Manager {/* #drone-shows-offline-in-fleet-manager */}
+
+UAV jest sparowany, ale Fleet Manager pokazuje go jako **Offline** (szary na mapie floty), jego telemetria jest zamrożona albo ma odznakę **Re-pair required**.
+
+Fleet Manager oznacza UAV jako offline, gdy przez 20 sekund nic od niego nie odebrał. Dron łączy się z Fleet Manager przez szyfrowane połączenie MQTT, korzystając z własnego połączenia internetowego.
+
+<SymptomTable rows={[
+  {symptom: 'Offline, a UAVcast-Pro Fleet Management pokazuje Disconnected', cause: 'Dron nie ma internetu albo port 8883 jest zablokowany', start: '#check-1'},
+  {symptom: 'Odznaka Re-pair required lub This UAV must be re-paired', cause: 'Dron ma stary certyfikat', start: '#check-2'},
+  {symptom: 'Offline zaraz po ponownej instalacji lub resecie UAVcast-Pro', cause: 'Parowanie zostało usunięte na dronie', start: '#check-3'},
+  {symptom: 'Online, ale bez pozycji i baterii', cause: 'Kontroler lotu nie jest połączony z UAVcast-Pro', start: '#check-4'},
+]} />
+
+## Sprawdzenie 1: Połączenie drona z Fleet Manager {/* #check-1 */}
+
+<Steps>
+
+1. Otwórz UAVcast-Pro na dronie i przejdź do **Fleet Management**. **Fleet Connection** pokazuje **Connected** lub **Disconnected** oraz **Last Connected**.
+2. Jeśli jest **Disconnected**, sprawdź, czy dron ma internet: wiersz **Cellular** na panelu albo `curl -I https://fleet-manager.uavmatrix.com` na urządzeniu. Najpierw napraw łącze według [Modem połączony, brak internetu](./modem-no-internet.mdx).
+3. Dron musi móc otworzyć **wychodzące połączenie TCP na porcie 8883** (MQTT przez TLS). Niektóre firmowe sieci, publiczne Wi-Fi i część planów SIM dla IoT przepuszczają tylko porty webowe. Spróbuj innej sieci albo poproś operatora o otwarcie portu 8883.
+4. Sprawdź datę i godzinę na urządzeniu poleceniem `date`. Połączenie używa certyfikatów, które nie działają na urządzeniu z błędnym zegarem.
+5. Upewnij się, że licencja na dronie jest nadal aktywna (**Aplikacja → Menedżer Licencji**).
+
+</Steps>
+
+## Sprawdzenie 2: Wymagane ponowne parowanie {/* #check-2 */}
+
+Fleet Manager zmienił sposób łączenia dronów, więc UAV sparowane przed tą zmianą trzeba sparować jeszcze raz. Nic nie przepada: UAV zachowuje nazwę i historię, a w Fleet Manager nie trzeba go usuwać.
+
+<Steps>
+
+1. W UAVcast-Pro na dronie otwórz **Fleet Management** i naciśnij **Disconnect from Fleet**, a następnie potwierdź.
+2. Naciśnij **Connect to Fleet Manager**. Pojawi się 8-cyfrowy **Pairing Code** z odliczaniem.
+3. W Fleet Manager przejdź do **Fleet → Pair Device**, wybierz organizację i wpisz kod.
+
+</Steps>
+
+## Sprawdzenie 3: Dron stracił parowanie {/* #check-3 */}
+
+Ponowna instalacja z resetem bazy danych, **Resetuj Bazę Danych** albo **Disconnect from Fleet** usuwa parowanie na dronie, więc przestaje on raportować. Sparuj go ponownie zgodnie ze sprawdzeniem 2. Parowanie z tą samą organizacją wykorzystuje ponownie istniejący wpis UAV.
+
+## Sprawdzenie 4: Online, ale brak telemetrii {/* #check-4 */}
+
+Pozycja, bateria i tryb lotu pochodzą z kontrolera lotu. Jeśli UAV jest online, a te pola są puste, UAVcast-Pro nie słyszy kontrolera lotu: zobacz [Brak heartbeat MAVLink](./no-mavlink-heartbeat.mdx).
+
+## Nadal offline? {/* #still-offline */}
+
+[Pobierz logi](./collect-logs.mdx) z drona z zaznaczonym **All Logs** i wyślij je na **support@uavmatrix.com** wraz z nazwą UAV i organizacją. Więcej problemów z Fleet Manager opisano w [Rozwiązywanie problemów w Fleet Manager](../fleet-manager/troubleshooting.mdx).
+
+Powiązane: [Parowanie Fleet Manager w UAVcast-Pro](../uavcast-pro/fleet-pairing.mdx)

@@ -1,0 +1,100 @@
+---
+title: Fleet Manager VPN - prywatna sieć dla dronów i GCS
+description: Włącz prywatną sieć VPN WireGuard swojej organizacji w Fleet Manager, połącz drony i laptopy stacji naziemnych oraz zarządzaj tabelą urządzeń.
+sidebar_position: 1
+---
+
+# Sieć i VPN {/* #network-and-vpn */}
+
+Każda organizacja może mieć własną prywatną sieć VPN: siatkę WireGuard łączącą twoje drony i stacje naziemne, obsługiwaną przez Fleet Manager. W niej każde urządzenie dostaje stały adres `100.x.y.z` i może bezpośrednio połączyć się z pozostałymi, niezależnie od tego, czy jest w sieci 4G, Wi-Fi czy satelitarnej, bez przekierowywania portów i publicznych adresów IP.
+
+Fleet Manager korzysta z tej sieci do kierowania [powiązań strumieni](./stream-bindings.mdx): wideo i MAVLink z drona do laptopów, na których piloci uruchamiają QGroundControl lub Mission Planner.
+
+Wszystko to znajduje się w sekcji **Network** (w pasku bocznym **Fleet Management → Network**).
+
+## Kiedy potrzebuję VPN? {/* #when-do-i-need-vpn */}
+
+VPN jest **opcjonalny**: Fleet Manager pokazuje, nanosi na mapę i steruje dronami bez niego, przez własne szyfrowane połączenie drona. Włącz go, gdy chcesz, aby strumienie docierały do stacji naziemnych.
+
+| Zalecany VPN | VPN niewymagany |
+|---|---|
+| Dron i stacja naziemna w różnych sieciach (4G, zdalne lokalizacje) | Dron i stacja naziemna w tej samej lokalnej sieci Wi-Fi |
+| Chcesz bezpośredniego strumieniowania wideo i telemetrii | Używasz bezpośredniego połączenia telemetrycznego USB lub szeregowego |
+| Potrzebujesz szyfrowanych połączeń między lokalizacjami | Testujesz w kontrolowanym środowisku |
+| Działasz w kilku lokalizacjach | |
+
+## Włączanie VPN {/* #enable-vpn */}
+
+Tylko Owner i Admin.
+
+<Steps>
+
+1. Otwórz **Network**. Jeśli VPN jest wyłączony, strona pokazuje **Enable VPN Network** wraz z korzyściami: bezpieczne połączenia oparte na WireGuard, strumieniowanie wideo i telemetrii o niskim opóźnieniu oraz działanie w dowolnej sieci.
+2. Wybierz **Enable VPN Network**.
+
+</Steps>
+
+<Screenshot id="fleet-manager/network--enable" alt="Strona Network z kartą Enable VPN Network dla organizacji bez VPN" caption="Strona Network przed włączeniem VPN, z trzema korzyściami i przyciskiem Enable VPN Network." />
+
+Po włączeniu VPN strona pokazuje cztery liczniki (**Total Devices**, **Online**, **UAVs**, **Ground Stations**) oraz trzy zakładki: **Devices**, **Stream Bindings** i **Settings**.
+
+<Screenshot id="fleet-manager/network" alt="Zakładka Devices na stronie Network z licznikami statusu i tabelą połączonych urządzeń" caption="Network → Devices dla dużego operatora: Total Devices 51, Online 39, UAVs 44, Ground Stations 7 oraz tabela Connected Devices." />
+
+## Dodawanie dronów do VPN {/* #put-drones-on-the-vpn */}
+
+Dron nigdy nie wymaga ręcznego polecenia. Są dwa sposoby:
+
+- **Podczas parowania.** Jeśli VPN jest włączony przed parowaniem, krok **VPN Connection** kreatora dołącza drona. Zobacz [Dodaj pierwszego drona](../pair-uav.mdx).
+- **Push to Drone.** Dla dronów sparowanych przed włączeniem VPN karta **Push to Drone** na zakładce **Devices** wylistowuje każdego drona, który nie jest w twojej sieci. Wybierz **Connect** obok drona, aby wysłać mu ustawienia VPN. Dron musi być online.
+
+Jeśli dron jest już w innej sieci Tailscale, ma odznakę **Existing VPN**. **Connect** prosi wtedy o potwierdzenie (**Existing VPN Connection Detected**), a **Replace & Connect** przenosi go do sieci twojej organizacji.
+
+Dron pojawia się w **Connected Devices** z typem **UAV** i swoim adresem VPN, a na stronie UAV pojawia się przycisk **Open via VPN**.
+
+## Dodawanie stacji naziemnych do VPN {/* #put-ground-stations-on-the-vpn */}
+
+Stacje naziemne dołączają jednym poleceniem Tailscale z **Connect a Device**. Postępuj zgodnie z [Połącz stację naziemną](../connect-gcs.mdx).
+
+## Połączone urządzenia {/* #connected-devices */}
+
+Tabela zawiera każde urządzenie w sieci:
+
+| Kolumna | Pokazuje |
+|---|---|
+| **Status** | Online lub offline w VPN |
+| **Device** | Nazwę i nazwę hosta |
+| **Type** | **UAV**, **GCS** lub **Unknown**. Urządzenia Unknown mają przycisk **Configure**. |
+| **IP Address** | Adres VPN urządzenia (`100.x.y.z`) |
+| **Last Check-in** | Kiedy urządzenie było ostatnio widziane w sieci |
+
+Wybierz **Sync**, aby odświeżyć listę z serwera VPN. Menu działań każdego wiersza zawiera:
+
+- **Rename**: czytelną nazwę, na przykład „Field laptop – Team North”.
+- **Change Type**: przełącz między **UAV**, **GCS** i **Unknown**. Dla UAV wybierz, który sparowany dron to jest.
+- **Remove Device**: usuwa urządzenie z sieci. Dla drona Fleet Manager każe mu opuścić VPN, a jego powiązania strumieni zostają usunięte.
+
+### Konfigurowanie nieznanego urządzenia {/* #configure-an-unknown-device */}
+
+Nowe stacje naziemne pojawiają się jako **Unknown**, a baner liczy urządzenia wymagające konfiguracji. Wybierz **Configure** i odpowiedz na pytanie **What type of device is this?**
+
+- **Ground Control Station (GCS):** komputer z QGroundControl, Mission Planner lub podobnym programem. Będzie **odbierał** wideo i telemetrię i stanie się dostępny dla powiązań strumieni.
+- **Drone / UAV:** dron z UAVcast-Pro. Wybierz, który sparowany dron to jest, abyś mógł zarządzać jego strumieniowaniem.
+
+Wybierz **Continue**, a następnie **Complete Setup**.
+
+## Zakładka Settings {/* #settings-tab */}
+
+**Danger Zone → Delete Network** trwale usuwa sieć VPN, wszystkie połączone urządzenia, wszystkie klucze uwierzytelniania i wszystkie powiązania strumieni. Urządzenia wypadają z sieci, a każdą stację naziemną i każdy dron trzeba będzie połączyć ponownie.
+
+Usunięcie sieci wyłącza też VPN dla organizacji, a online UAV otrzymują polecenie opuszczenia VPN. Strona Network pokazuje wtedy ponownie **Enable VPN Network**, co tworzy nową, pustą sieć. Nie ma osobnego przełącznika wyłączającego VPN: sposobem na to jest **Delete Network**.
+
+## Wymagania sieciowe {/* #network-requirements */}
+
+| Urządzenie | Wymaga połączeń wychodzących |
+|---|---|
+| Dron (połączenie z Fleet Manager) | HTTPS (TCP 443) do `fleet-manager.uavmatrix.com`, TCP 8883 dla MQTT przez TLS |
+| Dron i stacja naziemna (VPN) | HTTPS (TCP 443) do `vpn-connect.uavmatrix.com` oraz UDP dla WireGuard. Tailscale domyślnie używa UDP 41641. |
+
+Większość sieci komórkowych i biurowych na to pozwala. Jeśli urządzenia dołączają do VPN, ale nie mogą się nawzajem osiągnąć, zobacz [VPN połączony, ale nie można dotrzeć do drona](../../troubleshooting/vpn-cant-reach-drone.mdx).
+
+Gdy dwa urządzenia nie mogą połączyć się bezpośrednio przez UDP, ich ruch jest przekazywany przez publiczne serwery przekaźnikowe DERP Tailscale przez HTTPS (TCP 443). Pozostaje szyfrowany end-to-end, ale przekaźnik dodaje opóźnienie, dlatego jeśli to możliwe, zezwól na wychodzący UDP.

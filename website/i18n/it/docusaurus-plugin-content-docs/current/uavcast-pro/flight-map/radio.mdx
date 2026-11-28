@@ -1,0 +1,22 @@
+---
+title: "Controlla i canali RC e l'RSSI dall'interfaccia web di UAVcast-Pro"
+description: "Vedi i valori PWM dei canali RC e l'RSSI in tempo reale dal controllore di volo nella scheda Radio di UAVcast-Pro, per verificare gli interruttori del trasmettitore e la commutazione delle telecamere RC."
+sidebar_position: 3
+sidebar_label: "Radio"
+---
+
+# Scheda Radio {/* #radio-tab */}
+
+La scheda Radio mostra l'ingresso RC che il controllore di volo riceve dal tuo trasmettitore: il valore PWM di ogni canale e l'RSSI (intensità del segnale). Usala per verificare le assegnazioni degli interruttori, per esempio il canale che usi per la [commutazione delle telecamere RC](../camera/multi-camera.mdx), senza collegare una stazione di terra. Apri **Mappa di Volo → Radio**.
+
+<Screenshot id="uavcast-pro/flight-map--radio" alt="Scheda Radio con il badge RSSI, i quattro canali principali e i canali ausiliari, tutti a 0" caption="Mappa di Volo → Radio su un'unità da banco senza ricevitore RC, quindi ogni canale legge 0." />
+
+## Cosa vedi {/* #what-you-see */}
+
+- **RSSI**: l'intensità del segnale del ricevitore dal controllore di volo, valutata **Nessun segnale**, **Debole**, **Discreto**, **Buono** o **Eccellente**. Richiede che l'RSSI sia configurato sul controllore di volo (`RSSI_TYPE` su ArduPilot).
+- **Controlli Principali**: **Canale 1 - Roll**, **Canale 2 - Pitch**, **Canale 3 - Throttle** e **Canale 4 - Yaw**, nel layout di Mission Planner.
+- **Canali Ausiliari**: i canali rimanenti.
+
+I valori PWM vanno in genere da 1000 (min) a 2000 (max). Un canale che non si muove mai significa che non è mappato sul trasmettitore, oppure che il ricevitore non lo invia.
+
+I valori arrivano dal messaggio `RC_CHANNELS` del controllore di volo, quindi si aggiornano solo mentre il collegamento con il controllore di volo è **Connesso**.

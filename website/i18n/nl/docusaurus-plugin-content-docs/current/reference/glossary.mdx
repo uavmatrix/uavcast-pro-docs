@@ -1,0 +1,148 @@
+---
+title: "Drone-telemetrie en 4G-woordenlijst"
+sidebar_label: Woordenlijst
+description: "Heldere uitleg van termen in de UAVcast-Pro- en Fleet Manager-documentatie: MAVLink, GCS, heartbeat, APN, HiLink, NTRIP, RTCM, VRS, ZeroTier, Tailscale."
+sidebar_position: 6
+---
+
+# Woordenlijst {/* #glossary */}
+
+### AGL / AMSL {/* #agl--amsl */}
+
+Hoogte boven de grond (hier: boven het startpunt) en boven de gemiddelde zeespiegel. UAVcast-Pro gebruikt deze termen sinds v6.5.0, ter vervanging van REL en MSL.
+
+### APN (Access Point Name) {/* #apn-access-point-name */}
+
+De naam van de gateway van de provider waarmee een mobiel modem verbinding maakt. UAVcast-Pro detecteert deze automatisch wanneer **Access Point Naam (Optioneel)** leeg is.
+
+### ArduPilot {/* #ardupilot */}
+
+Open-source autopilotfirmware voor multicopters, vliegtuigen, VTOL, rovers en boten. UAVcast-Pro werkt met ArduPilot en met elke andere MAVLink-vluchtcontroller, zoals PX4. De vluchtmodusknoppen gebruiken de modusnamen van ArduPilot.
+
+### Authenticatiesleutel {/* #auth-key */}
+
+Een Tailscale-sleutel die een apparaat zonder browser aanmeldt bij een tailnet. Fleet Manager gebruikt authenticatiesleutels om grondstations op het VPN van de organisatie te plaatsen.
+
+### Bitrate {/* #bitrate */}
+
+Het aantal bits per seconde dat de videoencoder produceert. Dit moet binnen de uplink van uw verbinding passen, met ruimte over.
+
+### CSI-camera {/* #csi-camera */}
+
+Een camera op de lintkabelconnector van de Raspberry Pi, zoals Camera Module 3.
+
+### Bestemming {/* #destination */}
+
+In UAVcast-Pro een grondstationvermelding onder **Grondcontrolestations**: een IP-adres met een telemetriepoort en een videopoort.
+
+### Dubbele stream {/* #dual-stream */}
+
+Twee camera's tegelijkertijd naar het grondstation streamen, via twee videopoorten.
+
+### Fleet Manager {/* #fleet-manager */}
+
+Het webdashboard van UAVmatrix voor het monitoren en besturen van veel UAVcast-Pro-drones binnen één organisatie.
+
+### GCS (grondcontrolestation) {/* #gcs-ground-control-station */}
+
+De software, en de computer waarop die draait, waarmee u de drone monitort en aanstuurt: QGroundControl, Mission Planner, MAVProxy.
+
+### GCS failsafe {/* #gcs-failsafe */}
+
+Een instelling van de vluchtcontroller waardoor de drone zelfstandig handelt (terugkeren, landen, loiteren) wanneer hij het grondstation niet meer hoort.
+
+### GGA {/* #gga */}
+
+Een NMEA-zin met uw positie. VRS- en casters met het dichtstbijzijnde mountpoint hebben deze nodig om correcties voor uw locatie te berekenen.
+
+### H.264 {/* #h264 */}
+
+Het videocompressieformaat dat UAVcast-Pro verstuurt. Elk gangbaar grondstation kan het decoderen.
+
+### Heartbeat {/* #heartbeat */}
+
+Het MAVLink-bericht dat een vluchtcontroller ongeveer eens per seconde verstuurt om te melden "ik ben er". *Geen heartbeat* betekent dat de verbinding geen leesbaar MAVLink bevat.
+
+### HiLink-modem {/* #hilink-modem */}
+
+Een USB-modem met een ingebouwde router die zichzelf verbindt en voor Linux verschijnt als netwerkadapter.
+
+### Injector {/* #injector */}
+
+Een UAVcast-Pro-listener (HTTP, UDP of serieel) die uw eigen sensorwaarden omzet in MAVLink-berichten `NAMED_VALUE_FLOAT`.
+
+### Keyframe {/* #keyframe */}
+
+Een volledig videoframe waarmee de decoder kan beginnen. Vaker voorkomende keyframes herstellen sneller van pakketverlies. Instellen met **Stream Herstelsnelheid**.
+
+### MAVLink {/* #mavlink */}
+
+Het berichtenprotocol tussen vluchtcontrollers en grondstations.
+
+### Mountpoint {/* #mountpoint */}
+
+Een benoemde correctiestroom op een NTRIP-caster, meestal gekoppeld aan één basisstation of een VRS-dienst.
+
+### MQTT {/* #mqtt */}
+
+Het berichtenprotocol waarmee drones met Fleet Manager communiceren, versleuteld met TLS op poort 8883.
+
+### NTRIP / NTRIP-caster {/* #ntrip--ntrip-caster */}
+
+Een protocol, en de server, voor het via internet streamen van GNSS-correcties.
+
+### Koppelcode {/* #pairing-code */}
+
+De 8-cijferige code die UAVcast-Pro toont wanneer u een drone koppelt aan Fleet Manager. Geldig voor 5 minuten, eenmalig.
+
+### Read Only (bestemming) {/* #read-only-destination */}
+
+Een grondstationbestemming die telemetrie ontvangt maar niets op het voertuig kan wijzigen: commando's, modewijzigingen en parameter- en missieschrijfacties vanuit dit station worden geblokkeerd. {/* PENDING-RELEASE: read-only */}
+
+### Read Only (gebruiker) {/* #read-only-user */}
+
+Een gebruikersrol in UAVcast-Pro die pagina's kan bekijken, maar geen instellingen kan wijzigen of de drone kan besturen.
+
+### RTCM3 {/* #rtcm3 */}
+
+Het standaard berichtformaat voor GNSS-correcties.
+
+### RTK, RTK Float, RTK Fixed {/* #rtk-rtk-float-rtk-fixed */}
+
+Realtime kinematische positionering met correcties. Float is een benaderende oplossing; Fixed is de oplossing op centimeterniveau.
+
+### RTP / UDP {/* #rtp--udp */}
+
+Het transportprotocol dat UAVcast-Pro gebruikt voor video en telemetrie: snel, zonder hertransmissies, wat de latentie laag houdt.
+
+### SERIALx_PROTOCOL / SERIALx_BAUD {/* #serialx_protocol--serialx_baud */}
+
+ArduPilot-parameters die bepalen welk protocol een seriële poort spreekt (2 = MAVLink2) en met welke snelheid.
+
+### Streamkoppeling {/* #stream-binding */}
+
+In Fleet Manager een koppeling die de video en telemetrie van één drone naar één grondstation stuurt, op eigen poorten.
+
+### sysid / compid {/* #sysid--compid */}
+
+MAVLink-systeem-ID (welk voertuig) en component-ID (welk onderdeel daarvan). De vluchtcontroller heeft meestal sysid 1 en compid 1.
+
+### Tailnet {/* #tailnet */}
+
+Een privé Tailscale-netwerk.
+
+### Tailscale {/* #tailscale */}
+
+Een op WireGuard gebaseerde VPN. UAVcast-Pro kan lid worden van uw tailnet of van het organisatienetwerk van Fleet Manager.
+
+### UAVnet {/* #uavnet */}
+
+De gehoste ZeroTier-netwerkcontroller van UAVmatrix op uavnet.uavmatrix.com. Deze wordt uitgefaseerd ten gunste van het VPN van Fleet Manager; bestaande gebruikers moeten overstappen naar Fleet Manager.
+
+### VRS (virtueel referentiestation) {/* #vrs-virtual-reference-station */}
+
+Een correctiedienst die correcties voor uw positie berekent op basis van een netwerk van basisstations. Vereist GGA upstream.
+
+### ZeroTier {/* #zerotier */}
+
+Een peer-to-peer VPN. UAVcast-Pro kan lid worden van uw eigen ZeroTier-netwerk.

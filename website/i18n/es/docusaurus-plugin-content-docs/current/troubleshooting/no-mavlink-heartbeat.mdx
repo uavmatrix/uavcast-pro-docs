@@ -1,0 +1,91 @@
+---
+title: "Sin heartbeat MAVLink del controlador de vuelo"
+sidebar_label: Sin heartbeat MAVLink
+description: "¿UAVcast-Pro muestra Sin heartbeat o Esperando dispositivo? Revisa el cable USB, el cableado de TELEM, el protocolo SERIAL y la tasa de baudios, y luego usa Detectar automáticamente."
+sidebar_position: 4
+---
+
+# Sin heartbeat MAVLink del controlador de vuelo {/* #no-mavlink-heartbeat-from-the-flight-controller */}
+
+La página **Controlador de Vuelo → Conexión** muestra **Sin heartbeat**, **Esperando dispositivo**, **Detectando tasa de baudios** o **Buscando**, y la fila **Flight controller** del **Tablero** nunca se vuelve verde. UAVcast-Pro todavía no puede detectar el controlador de vuelo.
+
+La página tiene una **Comprobación de conexión** en vivo que prueba cada paso una vez por segundo y explica el primer problema que encuentra. Léela primero: suele ser más rápido que esta página.
+
+<Screenshot id="uavcast-pro/flight-controller--connection-check" alt="Tarjeta de comprobación de conexión con cuatro filas: controlador de vuelo conectado, datos legibles del controlador de vuelo, controlador de vuelo respondiendo y enviando a la estación de control" caption="La comprobación de conexión en un enlace funcional: los cuatro pasos aprobados. Cuando el enlace falla, el primer paso fallido se marca y se explica." />
+
+<SymptomTable rows={[
+  {symptom: 'Esperando dispositivo, o Controlador de vuelo conectado: No detectado', cause: 'No hay cable de datos, o la placa no tiene alimentación', start: '#check-1'},
+  {symptom: 'Hay señal en el cable, pero no hay datos legibles', cause: 'Tasa de baudios incorrecta, TX/RX invertidos, o el puerto no está configurado en MAVLink', start: '#check-2'},
+  {symptom: 'Los datos legibles muestran un % alto de dañados', cause: 'Cable suelto o largo, falta de tierra o ruido eléctrico', start: '#check-3'},
+  {symptom: 'El puerto aparece en uso por otro programa', cause: 'Otro programa tiene el puerto serie', start: '#check-4'},
+  {symptom: 'Estado Desactivado o Detenido', cause: 'El enlace está apagado', start: '#check-5'},
+]} />
+
+## Comprobación 1: ¿Se detecta el controlador de vuelo? {/* #check-1 */}
+
+**Por USB:**
+
+<Steps>
+
+1. Asegúrate de que el controlador de vuelo tenga alimentación y de que su cable USB vaya a la computadora de a bordo.
+2. Prueba con otro cable. Muchos cables USB solo cargan y no transportan datos. Si la placa se enciende, pero **Controlador de vuelo conectado** dice **No detectado**, el cable suele ser la causa.
+3. En **Tipo de enlace**, elige **USB** y deja **Puerto** en **Automático**. Automático encuentra el controlador de vuelo y lo sigue si cambia el número del dispositivo.
+
+</Steps>
+
+**Por un puerto TELEM (UART / Serial):**
+
+<Steps>
+
+1. En **Tipo de enlace**, elige **UART / Serial**.
+2. Revisa el cableado: TX del controlador de vuelo a RX de la computadora de a bordo, RX a TX, y GND a GND. Un cable de tierra faltante es una causa común.
+3. Nunca alimentes la Raspberry Pi desde el puerto TELEM. Aliméntala por separado.
+
+</Steps>
+
+:::note Puerto serie de la Raspberry Pi
+El instalador habilita el UART de la Pi y elimina la consola serie de `cmdline.txt`. En una Pi 3, 4 o Zero 2 W también deshabilita Bluetooth para liberar el UART completo. Si volviste a instalar el sistema operativo después de UAVcast-Pro, ejecuta el instalador de nuevo.
+:::
+
+## Comprobación 2: Iguala la configuración del puerto en el controlador de vuelo {/* #check-2 */}
+
+En un puerto TELEM, el controlador de vuelo debe hablar MAVLink a la velocidad en la que escucha UAVcast-Pro. Las conexiones USB no usan tasa de baudios.
+
+<Steps>
+
+1. Conecta el controlador de vuelo a Mission Planner o QGroundControl por USB.
+2. Abre la lista completa de parámetros y busca el puerto serie que cableaste: `SERIAL1` para TELEM1, `SERIAL2` para TELEM2.
+3. Establece `SERIALx_PROTOCOL` en `2` (MAVLink2). Escribe los parámetros y reinicia el controlador de vuelo.
+4. Anota `SERIALx_BAUD`. En UAVcast-Pro, deja **Tasa de baudios** en **Automático** o elige el mismo valor.
+
+</Steps>
+
+Con **Automático**, UAVcast-Pro prueba 57600, 115200, 921600, 1500000, 460800, 230400 y 500000 baudios, y recuerda la tasa que funcionó. El estado muestra *Probando … baudios (n de 7)* mientras busca.
+
+:::tip Deja que UAVcast-Pro busque por ti
+Presiona **Detectar automáticamente**. Pausa el enlace, escucha en cada puerto y en cada tasa de baudios, y luego guarda lo que encuentra. Puede tardar hasta un minuto. Si informa **No se encontró ningún controlador de vuelo**, abre **Mostrar lo probado** para ver cada puerto y velocidad que se probó.
+:::
+
+## Comprobación 3: Datos dañados {/* #check-3 */}
+
+Si **Datos legibles del controlador de vuelo** muestra un porcentaje *dañados*, llegan bytes, pero están corruptos. Normalmente esto significa un cable suelto o largo, un cable de tierra faltante o ruido de los motores y de los cables de alimentación.
+
+- Vuelve a conectar los conectores y acorta el cable.
+- Aleja los cables de señal de los cables del ESC y de la batería.
+- Prueba un `SERIALx_BAUD` más bajo, por ejemplo 57600 o 115200.
+
+## Comprobación 4: Puerto en uso {/* #check-4 */}
+
+La lista **Puerto** marca los puertos que otro programa ocupa (*en uso por …*). Detén ese programa, por ejemplo un MAVProxy o un segundo enrutador que hayas iniciado tú, o elige otro puerto.
+
+## Comprobación 5: ¿Está el enlace activado? {/* #check-5 */}
+
+En la parte superior de la página, **Enlace habilitado** debe estar activado. Si el estado dice **Enlace detenido**, presiona **Conectar**. Los ajustes se aplican de inmediato, sin reiniciar.
+
+## ¿Sigue sin heartbeat? {/* #still-no-heartbeat */}
+
+[Descarga los registros](./collect-logs.mdx) con **Mavlink Manager** seleccionado. El archivo `diagnostics.txt` incluido enumera los dispositivos serie, quién los ocupa, y los eventos de USB y de energía del kernel, que es lo que necesita soporte para los problemas de enlace.
+
+Cuando el controlador de vuelo muestre **Conectado**, pero tu estación de control siga esperando, ve a [Sin telemetría en la estación de control](./no-telemetry-in-gcs.mdx).
+
+Relacionado: [Conexión del controlador de vuelo](../uavcast-pro/flight-controller/index.mdx) · [Requisitos de hardware](../get-started/hardware-requirements.mdx)

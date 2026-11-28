@@ -1,0 +1,67 @@
+---
+title: "UAVcast-Pro bijwerken naar de nieuwste versie"
+description: "Werk UAVcast-Pro bij via de webinterface of de opdrachtregel, installeer een oudere versie en lees wat er met uw instellingen, serverpoort en opnames gebeurt."
+sidebar_position: 6
+sidebar_label: "Bijwerken"
+---
+
+# UAVcast-Pro bijwerken {/* #update-uavcast-pro */}
+
+Werk UAVcast-Pro bij via **Applicatie → Applicatie Bijwerken** in de webinterface, of door de installer opnieuw uit te voeren via SSH. Beide behouden uw instellingen, gebruikers, licentie en opnames. De drone heeft internettoegang nodig en u moet opnieuw opstarten zodra de update klaar is.
+
+:::warning Werk nooit bij vlak voor een vlucht
+Een update stopt alle UAVcast-Pro-services, inclusief telemetrie en video, en vereist een herstart. Werk bij op de grond, met de motoren ontwapend.
+:::
+
+## Bijwerken via de webinterface {/* #update-from-the-web-interface */}
+
+<Steps>
+
+1. Ga naar **Applicatie**. De kaart **Applicatie Bijwerken** toont de **Huidige Versie** en de **Nieuwste Versie**. Een groene banner *New version … available* verschijnt wanneer er een nieuwere release is.
+2. Laat **Selecteer versie om bij te werken** op de nieuwste versie staan, of kies een andere versie.
+3. Selecteer **Nu Bijwerken** (of **Update to …**). **Voortgang** toont de stappen voor download en installatie. Dit duurt enkele minuten, langer op een Pi Zero 2 W of Pi 3.
+4. Wanneer de banner **Herstart Vereist** verschijnt, selecteer dan **Nu herstarten**. Het apparaat start opnieuw op.
+5. Open de webinterface opnieuw en controleer de **Huidige Versie**.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/application--update-available" alt="Kaart Applicatie Bijwerken met de huidige en nieuwste versie, een banner Nieuwe versie beschikbaar en de knop Bijwerken" caption="Applicatie → Applicatie Bijwerken met een nieuwere versie beschikbaar." />
+
+## Bijwerken via de opdrachtregel {/* #update-from-the-command-line */}
+
+Voer de installer opnieuw uit. Die vervangt de programmabestanden en behoudt de database:
+
+```bash title="On the drone"
+curl -fsSL https://install.uavmatrix.com | sudo bash
+sudo reboot
+```
+
+Om een bepaalde versie te installeren, lijst u eerst de versies (geen root nodig) en installeert u daarna er een met `-b`:
+
+```bash title="On the drone"
+# List the versions available for this device
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l
+
+# Install a specific version
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.1
+```
+
+## Teruggaan naar een oudere versie {/* #go-back-to-an-older-version */}
+
+Kies de oudere versie in **Selecteer versie om bij te werken** en werk bij zoals gewoonlijk, of gebruik `-b` op de opdrachtregel. Instellingen die in een nieuwere versie zijn gemaakt, bestaan mogelijk niet in de oudere versie.
+
+## Wat een update behoudt en vervangt {/* #what-an-update-keeps-and-replaces */}
+
+| Behouden | Vervangen |
+|---|---|
+| Instellingendatabase (`/opt/uavcast-pro/uavcast.db`): grondstations, camera, modem, VPN, gebruikers, licentie | Programmabestanden in `/opt/uavcast-pro` (`build`, `dist`, `factory`, `install`) |
+| Opnames en telemetrielogboeken | systemd-servicebestanden |
+| ZeroTier- en Tailscale-lidmaatschap | Systeempakketten waarvan UAVcast-Pro afhankelijk is (bijgewerkt door apt) |
+
+{/* PENDING-RELEASE: port-persist */}
+
+Een aangepaste **Serverpoort** die op de pagina Applicatie is ingesteld, blijft behouden na updates.
+
+## Wijzigingen bekijken {/* #see-what-changed */}
+
+Elke release staat met de wijzigingen vermeld in de [changelog](../reference/changelog.mdx). Lees deze voordat u een drone bijwerkt die operationeel vliegt.

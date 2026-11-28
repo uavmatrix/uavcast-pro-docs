@@ -1,0 +1,93 @@
+---
+title: "Referencia de puertos y protocolos de UAVcast-Pro"
+sidebar_label: Puertos y protocolos
+description: "Todos los puertos que usan UAVcast-Pro y Fleet Manager: MAVLink UDP 14550, video UDP 5600, cámara 2 y audio, web, vista previa, RTSP, NTRIP y MQTT 8883."
+sidebar_position: 2
+---
+
+# Puertos y protocolos {/* #ports-and-protocols */}
+
+Usa esta página para configurar los firewalls de la estación de control en tierra, de la red del dron y de las redes corporativas. Se muestran los valores predeterminados; cuando un puerto puede cambiarse, se indica el ajuste correspondiente.
+
+## Estación de control en tierra: tráfico entrante {/* #ground-station-incoming-traffic */}
+
+UAVcast-Pro **envía** telemetría y video a cada estación de control en tierra. La estación solo necesita aceptar UDP entrante; no hace falta que nada escuche en el dron para esto.
+
+| Puerto (predeterminado) | Protocolo | Qué | Ajuste |
+|---|---|---|---|
+| **14550** | UDP | Telemetría MAVLink, en ambos sentidos una vez que la estación responde | **Control en Tierra → Puerto de Telemetría** |
+| **5600** | UDP | Video: H.264 en RTP, tipo de carga útil 96 | **Puerto de Video** |
+| **Puerto de Video + 1** (5601) | UDP | Video de la cámara 2 cuando **Dual stream** está activado | **Puerto de Video (Cámara 2)** (vacío = Puerto de Video + 1) |
+| **Puerto de Video + 2** (5602) | UDP | Audio: Opus en RTP, tipo de carga útil 97, cuando **Enviar audio a las estaciones de control en tierra** está activado | Sigue a **Puerto de Video** |
+
+:::note TCP 5760 está cerrado
+Desde la v6.5.0, el enrutador de telemetría no escucha en TCP 5760. Las estaciones de control en tierra se conectan por UDP a los destinos que añades.
+:::
+
+**Con vinculaciones de stream de Fleet Manager**, el primer dron vinculado a una estación de control en tierra usa 5600/14550, y cada dron adicional recibe su propio bloque de puertos: un puerto de video con espacio para la cámara 2 y el audio a continuación, y un puerto de telemetría. Lee los puertos de cada vinculación. {/* PENDING-RELEASE: port-blocks */}
+
+## Dron: servicios a los que te conectas {/* #drone-services-you-connect-to */}
+
+| Puerto | Protocolo | Qué | Notas |
+|---|---|---|---|
+| **80** | TCP (HTTP) | Interfaz web | Cámbialo en **Aplicación → Ajustes → Puerto del Servidor** (80 o superior). |
+| **8889** | TCP (HTTP) | Vista previa en vivo en el navegador (WebRTC) | Usada por **Cámara → Vista Previa en Vivo** y por las ventanas de video del Mapa de Vuelo. |
+| 8189 | UDP | Medios WebRTC para la vista previa en vivo | Valor predeterminado del servidor de medios. |
+| **9996** | TCP (HTTP) | Reproducción de grabaciones | Usada por la biblioteca de grabaciones y el reproductor de revisión de vuelo. |
+| **8554** | TCP (RTSP) | Copia RTSP del stream de la cámara (`/camera`, `/camera2`) | Disponible mientras la vista previa en vivo o una grabación estén activas. |
+| 8888 | TCP (HTTP) | Copia HLS del stream de la cámara | No la usa la interfaz web. |
+| Inyector HTTP | TCP (HTTP) | `http://<drone>/api/inject/<token>` | Se sirve en el puerto de la interfaz web. Consulta [Inyectores](../uavcast-pro/flight-controller/injectors.mdx). |
+| Inyector UDP | UDP | A tu elección (14600 es un valor predeterminado seguro) | Se configura por inyector en **Controlador de Vuelo → Inyectores**. |
+
+Sobre una VPN, estos puertos deben ser accesibles en la dirección VPN del dron. No se necesita reenvío de puertos por el lado celular.
+
+## Dron: tráfico saliente {/* #drone-outgoing-traffic */}
+
+El dron abre estas conexiones por sí mismo. Las redes que solo permiten tráfico web bloquearán algunas de ellas.
+
+| Destino | Puerto | Protocolo | Qué |
+|---|---|---|---|
+| Estaciones de control en tierra | 14550, 5600 (+1, +2) | UDP | Telemetría, video, audio |
+| `uavmatrix.com` | 443 | HTTPS | Activación de licencia y verificaciones periódicas |
+| `install.uavmatrix.com` | 443 | HTTPS | Instalador y actualizaciones |
+| `fleet-manager.uavmatrix.com` | 443 | HTTPS | Emparejamiento con Fleet Manager |
+| Broker de Fleet Manager | **8883** | MQTT sobre TLS (certificados de cliente) | Estado, telemetría y comandos de Fleet Manager |
+| `vpn-connect.uavmatrix.com` | 443 | HTTPS | Servidor de inicio de sesión de la VPN de Fleet Manager |
+| Tu caster NTRIP | 2101 (o según se configure) | TCP, TLS opcional | Correcciones RTCM |
+| ZeroTier / Tailscale | ZeroTier 9993, Tailscale 41641 (y 443 como respaldo) | UDP | Túneles VPN |
+| Tu proveedor de DNS | 443 | HTTPS | Actualizaciones de DNS dinámico |
+
+## Dentro del dron (solo local) {/* #inside-the-drone-local-only */}
+
+Estos puertos los usan los servicios internos de UAVcast-Pro y no necesitan reglas de firewall:
+
+| Puerto | Qué |
+|---|---|
+| 6379 | Redis, bus de mensajes interno |
+| 12550, 12551 | Enrutador de telemetría hacia la aplicación UAVcast-Pro y hacia el cliente NTRIP |
+| 8090 | Listener HTTP del inyector (se accede mediante `/api/inject/…` en el puerto 80) |
+| 9997 | API del servidor de medios |
+| 5000 | API del servicio en segundo plano de UAVcast-Pro, usada por la interfaz web |
+
+## Reglas de firewall para la estación de control en tierra {/* #firewall-rules-for-the-ground-station */}
+
+<Tabs>
+<TabItem value="windows" label="Windows" default>
+
+```powershell title="PowerShell (Administrador)"
+New-NetFirewallRule -DisplayName "MAVLink Telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+New-NetFirewallRule -DisplayName "UAV Video" -Direction Inbound -Protocol UDP -LocalPort 5600-5602 -Action Allow
+```
+
+</TabItem>
+<TabItem value="linux" label="Linux (UFW)">
+
+```bash
+sudo ufw allow 14550/udp comment 'MAVLink Telemetry'
+sudo ufw allow 5600:5602/udp comment 'UAV Video and audio'
+```
+
+</TabItem>
+</Tabs>
+
+Agrega más puertos si usas otros puertos de telemetría o de video, o varios drones mediante vinculaciones de stream de Fleet Manager.

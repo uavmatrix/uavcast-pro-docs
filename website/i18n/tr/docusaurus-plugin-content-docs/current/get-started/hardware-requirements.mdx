@@ -1,0 +1,100 @@
+---
+title: "UAVcast-Pro donanım gereksinimleri (Pi, FC, kameralar, modemler)"
+description: "UAVcast-Pro ile çalışan Raspberry Pi veya Linux bilgisayarı, uçuş kontrolcüsü, kamera ve 4G/LTE modem; ayrıca kablolama, güç ve depolama gereksinimleri."
+sidebar_position: 3
+sidebar_label: "Donanım gereksinimleri"
+---
+
+# Donanım gereksinimleri {/* #hardware-requirements */}
+
+UAVcast-Pro, herhangi bir MAVLink uçuş kontrolcüsüne (ArduPilot veya PX4) bağlı 64 bit bir Linux eşlik eden bilgisayarda (companion computer) çalışır. Video için bir kamera, Wi-Fi menzili dışındaki uçuşlar için ise bir 4G/LTE modem ekleyin. Pi kamerası ve USB modem içeren bir Raspberry Pi 4 veya 5, en yaygın kurulumdur.
+
+## Eşlik eden bilgisayar {/* #companion-computer */}
+
+UAVcast-Pro, Raspberry Pi OS, Debian veya Ubuntu çalıştıran, **arm64** veya **amd64 (x86-64)** işlemcili herhangi bir **64 bit** Linux kartına veya PC'ye kurulabilir. 32 bit sistemler (`armv7l`, `i686`) desteklenmez.
+
+| Kart | Durum | Notlar |
+|---|---|---|
+| Raspberry Pi 5 | Destekleniyor | Donanım H.264 kodlayıcısı yoktur. Video yazılımla kodlanır; bu nedenle yüksek çözünürlükte veya iki akışta Kamera sayfasındaki **System load** göstergesini izleyin. |
+| Raspberry Pi 4 | Destekleniyor, önerilir | CPU, güç tüketimi ve fiyat açısından iyi bir denge. 2 GB RAM veya daha fazla. |
+| Raspberry Pi 3 / 3B+ | Destekleniyor | Telemetri ve bir 720p akış için yeterli. Kurulum yaklaşık 30 dakika sürer. |
+| Raspberry Pi Zero 2 W | Destekleniyor | En küçük ve en hafif model. Kurulum yaklaşık 30 dakika sürer; videoyu makul tutun. |
+| Raspberry Pi Compute Module 3+/4 | Destekleniyor | Eşleşen Pi modeliyle aynı. |
+| NVIDIA Jetson, Orange Pi, Banana Pi ve diğer arm64 kartlar | Destekleniyor | Satıcının 64 bit Ubuntu veya Debian imajını kullanın. UAVcast-Pro bu kartları tanır ve uçuş kontrolcüsü için seri portlarını önerir. USB kamera kullanın (Raspberry Pi CSI kameraları bir Pi gerektirir). |
+| x86-64 PC (Intel NUC, mini PC, dizüstü bilgisayar) | Destekleniyor | amd64 sürümünü kullanır. USB seri adaptörler `/dev/ttyUSB*` veya `/dev/ttyACM*` olarak görünür. |
+
+Kartın mimarisini kontrol etmek için kartta `uname -m` komutunu çalıştırın. `aarch64` veya `x86_64` çıktısını görmelisiniz.
+
+:::note Raspberry Pi olmayan arm64 kartlar
+Jetson, Orange Pi, Banana Pi ve Raspberry Pi olmayan diğer arm64 kartlar, {/* PENDING-RELEASE: non-pi-arm64 version */}bir sonraki UAVcast-Pro sürümünü veya daha yenisini gerektirir. Eski yükleyiciler bu kartlarda *Device is not a Raspberry Pi* mesajıyla durur.
+:::
+
+### Depolama {/* #storage */}
+
+- Kök diskte **en az 500 MB boş alan** olmalıdır; aksi halde yükleyici durur. Pratik minimum 8 GB veya daha büyük bir karttır. Drone üzerinde video kaydediyorsanız 32 GB veya daha fazlasını kullanın.
+- İyi bir A1/A2 dereceli microSD kart kullanın ya da SSD'den önyükleme yapın. Kayıtlar bir USB sürücüye veya SSD'ye de yazılabilir (bkz. [Kayıtlar](../uavcast-pro/camera/recordings.mdx)).
+
+:::note Lisans depolama aygıtına bağlıdır
+UAVcast-Pro bir aygıtı, CPU seri numarası ile önyükleme diskinin (SD kart veya SSD) seri numarasının birleşimiyle tanır. Yeni bir SD karta geçmek yeni bir aygıt sayılır. Önce eski aygıtın kaydını silin. Bkz. [Yeni donanıma taşıma](./license-activation.mdx#move-to-new-hardware).
+:::
+
+### Güç {/* #power */}
+
+Raspberry Pi, Pi'nin ve USB portlarındaki her şeyin yükünü taşıyabilecek kararlı bir **5.1 V** besleme gerektirir. 4G modem iletim yaparken 500 mA'in epey üzerinde akım çekebilir; USB kamera da yük ekler.
+
+- Pi'yi tüm yük için boyutlandırılmış ayrı bir 5 V BEC veya regülatörden besleyin. Uçuş kontrolcüsünün TELEM veya USB portu Pi'yi besleyemez.
+- Modem Pi'nin gerilimini düşürüyorsa, Pi'yi güçlü bir USB hub'dan veya ayrı bir 5 V kaynaktan besleyin.
+- [Kontrol Paneli](../uavcast-pro/dashboard.mdx)'ndeki **Power supply** satırını kontrol edin. *Voltage too low - use a stronger power supply* mesajı, Pi'nin şu anda düşük gerilimle çalıştığı anlamına gelir. *Slowed down (heat or power)* mesajı ise CPU'nun kısıtlandığını (throttling) gösterir.
+
+## Uçuş kontrolcüsü {/* #flight-controller */}
+
+UAVcast-Pro, **herhangi bir MAVLink uçuş kontrolcüsü** ile çalışır: Pixhawk ve Cube ailelerinde, Matek, Holybro, CUAV, mRo ve diğer çoğu kartta ArduPilot (Copter, Plane, Rover, Sub) ve PX4. MAVLink 2 önerilir.
+
+Uçuş modu adları ve mod düğmeleri (Uçuş Haritası'nda ve Fleet Manager'da), Copter, Plane, Rover ve Sub için ArduPilot'un modlarını kullanır. PX4 uçuş kontrolcüsünde telemetri, video, yer kontrol istasyonlarına yönlendirme, harita ve HUD aynı şekilde çalışır; PX4 uçuş modlarını değiştirmek için yer kontrol istasyonunuzu kullanın.
+
+Bağlantıyı iki yoldan biriyle kurabilirsiniz:
+
+| Bağlantı | Kablolama | Ne zaman kullanılır |
+|---|---|---|
+| **USB** | Uçuş kontrolcüsünün USB portundan eşlik eden bilgisayara USB kablosu. | En kolay yöntem. Ayarlanacak baud hızı yoktur. Kısa, kaliteli bir veri kablosu kullanın. |
+| **UART / Serial** | TELEM portunun TX → bilgisayarın RX, RX → bilgisayarın TX, GND → GND bağlantısı. Ya da bir USB-seri (FTDI) kablosu. | USB portu başka bir şey için kullanılıyorsa veya daha düzenli bir kurulum istiyorsanız. Bu portta MAVLink'i etkinleştirin: ArduPilot'ta `SERIALx_PROTOCOL = 2` (MAVLink2), PX4'te `MAV_x_CONFIG`. |
+
+**Yalnızca Raspberry Pi:** GPIO UART'ı `/dev/serial0` (GPIO 14 TX, GPIO 15 RX) olarak görünür. Yükleyici bunu uçuş kontrolcüsü için serbest bırakır: seri oturum açma konsolunu devre dışı bırakır ve Pi 3, 4 ve Zero 2 W'de Bluetooth'u UART'tan çıkarır. Hem Pi hem de uçuş kontrolcüsü kendi besleme kaynağına sahipken, uçuş kontrolcüsünün 5 V pinini asla Pi'ye bağlamayın.
+
+Diğer kartlarda kartın kendi UART'ını kullanın (örneğin Jetson'da `ttyTHS*`, Orange Pi'de `ttyS*`) ya da bir USB-seri adaptör kullanın.
+
+| Uçuş kontrolcüsü TELEM portu | Raspberry Pi GPIO başlığı |
+|---|---|
+| TX | GPIO 15 (RXD), pin 10 |
+| RX | GPIO 14 (TXD), pin 8 |
+| GND | GND, örneğin pin 6 |
+
+TX her zaman RX'e bağlanır. TELEM portunun 5 V pinini bağlamadan bırakın.
+
+UAVcast-Pro portu ve baud hızını otomatik olarak bulur. Bkz. [Uçuş kontrolcüsünü bağlama](../uavcast-pro/flight-controller/index.mdx).
+
+## Kameralar {/* #cameras */}
+
+| Kamera | Notlar |
+|---|---|
+| Raspberry Pi kamera modülleri (v1, v2, v3, HQ, Global Shutter) ve diğer libcamera CSI kameraları | En iyi gecikme süresi. Raspberry Pi 5 ve Compute Module'ler iki CSI kamerayı çalıştırabilir. |
+| Logitech C920 veya C615 gibi USB (UVC) web kameraları | Tak ve çalıştır. `/dev/video*` olarak algılanır. |
+| HDMI kaynakları (GoPro, kamera gimbal'leri) | Bir HDMI-CSI köprüsü (CSI kamera olarak görünür) veya bir USB HDMI yakalama çubuğu (USB kamera olarak görünür) üzerinden. |
+| IP kameralar ve GStreamer'ın okuyabildiği diğer her şey | [Özel Pipeline](../uavcast-pro/camera/custom-pipeline.mdx) üzerinden. |
+
+İki kamera aynı anda çalışabilir; bir RC kanalıyla değiştirilebilir ya da birlikte akıtılabilir. Bkz. [İki kamera ve RC ile değiştirme](../uavcast-pro/camera/multi-camera.mdx). Ses için herhangi bir USB mikrofon veya yerleşik mikrofonlu bir web kamerası çalışır. Bkz. [Ses](../uavcast-pro/camera/audio.mdx).
+
+## 4G/LTE modemler {/* #4glte-modems */}
+
+UAVcast-Pro iki tür USB modemi destekler:
+
+| Tür | Nasıl çalışır | Örnekler |
+|---|---|---|
+| **HiLink** | Modem küçük bir yönlendiricidir. Bir ağ kartı olarak görünür (genellikle `eth1` veya `usb0`) ve kendiliğinden bağlanır. UAVcast-Pro'da yapılandırılacak bir şey yoktur. | Huawei E3372**h** (HiLink yazılımı), E8372, çoğu "web arayüzlü LTE USB dongle" |
+| **Geleneksel (PPP)** | ModemManager ve NetworkManager tarafından yönetilir. UAVcast-Pro bağlanır, APN'yi bulur ve kopmalardan sonra yeniden bağlanır. | Huawei E3372**s** (stick yazılımı), Quectel EC25 / EG25 / EM06 ve bir USB adaptördeki Sierra Wireless modülleri |
+
+[ModemManager destekli aygıtlar listesinde](https://www.freedesktop.org/wiki/Software/ModemManager/SupportedDevices/) yer alan herhangi bir modem, Geleneksel modem olarak çalışmalıdır. Bölgeniz için veri paketi olan bir SIM kullanın ve operatörünüzün gelen trafiği engelleyip engellemediğini kontrol edin (bir VPN bunu aşar). Bkz. [Hücresel modem](../uavcast-pro/connectivity/cellular-modem.mdx).
+
+## Yer kontrol istasyonu bilgisayarı {/* #ground-station-computer */}
+
+Mission Planner, QGroundControl veya başka bir MAVLink yer kontrol istasyonu çalıştıran herhangi bir bilgisayar. Varsayılan olarak telemetriyi UDP 14550'de, videoyu UDP 5600'de alır. Mission Planner'da video için GStreamer'ın kurulu olması gerekir; QGroundControl bunu yerleşik olarak içerir.

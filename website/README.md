@@ -52,7 +52,7 @@ A `<Screenshot>` whose image is missing renders a placeholder frame, so pages bu
 
 ## Adding a language
 
-All ten locales are configured in `docusaurus.config.ts` (`LOCALES`). A locale goes live, meaning it appears in the language menu, in hreflang and in the sitemap index, as soon as its translated docs exist:
+All ten locales are configured in `docusaurus.config.ts` (`LOCALES`). A locale goes live, meaning it appears in the language menu, in hreflang and in the sitemap index, once every file under `docs/` has a translation at the same path in `i18n/<path>/docusaurus-plugin-content-docs/current/`. A file that is missing, or still identical to the English source, does not count. Until then the locale shows as "Soon" in the language menu:
 
 ```bash
 # 1. UI strings (navbar, footer, home page, search) for e.g. Spanish

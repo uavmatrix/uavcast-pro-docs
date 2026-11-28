@@ -1,0 +1,86 @@
+---
+title: "Raspberry Pi drone'undan yer kontrol istasyonuna (GCS) düşük gecikmeli video akışı"
+description: "Raspberry Pi kamerasını veya USB web kamerasını UAVcast-Pro'da kurun ve düşük gecikmeli H.264 videoyu UDP üzerinden QGroundControl veya Mission Planner'a aktarın. Çözünürlük, FPS ve bit hızı."
+sidebar_position: 1
+sidebar_label: "Kamera ayarları"
+---
+
+# Kamera ayarları {/* #camera-settings */}
+
+UAVcast-Pro, bir Raspberry Pi CSI kamerasından veya USB web kamerasından video yakalar, H.264 olarak kodlar ve **Videoyu Etkinleştir** seçeneği açık olan her yer kontrol istasyonuna UDP üzerinden RTP olarak gönderir. Mission Planner ve QGroundControl bunu doğrudan 5600 portunda oynatır. Akışın bir kopyası, web arayüzündeki canlı önizlemeyi ve drone üzerindeki kaydediciyi besler. **Kamera → Kamera ayarları** sayfasını açın.
+
+<Screenshot id="uavcast-pro/camera" alt="CAM 1 bir Raspberry Pi kamerasına ayarlı Kamera Kontrol Paneli; çözünürlük, FPS, bit hızı ve akış kurtarma için kamera ayarları ile Canlı Önizleme paneli" caption="Kamera → Kamera ayarları; CAM 1 olarak Raspberry Pi kamerası, 1536×864 çözünürlük ve 30 FPS, bit hızı Otomatik. Burada Canlı Önizleme kapalı." />
+
+## Kamerayı ayarlama {/* #set-up-the-camera */}
+
+<Steps>
+
+1. Kamerayı bağlayın ve **Kamera → Kamera ayarları** sayfasına gidin.
+2. **Kamera Etkinleştirilsin mi?** seçeneğini **Evet** yapın.
+3. **CAM 1** yuvasına tıklayın ve kamerayı seçin. CSI kameralar *Raspberry Pi Camera - imx708 (CSI)* gibi veya benzer biçimde, USB kameralar ise kendi adlarıyla görünür.
+4. **Kamera Ayarları** altında kameranızın desteklediği bir **Çözünürlük** seçin. Desteklenmeyen boyutlar işaretlenir.
+5. Başlangıç için **FPS Seç** seçeneğini **Otomatik** olarak bırakın ve **Bit Hızı** değerini `0` (otomatik) yapın.
+6. **Akış Ayarları** altında **Canlı Önizleme Etkinleştirilsin mi?** seçeneğini işaretleyin ve **Başlat** seçeneğini seçin.
+7. [Yer Kontrol İstasyonları](../ground-stations/index.mdx) sayfasında, video almasını istediğiniz her yer kontrol istasyonu için **Videoyu Etkinleştir** seçeneğini açın.
+
+</Steps>
+
+Kamera listede görünmüyorsa sayfanın altındaki **İşlem Kayıtları**'na bakın: Kamera algılayıcının kontrol ettiği her cihazı ve neden atlandığını gösterirler.
+
+## Ayar referansı {/* #settings-reference */}
+
+| Ayar | Varsayılan | Değerler | Notlar |
+|---|---|---|---|
+| **Kamera Etkinleştirilsin mi?** | **Evet** | **Evet**, **Hayır** | **Hayır** videoyu tamamen durdurur. |
+| **CAM 1** | Raspberry Pi kamerası | Algılanan kameralar, **Özel Pipeline Gir** | Kendi GStreamer pipeline'ınızı yazmak için **Özel Pipeline Gir** seçeneğini seçin. Bkz. [Özel pipeline](./custom-pipeline.mdx). |
+| **Çözünürlük** | `640x480` | Kameranın bildirdiği boyutlar | Kamera bu boyutu sağlayamazsa UAVcast-Pro en büyük desteklenen boyuta döner ve kullanılanı günlüğe yazar. |
+| **FPS Seç** | **Otomatik** | **Otomatik** veya kameranın bu çözünürlükte desteklediği hızlar | **Otomatik**, hızı kameranın seçmesine izin verir. |
+| **Bit Hızı** | `0` (**Otomatik**) | 0–10000 kbps, 100'er adımlarla | Hücresel bağlantılar için sabit bir değer belirleyin. |
+| **Akış Kurtarma Hızı** | **Otomatik** | **Otomatik** (0), 1, 5, 10, 15, 30, 60, 90, 120 kare | Anahtar kare aralığı. Düşük değerler paket kaybından sonra daha hızlı kurtarır ve VPN üzerinde gri bulanıklığı giderir, ancak bant genişliği harcar. |
+| **Çevirme Ayarları** | Kapalı | **Dikey Çevir**, **Yatay Çevir** | CSI kameralar. |
+| **Döndürme** | `0°` | 0°, 90°, 180°, 270° | USB ve diğer CSI olmayan kameralar. |
+| **Canlı Önizleme Etkinleştirilsin mi?** | Açık | Açık, kapalı | Bu sayfadaki ve Uçuş Haritasındaki önizleme. Kayıt da akışın bu kopyasını kullanır. |
+
+Ayarlar değiştirdikçe kaydedilir. Çalışan bir akış değişikliği almazsa **Akış Ayarları** altında **Yeniden Başlat** seçeneğini seçin.
+
+## Bağlantınıza göre ayar seçin {/* #pick-settings-for-your-link */}
+
+Tek bir doğru ayar yoktur: bit hızı, telemetri için pay bırakarak bağlantının en yavaş kısmına sığmalıdır. Tek kamera için başlangıç değerleri şunlardır:
+
+| Bağlantı | Çözünürlük | FPS | Bit hızı | Akış Kurtarma Hızı |
+|---|---|---|---|---|
+| Yerel Wi-Fi veya Ethernet | 1920x1080 | 30 | 4000–6000 kbps | Otomatik |
+| İyi 4G/LTE | 1280x720 | 30 | 1500–2500 kbps | 30 kare |
+| Zayıf 4G veya uzun menzil | 1280x720 veya 854x480 | 15–20 | 800–1200 kbps | 15 kare |
+
+Paket kaybından sonra görüntü donarsa veya gri bulanıklaşırsa önce bit hızını düşürün, ardından anahtar karelerin daha sık gelmesi için **Akış Kurtarma Hızı** değerini düşürün.
+
+### CPU yükü {/* #cpu-load */}
+
+**Sistem yükü** göstergesi, kodlayıcının ne kadar çalıştığını gösterir. Bir Raspberry Pi 5'te her akış yazılımla kodlanır (Pi 5'in H.264 kodlayıcısı yoktur); bu yüzden yüksek çözünürlükler veya iki akış CPU'yu tamamen doldurabilir. *CPU sınırına yakın. Çözünürlüğü veya bit hızını düşürün.* uyarısını verdiğinde, uçuştan önce bunu yapın.
+
+## Canlı önizleme {/* #live-preview */}
+
+**Canlı Önizleme**, akışı yerleşik medya sunucusu üzerinden (WebRTC, **8889** portu) tarayıcıda oynatır. Ağa bağlı olarak, yer kontrol istasyonunuzun aldığı UDP akışının birkaç yüz milisaniye gerisindedir. Tam ekran izlemek için yeni sekme düğmesini kullanın. Tarayıcılar önizlemeyi sessiz başlatır; [ses](./audio.mdx) kullanıyorsanız oynatıcıda sesi açın.
+
+Önizleme, tarayıcının drone'daki 8889 portuna doğrudan ulaşabilmesini gerektirir. LAN üzerinde ve VPN üzerinden çalışır, ancak yalnızca web arayüzünü taşıyan **Open via Proxy** seçeneğiyle çalışmaz. Önizleme için **Open via VPN** seçeneğini kullanın.
+
+## Akış nasıl gönderilir {/* #how-the-stream-is-sent */}
+
+| Akış | Taşıma | Yer kontrol istasyonundaki port |
+|---|---|---|
+| Kamera 1 videosu | H.264, UDP üzerinden RTP | **Video Portu** (varsayılan `5600`) |
+| Kamera 2 videosu (çift akış) | H.264, UDP üzerinden RTP | **Video Portu (Kamera 2)**, varsayılan Video Portu + 1 (`5601`) |
+| Ses (isteğe bağlı) | Opus, UDP üzerinden RTP | Video Portu + 2 (`5602`) |
+| Önizleme | WebRTC | Tarayıcıdan drone'a, 8889 portu |
+
+Drone akışı yer kontrol istasyonuna iter. Yer kontrol istasyonunun akışı istemesi gerekmez ve drone üzerinde gelen video bağlantılarını dinleyen hiçbir şey yoktur.
+
+## İlgili {/* #related */}
+
+- [İki kamera: RC geçişi ve çift akış](./multi-camera.mdx)
+- [Ses](./audio.mdx)
+- [Kayıtlar ve uçuş incelemesi](./recordings.mdx)
+- [Özel GStreamer pipeline'ı](./custom-pipeline.mdx)
+- [Sorun giderme: kamera algılanmadı](../../troubleshooting/camera-not-detected.mdx)
+- [Sorun giderme: kesintili veya gecikmeli video](../../troubleshooting/choppy-or-delayed-video.mdx)

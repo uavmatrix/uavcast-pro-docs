@@ -1,0 +1,56 @@
+---
+title: "UAVcast-Pro 是什么？4G/LTE 无人机遥测与视频"
+description: "UAVcast-Pro 可将 Raspberry Pi 或 Linux 伴随计算机变为 MAVLink 遥测和 H.264 视频的 4G/LTE 链路。了解它如何与 Fleet Manager 协同工作。"
+sidebar_position: 1
+sidebar_label: "概述"
+---
+
+# UAVcast-Pro 是什么？ {/* #what-is-uavcast-pro */}
+
+UAVcast-Pro 是运行在无人机伴随计算机上的软件，通常使用 Raspberry Pi。它从任意 MAVLink 飞控（ArduPilot 或 PX4）读取 MAVLink 数据，从一个或两个摄像头输出 H.264 视频流，并通过 Wi-Fi、以太网或 4G/LTE 调制解调器将两者发送至地面控制站。可通过运行在无人机上的网页界面进行设置和监控。
+
+UAVmatrix Fleet Manager 是与之配套的云端仪表板。将运行 UAVcast-Pro 的无人机与 Fleet Manager 配对后，即可在同一张地图上查看整个机队，打开远程终端，规划任务，并在无需端口转发的情况下将视频和遥测数据路由到地面站。每个 UAVcast-Pro 许可证都包含 Fleet Manager。
+
+## 各组件如何连接 {/* #how-the-pieces-connect */}
+
+```text
+ 飞控（ArduPilot、PX4）  ──USB/UART──►  运行 UAVcast-Pro 的伴随计算机
+                                        │  MAVLink 路由器、摄像头服务器、调制解调器、
+ 摄像头 ──CSI/USB────────────────────►  │  VPN、NTRIP 客户端、录制器、网页界面
+                                        │
+                                        ├── UDP 14550（遥测）──────┐
+                                        ├── UDP 5600（视频）  ──────┼─► Mission Planner / QGroundControl
+                                        │                          │   通过局域网、VPN 或 4G
+                                        └── MQTT/TLS 8883 ─────────┴─► Fleet Manager（可选）
+```
+
+- **在无人机上**：UAVcast-Pro 占用飞控的串口，并将 MAVLink 转发给您添加的每个地面站。摄像头服务器对 H.264 视频进行编码，并通过 UDP 将 RTP 发送至相同的地面站。除非您添加，否则不会监听任何传入的遥测连接。
+- **无人机与地面之间**：在本地网络中，地面站自身的 IP 地址即可满足需求。通过 4G 连接时，无人机没有公网地址，因此需要将两端都接入 VPN。包含在每个许可证中的 [Fleet Manager VPN](../uavcast-pro/connectivity/vpn.mdx) 会为您完成此操作；UAVcast-Pro 也可以加入您自己的 Tailscale 或 ZeroTier 网络。
+- **在云端**：配对后，无人机会保持一条由证书认证的出站 MQTT 连接至 Fleet Manager。参见[将无人机与 Fleet Manager 配对](../uavcast-pro/fleet-pairing.mdx)。
+
+## 功能概览 {/* #what-you-can-do-with-it */}
+
+| 领域 | 功能 | 页面 |
+|---|---|---|
+| 遥测 | 自动检测飞控端口和波特率，将 MAVLink 路由到任意数量的地面站，并可选择只读目标 | [飞行控制器](../uavcast-pro/flight-controller/index.mdx)、[地面控制站](../uavcast-pro/ground-stations/index.mdx) |
+| 视频 | 树莓派 CSI 摄像头和 USB 摄像头，双摄像头支持 RC 切换或双路流，音频，自定义 GStreamer 管道 | [摄像头与视频](../uavcast-pro/camera/index.mdx) |
+| 录制 | 在无人机上录制每次飞行的视频和遥测数据，并提供飞行回放播放器 | [录制](../uavcast-pro/camera/recordings.mdx) |
+| 飞行地图 | 实时地图、驾驶舱 HUD、解锁/上锁、返航和悬停、任务规划、MAVLink 检查器、日志分析 | [飞行地图](../uavcast-pro/flight-map/index.mdx) |
+| 连接 | 自动配置 APN 的 4G/LTE 调制解调器、Fleet Manager VPN 或您自己的 Tailscale 或 ZeroTier 网络、动态 DNS、Wi-Fi 与调制解调器的优先级 | [连接](/uavcast-pro/connectivity/) |
+| RTK | NTRIP 客户端，可将 RTCM3 修正数据发送至飞控 | [NTRIP / RTK](../uavcast-pro/flight-controller/ntrip-rtk.mdx) |
+| 自定义数据 | 将传感器和脚本桥接到 MAVLink 并绘制图表 | [注入器](../uavcast-pro/flight-controller/injectors.mdx)、[数据流](../uavcast-pro/data-streams.mdx) |
+
+## 所需条件 {/* #what-you-need */}
+
+- 64 位 Linux 伴随计算机（arm64 或 amd64）。Raspberry Pi 3、4、5 和 Zero 2 W 是常见选择；x86 迷你 PC 同样可用。NVIDIA Jetson、Orange Pi 及其他 arm64 主板将在 {/* PENDING-RELEASE: non-pi-arm64 version */}UAVcast-Pro 的下一个发行版中支持。参见[硬件要求](./hardware-requirements.mdx)。
+- MAVLink 飞控：ArduPilot 或 PX4。飞行模式按钮采用 ArduPilot 的模式名称。
+- 来自 [UAVmatrix 商店](https://uavmatrix.com/products/)的 UAVcast-Pro 许可证。参见[许可证与激活](./license-activation.mdx)。
+- 如需在 Wi-Fi 覆盖范围之外飞行：4G/LTE 调制解调器和数据 SIM 卡。
+
+## 后续步骤 {/* #next-steps */}
+
+<CardGrid>
+  <Card href="/get-started/quick-start/" title="快速入门" description="从全新的树莓派开始，在 Mission Planner 或 QGroundControl 中获取遥测和视频。" />
+  <Card href="/get-started/installation/" title="安装 UAVcast-Pro" description="在 Raspberry Pi OS、Debian 或 Ubuntu 上通过一条命令安装（arm64 和 amd64）。" />
+  <Card href="/get-started/license-activation/" title="激活许可证" description="在设备上激活许可证，查看设备名额，并将许可证迁移到新硬件。" />
+</CardGrid>

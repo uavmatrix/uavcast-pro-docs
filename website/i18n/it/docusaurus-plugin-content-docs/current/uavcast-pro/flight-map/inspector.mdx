@@ -1,0 +1,34 @@
+---
+title: "Ispeziona i messaggi MAVLink in tempo reale nell'interfaccia web di UAVcast-Pro"
+description: "Usa l'Ispettore MAVLink di UAVcast-Pro per vedere ogni messaggio del controllore di volo con la sua frequenza, l'ID di sistema e l'ID componente, e per fare il debug di telemetria e iniettori."
+sidebar_position: 4
+sidebar_label: "Ispettore"
+---
+
+# Ispettore MAVLink {/* #mavlink-inspector */}
+
+L'Ispettore elenca ogni messaggio MAVLink ricevuto da UAVcast-Pro, raggruppato per velivolo, con la sua frequenza e gli ultimi valori dei campi. Usalo per verificare che il controllore di volo invii ciò che ti aspetti, per trovare i nomi esatti dei campi di un messaggio o per confermare che un [iniettore](../flight-controller/injectors.mdx) produce messaggi `NAMED_VALUE_FLOAT`. Apri **Mappa di Volo → Ispettore**.
+
+<Screenshot id="uavcast-pro/flight-map--inspector" alt="Ispettore MAVLink con stato della connessione e la lista dei messaggi per il sistema 1, con nomi dei messaggi, frequenze in Hz e conteggi" caption="Mappa di Volo → Ispettore con i messaggi del controllore di volo (sistema 1) e ATTITUDE espanso." />
+
+## Cosa vedi {/* #what-you-see */}
+
+**Stato della connessione MAVLink** in alto: **Connessione**, **Velivolo**, **Satelliti GPS**, **Messaggi totali** e **ID Sistema**.
+
+**Ispettore Messaggi** sotto: un gruppo per velivolo (*Velivolo (ID Sistema: 1)*) e al suo interno una riga per messaggio, con:
+
+- il nome del messaggio,
+- **COMP**: l'ID del componente che l'ha inviato (1 = autopilota, 194 = il valore predefinito per gli iniettori),
+- la frequenza in **Hz** e il numero di messaggi ricevuti.
+
+Apri un messaggio per vedere i suoi campi e i valori attuali.
+
+## Controlli tipici {/* #typical-checks */}
+
+| Domanda | Cosa cercare |
+|---|---|
+| Il GPS invia dati? | `GPS_RAW_INT` a 2–10 Hz, e `GPS_RTK` se usi [RTK](../flight-controller/ntrip-rtk.mdx). |
+| Perché la telemetria è lenta nella stazione di terra? | Frequenze basse su `ATTITUDE`, `VFR_HUD` o `GLOBAL_POSITION_INT`. Aumenta le frequenze dello stream `SRx_` sulla porta MAVLink del controllore di volo. |
+| Il mio iniettore funziona? | `NAMED_VALUE_FLOAT` sotto COMP 194 (o il compid che hai impostato). |
+
+Se l'elenco mostra *In attesa di messaggi...*, il collegamento con il controllore di volo non è attivo. Vedi [Controllore di volo](../flight-controller/index.mdx).

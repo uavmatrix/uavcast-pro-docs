@@ -1,0 +1,73 @@
+---
+title: "Drone-video en telemetrie opnemen op de companion computer"
+description: "Neem cameravideo en MAVLink-telemetrie op de drone op met UAVcast-Pro, automatisch bij het armen, naar de SD-kaart of een USB-SSD, en bekijk vluchten met video, kaart en data."
+sidebar_position: 5
+sidebar_label: "Opnames & vluchtterugblik"
+---
+
+# Opnames en vluchtterugblik {/* #recordings-and-flight-review */}
+
+UAVcast-Pro neemt elke vlucht op de drone zelf op: de cameravideo en een MAVLink-telemetrielog (`.tlog`). Opnemen gebruikt de stream die al is gecodeerd, dus het kost geen extra CPU en onderbreekt nooit de live video naar uw grondstation. Omdat de bestanden op de drone worden geschreven, krijgt u video in volledige kwaliteit, ook wanneer de mobiele verbinding wegvalt. Opnames starten automatisch wanneer u armt, of handmatig vanaf de Vliegkaart. Vereist v6.5.1 of later.
+
+Open **Camera → Opnames**. Het heeft twee tabbladen: **Bibliotheek** en **Instellingen**.
+
+<Screenshot id="uavcast-pro/camera--recordings" alt="Opnamebibliotheek met een opslagbalk en twee opgenomen vluchten met duur, en CAM 1- en Telemetrie-badges" caption="Camera → Opnames → Bibliotheek met twee opgenomen vluchten." />
+
+## Automatisch opnemen bij armen {/* #record-automatically-when-armed */}
+
+Dit staat standaard aan. Opnemen start wanneer de motoren armen en stopt wanneer ze ontwapenen. Als de verbinding onderweg wegvalt, gaat de opname door.
+
+Controleer het volgende voordat u erop vertrouwt:
+
+- Controleer de vrije ruimte bij **Opslag voor opnames** op de Vliegkaart of in **Instellingen**.
+- Opnemen vereist niet dat **Live Voorvertoning inschakelen?** aan staat. Met opnemen aan houdt de camera een kopie van de stream in de ingebouwde mediaserver, zelfs wanneer de voorvertoning uit staat.
+
+## Handmatig opnemen {/* #record-by-hand */}
+
+De werkbalk van de Vliegkaart heeft een groep **Opname**: **CAM 1** (en **CAM 2** bij dubbele stream) om video te starten en te stoppen, en **Telemetrie** om een telemetrielog te starten en te stoppen. Een rode stip toont wat er wordt opgenomen. Alleen-lezen gebruikers kunnen geen opnames starten.
+
+## Opslaginstellingen {/* #storage-settings */}
+
+Open **Camera → Opnames → Instellingen**.
+
+| Instelling | Standaard | Waarden | Opmerkingen |
+|---|---|---|---|
+| **Opslaglocatie** | **Interne opslag** | Interne opslag, een gedetecteerde USB-schijf of SSD, **Of een andere map** | Sluit een schijf aan en selecteer **Schijven opnieuw zoeken** om hem te zien. Interne opslag is `/opt/uavcast-pro/recordings/video`. |
+| **Vrij houden** | `2` GB | 0,5–1000 GB | Opnemen vult de schijf nooit tot boven deze waarde. Het systeem heeft zelf ook ruimte nodig. |
+| **Oudste opnames verwijderen wanneer de ruimte bijna op is** | Aan | Aan, uit | Net als een dashcam: opnemen stopt nooit door gebrek aan ruimte. Uit: opnemen stopt dan. |
+| **Opnames verwijderen die ouder zijn dan** | `0` dagen | 0–3650 dagen | `0` bewaart opnames tot de ruimte nodig is. |
+| **Automatisch opnemen bij armen** | Aan | Aan, uit | |
+| **Camera 1 opnemen** | Aan | Aan, uit | Geldt voor automatisch opnemen. |
+| **Camera 2 opnemen** | Aan | Aan, uit | Alleen wanneer dubbele stream aan staat. |
+| **Bestandslengte** | `1` min | 1–30 min | Video wordt opgeslagen in stukken van deze lengte. Kortere stukken verliezen minder na een stroomstoring. |
+| **Telemetrie opnemen** | **Bij armen** | **Bij armen**, **Altijd terwijl verbonden**, **Uit** | Het `.tlog` dat naast de video wordt getoond. **Altijd** logt ook op de grond en start bij elke arm, ontwapening en elk uur een nieuw bestand. |
+
+<Screenshot id="uavcast-pro/camera--recordings-settings" alt="Opname-instellingen met Interne opslag geselecteerd, 2 GB vrij houden, oudste opnames verwijderen aan en automatisch opnemen bij armen aan" caption="Interne opslag geselecteerd, met automatisch opnemen bij armen." />
+
+:::tip Opnemen naar een USB-SSD
+Een USB 3-SSD is sneller en veel duurzamer dan een microSD-kaart voor continue video. Sluit hem aan, selecteer **Schijven opnieuw zoeken** en kies hem daarna onder **Opslaglocatie**.
+:::
+
+## Bestanden en formaten {/* #files-and-formats */}
+
+- Video wordt geschreven als gefragmenteerde MP4-segmenten, die afspeelbaar blijven als de stroom uitvalt midden in een vlucht. Downloads zijn MP4.
+- Telemetrie is een standaard MAVLink-`.tlog`, leesbaar in Mission Planner, MAVExplorer, UAV Log Viewer en [Vluchtanalyse](../flight-map/flight-analytics.mdx).
+- Een opname in de bibliotheek is één clip zolang de bestanden op elkaar aansluiten zonder een gat van meer dan 15 seconden.
+
+## Een vlucht terugkijken {/* #review-a-flight */}
+
+Selecteer **Afspelen** bij een opname om de **Vluchtterugblik** te openen: de video, het kaartspoor, het cockpitbeeld en de vluchtdata op één tijdlijn.
+
+- De tijdlijn markeert **Gearmd**, **Ontwapend** en wijzigingen van de vluchtmodus.
+- **10 seconden terug**, **Afspelen**/**Pauzeren**, **10 seconden vooruit** en **Afspeelsnelheid** (0,5× tot 4×).
+- Met twee camera's schakelt **Videolay-out wijzigen** tussen **Beeld-in-beeld** en **Naast elkaar**; **Deze camera groot tonen** wisselt ze om.
+- Het gegevenspaneel toont **Hoogte**, **Snelheid**, **Batterij**, **Satellieten** en **Modus** op het huidige moment.
+- **Download** slaat de clip op als MP4.
+
+<Screenshot id="uavcast-pro/camera--flight-review" alt="Vluchtterugblik-speler met het videogebied, kaartspoor, cockpitbeeld en een tijdlijn met afspeelbediening" caption="Vluchtterugblik: video, kaart, cockpit en telemetrie op één tijdlijn." />
+
+Als de speler *Geen telemetrielog voor deze opname* meldt, werd telemetrie op dat moment niet opgenomen (standaard alleen tijdens het armen).
+
+## Opnames verwijderen {/* #delete-recordings */}
+
+Selecteer **Verwijderen** bij een opname. Heeft deze een telemetrielog, dan kiest u **Alleen video verwijderen** of **Video en telemetrie verwijderen**. Verwijderen is permanent. Een opname die nog loopt, moet eerst worden gestopt.

@@ -1,0 +1,84 @@
+---
+title: "Wdrożenie floty dronów z Fleet Manager"
+sidebar_label: Wdrożenie floty
+description: "Zaplanuj licencje, a następnie nazwij, sparuj i połącz 20+ dronów UAVcast-Pro z UAVmatrix Fleet Manager, z rolami zespołu, VPN organizacji i powiązaniami strumieni."
+sidebar_position: 9
+---
+
+# Wdrożenie floty dronów z Fleet Manager {/* #onboard-a-fleet-of-drones-with-fleet-manager */}
+
+Ten przewodnik pokazuje, jak w jednym przebiegu wprowadzić do [UAVmatrix Fleet Manager](../fleet-manager/index.mdx) flotę, powiedzmy 20 dronów: licencje, nazewnictwo, parowanie, VPN organizacji i podłączenie stacji naziemnych do dronów. Zakłada, że każdy dron ma już uruchomione UAVcast-Pro z podłączonym kontrolerem lotu i dostęp do internetu.
+
+## 1. Zaplanuj licencje {/* #1-plan-the-licenses */}
+
+Dwie zasady decydują, czy dron można sparować:
+
+- **Każdy dron potrzebuje aktywnej licencji UAVcast-Pro** na urządzeniu. Jedna licencja może obejmować kilka dronów: jej liczba **Allowed Devices** to liczba slotów. Dla 20 dronów potrzebujesz łącznie 20 slotów w jednej lub kilku licencjach.
+- **Licencja musi należeć do członka organizacji**, w której parujesz. Fleet Manager dopasowuje adres e-mail konta w sklepie, na które kupiono licencję, do adresów e-mail członków. Jeśli zakup został zrealizowany na innym koncie, zaproś je do organizacji albo poproś o pomoc support, aby dodać e-mail zakupu do Twojego użytkownika.
+
+Sprawdź to przed dniem parowania: dron, którego licencja należy do osoby spoza organizacji, zostanie odrzucony z komunikatem **License is not owned by any member of this organization**.
+
+## 2. Skonfiguruj organizację i zespół {/* #2-set-up-the-organization-and-team */}
+
+<Steps>
+
+1. Zaloguj się na [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com) swoim kontem uavmatrix.com i utwórz organizację. Zobacz [Konfiguracja organizacji](../fleet-manager/set-up-organization.mdx).
+2. W sekcji **Team** zaproś swoich ludzi. Owner i Admin mogą parować, sterować i usuwać drony; Viewer może tylko obserwować. Zobacz [Role i uprawnienia](../fleet-manager/team/roles-and-permissions.mdx).
+3. Podziel pracę parowania między dwóch lub trzech Adminów, jeśli masz wiele dronów. Każdy użytkownik może wykonać 5 parowań na minutę; limit powstrzymuje zgadywanie metodą brute-force, a także spowalnia sytuację, w której jedna osoba paruje 20 dronów pod rząd.
+
+</Steps>
+
+## 3. Nazwij każdego drona przed parowaniem {/* #3-name-every-drone-before-pairing */}
+
+Nazwa, jaką dron ma w UAVcast-Pro, staje się jego nazwą w Fleet Manager. Ustal wzorzec, na przykład `SURVEY-01` … `SURVEY-20`, i oznacz płatowce pasującymi etykietami.
+
+Na każdym dronie otwórz UAVcast-Pro → **Zarządzanie → Fleet Management** i wypełnij pole **Device Name**. Bez nazwy dron pojawi się z nazwą hosta. Nazwę możesz później zmienić w Fleet Manager.
+
+## 4. Sparuj każdego drona {/* #4-pair-each-drone */}
+
+Powtórz dla każdego drona. Przy dwóch oknach przeglądarki obok siebie (UAVcast-Pro drona i Fleet Manager) każde parowanie zajmuje około minuty.
+
+<Steps>
+
+1. W UAVcast-Pro otwórz **Fleet Management** i naciśnij **Connect to Fleet Manager**. Pojawi się 8-cyfrowy **Pairing Code**. Wygasa po 5 minutach.
+2. W Fleet Manager przejdź do **Fleet → Pair Device**.
+3. **Select Organization**, a następnie **Enter Pairing Code**.
+4. **Confirm Device**: sprawdź nazwę, nazwę hosta, architekturę i wersję UAVcast, aby upewnić się, że parujesz właściwego drona.
+5. **VPN Connection**: zaznacz **Enable VPN for this UAV**, jeśli stacje naziemne mają łączyć się z dronem przez VPN organizacji. Jeśli dron już używa Tailscale, **Replace existing VPN with Fleet Manager network** przenosi go do sieci organizacji.
+6. **Complete Pairing**. W UAVcast-Pro pozycja **Fleet Connection** zmieni się na **Connected**.
+
+</Steps>
+
+<Screenshot id="fleet-manager/pair-device--confirm" alt="Kreator parowania Fleet Manager na kroku Confirm Device z nazwą drona, nazwą hosta, architekturą i wersją UAVcast" caption="Fleet → Pair Device, krok Confirm Device." />
+
+Błędy i ich znaczenie: [Kod parowania nieprawidłowy lub wygasły](../troubleshooting/pairing-code-invalid.mdx). Pełny kreator opisano w [Sparuj pierwszego drona UAV](../fleet-manager/pair-uav.mdx).
+
+## 5. Sprawdź flotę {/* #5-check-the-fleet */}
+
+Otwórz **Fleet**. Każdy dron powinien być widoczny jako online. Na **Fleet Map** każdy dron pojawia się na swojej pozycji GPS, gdy jego kontroler lotu ma fix. Dron pokazujący **Offline** nie zgłasza się od 20 sekund: zobacz [Dron offline w Fleet Manager](../troubleshooting/drone-offline-fleet-manager.mdx).
+
+## 6. Połącz stacje naziemne {/* #6-connect-the-ground-stations */}
+
+<Steps>
+
+1. Przejdź do **Network** i naciśnij **Enable VPN Network**, jeśli VPN organizacji nie jest jeszcze włączony.
+2. Naciśnij **Connect a Device**, wybierz **Ground Control Station (GCS)** i skopiuj **GCS Connection Command**. Uruchom go w terminalu **na laptopie stacji naziemnej**, z zainstalowanym Tailscale. Nie wklejaj go do UAVcast-Pro.
+3. Laptop pojawi się w **Ground Stations**, gdy zostanie połączony.
+4. W sekcji **Stream Bindings** naciśnij **Add Stream Binding** i powiąż każdego drona ze stacją naziemną, która ma go odbierać. Dron musi być online, ponieważ Fleet Manager przesyła do niego miejsce docelowe.
+5. Każdy binding dostaje własny blok portów na tej stacji naziemnej: pierwszy dron używa domyślnych, 5600 (wideo) i 14550 (telemetria), a każdy kolejny dostaje następny wolny blok. Skonfiguruj oprogramowanie stacji naziemnej z portami pokazanymi przy każdym bindingu.
+
+</Steps>
+
+<Screenshot id="fleet-manager/network--stream-bindings" alt="Strona Network w Fleet Manager z powiązaniami strumieni łączącymi kilka dronów z jedną stacją naziemną i automatycznie przydzielonymi portami" caption="Network → Stream Bindings: każdy binding pokazuje swoją stację naziemną oraz porty wideo i telemetrii." />
+
+Szczegóły: [Podłącz stację naziemną](../fleet-manager/connect-gcs.mdx) i [Powiązania strumieni](../fleet-manager/network/stream-bindings.mdx).
+
+:::note Podwójny strumień i audio
+Każdy binding dostaje własny blok portów na stacji naziemnej, z miejscem na drugą kamerę drona i audio po porcie wideo, dzięki czemu kilka dronów może współdzielić jedną stację naziemną. {/* PENDING-RELEASE: port-blocks */}
+:::
+
+## 7. Na co dzień {/* #7-day-to-day */}
+
+- **Re-pair required**: gdy Fleet Manager pokaże tę odznakę, sparuj drona ponownie raz z UAVcast-Pro. Zachowa nazwę i historię. Zobacz [Usuń lub przenieś UAV](../fleet-manager/fleet/remove-or-transfer.mdx).
+- **Wymiana karty SD lub płytki drona** sama w sobie nie zwalnia miejsca: wyrejestruj stare urządzenie w **Aplikacja → Menedżer Licencji → Activated Devices** na dowolnym dronie korzystającym z tej samej licencji, a następnie sparuj nowe.
+- **Zdalna praca z dronem**: strona szczegółów UAV w Fleet Manager ma terminal, logi i akcje, takie jak restart. Zobacz [Szczegóły UAV](../fleet-manager/fleet/uav-details.mdx).
