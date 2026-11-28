@@ -1,6 +1,8 @@
 ---
 slug: /configuration-contributors
-title: Contributors
+title: "Translate the Web Interface"
+sidebar_label: "Contributors"
+description: "How to contribute a translation of the UAVcast-Pro web interface by forking the translations repository and editing a language file."
 authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 8

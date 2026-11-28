@@ -1,6 +1,8 @@
 ---
 slug: /configuration-dynamic-dns
-title: Dynamic DNS
+title: "Dynamic DNS Setup"
+sidebar_label: "Dynamic DNS"
+description: "Bind the changing public IP address of your modem connection to a fixed hostname with a dynamic DNS provider, for setups that do not use a VPN."
 authors: Bernt Christian Egeland
 tags: []
 ---

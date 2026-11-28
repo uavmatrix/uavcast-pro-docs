@@ -1,6 +1,8 @@
 ---
 slug: /configuration-flight-controller
-title: Flight Controller
+title: "Connect a Pixhawk or ArduPilot/PX4 Flight Controller"
+sidebar_label: "Flight Controller"
+description: "Configure the MAVLink connection between your companion computer and a Pixhawk, Cube or other ArduPilot/PX4 flight controller over USB or serial, routed by mavlink-router."
 authors: Bernt Christian Egeland
 tags: []
 ---

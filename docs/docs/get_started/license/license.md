@@ -1,4 +1,7 @@
 ---
+title: "Activate Your License Key"
+sidebar_label: "License Activation"
+description: "Activate your UAVcast-Pro license key in the web interface, check its status and device limits, and unregister a device to move the license to another one."
 sidebar_position: 2
 ---
 

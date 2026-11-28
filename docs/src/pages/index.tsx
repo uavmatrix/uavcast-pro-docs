@@ -86,8 +86,8 @@ export default function Home(): JSX.Element {
 	const { siteConfig } = useDocusaurusContext();
 	return (
 		<Layout
-			title={siteConfig.title}
-			description="UAVcast-Pro - Professional Drone Control System"
+			title="4G/LTE Drone Telemetry, Video and Control"
+			description="Documentation for UAVcast-Pro, the 4G/LTE companion computer software for ArduPilot and PX4 drones: installation, flight controller and ground station setup, VPN, video streaming and RTK."
 		>
 			<HomepageHeader />
 			<main>

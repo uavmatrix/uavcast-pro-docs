@@ -2,6 +2,7 @@
   "label": "Get Started",
   "position": 3,
   "link": {
-    "type": "generated-index"
+    "type": "generated-index",
+    "description": "Install UAVcast-Pro, check the hardware requirements, activate your license and complete the quick start."
   }
 }

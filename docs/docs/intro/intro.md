@@ -1,6 +1,8 @@
 ---
 slug: /introduction
-title: Introduction
+title: "4G/LTE Drone Telemetry and Video for ArduPilot and PX4"
+sidebar_label: "Introduction"
+description: "UAVcast-Pro v6 turns a Raspberry Pi or other Linux companion computer into a 4G/LTE link for ArduPilot and PX4 drones, with telemetry, live video, RTK and control beyond visual line of sight."
 authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 1

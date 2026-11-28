@@ -1,6 +1,8 @@
 ---
 slug: /configuration-camera
-title: Camera
+title: "Camera: Stream Drone Video over 4G with GStreamer"
+sidebar_label: "Camera"
+description: "Stream H.264 video from Raspberry Pi and USB cameras to Mission Planner, QGroundControl or GStreamer, with multi-camera RC switching, audio and custom pipelines."
 authors: Bernt Christian Egeland
 tags: []
 ---

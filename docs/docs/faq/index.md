@@ -1,6 +1,8 @@
 ---
 slug: /frequently-asked-questions
-title: Frequently Asked Questions
+title: "FAQ and Troubleshooting"
+sidebar_label: "Frequently Asked Questions"
+description: "Answers to common UAVcast-Pro problems: license activation, opening the web interface, failed installation checks, no MAVLink heartbeat, and missing video or telemetry."
 authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 5
@@ -27,7 +29,7 @@ No. UAVcast-Pro does not care if you use LTE, Wifi or Ethernet cable. As long as
 
 ### Where can i download latest version?
 
-- See the [installation](installation) instructions
+- See the [installation](/docs/6.x/installation) instructions
 
 ### Cannot activate UAVcast-Pro license
 
@@ -35,7 +37,7 @@ No. UAVcast-Pro does not care if you use LTE, Wifi or Ethernet cable. As long as
 
 ### Installation validation fails.
 
-- Make sure you use a supported raspberry image as decribed in the [installation instructions](installation).
+- Make sure you use a supported raspberry image as decribed in the [installation instructions](/docs/6.x/installation).
 - For other installation issues, please navigate to `/opt/uavcast-pro/logs` folder and copy the `uavcast_installation.log` to your computer.
   Email the logfile to **support@uavmatrix.com**
 

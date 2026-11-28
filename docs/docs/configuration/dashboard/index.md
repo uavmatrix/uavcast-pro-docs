@@ -1,6 +1,8 @@
 ---
 slug: /configuration-dashboard
-title: Dashboard
+title: "Dashboard: Companion Computer Health and Service Status"
+sidebar_label: "Dashboard"
+description: "The UAVcast-Pro dashboard shows live service status, CPU temperature and throttling, memory, storage and network statistics for your companion computer."
 authors: Bernt Christian Egeland
 tags: []
 ---

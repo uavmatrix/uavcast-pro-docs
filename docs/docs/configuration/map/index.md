@@ -1,6 +1,8 @@
 ---
 slug: /configuration-map
-title: Flight Map
+title: "Flight Map: Live Tracking, Missions and MAVLink Inspector"
+sidebar_label: "Flight Map"
+description: "Use the UAVcast-Pro flight map for live vehicle tracking, flight commands, mission planning, the radio view, the MAVLink inspector and flight analytics."
 authors: Bernt Christian Egeland
 tags: []
 ---

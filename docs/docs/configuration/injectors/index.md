@@ -1,6 +1,8 @@
 ---
 slug: /configuration-injectors
-title: Telemetry Injectors
+title: "Telemetry Injectors: Custom Sensor Data in MAVLink"
+sidebar_label: "Telemetry Injectors"
+description: "Inject external sensor and script data into the MAVLink stream as NAMED_VALUE_FLOAT/INT messages, so QGroundControl, Mission Planner and fleet tools show it as native telemetry."
 authors: Bernt Christian Egeland
 tags: []
 ---
