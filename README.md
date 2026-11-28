@@ -1,20 +1,18 @@
+# UAVmatrix docs
+
+Source for **https://docs.uavmatrix.com**: documentation for UAVcast-Pro and Fleet Manager, in 10 languages.
+
+The site lives in [`website/`](website/) (Docusaurus 3). See [`website/README.md`](website/README.md) for local development, adding a language, screenshots and the redirect map.
+
 ## Contributing
 
-Docs now using Docusaurus 3, a modern static website generator. You can contribute to the docs by following the steps below:
+1. Fork and clone the repository, then create a branch: `git checkout -b my-change`
+2. `cd website && npm install && npm run start`, which opens the dev server at http://localhost:3000
+3. Edit pages under `website/docs/` (English). Translations live in `website/i18n/<locale>/`.
+4. Open a pull request against `master`. The **Build docs (website/)** check builds every language and fails on broken links.
 
-- Fork the uavcast-pro-docs to your git account.
-- Clone your respository `git clone https://github.com/your_account_name/uavcast-pro-docs.git`
-- create a new branch for your changes `git checkout -b name_of_your_new_branch`
-- In the docs folder, open a new terminal and type `npm install` to install dependencies and then `npm run start`, this will start the dev server, can access the docs page by typing `localhost:3000` in your browser.
+## Deploy
 
-## Push changes
+Merging to `master` deploys automatically: **Deploy docs v2 (website/) to GitHub Pages** builds the site and publishes it to the `gh-pages` branch, which GitHub serves at docs.uavmatrix.com.
 
-- `git add .`
-- `git commit -m "name_your_changes"`
-- `git push origin your_branch_name`
-
-## Merge Request
-- When you want to merge your changes with master, fill in a new merge request.
-
-## Build
-- `npm run build` will build the site and output it to a directory called `build`.
+The previous Docusaurus site (`docs/`, versions 4.x–6.x) was removed at the v2 cutover on 2026-11-28. It's still in git history.
