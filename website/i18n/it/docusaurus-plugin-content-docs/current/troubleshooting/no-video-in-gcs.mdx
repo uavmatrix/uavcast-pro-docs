@@ -1,0 +1,153 @@
+---
+title: "Nessun video in QGroundControl o Mission Planner"
+sidebar_label: Nessun video nella stazione di terra
+description: "La telemetria funziona ma il video resta nero in QGroundControl o Mission Planner? Controlla la telecamera, Attiva Video, l'IP di destinazione, UDP 5600 e la stazione di terra."
+sidebar_position: 2
+---
+
+# Nessun video in QGroundControl o Mission Planner {/* #no-video-in-qgroundcontrol-or-mission-planner */}
+
+La telemetria arriva e il drone compare sulla mappa, ma l'area video resta nera, oppure la finestra video di QGroundControl mostra **WAITING FOR VIDEO**. Esegui i controlli in ordine. La maggior parte dei casi si risolve con il controllo 2 o 3.
+
+<Screenshot id="gcs/qgroundcontrol--fly-view" url="QGroundControl" alt="Vista Fly di QGroundControl collegata a un velivolo ArduPilot: barra degli strumenti con Not Ready e Stabilize, una missione a cinque waypoint sulla mappa con No GPS Lock per il velivolo, e la finestra video nell'angolo in basso a sinistra che mostra WAITING FOR VIDEO" caption="Il sintomo in QGroundControl: la telemetria arriva (Not Ready, Stabilize nella barra degli strumenti; No GPS Lock perché questo banco di prova non ha GPS), ma la finestra video nell'angolo in basso a sinistra indica WAITING FOR VIDEO." />
+
+<SymptomTable rows={[
+  {symptom: 'Il video è nero nella stazione di terra e nell\'anteprima dal vivo di UAVcast-Pro', cause: 'La telecamera non è in funzione sul drone', start: '#check-1'},
+  {symptom: 'L\'anteprima dal vivo funziona, la stazione di terra resta nera', cause: 'Attiva Video è disattivato per questa stazione di terra, oppure l\'IP è errato', start: '#check-2'},
+  {symptom: 'Funzionava in Wi-Fi a casa, nero con il 4G', cause: 'La destinazione usa un IP locale invece dell\'IP della VPN', start: '#check-2'},
+  {symptom: 'Sembra tutto corretto, ma su Windows resta nero', cause: 'Il firewall blocca l\'UDP in ingresso sulla porta 5600', start: '#check-3'},
+  {symptom: 'QGroundControl mostra il video, Mission Planner no', cause: 'In Mission Planner non è impostata alcuna sorgente GStreamer', start: '#check-4'},
+]} />
+
+## Controllo 1: conferma che la telecamera trasmette sul drone {/* #check-1 */}
+
+Se il drone non produce video, nessuna impostazione della stazione di terra servirà a nulla.
+
+<Steps>
+
+1. Apri l'interfaccia web di UAVcast-Pro e vai su **Telecamera → Impostazioni telecamera**.
+2. Controlla che **Attivare la Telecamera?** sia **Sì** e che una telecamera sia scelta in **Seleziona Telecamera**.
+3. Controlla che la telecamera sia in funzione: la riga **Video** della dashboard deve indicare **In esecuzione**. Se è ferma, premi **Avvia** nella pagina Telecamera (il pulsante diventa **Riavvia** mentre la telecamera è in funzione).
+4. Attiva **Abilitare Anteprima dal Vivo?** e guarda **Anteprima dal Vivo**. Se vedi un'immagine, la telecamera funziona e puoi passare al controllo 2.
+5. Se **Seleziona Telecamera** indica **Nessuna telecamera disponibile**, vai a [Telecamera non rilevata](./camera-not-detected.mdx).
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera" alt="Pagina Impostazioni telecamera di UAVcast-Pro con CAM 1 attivata e il pannello Anteprima dal Vivo che mostra Nessun Video Disponibile" caption="Telecamera → Impostazioni telecamera con CAM 1 attivata. Anteprima dal Vivo mostra Nessun Video Disponibile finché non è selezionato Abilitare Anteprima dal Vivo?." />
+
+:::note L'anteprima non è il flusso verso la stazione di terra
+L'anteprima nel browser passa dal media server integrato (WebRTC sulla porta 8889). La stazione di terra riceve un flusso H.264 separato tramite UDP. Un'anteprima funzionante dimostra che la telecamera funziona, non che il flusso UDP arrivi al tuo laptop.
+:::
+
+Se i **Registri azioni** nella pagina Telecamera indicano che una telecamera *non supporta* una risoluzione, scegli un altro valore in **Risoluzione**. UAVcast-Pro passa alla dimensione supportata più grande e registra quella utilizzata.
+
+## Controllo 2: verifica la destinazione della stazione di terra {/* #check-2 */}
+
+UAVcast-Pro invia il video solo alle destinazioni in cui il video è attivo. Telemetria e video hanno interruttori separati, e **entrambi sono disattivati su una nuova destinazione**.
+
+<Steps>
+
+1. Vai su **Stazioni di Controllo a Terra** e trova la scheda del computer che esegue la tua stazione di terra.
+2. Assicurati che **Attiva Endpoint** e **Attiva Video** siano entrambi attivi.
+3. Controlla **IP o Host di Destinazione**. Deve essere l'indirizzo IPv4 del computer della stazione di terra visto dal drone. Gli hostname non sono accettati.
+4. Controlla che **Porta Video** sia `5600`, oppure la porta su cui ascolta la tua stazione di terra.
+5. I campi vengono salvati quando esci dal campo o premi Invio. Una spunta verde conferma il salvataggio.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/ground-control--video-enabled" alt="Porta Video 5600 e interruttore Attiva Video acceso" caption="Stazioni di Controllo a Terra: una destinazione con Attiva Video attivo e Porta Video 5600." />
+
+:::warning Volo con 4G? Usa l'IP della VPN
+Tramite collegamento cellulare il drone non può raggiungere l'indirizzo locale del tuo laptop (come `192.168.1.20`). Usa l'indirizzo che il laptop ha sulla VPN (VPN di Fleet Manager, Tailscale o ZeroTier). Su Windows, esegui `ipconfig` e cerca l'adattatore di Tailscale o ZeroTier.
+:::
+
+Usi Fleet Manager? Le destinazioni vengono create automaticamente quando aggiungi un'associazione di flusso, e ogni drone aggiuntivo sulla stessa stazione di terra ottiene le sue porte. Controlla la porta video mostrata nell'associazione, non la 5600. Vedi [Associazioni di flusso](../fleet-manager/network/stream-bindings.mdx).
+
+## Controllo 3: consenti l'UDP 5600 nel firewall {/* #check-3 */}
+
+Il video arriva come traffico UDP in ingresso. Su Windows questo è bloccato per impostazione predefinita, anche quando la telemetria passa, perché la stazione di terra ha richiesto un'eccezione.
+
+<Tabs>
+<TabItem value="windows" label="Windows" default>
+
+Apri **PowerShell come amministratore** ed esegui:
+
+```powershell title="PowerShell (amministratore)"
+New-NetFirewallRule -DisplayName "UAV Video" -Direction Inbound -Protocol UDP -LocalPort 5600 -Action Allow
+New-NetFirewallRule -DisplayName "MAVLink Telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+```
+
+Gli adattatori di ZeroTier e Tailscale spesso sono classificati come rete *Pubblica*. Una regola creata in questo modo si applica a tutti i profili.
+
+</TabItem>
+<TabItem value="linux" label="Linux">
+
+```bash title="UFW"
+sudo ufw allow 5600/udp comment 'UAV Video'
+sudo ufw allow 14550/udp comment 'MAVLink Telemetry'
+```
+
+</TabItem>
+<TabItem value="macos" label="macOS">
+
+Il firewall di macOS consente l'UDP in ingresso per le app che approvi. Se hai cliccato *Nega* quando QGroundControl è stato avviato per la prima volta, consentilo di nuovo in **Impostazioni di Sistema → Rete → Firewall → Opzioni**.
+
+</TabItem>
+</Tabs>
+
+## Controllo 4: configura il video nella stazione di terra {/* #check-4 */}
+
+<Tabs>
+<TabItem value="qgc" label="QGroundControl" default>
+
+<Steps>
+
+1. Clicca sull'icona **Q**, poi su **Impostazioni Applicazione**.
+2. Apri le impostazioni video (**Video**, oppure **Generale → Video** nelle versioni precedenti).
+3. Imposta **Sorgente** su **Flusso video UDP h.264**, e controlla che l'indirizzo UDP usi la porta `5600` (**UDP URL** `0.0.0.0:5600` nelle versioni attuali, **UDP Port** `5600` in quelle precedenti).
+4. Torna alla vista Fly. Il riquadro video dovrebbe mostrare un'immagine entro pochi secondi.
+
+</Steps>
+
+</TabItem>
+<TabItem value="mp" label="Mission Planner">
+
+Mission Planner mostra il video nell'HUD. Se resta nero, imposta la sorgente a mano:
+
+<Steps>
+
+1. Fai clic con il tasto destro sull'HUD e scegli **Video → Imposta sorgente GStreamer**.
+2. Incolla questa pipeline e conferma:
+
+</Steps>
+
+```text title="Sorgente GStreamer di Mission Planner"
+udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+```
+
+</TabItem>
+</Tabs>
+
+## Controllo 5: prova il flusso senza stazione di terra {/* #check-5 */}
+
+Questo passaggio esclude dal problema il software della stazione di terra. Se si apre una finestra con il video, il drone, la rete e il firewall funzionano e il problema è nelle impostazioni della stazione di terra.
+
+```bash title="Windows, Linux e macOS"
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+:::warning Windows: scegli l'installazione Completa
+Quando installi GStreamer (runtime MSVC 64 bit), scegli **Completa**. L'installazione Tipica esclude il decoder H.264 e il comando fallisce con `no element "avdec_h264"`.
+:::
+
+Chiudi il test prima di riaprire la stazione di terra: su una porta può essere in ascolto un solo programma alla volta. Configurazione passo passo del ricevitore: [Mission Planner](../uavcast-pro/ground-stations/mission-planner.mdx), [QGroundControl](../uavcast-pro/ground-stations/qgroundcontrol.mdx), e GStreamer su [Windows](../uavcast-pro/ground-stations/gstreamer-windows.mdx), [Linux](../uavcast-pro/ground-stations/gstreamer-linux.mdx) o [macOS](../uavcast-pro/ground-stations/gstreamer-macos.mdx).
+
+:::tip Video presente, ma a scatti con il 4G?
+Vedi [Video a scatti o in ritardo](./choppy-or-delayed-video.mdx).
+:::
+
+## Ancora nessun video? {/* #still-no-video */}
+
+[Scarica i log](./collect-logs.mdx) con **Camera Server** selezionato nell'elenco dei log, e inviali a **support@uavmatrix.com** insieme alla versione di UAVcast-Pro, al modello della telecamera e alla stazione di terra che usi.
+
+Correlati: [Impostazioni telecamera](../uavcast-pro/camera/index.mdx) · [Stazioni di Controllo a Terra](../uavcast-pro/ground-stations/index.mdx)

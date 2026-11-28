@@ -1,0 +1,69 @@
+---
+title: "QGroundControl 或 Mission Planner 中没有遥测数据"
+sidebar_label: 地面站没有遥测数据
+description: "UAVcast-Pro 中飞行控制器已连接，但 QGroundControl 或 Mission Planner 仍在等待？请检查启用遥测、IP 地址、UDP 14550 和 VPN。"
+sidebar_position: 5
+---
+
+# QGroundControl 或 Mission Planner 中没有遥测数据 {/* #no-telemetry-in-qgroundcontrol-or-mission-planner */}
+
+UAVcast-Pro 显示飞行控制器为 **Connected**，但 QGroundControl 提示 *Waiting for vehicle connection*，或 Mission Planner 超时并提示 *No heartbeat packets received*。无人机能够收到飞行控制器的数据，只是遥测数据没有到达您的地面站。
+
+如果 UAVcast-Pro 本身显示 **No heartbeat**，请先解决该问题：[没有 MAVLink 心跳](./no-mavlink-heartbeat.mdx)。
+
+<SymptomTable rows={[
+  {symptom: '仪表盘显示 Ground station 为 None set up 或 Not sending', cause: '没有目标地址，或未启用遥测', start: '#check-1'},
+  {symptom: '仪表盘显示 Sending，但地面站收不到数据', cause: 'IP 错误、防火墙，或地面站监听了其他端口', start: '#check-2'},
+  {symptom: '在 Wi-Fi 下正常，通过 4G 没有数据', cause: '目标地址是本地 IP，而不是 VPN IP', start: '#check-3'},
+  {symptom: '以前通过 TCP 5760 连接，更新后失效', cause: 'TCP 5760 已在 v6.5.0 中关闭', start: '#check-4'},
+  {symptom: '遥测数据可以显示，但命令和模式切换无效', cause: '该目标地址已启用只读', start: '#check-5'},
+]} />
+
+## 检查 1：是否正在发送遥测数据？ {/* #check-1 */}
+
+<Steps>
+
+1. 打开 **仪表盘**，读取状态卡片中的 **Ground station** 行。
+   - **None set up**：没有目标地址。请在第 2 步中添加。
+   - **Not sending**：已存在目标地址，但没有数据发出。
+   - **Sending to … · n packets/s**：遥测数据正从无人机发出。请继续检查 2。
+2. 前往 **地面控制站**。如果列表为空，请点击 **添加目标地址**。
+3. 在您电脑对应的卡片上，开启 **启用终端** 和 **启用遥测**。新建的目标地址默认关闭视频和遥测。
+4. 在 **目标IP或主机** 中输入电脑的 IPv4 地址，并将 **遥测端口** 保持为 `14550`。
+
+</Steps>
+
+<Screenshot id="uavcast-pro/ground-control--telemetry-enabled" alt="目标地址的遥测部分：已开启启用遥测，且已关闭只读" caption="地面控制站：已开启启用遥测的目标地址。" />
+
+:::note 无效地址会被跳过
+UAVcast-Pro 仅接受 `192.168.1.10` 这类 IPv4 地址。如果您尝试保存主机名，将会看到提示 *Enter a valid IPv4 address, for example 192.168.1.10.*。缺失或无效的地址会被排除在遥测路由器之外，飞行控制器页面上的 **Connection check** 会列出该问题。
+:::
+
+## 检查 2：确认地面站正在监听 {/* #check-2 */}
+
+UAVcast-Pro 通过 UDP 将 MAVLink 发送到您设置的地址和端口。地面站必须监听该端口。
+
+- **QGroundControl** 默认监听 UDP 14550。如果您更改了 **遥测端口**，请在 **Application Settings → Comm Links** 中添加使用相同端口的 UDP 通信链路。
+- **Mission Planner**：在右上角的连接下拉菜单中选择 **UDP**，点击 **Connect**，并接受端口 `14550`。
+- 同一端口只能由一个程序监听。请关闭 MAVProxy、第二个 QGroundControl，或其他可能占用 14550 端口的工具。
+- 允许防火墙接收入站 UDP 14550。相关命令见 [没有视频，检查 3](./no-video-in-gcs.mdx#check-3)。
+
+## 检查 3：蜂窝网络下使用 VPN 地址 {/* #check-3 */}
+
+通过 4G 连接时，无人机无法访问 `192.168.1.20` 之类的本地地址。请将您电脑的 VPN 地址（Fleet Manager VPN、Tailscale 或 ZeroTier）填入 **目标IP或主机**。
+
+在电脑上对无人机的 VPN 地址执行 ping。如果 ping 失败，问题出在 VPN 上：请参阅 [VPN 已连接但无法访问无人机](./vpn-cant-reach-drone.mdx)。
+
+## 检查 4：TCP 5760 已无法使用 {/* #check-4 */}
+
+自 v6.5.0 起，遥测路由器不再接受端口 5760 上的 TCP 连接，因此只有您添加并开启的地面站才能接收数据。如果您以前通过 TCP 5760 连接 Mission Planner，请将您的电脑添加为目标地址，并改用 UDP 连接。
+
+## 检查 5：命令被忽略 {/* #check-5 */}
+
+如果遥测数据可以显示，但解锁、模式切换或任务上传没有任何效果，请检查该目标地址上的 **只读** 设置。只读会阻止所有会改变飞行器状态的操作（命令、模式切换，以及参数和任务写入），因此地面站只能查看。此行为自 UAVcast-Pro 6.5.3 起生效；在更早的版本中，只读不会阻止参数写入。 由于部分请求未得到响应，某些地面站在此模式下会显示警告。
+
+## 仍然没有数据？ {/* #still-nothing */}
+
+选中 **Mavlink Manager** 后，[下载日志](./collect-logs.mdx)，并发送至 **support@uavmatrix.com**。请注明您使用的地面站及其 IP 地址。
+
+相关链接：[地面控制站](../uavcast-pro/ground-stations/index.mdx) · [端口与协议](../reference/ports-and-protocols.mdx)

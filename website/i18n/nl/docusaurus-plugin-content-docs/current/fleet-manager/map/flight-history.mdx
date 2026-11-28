@@ -1,0 +1,62 @@
+---
+title: Vluchtgeschiedenis en afspelen van drones in Fleet Manager
+sidebar_label: Vluchtgeschiedenis
+description: Speel de opgenomen vlucht van een drone af op de kaart van Fleet Manager, lees duur, maximale hoogte en snelheid, sla benoemde vluchten op en stel de bewaartermijn van telemetrie in.
+sidebar_position: 2
+---
+
+# Vluchtgeschiedenis {/* #flight-history */}
+
+Fleet Manager neemt de telemetrie van elke drone één keer per seconde op zolang deze verbonden is: positie, hoogte, snelheid, koers, accu, vluchtmodus, geactiveerde status en GPS. **Flight history** (vluchtgeschiedenis) speelt die opname af op de kaart.
+
+## Geschiedenis van een drone openen {/* #open-a-drones-history */}
+
+Selecteer op **Fleet Map** de markering van de drone en daarna **History** in de popup. De lade **_name_ - Flight History** opent onderaan de kaart.
+
+<Screenshot id="fleet-manager/map--history" alt="Lade met vluchtgeschiedenis onder de kaart, met een sessiekiezer, afspeelbediening, statistieken en een afgespeeld vliegpad" caption="Vluchtgeschiedenis voor een inspectiedrone: de opgeslagen vlucht Turbine blade inspection is geselecteerd, het afspelen staat op 4x, en Duration, Max Alt, Max Speed en Avg Battery worden getoond." />
+
+## Een sessie kiezen {/* #pick-a-session */}
+
+**Select flight session** toont:
+
+1. Eerst de **Saved flights** (met een bladwijzerpictogram): de vluchten die uw team heeft benoemd.
+2. Daarna één item per **dag** met opgeslagen telemetrie, voor de laatste 30 dagen.
+
+Een dag groepeert alle telemetrie van die datum, dus meerdere vluchten op één dag verschijnen als één sessie. Sla het deel dat u interesseert op als benoemde vlucht om het later snel terug te vinden.
+
+## Afspelen {/* #play-it-back */}
+
+- Afspelen en pauzeren, één stap terug of vooruit van 5 % van de sessie, of naar het begin of einde springen. Sleep over de tijdlijn om te scrubben.
+- Snelheden: **0.5x**, **1x** (realtime), **2x**, **4x**, **8x**, **10x** en **20x**.
+- Toetsenbord: **Space** afspelen/pauzeren, **←** / **→** stap, **Esc** sluiten.
+
+Op de kaart omlijsten een groene **Start**- en een rode **End**-markering de vlucht. Het deel dat al is afgespeeld, wordt cyaan getekend, de rest gestippeld grijs, en een dronepictogram met zijn hoogte beweegt langs het pad.
+
+Het statistiekenpaneel toont **Duration**, **Max Alt**, **Max Speed** en **Avg Battery**. **Current Position** toont **Alt**, **Speed**, **Heading** en **Mode** op het afspeelpunt.
+
+## Opslaan, hernoemen en verwijderen van vluchten {/* #save-rename-and-delete-flights */}
+
+Owners en Admins kunnen benoemde vluchten opslaan, hernoemen en verwijderen. Viewers kunnen ze afspelen.
+
+- **Save and name this flight** slaat het huidige tijdsbereik op onder een naam (tot 100 tekens), bijvoorbeeld "Survey over Field A". Twee opgeslagen vluchten kunnen elkaar niet overlappen: **A saved session already exists for this time range**.
+- **Rename flight** wijzigt de naam.
+- **Delete saved flight** verwijdert alleen de naam. **Delete Saved Flight?** legt uit dat de telemetrie zelf niet wordt verwijderd.
+
+## Hoe lang geschiedenis wordt bewaard {/* #how-long-history-is-kept */}
+
+Owners en Admins stellen de bewaartermijn per organisatie in via **Settings → History** (**Telemetry History**):
+
+- **Retention:** 7, 14, 30, 60 of 90 dagen, **6 months** of **1 year**. De standaard en het maximum is 1 jaar.
+- **Prune Now** verwijdert data die ouder is dan 7, 14, 30, 60 of 90 dagen, meteen (standaard 30), na de bevestiging **Prune Old History**.
+- **Delete Drone History** (prullenbakpictogram per drone) of **Select All** → **Delete Selected (n)** wist de geschiedenis van gekozen drones.
+- Kaarten tonen **Storage Used**, **Total Records** en **Retention**.
+
+Fleet Manager verwijdert gegevens die ouder zijn dan de bewaartermijn, eenmaal per dag. Oudere gegevens worden na 7 dagen gecomprimeerd, zodat een jaar aan geschiedenis voor een grote vloot werkbaar blijft.
+
+<Screenshot id="fleet-manager/settings--history" alt="Tabblad Geschiedenis in de instellingen, met bewaartermijnkiezer, opschoonopties en een geschiedenislijst per drone" caption="Settings → History voor een organisatie met 46 drones: Storage Used, Total Records, Retention 90 days, en de lijst per drone met Delete-knoppen." />
+
+:::note Geen logexport
+Fleet Manager exporteert vluchtgeschiedenis niet als bestand en slaat geen video- of vluchtcontrollerlogs op (`.tlog`, DataFlash). Bewaar die via uw grondstationssoftware of de SD-kaart van de vluchtcontroller. Voor video-opnames op de drone, zie [Opnames en vluchtreview](../../guides/recording-flight-review.mdx).
+:::
+
+Het verwijderen van een drone verwijdert de volledige geschiedenis, ook de opgeslagen vluchten. Zie [Een drone verwijderen of overdragen](../fleet/remove-or-transfer.mdx).

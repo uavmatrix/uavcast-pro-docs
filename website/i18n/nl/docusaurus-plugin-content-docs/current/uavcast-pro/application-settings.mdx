@@ -1,0 +1,87 @@
+---
+title: "UAVcast-Pro applicatie-instellingen, logboeken en database-back-up"
+description: "Wijzig de webpoort en taal van UAVcast-Pro, download logboeken voor support met de debugmodus, en maak een back-up van, herstel of reset de instellingendatabase op de pagina Applicatie."
+sidebar_position: 11
+sidebar_label: "Applicatie-instellingen & logboeken"
+---
+
+# Applicatie-instellingen, logboeken en back-ups {/* #application-settings-logs-and-backups */}
+
+De pagina **Applicatie** bevat alles over UAVcast-Pro zelf: de licentie, updates, interface-instellingen, logboekdownloads en de instellingendatabase. Ze is alleen zichtbaar voor beheerders, en het is de enige pagina die werkt voordat het apparaat is gelicentieerd. Open **Beheer → Applicatie**.
+
+<Screenshot id="uavcast-pro/application" alt="Pagina Applicatie met Licentie Beheer en Applicatie Bijwerken links, en de kaarten Instellingen, Logboekregistratie en Database rechts" caption="Beheer → Applicatie." />
+
+| Kaart | Behandeld in |
+|---|---|
+| **Licentie Beheer** | [Licentie en activering](../get-started/license-activation.mdx) |
+| **Applicatie Bijwerken** | [UAVcast-Pro bijwerken](../get-started/updating.mdx) |
+| **Instellingen**, **Logboekregistratie**, **Database** | Deze pagina |
+
+## Instellingen {/* #settings */}
+
+| Instelling | Standaard | Waarden | Opmerkingen |
+|---|---|---|---|
+| **Neem een Rondleiding** | | | Start de begeleide rondleiding van de interface opnieuw. |
+| **Donker Thema** | Aan | Aan, uit | Wordt per browser opgeslagen. Ook beschikbaar via de thema-schakelaar in de bovenbalk. |
+| **Serverpoort** | `80` | 1–65535 | Poort van de webinterface. Zie hieronder. |
+| **Taal** | Browsertaal, anders English | English, Español, 简体中文, 繁體中文, Italiano, Nederlands, Polski, Português, Русский, Türkçe | Ook beschikbaar in het gebruikersmenu onderaan de zijbalk. |
+
+### De webinterfacepoort wijzigen {/* #change-the-web-interface-port */}
+
+<Steps>
+
+1. Voer de nieuwe poort in bij **Serverpoort**.
+2. Selecteer **Indienen en server herstarten**. Er verschijnt een dialoogvenster met de **New URL**, bijvoorbeeld `http://192.168.1.50:8080`.
+3. Wacht enkele seconden en open de nieuwe URL.
+
+</Steps>
+
+Bladwijzers en links naar het oude adres werken niet meer. Een gewijzigde poort toont de waarschuwing *De serverpoort is gewijzigd ten opzichte van de standaardpoort 80.* Vanaf UAVcast-Pro 6.5.3 blijft de poort behouden wanneer u bijwerkt; eerdere versies zetten hem terug op 80.
+
+## Logboekregistratie {/* #logging */}
+
+UAVcast-Pro registreert elke service afzonderlijk. Download de logboeken wanneer er iets misgaat en stuur ze naar de support.
+
+<Steps>
+
+1. Schakel **Debug Modus** in voor meer detail. Reproduceer het probleem.
+2. Laat bij **Selecteer logboeken om te downloaden** **Alle Logboeken** staan, of kies één service.
+3. Kies bij **Selecteer tijdsperiode** een periode die het probleem omvat (**Laatste 10 minuten** tot **Alle Tijd**).
+4. Selecteer **Download**. U krijgt een zip-bestand.
+5. Stuur het bestand per e-mail naar support@uavmatrix.com met een korte beschrijving van wat er is gebeurd. Schakel **Debug Modus** daarna weer uit.
+
+</Steps>
+
+De download bevat een `diagnostics.txt`-momentopname (instellingen, seriële poorten, voeding- en USB-gebeurtenissen) die de support versnelt.
+
+| Logboek | Omvat |
+|---|---|
+| **Mavlink Beheer**, **Mavlink Uitgever** | Verbinding met de vluchtcontroller, routering naar grondstations |
+| **Camera Server**, **Camera Detector** | Videopijplijn, cameradetectie |
+| **Modem Beheer**, **Modem Detector** | Mobiele modemverbinding, APN-pogingen |
+| **VPN Beheer** | ZeroTier en Tailscale |
+| **NTRIP-client** | RTK-correcties |
+| **DNS Beheer** | Updates van Dynamische DNS |
+| **Licentie Beheer** | Activering en de licentiecontrole elke 4 uur |
+| **Applicatie Updater**, **Applicatie Installatie** | Updates en installaties |
+| **Backend API Server** | De interne API |
+
+**Alle Logboeken Opschonen** verwijdert alle logbestanden. Dit kan niet ongedaan worden gemaakt; doe dit vóór het reproduceren van een probleem als u een schoon logboek wilt. Op de drone staan de logboeken in `/opt/uavcast-pro/logs`.
+
+Elke pagina heeft ook een **Actielogboek**-console die het live logboek van de service van die pagina toont.
+
+## Database {/* #database */}
+
+Alle instellingen (grondstations, vluchtcontroller, camera, modem, VPN, NTRIP, gebruikers, dashboards, injectors, licentiegegevens) staan in één SQLite-database, `/opt/uavcast-pro/uavcast.db`.
+
+| Actie | Wat het doet |
+|---|---|
+| **Database Back-up** | Downloadt de database als `uavcast_backup.db`. |
+| **Database Herstellen** | Uploadt een `.db`-back-up en vervangt de huidige instellingen, inclusief de gebruikers. |
+| **Database Resetten** | Zet de instellingen van grondstations, vluchtcontroller, camera, VPN en Dynamische DNS terug naar de standaardwaarden. Gebruikers, licentie, modem, NTRIP, opname-instellingen, dashboards, injectors en de koppeling met Fleet Manager blijven behouden. Dit kan niet ongedaan worden gemaakt. |
+
+Gebruik back-ups om vóór wijzigingen een bekend goede configuratie te bewaren, of om een tweede drone op dezelfde manier in te richten. Herstart de drone na een herstel, zodat elke service start met de hersteld instellingen.
+
+:::note Herstellen op ander hardware
+De licentiegegevens in de database zijn gekoppeld aan het apparaat waarvandaan ze komen. Activeer na het herstellen van een back-up op een andere Pi of SD-kaart de licentie op het nieuwe apparaat. Herstellen zet ook de gebruikers en wachtwoorden uit de back-up terug.
+:::

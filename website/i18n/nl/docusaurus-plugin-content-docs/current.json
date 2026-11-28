@@ -1,0 +1,74 @@
+{
+  "version.label": {
+    "message": "Volgende",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Get started": {
+    "message": "Aan de slag",
+    "description": "The label for category 'Get started' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.UAVcast-Pro": {
+    "message": "UAVcast-Pro",
+    "description": "The label for category 'UAVcast-Pro' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Flight Controller": {
+    "message": "Vluchtcontroller",
+    "description": "The label for category 'Flight Controller' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Flight Map": {
+    "message": "Vliegkaart",
+    "description": "The label for category 'Flight Map' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Ground stations & video": {
+    "message": "Grondstations & video",
+    "description": "The label for category 'Ground stations & video' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity": {
+    "message": "Connectiviteit",
+    "description": "The label for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity.link.generated-index.title": {
+    "message": "Connectiviteit: modem, VPN, DNS en netwerken",
+    "description": "The generated-index page title for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity.link.generated-index.description": {
+    "message": "Verbind UAVcast-Pro via 4G/LTE met internet, bereik het via een VPN, publiceer het met dynamische DNS en kies welk netwerk het verkeer draagt.",
+    "description": "The generated-index page description for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Camera & video": {
+    "message": "Camera & video",
+    "description": "The label for category 'Camera & video' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fleet Manager": {
+    "message": "Fleet Manager",
+    "description": "The label for category 'Fleet Manager' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Team & roles": {
+    "message": "Team & rollen",
+    "description": "The label for category 'Team & roles' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fleet & UAVs": {
+    "message": "Vloot & UAV's",
+    "description": "The label for category 'Fleet & UAVs' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Live map": {
+    "message": "Live kaart",
+    "description": "The label for category 'Live map' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Network & VPN": {
+    "message": "Netwerk & VPN",
+    "description": "The label for category 'Network & VPN' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Handleidingen",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Troubleshooting & FAQ": {
+    "message": "Probleemoplossing & FAQ",
+    "description": "The label for category 'Troubleshooting & FAQ' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Reference": {
+    "message": "Referentie",
+    "description": "The label for category 'Reference' in sidebar 'docs'"
+  }
+}

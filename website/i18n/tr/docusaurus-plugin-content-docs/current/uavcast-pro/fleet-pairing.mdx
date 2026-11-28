@@ -1,0 +1,76 @@
+---
+title: "UAVcast-Pro drone'unu Fleet Manager ile eşleştirin"
+description: "UAVcast-Pro çalıştıran bir drone'u UAVmatrix Fleet Manager'a bağlayın: drone'da eşleştirme kodunu alın, Fleet Manager'a girin, bağlantıyı kontrol edin, yeniden adlandırın veya eşleştirmeyi kaldırın."
+sidebar_position: 9
+sidebar_label: "Fleet Management eşleştirme"
+---
+
+# Fleet Manager ile eşleştirme {/* #pair-with-fleet-manager */}
+
+Eşleştirme, UAVcast-Pro çalıştıran bir drone'u, filonuz için bulut tabanlı kontrol paneli olan [UAVmatrix Fleet Manager](../fleet-manager/index.mdx) ile organizasyonunuza bağlar. Eşleştirildikten sonra drone, sertifika ile kimliği doğrulanmış şifreli bir bağlantıyı Fleet Manager ile sürdürür ve yeniden başlatma veya ağ değişikliğinden sonra kendiliğinden yeniden bağlanır. Eşleştirmeyi drone'da başlatır, Fleet Manager'da tamamlarsınız. Yaklaşık iki dakika sürer.
+
+## Başlamadan önce {/* #before-you-begin */}
+
+- Drone'da **etkin bir lisans** bulunan UAVcast-Pro. Lisans olmadan eşleştirme reddedilir (*Geçerli lisans bulunamadı. Lütfen önce lisansınızı etkinleştirin.*).
+- UAVcast-Pro'da bir **yönetici** kullanıcı. **Fleet Management** salt okunur kullanıcılardan gizlidir.
+- Organizasyonda **Owner** veya **Admin** rolüne sahip bir Fleet Manager hesabı. Drone'un lisansı, bu organizasyonun bir üyesine ait olmalıdır.
+- Drone'da internet bağlantısı; giden TCP **8883** (TLS üzerinden MQTT) ve HTTPS (443) izinli olmalıdır.
+
+## Drone'u eşleştirin {/* #pair-the-drone */}
+
+<Steps>
+
+1. Drone'un web arayüzünde **Yönetim → Fleet Management** bölümüne gidin.
+2. **Connect to Fleet Manager** seçeneğini seçin. Drone, Fleet Manager'dan bir kod ister ve **Expires in** geri sayımıyla birlikte bir **Pairing Code** gösterir; ardından *Waiting for Manager to confirm pairing...* yazar.
+3. Başka bir sekmede [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com) adresinden oturum açın ve **Fleet → Pair Device** bölümüne gidin.
+4. Drone'dan aldığınız kodu girin ve cihaz bilgilerini (ana bilgisayar adı, mimari, UAVcast-Pro sürümü) önünüzdeki drone ile eşleştiğini doğrulayın.
+5. Fleet Manager'daki adımları tamamlayın (VPN seçimi ve ad).
+6. Drone'a dönün; sayfa **Fleet Connection** görünümüne geçer ve durum **Connected** olur.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/fleet--connect" alt="Fleet Manager'a Bağlan düğmesi bulunan Fleet Manager'a bağlan kartı" caption="Henüz eşleştirilmemiş bir drone'da Yönetim → Fleet Management. Fleet Manager'a Bağlan seçildiğinde bu kart, 8 haneli Pairing Code ve Expires in geri sayımı ile değiştirilir." />
+
+:::info Kod 5 dakika geçerlidir
+Kodu girmeden süre dolarsa yeni bir kod için **Fleet Manager'a Bağlan** seçeneğini tekrar seçin.
+:::
+
+Organizasyonlar, VPN ve drone filoya eklendikten sonra yapılacaklar dahil Fleet Manager tarafı, [İlk drone'unuzu Fleet Manager'a ekleyin](../fleet-manager/pair-uav.mdx) sayfasında anlatılmıştır.
+
+## Eşleştirmeden sonra {/* #after-pairing */}
+
+**Fleet Connection** kartı şunları gösterir:
+
+| Alan | Anlamı |
+|---|---|
+| **Connected** / **Disconnected** | Drone'un şu anda Fleet Manager ile iletişim kurup kurmadığı. |
+| **Device Name** | Fleet Manager'da gösterilen ad. Adı buradan veya Fleet Manager'dan düzenleyebilirsiniz. *Managed by Fleet Manager*, adın orada ayarlandığı anlamına gelir. |
+| **Hostname**, **Device ID** | Fleet Manager'ın bu drone'u nasıl tanımladığı. |
+| **Manager URL** | Drone'un eşleştirildiği Fleet Manager örneği. |
+| **Last Connected** | Drone'un Fleet Manager'a en son ulaştığı zaman. |
+
+Fleet Manager, drone'dan şunları alır: canlı telemetri (konum, batarya, GPS, uçuş durumu), UAVcast-Pro sistem durumu ve uzaktan servis kontrolü. Fleet Manager'ın stream binding'ler aracılığıyla oluşturduğu yer kontrol istasyonu hedefleri, [Yer Kontrol İstasyonları](./ground-stations/index.mdx) sayfasında bulut simgesiyle görünür.
+
+Drone'u daha sonra organizasyonunuzun VPN'ine eklemek için [Sanal Özel Ağ](./connectivity/vpn.mdx) sayfasındaki **Fleet Manager** sekmesini kullanın.
+
+## Eşleştirmeyi kaldırma {/* #unpair */}
+
+<Steps>
+
+1. **Yönetim → Fleet Management** bölümüne gidin.
+2. **Disconnect from Fleet** seçeneğini seçin ve onaylayın.
+
+</Steps>
+
+Bu işlem eşleştirmeyi ve drone'un sertifikalarını kaldırır. Drone'u Fleet Manager'da yeniden kullanmak için yeni bir kodla yeniden eşleştirin. Drone'u Fleet Manager'daki filonuzdan da kaldırın; aksi halde çevrimdışı olarak listede kalır.
+
+## Sorun giderme {/* #troubleshooting */}
+
+| Belirti | Kontrol edin |
+|---|---|
+| *Geçerli lisans bulunamadı. Lütfen önce lisansınızı etkinleştirin.* | **Uygulama** bölümünden lisansı etkinleştirin. Bkz. [Lisanslama ve etkinleştirme](../get-started/license-activation.mdx). |
+| Fleet Manager, lisansın organizasyonun bir üyesine ait olmadığını söylüyor | Lisans, bir üye olmayan bir e-posta ile satın alınmış. Bu e-postayı Fleet Manager'a ekleyin (bkz. [Lisanslar](../fleet-manager/licenses.mdx)) veya bu hesabı organizasyona davet edin. |
+| Kodun süresi doldu | **Fleet Manager'a Bağlan** seçeneğini yeniden seçin. |
+| Eşleştirildi, ancak durum **Disconnected** olarak kalıyor | Drone, TCP 8883 üzerinden Fleet Manager'a ulaşamıyor. Bazı ağlar bunu engeller. Drone'un internet bağlantısını ve güvenlik duvarını kontrol edin. |
+
+Daha fazla yardım: [Eşleştirme kodu geçersiz](../troubleshooting/pairing-code-invalid.mdx) ve [Drone Fleet Manager'da çevrimdışı](../troubleshooting/drone-offline-fleet-manager.mdx).

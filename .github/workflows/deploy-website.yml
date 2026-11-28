@@ -1,0 +1,68 @@
+name: Deploy docs v2 (website/) to GitHub Pages
+
+# Live since the docs v2 cutover (2026-11-28): deploys on push to master.
+#
+# At cutover:
+#   1. Disable or delete .github/workflows/deploy.yml and test-deploy.yml. They
+#      build the old docs/ site and push to the same gh-pages branch, so they
+#      would overwrite this deploy on the next push to master.
+#   2. Uncomment the `push` trigger below.
+#   3. In the repo settings (Pages), keep "Deploy from a branch: gh-pages /",
+#      custom domain docs.uavmatrix.com, and turn on "Enforce HTTPS".
+#
+# Old URLs are handled by the static redirect pages in the build
+# (plugins/redirects). GitHub Pages cannot send server-side 301s.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths: ['website/**', '.github/workflows/deploy-website.yml']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gh-pages-deploy
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: website
+
+jobs:
+  deploy:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history for "Last updated" dates
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (all published locales)
+        run: npm run build
+
+      - name: Check redirects
+        run: npm run check:redirects
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./website/build
+          publish_branch: gh-pages
+          cname: docs.uavmatrix.com
+          force_orphan: true
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit_message: 'Deploy docs v2 from ${{ github.sha }}'

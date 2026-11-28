@@ -1,0 +1,133 @@
+.sketch {
+  --sk-ground: #e9e1d6;
+  --sk-sky: #dfe8f6;
+}
+[data-theme='dark'] .sketch {
+  --sk-ground: #2a241d;
+  --sk-sky: #1a2333;
+}
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: var(--font-sans);
+}
+.chrome {
+  fill: var(--m-side);
+  stroke: var(--m-line);
+}
+.chromeDim {
+  fill: var(--m-dim);
+}
+.chromeText {
+  fill: var(--m-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.canvas {
+  fill: var(--m-bg);
+}
+.panel {
+  fill: var(--m-panel);
+  stroke: var(--m-line);
+}
+.dim {
+  fill: var(--m-line);
+}
+.dialog {
+  fill: var(--m-panel);
+  stroke: var(--line-strong);
+  filter: drop-shadow(0 6px 14px rgba(10, 18, 34, 0.14));
+}
+.field {
+  fill: var(--m-panel);
+  stroke: var(--m-line);
+}
+.fieldDim {
+  fill: var(--m-bg);
+  stroke: var(--m-line);
+}
+.fieldStrong {
+  fill: var(--m-panel);
+  stroke: var(--accent-line);
+  stroke-width: 1.5;
+}
+.accentBox {
+  fill: var(--accent);
+}
+.accentSoft {
+  fill: var(--accent-soft);
+  stroke: var(--accent-line);
+}
+.accentText {
+  fill: var(--on-accent);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.label {
+  fill: var(--m-text);
+  font-size: 13px;
+  font-weight: 500;
+}
+.heading {
+  fill: var(--m-text);
+  font-size: 18px;
+  font-weight: 600;
+}
+.mono {
+  fill: var(--m-text);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+.stroke {
+  fill: none;
+  stroke: var(--faint);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.knob {
+  fill: var(--m-panel);
+  stroke: var(--m-line);
+}
+.sky {
+  fill: var(--sk-sky);
+}
+.ground {
+  fill: var(--sk-ground);
+}
+.hudLine {
+  stroke: var(--ok);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+.hudDot {
+  fill: var(--ok);
+}
+.hudTape {
+  fill: var(--m-panel);
+  opacity: 0.55;
+}
+.pin circle {
+  fill: var(--accent);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+.pin text {
+  fill: var(--on-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+}
+.tag {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-right: 4px;
+}

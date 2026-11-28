@@ -1,0 +1,93 @@
+---
+title: "UAVcast-Pro 端口与协议参考"
+sidebar_label: 端口与协议
+description: "UAVcast-Pro 和 Fleet Manager 使用的所有端口：MAVLink UDP 14550、视频 UDP 5600、摄像头 2 与音频、Web、预览、RTSP、NTRIP 以及 MQTT 8883。"
+sidebar_position: 2
+---
+
+# 端口与协议 {/* #ports-and-protocols */}
+
+请使用本页为地面站、无人机网络以及企业网络配置防火墙。页面中显示的是默认值；凡是可以更改端口的地方，都会注明对应的设置。
+
+## 地面站：传入流量 {/* #ground-station-incoming-traffic */}
+
+UAVcast-Pro 会将遥测和视频 **发送** 到每个地面站。地面站只需接受传入的 UDP 流量；无需在无人机端进行任何监听。
+
+| 端口（默认） | 协议 | 用途 | 设置 |
+|---|---|---|---|
+| **14550** | UDP | MAVLink 遥测，地面站应答后双向传输 | **地面控制站 → 遥测端口** |
+| **5600** | UDP | 视频：RTP 中的 H.264，负载类型 96 | **视频端口** |
+| **视频端口 + 1**（5601） | UDP | 启用 **双流** 时的摄像头 2 视频 | **视频端口（摄像头 2）**（留空 = 视频端口 + 1） |
+| **视频端口 + 2**（5602） | UDP | RTP 中的 Opus 音频，负载类型 97，启用 **向地面站发送音频** 时使用 | 跟随 **视频端口** |
+
+:::note TCP 5760 已关闭
+自 v6.5.0 起，遥测路由器不再监听 TCP 5760。地面站通过 UDP 连接到您添加的目标地址。
+:::
+
+**使用 Fleet Manager 流绑定时**，绑定到某地面站的第一架无人机使用 5600/14550，每架额外的无人机各自获得一组端口：视频端口之后预留了摄像头 2 和音频的位置，另加一个遥测端口。请查看每个绑定上的端口信息。
+
+## 无人机：您需要连接的服务 {/* #drone-services-you-connect-to */}
+
+| 端口 | 协议 | 用途 | 说明 |
+|---|---|---|---|
+| **80** | TCP（HTTP） | Web 界面 | 可在 **应用程序 → 设置 → 服务器端口** 中更改（80 或更高）。 |
+| **8889** | TCP（HTTP） | 浏览器中的实时预览（WebRTC） | 由 **摄像头 → 实时预览** 和飞行地图的视频窗口使用。 |
+| 8189 | UDP | 实时预览的 WebRTC 媒体流 | 媒体服务器默认值。 |
+| **9996** | TCP（HTTP） | 录像回放 | 由录制库和飞行回放播放器使用。 |
+| **8554** | TCP（RTSP） | 摄像头流的 RTSP 副本（`/camera`、`/camera2`） | 在实时预览或录制开启期间可用。 |
+| 8888 | TCP（HTTP） | 摄像头流的 HLS 副本 | Web 界面不使用。 |
+| HTTP 注入器 | TCP（HTTP） | `http://<drone>/api/inject/<token>` | 通过 Web 界面端口提供。参见 [注入器](../uavcast-pro/flight-controller/injectors.mdx)。 |
+| UDP 注入器 | UDP | 自定义（14600 是安全的默认值） | 在 **飞行控制器 → 注入器** 中为每个注入器单独设置。 |
+
+通过 VPN 连接时，这些端口必须可以通过无人机的 VPN 地址访问。蜂窝网络一侧无需端口转发。
+
+## 无人机：出站流量 {/* #drone-outgoing-traffic */}
+
+无人机会自行建立以下连接。仅允许 Web 流量的网络会阻止其中的部分连接。
+
+| 目标 | 端口 | 协议 | 用途 |
+|---|---|---|---|
+| 地面站 | 14550、5600（+1、+2） | UDP | 遥测、视频、音频 |
+| `uavmatrix.com` | 443 | HTTPS | 许可证激活和定期检查 |
+| `install.uavmatrix.com` | 443 | HTTPS | 安装程序和更新 |
+| `fleet-manager.uavmatrix.com` | 443 | HTTPS | Fleet Manager 配对 |
+| Fleet Manager 消息代理 | **8883** | MQTT over TLS（客户端证书） | Fleet Manager 状态、遥测与命令 |
+| `vpn-connect.uavmatrix.com` | 443 | HTTPS | Fleet Manager VPN 登录服务器 |
+| 您的 NTRIP 播发站 | 2101（或按设置） | TCP，可选 TLS | RTCM 改正数据 |
+| ZeroTier / Tailscale | ZeroTier 9993，Tailscale 41641（及 443 备用） | UDP | VPN 隧道 |
+| 您的 DNS 服务商 | 443 | HTTPS | 动态 DNS 更新 |
+
+## 无人机内部（仅本地） {/* #inside-the-drone-local-only */}
+
+以下端口仅供 UAVcast-Pro 自身的服务之间使用，无需配置防火墙规则：
+
+| 端口 | 用途 |
+|---|---|
+| 6379 | Redis，内部消息总线 |
+| 12550、12551 | 遥测路由器，分别连接至 UAVcast-Pro 应用和 NTRIP 客户端 |
+| 8090 | 注入器 HTTP 监听器（通过 80 端口上的 `/api/inject/…` 访问） |
+| 9997 | 媒体服务器 API |
+| 5000 | UAVcast-Pro 后台服务 API，供 Web 界面使用 |
+
+## 地面站的防火墙规则 {/* #firewall-rules-for-the-ground-station */}
+
+<Tabs>
+<TabItem value="windows" label="Windows" default>
+
+```powershell title="PowerShell（管理员）"
+New-NetFirewallRule -DisplayName "MAVLink Telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+New-NetFirewallRule -DisplayName "UAV Video" -Direction Inbound -Protocol UDP -LocalPort 5600-5602 -Action Allow
+```
+
+</TabItem>
+<TabItem value="linux" label="Linux（UFW）">
+
+```bash
+sudo ufw allow 14550/udp comment 'MAVLink Telemetry'
+sudo ufw allow 5600:5602/udp comment 'UAV Video and audio'
+```
+
+</TabItem>
+</Tabs>
+
+如果您使用其他遥测或视频端口，或通过 Fleet Manager 流绑定连接多架无人机，请添加更多端口。

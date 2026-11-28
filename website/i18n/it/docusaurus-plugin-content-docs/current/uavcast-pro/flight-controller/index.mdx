@@ -1,0 +1,97 @@
+---
+title: "Collega un controllore di volo MAVLink a UAVcast-Pro"
+description: "Collega un Pixhawk o qualsiasi altro controllore di volo ArduPilot o PX4 a UAVcast-Pro via USB o UART, con rilevamento automatico di porta e baud rate e verifica live della connessione."
+sidebar_position: 1
+sidebar_label: "Connessione"
+---
+
+# Collega il controllore di volo {/* #connect-the-flight-controller */}
+
+UAVcast-Pro legge MAVLink dal tuo controllore di volo (ArduPilot, PX4 o qualsiasi altro autopilota MAVLink) via USB o UART (porta TELEM) e lo inoltra a ogni stazione di controllo a terra che aggiungi. Con **Porta** e **Baud rate** su **Automatico**, l'impostazione predefinita, trova da solo il controllore di volo, ricorda ciò che ha funzionato e si ricollega dopo un riavvio, un problema USB o un'accensione tardiva. Lo trovi in **Controllore di Volo → Connessione**.
+
+<Screenshot id="uavcast-pro/flight-controller" alt="Pagina Controllore di Volo → Connessione che mostra Connesso, la verifica della connessione con quattro passaggi superati e l'Ispettore MAVLink" caption="Controllore di Volo → Connessione con un collegamento USB a un Pixhawk." />
+
+## Collega via USB {/* #connect-over-usb */}
+
+<Steps>
+
+1. Collega la porta USB del controllore di volo al computer di bordo con un cavo che trasmette dati.
+2. Vai su **Controllore di Volo → Connessione** e seleziona **USB** in **Tipo di collegamento**.
+3. Lascia **Porta** su **Automatico**. Le connessioni USB non usano il baud rate.
+4. Se il pannello di stato indica **Collegamento fermo**, seleziona **Connetti**.
+
+</Steps>
+
+Entro pochi secondi lo stato mostra **CONNESSO** con il tipo di veicolo e l'ID di sistema, per esempio *Connesso a Quadrotor (sistema 1) su ArduPilot fmuv2 (ttyACM0)*.
+
+## Collega tramite una porta TELEM (UART) {/* #connect-over-a-telem-port-uart */}
+
+<Steps>
+
+1. Cabla la porta TELEM: controllore di volo **TX → RX** sul computer di bordo, **RX → TX** e **GND → GND**. Non collegare i 5 V se entrambe le schede hanno una propria alimentazione.
+2. Sul controllore di volo, imposta la porta su MAVLink 2: per TELEM2 è `SERIAL2_PROTOCOL = 2`. Annota `SERIAL2_BAUD`.
+3. In UAVcast-Pro, seleziona **UART / Seriale** in **Tipo di collegamento**.
+4. Lascia **Porta** e **Baud rate** su **Automatico**, oppure scegli la porta (su un Raspberry Pi la UART GPIO è contrassegnata come **consigliata**) e il baud rate che corrisponde a `SERIALx_BAUD`.
+5. Seleziona **Connetti** se il collegamento è fermo.
+
+</Steps>
+
+Le modifiche si applicano subito. Non serve riavviare nulla.
+
+:::tip Baud rate automatico
+In modalità automatica UAVcast-Pro prova 57600, 115200, 921600, 1500000, 460800, 230400 e 500000 baud, partendo dall'ultimo valore che ha funzionato. Se gli heartbeat si fermano per 20 secondi mentre i dati continuano ad arrivare (per esempio dopo che hai cambiato `SERIALx_BAUD`), la ricerca ricomincia.
+:::
+
+## Riferimento impostazioni {/* #settings-reference */}
+
+| Impostazione | Predefinito | Valori | Note |
+|---|---|---|---|
+| **Collegamento abilitato** | Attivo | Attivo, disattivato | Disattivato rilascia la porta seriale e interrompe la telemetria verso tutte le stazioni di controllo a terra. |
+| **Tipo di collegamento** | **USB** | **USB**, **UART / Seriale** | Stabilisce quali porte cerca **Automatico**. |
+| **Porta** | **Automatico** | **Automatico**, una porta rilevata, **Percorso personalizzato...** | Automatico preferisce il percorso stabile `/dev/serial/by-id/…` e segue il dispositivo se cambia numero. Il percorso personalizzato accetta qualsiasi dispositivo, per esempio `/dev/ttyAMA0`. Le porte usate da un altro programma mostrano *in uso da …*. |
+| **Baud rate** | **Automatico** | **Automatico** o un valore fisso | Ignorato per USB. Deve corrispondere a `SERIALx_BAUD` se fisso. |
+
+## Leggi il pannello di stato {/* #read-the-status-panel */}
+
+| Stato | Significato |
+|---|---|
+| **Connesso** | Gli heartbeat stanno arrivando. **Connesso da**, **Ultimo heartbeat** e **Riconnessioni automatiche** mostrano lo stato di salute del collegamento. |
+| **In attesa del dispositivo** | La porta non esiste. Il controllore di volo è scollegato, senza alimentazione o ancora in avvio. |
+| **Rilevamento baud rate** | Sta provando i baud rate (*Provo 115200 baud (2 di 7)*). |
+| **Nessun heartbeat** | La porta è aperta ma non arriva MAVLink valido: baud rate sbagliato, TX/RX invertiti o porta non impostata su MAVLink. |
+| **Riconnessione** | Il collegamento è caduto e si sta ripristinando da solo. |
+| **Ricerca** | **Rilevamento automatico** sta scansionando ogni porta e ogni velocità. Può richiedere fino a un minuto. |
+| **Disattivato** / **Fermo** | Il collegamento è disattivato o fermo. Seleziona **Connetti**. |
+
+### Verifica della connessione {/* #connection-check */}
+
+La scheda **Verifica della connessione**, aggiornata ogni secondo, segue i dati dal cavo fino alla stazione di controllo a terra. La prima riga che non è verde indica il problema:
+
+1. **Controllore di volo collegato** (USB) oppure **Porta seriale disponibile** (UART). *Non rilevato* di solito significa un cavo USB solo di ricarica oppure assenza di alimentazione.
+2. **Segnale sul cavo**: i byte arrivano sulla porta.
+3. **Dati leggibili del controllore di volo**: i byte si decodificano come MAVLink. *% danneggiati* indica un cavo allentato o troppo lungo, una massa mancante o disturbi dai cavi di alimentazione.
+4. **Il controllore di volo risponde**: heartbeat dal veicolo.
+5. **Invio alla stazione di controllo a terra**: pacchetti al secondo verso ogni destinazione attiva, oppure *Nessuna stazione di controllo a terra configurata*.
+
+### Rilevamento automatico {/* #auto-detect */}
+
+**Rilevamento automatico** mette in pausa il collegamento, ascolta su ogni porta seriale a ogni baud rate, salva la porta e la velocità che trova e avvia il collegamento con quelle. Usalo quando non sai quale porta o baud rate usa il controllore di volo. **Mostra cosa è stato provato** elenca ogni tentativo.
+
+## Pannello Ispettore Mavlink {/* #mavlink-inspector-panel */}
+
+La colonna di destra mostra lo stato live del veicolo: collegamento, **Informazioni Failsafe GCS**, **Informazioni Veicolo** (tipo, controllore, modalità di volo, armato), **Stato Batteria**, **Informazioni GPS** e dati di volo. Se il pannello mostra **Avviso - Failsafe disattivato**, il controllore di volo non ha il failsafe GCS. Attivalo (`FS_GCS_ENABLE` su ArduPilot) prima di volare su un collegamento cellulare.
+
+## Sicurezza: nessuna porta di telemetria aperta {/* #security-no-open-telemetry-port */}
+
+UAVcast-Pro non accetta connessioni di telemetria in entrata. Il server TCP sulla porta 5760 che mavlink-router normalmente apre è disattivato, quindi solo le stazioni di controllo a terra che aggiungi in [Stazioni di Controllo a Terra](../ground-stations/index.mdx) ricevono la telemetria, e solo mentre **Attiva Telemetria** è attivo.
+
+:::note Dalla versione precedente
+Le versioni precedenti usavano come impostazione predefinita `/dev/ttyACM0` a 57600 baud e accettavano connessioni TCP sulla porta 5760. Dalla v6.4.3 ogni dispositivo passa una volta su **Automatico**, provando per primi la vecchia porta e il vecchio baud rate. Dalla v6.5.0 la TCP 5760 è chiusa: aggiungi il tuo PC come stazione di controllo a terra e collegati via UDP.
+:::
+
+## Argomenti correlati {/* #related */}
+
+- [Correzioni NTRIP / RTK](./ntrip-rtk.mdx)
+- [Iniettori: invia i dati dei tuoi sensori in MAVLink](./injectors.mdx)
+- [Stazioni di controllo a terra](../ground-stations/index.mdx)
+- [Risoluzione dei problemi: nessun heartbeat MAVLink](../../troubleshooting/no-mavlink-heartbeat.mdx)

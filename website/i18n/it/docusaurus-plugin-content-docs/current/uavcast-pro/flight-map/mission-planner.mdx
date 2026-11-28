@@ -1,0 +1,57 @@
+---
+title: "Pianifica e carica una missione a waypoint dal browser"
+description: "Pianifica una missione a waypoint nella scheda Mission Planner di UAVcast-Pro, imposta il sistema di riferimento dell'altitudine e il raggio, salvala come file .waypoints e caricala sul controllore di volo ArduPilot."
+sidebar_position: 2
+sidebar_label: "Pianificatore di Missioni"
+---
+
+# Scheda Mission Planner {/* #mission-planner-tab */}
+
+La scheda Mission Planner ti permette di pianificare una semplice missione a waypoint nel browser e di caricarla sul controllore di volo tramite UAVcast-Pro, da ovunque sia raggiungibile l'interfaccia web. Le missioni vengono salvate nello stesso formato `.waypoints` (QGC WPL 110) usato da Mission Planner e QGroundControl, così puoi spostarle tra i vari strumenti. Apri **Mappa di Volo → Pianificatore di Missioni**.
+
+<Screenshot id="uavcast-pro/flight-map--mission-planner" alt="Scheda Mission Planner con una mappa satellitare, una tabella dei waypoint vuota e i pulsanti Salva, Apri, Carica, Leggi e Cancella" caption="Mappa di Volo → Pianificatore di Missioni prima di aggiungere un waypoint. Clicca sulla mappa per aggiungerne uno." />
+
+## Pianifica una missione {/* #plan-a-mission */}
+
+<Steps>
+
+1. Clicca sulla mappa nel punto in cui deve trovarsi il primo waypoint. La prima volta, **Imposta Valori Predefiniti** chiede **Altitudine Predefinita (metri)**, **Raggio Waypoint (metri)** e **Sistema di Riferimento Altitudine**. Seleziona **Continua**.
+2. Continua a cliccare per aggiungere waypoint. Trascina un marcatore per spostarlo.
+3. Regola ogni waypoint nella tabella: **Alt (m)**, **Riferimento** e **Raggio (m)**. Rimuovi un waypoint nella colonna **Azione**.
+4. Controlla **Waypoint** e **Distanza** per il percorso totale.
+
+</Steps>
+
+| Predefinito | Valore | Opzioni |
+|---|---|---|
+| **Altitudine Predefinita (metri)** | `100` | qualsiasi valore |
+| **Raggio Waypoint (metri)** | `30` | qualsiasi valore |
+| **Sistema di Riferimento Altitudine** | **Relativa** | **Relativa** (sopra home), **Assoluta** (sopra il livello medio del mare), **Terreno** (sopra il suolo, richiede dati del terreno sul controllore di volo) |
+
+Nella tabella i riferimenti sono abbreviati in **Rel**, **Abs** e **Ter**. I waypoint vengono inviati come `MAV_CMD_NAV_WAYPOINT`.
+
+## Caricamento sul controllore di volo {/* #upload-to-the-flight-controller */}
+
+<Steps>
+
+1. Sotto **Controllore di Volo**, seleziona **Carica**.
+2. Conferma **Carica Missione**. La finestra avvisa che sostituisce la missione sul controllore di volo.
+3. Vedi *Missione caricata sul controllore di volo*.
+
+</Steps>
+
+- **Leggi** scarica nel pianificatore la missione presente sul controllore di volo.
+- **Cancella** rimuove i waypoint dal pianificatore.
+
+Per volare la missione, usa **Avvia** nella scheda **Azioni** della Mappa di Volo, oppure passa in AUTO dal tuo trasmettitore o dalla stazione di terra.
+
+## Salva e apri i file {/* #save-and-load-files */}
+
+Sotto **File**:
+
+- **Salva** scarica la missione come `mission.waypoints`.
+- **Apri** apre un file `.waypoints` o `.txt` in formato QGC WPL, per esempio uno salvato da Mission Planner.
+
+## Limiti {/* #limits */}
+
+Questo pianificatore gestisce solo waypoint semplici. **Apri** mantiene posizione, altitudine, riferimento e raggio di ogni riga, ma trasforma ogni riga in un waypoint semplice: i comandi di decollo, atterraggio, loiter e DO (trigger della camera, servo) non vengono mantenuti, e un comando senza posizione diventa un waypoint in 0, 0. Per i comandi di decollo e atterraggio, i comandi DO, le griglie di rilevamento, i geofence e i punti di raccolta (rally), pianifica e carica direttamente da Mission Planner o QGroundControl.

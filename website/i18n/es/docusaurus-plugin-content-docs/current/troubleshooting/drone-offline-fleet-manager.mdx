@@ -1,0 +1,57 @@
+---
+title: "El dron aparece como Offline en Fleet Manager"
+sidebar_label: Dron offline en Fleet Manager
+description: "¿El UAV emparejado aparece como Offline o Re-pair required en Fleet Manager? Revisa la conexión a internet del dron, el puerto saliente 8883, Fleet Management de UAVcast-Pro y la licencia."
+sidebar_position: 14
+---
+
+# El dron aparece como Offline en Fleet Manager {/* #drone-shows-offline-in-fleet-manager */}
+
+El UAV está emparejado, pero Fleet Manager lo muestra como **Offline** (en gris en el mapa de flota), su telemetría está congelada, o tiene una insignia **Re-pair required**.
+
+Fleet Manager marca un UAV como offline cuando no ha recibido nada de él durante 20 segundos. El dron se comunica con Fleet Manager mediante una conexión MQTT cifrada, a través de su propia conexión a internet.
+
+<SymptomTable rows={[
+  {symptom: 'Offline, y Fleet Management de UAVcast-Pro dice Disconnected', cause: 'El dron no tiene internet, o el puerto 8883 está bloqueado', start: '#check-1'},
+  {symptom: 'Insignia Re-pair required, o This UAV must be re-paired', cause: 'El dron tiene un certificado antiguo', start: '#check-2'},
+  {symptom: 'Offline justo después de reinstalar o restablecer UAVcast-Pro', cause: 'Se eliminó el emparejamiento en el dron', start: '#check-3'},
+  {symptom: 'En línea, pero sin posición ni batería', cause: 'El controlador de vuelo no está conectado a UAVcast-Pro', start: '#check-4'},
+]} />
+
+## Comprobación 1: conexión del dron con Fleet Manager {/* #check-1 */}
+
+<Steps>
+
+1. Abre UAVcast-Pro en el dron y ve a **Fleet Management**. **Fleet Connection** muestra **Connected** o **Disconnected**, y **Last Connected**.
+2. Si aparece **Disconnected**, verifica que el dron tenga internet: revisa la fila **Cellular** del tablero, o ejecuta `curl -I https://fleet-manager.uavmatrix.com` en el dispositivo. Primero corrige el enlace con [Módem conectado, sin internet](./modem-no-internet.mdx).
+3. El dron debe poder abrir una **conexión TCP saliente en el puerto 8883** (MQTT sobre TLS). Algunas redes corporativas, el Wi-Fi público y algunos planes de SIM para IoT solo permiten puertos web. Prueba con otra red o pide al proveedor que abra el 8883.
+4. Verifica la fecha y la hora del dispositivo con `date`. La conexión usa certificados, que fallan en un dispositivo con el reloj incorrecto.
+5. Asegúrate de que la licencia del dron siga activa (**Aplicación → Gestor de Licencias**).
+
+</Steps>
+
+## Comprobación 2: se requiere volver a emparejar {/* #check-2 */}
+
+Fleet Manager cambió la forma en que se conectan los drones, y los UAV emparejados antes de ese cambio deben emparejarse una vez más. No se pierde nada: el UAV conserva su nombre e historial, y no necesitas eliminarlo en Fleet Manager.
+
+<Steps>
+
+1. En UAVcast-Pro del dron, abre **Fleet Management** y pulsa **Disconnect from Fleet**, y luego confirma.
+2. Pulsa **Connect to Fleet Manager**. Aparecerá un **Pairing Code** de 8 dígitos con una cuenta regresiva.
+3. En Fleet Manager, ve a **Fleet → Pair Device**, elige la organización e introduce el código.
+
+</Steps>
+
+## Comprobación 3: el dron perdió su emparejamiento {/* #check-3 */}
+
+Reinstalar con un restablecimiento de la base de datos, **Reiniciar Base de Datos** o **Disconnect from Fleet** elimina el emparejamiento del dron, y deja de reportar. Vuelve a emparejarlo como en la comprobación 2. Emparejarlo en la misma organización reutiliza la entrada del UAV existente.
+
+## Comprobación 4: en línea, pero sin telemetría {/* #check-4 */}
+
+La posición, la batería y el modo de vuelo provienen del controlador de vuelo. Si el UAV está en línea pero esos campos están vacíos, UAVcast-Pro no puede escuchar al controlador de vuelo: consulta [Sin heartbeat de MAVLink](./no-mavlink-heartbeat.mdx).
+
+## ¿Sigue fuera de línea? {/* #still-offline */}
+
+[Descarga los registros](./collect-logs.mdx) del dron con **Todos los Registros** seleccionado, y envíalos a **support@uavmatrix.com** junto con el nombre del UAV y la organización. Más problemas de Fleet Manager se explican en [Solución de problemas de Fleet Manager](../fleet-manager/troubleshooting.mdx).
+
+Relacionado: [Emparejamiento de Fleet Manager en UAVcast-Pro](../uavcast-pro/fleet-pairing.mdx)

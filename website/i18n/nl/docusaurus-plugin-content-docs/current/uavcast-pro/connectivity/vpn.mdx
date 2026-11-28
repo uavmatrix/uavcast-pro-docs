@@ -1,0 +1,148 @@
+---
+title: "Uw drone via 4G bereiken met een VPN: Fleet Manager, Tailscale, ZeroTier"
+description: "Plaats uw drone en grondstation op één privénetwerk met de Fleet Manager VPN, of met uw eigen Tailscale- of ZeroTier-netwerk, zodat telemetrie en video werken via 4G/LTE."
+sidebar_position: 2
+sidebar_label: "VPN"
+---
+
+# VPN {/* #vpn */}
+
+Via 4G/LTE krijgt uw drone een adres van de mobiele provider dat uw grondstation niet kan bereiken. Een VPN lost dat op: de drone en het grondstation sluiten aan op hetzelfde privénetwerk en krijgen daarop vaste adressen, waar ze ook zijn en welk netwerk ze ook gebruiken. Open **Virtueel Privénetwerk** in de zijbalk.
+
+De snelste manier is de **Fleet Manager VPN**, die is inbegrepen bij uw UAVcast-Pro-licentie. Als u al uw eigen Tailscale-tailnet of ZeroTier-netwerk gebruikt, kan UAVcast-Pro daarbij aansluiten.
+
+<Screenshot id="uavcast-pro/private-network" alt="Pagina Virtueel Privénetwerk met VPN ingeschakeld, Tailscale geselecteerd, het tabblad Fleet Manager en VPN-informatie met Niet Verbonden" caption="Virtueel Privénetwerk met Tailscale geselecteerd op een drone die nog niet is gekoppeld of ingelogd." />
+
+## Welke moet ik gebruiken? {/* #which-one-should-i-use */}
+
+| | Fleet Manager VPN | Tailscale | ZeroTier |
+|---|---|---|---|
+| Account | Uw Fleet Manager-organisatie (inbegrepen bij uw licentie) | Uw eigen Tailscale-account | Uw eigen ZeroTier-netwerk (zelf beheerd) |
+| Instellen op de drone | Eén klik tijdens of na het koppelen | Inloggen met een browserlink of een authenticatiesleutel | Een netwerk-ID plakken |
+| Grondstations | Aangesloten via de pagina **Network** van Fleet Manager, streams ingesteld met streamkoppelingen | Aansluiten op uw tailnet | Aansluiten op uw netwerk |
+| Het beste voor | De meeste operators, en elke vloot | Teams die al Tailscale gebruiken | Teams die al ZeroTier gebruiken |
+
+De drone kan via deze pagina op één VPN tegelijk zitten.
+
+:::note UAVnet wordt uitgefaseerd
+UAVnet, de gehoste ZeroTier-controller van UAVmatrix op uavnet.uavmatrix.com, wordt uitgefaseerd ten gunste van Fleet Manager. Als uw drones een UAVnet-netwerk gebruiken, verplaats ze dan naar de Fleet Manager VPN. De knop **Open UAVNet Controller** op deze pagina opent UAVnet.
+:::
+
+## Fleet Manager VPN {/* #fleet-manager-vpn */}
+
+De Fleet Manager VPN is het privénetwerk van uw organisatie, beheerd door Fleet Manager op de Tailscale-client. U hebt geen Tailscale-account nodig.
+
+<Steps>
+
+1. Open in Fleet Manager **Network** (Netwerk) en selecteer **Enable VPN Network** als die nog niet aan staat. Zie [Netwerk en VPN](../../fleet-manager/network/index.mdx).
+2. [Koppel de drone](../fleet-pairing.mdx) en laat **Enable VPN for this UAV** aangevinkt in de koppelwizard. Een drone die al is gekoppeld, sluit aan via het tabblad **Fleet Manager** op deze pagina (zie hieronder), of met **Push to Drone** op de pagina **Network** van Fleet Manager.
+3. Plaats elk grondstation op het netwerk via de pagina **Network** van Fleet Manager: [Een grondstation aansluiten](../../fleet-manager/connect-gcs.mdx).
+4. Stuur streams ernaartoe met een [streamkoppeling](../../fleet-manager/network/stream-bindings.mdx). Fleet Manager voegt de bestemming voor u toe op de pagina [Grondcontrolestations](../ground-stations/index.mdx) van de drone.
+
+</Steps>
+
+Een stapsgewijze vluchtinstelling via 4G staat in [Vliegen buiten zicht over 4G](../../guides/bvlos-4g.mdx).
+
+## Tailscale {/* #tailscale */}
+
+Gebruik dit voor uw eigen tailnet, of voor de Fleet Manager VPN op een drone die al is gekoppeld. UAVcast-Pro installeert Tailscale. Kies op een van de drie tabbladen hoe de drone inlogt.
+
+<Tabs groupId="tailscale">
+<TabItem value="web" label="Web Login" default>
+
+<Steps>
+
+1. Zet **VPN Inschakelen** op **Ja** en kies **Tailscale** bij **Diensten**.
+2. Selecteer op **Web Login** **Login-URL genereren** en daarna **Authenticeer dit apparaat**.
+3. Log in op Tailscale in het nieuwe tabblad en keur het apparaat goed.
+4. Terug in UAVcast-Pro verandert de status naar **Verbonden** en worden **IPv4 Adres**, **Hostnaam** en **Tailnet** getoond.
+
+</Steps>
+
+</TabItem>
+<TabItem value="key" label="Authenticatiesleutel">
+
+<Steps>
+
+1. Genereer in de [Tailscale-beheerconsole](https://login.tailscale.com/admin/settings/keys) een authenticatiesleutel. Maak die vooraf goedgekeurd; maak hem herbruikbaar als u meerdere drones instelt.
+2. Kies in UAVcast-Pro **Tailscale**, open **Authenticatiesleutel**, plak de sleutel (`tskey-auth-…`) en stel optioneel **Hostnaam (Optioneel)** in.
+3. Selecteer **Verbind met Authenticatiesleutel**.
+
+</Steps>
+
+Gebruik dit voor drones waar geen browser bij is, of om veel drones op dezelfde manier in te stellen.
+
+</TabItem>
+<TabItem value="fleet" label="Fleet Manager">
+
+Als de drone [gekoppeld is aan Fleet Manager](../fleet-pairing.mdx) en uw organisatie de VPN heeft ingeschakeld, selecteert u **Verbinden met Fleet Manager VPN**. Verbinden kan tot 30 seconden duren. De status toont dan **Verbonden met Fleet Manager**.
+
+Nog niet gekoppeld? Het tabblad toont **Niet gekoppeld aan Fleet Manager** en verwijst naar **Ga naar koppeling Fleet Manager**.
+
+</TabItem>
+</Tabs>
+
+Installeer Tailscale op het grondstation, log in op hetzelfde tailnet en gebruik het Tailscale-IP-adres (`100.x.y.z`) als bestemming op Grondcontrolestations.
+
+Wanneer verbonden, zet **Interface Uit** de Tailscale-interface uit zonder uit te loggen, zet **Interface Aan** hem weer aan, en verwijdert **Uitloggen** het apparaat uit het tailnet.
+
+:::warning De Fleet Manager VPN vervangt uw eigen Tailscale-login
+De Fleet Manager VPN draait op Tailscale met de eigen loginserver van Fleet Manager. Verbinden ermee logt de drone uit van uw eigen tailnet. Als uw SSH-sessie via dat tailnet loopt, wordt die verbroken. Doe dit vanaf het lokale netwerk.
+:::
+
+## ZeroTier {/* #zerotier */}
+
+Gebruik dit als u een eigen ZeroTier-netwerk beheert, bijvoorbeeld in ZeroTier Central of op uw eigen controller.
+
+### De drone verbinden {/* #join-the-drone */}
+
+<Steps>
+
+1. Ga in UAVcast-Pro naar **Virtueel Privénetwerk**.
+2. Zet **VPN Inschakelen** op **Ja**.
+3. Kies bij **Diensten** **ZeroTier**.
+4. Plak uw netwerk-ID van 16 tekens in **Netwerk ID** en selecteer **Verbinden met Netwerk**.
+5. Autoriseer de drone in uw ZeroTier-controller als het netwerk privé is. Het paneel **ZeroTier Netwerk** toont dan **Verbonden** en het **Apparaat IP**.
+
+</Steps>
+
+**TOEGANG_GEWEIGERD** betekent dat het apparaat nog niet is geautoriseerd.
+
+### Het grondstation verbinden {/* #join-the-ground-station */}
+
+<Steps>
+
+1. Installeer [ZeroTier One](https://www.zerotier.com/download/) op de computer van het grondstation.
+2. Verbind met hetzelfde netwerk-ID: op Windows en macOS via het ZeroTier-pictogram in de systeemvak of menubalk (**Join New Network**); op Linux met `sudo zerotier-cli join <network-id>`.
+3. Autoriseer het in uw controller en noteer het IP-adres dat het krijgt.
+
+</Steps>
+
+Stel op [Grondcontrolestations](../ground-stations/index.mdx) de **Bestemmings-IP of Host** in op het **ZeroTier**-IP van het grondstation. Telemetrie en video gaan nu via de VPN.
+
+:::tip Wisselen tussen Wi-Fi en 4G
+ZeroTier en Tailscale volgen het best beschikbare netwerk. U kunt op het veld beginnen op Wi-Fi, en de verbinding schakelt over naar het modem zodra het Wi-Fi-bereik wegvalt, zonder dat een adres verandert.
+:::
+
+## Overzicht van instellingen {/* #settings-reference */}
+
+| Instelling | Standaard | Waarden | Opmerkingen |
+|---|---|---|---|
+| **VPN Inschakelen** | **Nee** | **Ja**, **Nee** | |
+| **Diensten** | **ZeroTier** | **ZeroTier**, **Tailscale** | Uitgeschakeld totdat VPN is ingeschakeld. |
+| **Netwerk ID** (ZeroTier) | leeg | 16-tekens ZeroTier-netwerk-ID | Van uw eigen ZeroTier-controller. |
+| **Authenticatiesleutel** (Tailscale) | leeg | `tskey-auth-…` | |
+| **Hostnaam (Optioneel)** (Tailscale) | systeemhostnaam | tekst | Naam die in de Tailscale-beheerconsole wordt getoond. |
+
+## Probleemoplossing {/* #troubleshooting */}
+
+| Symptoom | Controleer |
+|---|---|
+| ZeroTier toont **TOEGANG_GEWEIGERD** | Autoriseer het apparaat in uw ZeroTier-controller. |
+| Verbonden, maar geen telemetrie op het grondstation | De bestemming gebruikt nog het LAN-IP. Gebruik het VPN-IP van het grondstation en sta UDP 14550 en 5600 toe in de firewall. |
+| *Geen VPN-informatie beschikbaar* | VPN is uitgeschakeld of de dienst draait niet. Controleer **VPN Inschakelen** en het **Actielogboek**. |
+| Tailscale-webinlog toont *Geen authenticatie-URL* | Gebruik in plaats daarvan het tabblad **Authenticatiesleutel**. |
+
+De interfaces verschijnen op de pagina [Netwerken](./networks.mdx) als `zt…` (ZeroTier) of `tailscale0`, gemarkeerd met **VPN**.
+
+Nog steeds vast? Zie [VPN verbonden maar de drone is niet bereikbaar](../../troubleshooting/vpn-cant-reach-drone.mdx).

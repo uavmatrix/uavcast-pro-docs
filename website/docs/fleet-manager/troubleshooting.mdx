@@ -1,0 +1,83 @@
+---
+title: Fleet Manager troubleshooting - pairing, offline, streams
+sidebar_label: Troubleshooting
+description: "Fix common Fleet Manager problems: pairing errors, drones stuck on PAIRING or offline, re-pair required, missing streams and failed commands."
+sidebar_position: 17
+---
+
+# Fleet Manager troubleshooting
+
+Start from what you see. Each row links to the fix, either below or on the shared [troubleshooting](../troubleshooting/index.mdx) pages.
+
+| What you see | Likely cause | Go to |
+|---|---|---|
+| **Invalid pairing code**, **This pairing code has expired**, **This pairing code has already been used** | Typo, code older than 5 minutes, or claimed already | [Pairing code invalid or expired](../troubleshooting/pairing-code-invalid.mdx) |
+| **License is not owned by any member of this organization** | License bought with an email that isn't a member | [Licenses bought with another email](./licenses.mdx#licenses-bought-with-another-email) |
+| **This UAV is already paired to an organization** | The drone still belongs to another organization | [Move a drone](./fleet/remove-or-transfer.mdx#move-a-drone-to-another-organization) |
+| UAVcast-Pro shows **No valid license found** or **Invalid or inactive license** | License not activated on the drone, expired or refunded | [License won't activate](../troubleshooting/license-activation-failed.mdx) |
+| No **Pair Device** button | You are a Viewer | [Roles and permissions](./team/roles-and-permissions.mdx) |
+| Drone stuck on **PAIRING** | The drone hasn't connected to the broker yet | [Stuck on PAIRING](#stuck-on-pairing) |
+| Drone **OFFLINE** | No internet, port 8883 blocked, or UAVcast-Pro not running | [Drone offline in Fleet Manager](../troubleshooting/drone-offline-fleet-manager.mdx) |
+| **Re-pair required** | Old connection certificate | [Re-pair a drone](./fleet/remove-or-transfer.mdx#re-pair-a-drone) |
+| **NO MAVLINK** on the map | UAVcast-Pro has no data from the flight controller | [No MAVLink heartbeat](../troubleshooting/no-mavlink-heartbeat.mdx) |
+| Binding fails: **Failed to send configuration to drone - it may be offline** | Drone offline or didn't confirm within 15 s | [Binding won't save](#binding-wont-save) |
+| Binding exists, no telemetry or video in the ground station | Firewall, wrong port, or stream switched off | [No stream at the ground station](#no-stream-at-the-ground-station) |
+| Ground station joined the VPN but can't reach the drone | Device type, drone not on VPN, or UDP blocked | [VPN connected but can't reach the drone](../troubleshooting/vpn-cant-reach-drone.mdx) |
+| Commands don't work, **UAVcast Upgrade Required** | Drone offline, Viewer role, or old UAVcast-Pro | [Commands fail](#commands-fail) |
+| **Request timed out. UAVcast may be unreachable.** when opening UAVcast-Pro remotely | Slow link through the proxy | [Proxy is slow or incomplete](#proxy-is-slow-or-incomplete) |
+| Invitation email never arrived | Spam filter, or wrong address | [Invitation not received](#invitation-not-received) |
+
+## Stuck on PAIRING
+
+**PAIRING** means Fleet Manager has accepted the code and is waiting for the drone's first heartbeat over MQTT.
+
+<Steps>
+
+1. Look at UAVcast-Pro's **Fleet Management** page. If it still says **Waiting for Manager to confirm pairing...**, the drone hasn't fetched its certificate. Check that it has internet.
+2. Check outbound TCP 8883 from the drone:
+
+   ```bash title="On the drone"
+   nc -vz fleet-manager.uavmatrix.com 8883
+   ```
+
+3. If you entered an **older** code from the same drone (for example after selecting **Connect to Fleet Manager** twice), UAVcast-Pro isn't waiting for it. Select **Disconnect from Fleet** if shown, get a new code and pair again into the same organization. The drone keeps its record.
+
+</Steps>
+
+The drone has 15 minutes after the code's expiry to fetch its certificate. After that, pair again.
+
+## Binding won't save
+
+Fleet Manager only saves a binding after the drone confirms it. Check that the drone shows **ONLINE**, then try again. If the drone is online but bindings still fail, the drone may not be on the VPN: check **Network → Connected Devices** for it with type **UAV**, or use **Push to Drone**.
+
+## No stream at the ground station
+
+<Steps>
+
+1. On **Network → Stream Bindings**, check that **Video** and **Telemetry** are switched on and note the **Ports**.
+2. Check that the ground station software listens on exactly those ports. Only the first drone on a laptop uses 5600 / 14550; every further drone has its own ports.
+3. Allow inbound UDP on those ports in the laptop's firewall. On Windows, allow QGroundControl or Mission Planner on **Private** and **Public** networks.
+4. Run `tailscale status` on the laptop and check that the drone is listed.
+
+</Steps>
+
+More detail: [No telemetry in the ground station](../troubleshooting/no-telemetry-in-gcs.mdx) and [No video in the ground station](../troubleshooting/no-video-in-gcs.mdx).
+
+## Commands fail
+
+- The drone must be **ONLINE**.
+- Only Owners and Admins can send commands. Viewers don't get the command buttons, and the server rejects commands from them.
+- Arm, disarm and preflight calibration need UAVcast-Pro 6.3.0_rc13 or later. [Update UAVcast-Pro](../get-started/updating.mdx).
+- The flight controller can refuse a command, for example arming with failed pre-arm checks. Read its message in the map popup or the **Logs** tab.
+
+## Proxy is slow or incomplete
+
+**Open via Proxy** passes each page request over the drone's link, with 30 seconds per request, and doesn't carry live (WebSocket) features. On a weak cellular link, wait for the page to finish loading, or join the VPN and use **Open via VPN**. See [Open UAVcast-Pro remotely](./fleet/remote-uavcast.mdx).
+
+## Invitation not received
+
+Ask the person to check spam. On **Team**, check the email under **Pending Invitations**. If it's wrong, **Revoke** it and invite again. Invitations expire after 7 days.
+
+## Still stuck
+
+Open a ticket from the support button with a screenshot, or email support@uavmatrix.com. Include the drone's name and device ID (on its UAV page). Email the UAVcast-Pro log bundle (a ZIP) to support@uavmatrix.com with your ticket number, since tickets only take an image. See [Support](./support.mdx) and [Collect logs](../troubleshooting/collect-logs.mdx).

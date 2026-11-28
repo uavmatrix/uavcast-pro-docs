@@ -1,0 +1,60 @@
+---
+title: "UAVcast-Pro dokümantasyonu: web arayüzünün her sayfası"
+description: "UAVcast-Pro web arayüzü için başvuru: kontrol paneli, uçuş kontrolcüsü, uçuş haritası, yer kontrol istasyonları, kamera, modem, VPN, Fleet Manager eşleştirme, kullanıcılar ve ayarlar."
+sidebar_position: 1
+sidebar_label: "Genel bakış"
+---
+
+# UAVcast-Pro {/* #uavcast-pro */}
+
+Bu bölüm, UAVcast-Pro web arayüzünün her sayfasını uygulamanın kenar çubuğundaki sıraya göre açıklar. Her sayfada ekranın amacı, nasıl kurulacağı ve her ayarın varsayılan değeriyle birlikte listelendiği anlatılır. UAVcast-Pro'da yeniyseniz [Hızlı başlangıç](../get-started/quick-start.mdx) bölümüyle başlayın.
+
+## Operasyonlar {/* #operations */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/dashboard/" title="Kontrol Paneli" description="Uçuş kontrolcüsü, GPS, bağlantılar, video ve gücün sağlık durumuna tek bakışta göz atın." />
+  <Card href="/uavcast-pro/data-streams/" title="Veri Akışları" description="Herhangi bir MAVLink veya sensör değeri için özel canlı panolar." />
+  <Card href="/uavcast-pro/flight-controller/" title="Uçuş Kontrolcüsü" description="Otomatik port ve baud algılamalı USB veya UART bağlantısı, NTRIP/RTK ve enjektörler." />
+  <Card href="/uavcast-pro/flight-map/" title="Uçuş Haritası" description="Canlı harita, kokpit HUD'u, arm/disarm, modlar, görevler, radyo, İnceleyici ve günlük analizi." />
+  <Card href="/uavcast-pro/ground-stations/" title="Yer kontrol istasyonları ve video" description="Hedefler ile birlikte Mission Planner, QGroundControl, GStreamer, Android ve VLC kurulum adımları." />
+</CardGrid>
+
+## Bağlantı {/* #connectivity */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/connectivity/cellular-modem/" title="Modem" description="Otomatik APN destekli HiLink ve geleneksel 4G/LTE modemler." />
+  <Card href="/uavcast-pro/connectivity/vpn/" title="Sanal Özel Ağ" description="Fleet Manager VPN'i veya kendi Tailscale ya da ZeroTier ağınız." />
+  <Card href="/uavcast-pro/connectivity/dynamic-dns/" title="Dinamik DNS" description="Bir sunucu adını drone'un genel IP adresine yönlendirilmiş tutun." />
+  <Card href="/uavcast-pro/connectivity/networks/" title="Ağlar" description="Arayüzler ve Wi-Fi ile modem önceliği." />
+</CardGrid>
+
+## Medya {/* #media */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/camera/" title="Kamera ayarları" description="CSI ve USB kameralar, çözünürlük, bit hızı, UDP üzerinden düşük gecikmeli H.264." />
+  <Card href="/uavcast-pro/camera/multi-camera/" title="İki kamera" description="RC kanal değiştirme veya çift akış." />
+  <Card href="/uavcast-pro/camera/audio/" title="Ses" description="Önizlemede ve yer kontrol istasyonlarına mikrofon sesi." />
+  <Card href="/uavcast-pro/camera/recordings/" title="Kayıtlar" description="Drone üzerinde video ve telemetri kaydı ile uçuş incelemesi." />
+</CardGrid>
+
+## Yönetim {/* #management */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/fleet-pairing/" title="Fleet Management" description="Drone'u UAVmatrix Fleet Manager ile eşleştirin." />
+  <Card href="/uavcast-pro/users/" title="Users" description="Admin girişi ve Read Only kullanıcılar." />
+  <Card href="/uavcast-pro/application-settings/" title="Uygulama" description="Port, dil, destek için günlükler, veritabanı yedekleme ve geri yükleme." />
+</CardGrid>
+
+## Portlara genel bakış {/* #ports-at-a-glance */}
+
+| Port | Yön | Kullanım amacı |
+|---|---|---|
+| TCP 80 | Tarayıcı → drone | Web arayüzü (yapılandırılabilir) ve HTTP enjektörleri |
+| UDP 14550 | Drone → yer kontrol istasyonu | MAVLink telemetrisi (hedef başına, yapılandırılabilir) |
+| UDP 5600 | Drone → yer kontrol istasyonu | Video, kamera 1 (hedef başına, yapılandırılabilir) |
+| UDP 5601 | Drone → yer kontrol istasyonu | Çift akışlı kamera 2 için video (varsayılan olarak Video Portu + 1) |
+| UDP 5602 | Drone → yer kontrol istasyonu | Ses (Video Portu + 2) |
+| TCP 8889, UDP 8189 | Tarayıcı → drone | Canlı önizleme (WebRTC sinyalleşmesi ve medya) |
+| TCP 8883 | Drone → Fleet Manager | Fleet Manager bağlantısı (TLS üzerinden MQTT) |
+| TCP 2101 | Drone → NTRIP caster | RTK düzeltmeleri (caster portu) |
+| UDP 14600 | Sensör → drone | UDP enjektörü (varsayılan, yapılandırılabilir) |

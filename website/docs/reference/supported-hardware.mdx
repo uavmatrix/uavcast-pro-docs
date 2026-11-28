@@ -1,0 +1,66 @@
+---
+title: "UAVcast-Pro supported hardware and OS"
+sidebar_label: Supported hardware
+description: "Boards, operating systems, flight controllers, cameras, LTE modems and RTK receivers that work with UAVcast-Pro v6: Raspberry Pi, Jetson and other arm64 boards, and x86 PCs."
+sidebar_position: 4
+---
+
+# Supported hardware
+
+UAVcast-Pro v6 runs on any 64-bit Linux computer that runs Raspberry Pi OS, Debian or Ubuntu, on **arm64** or **amd64** (arm64 boards other than a Raspberry Pi from UAVcast-Pro 6.5.3). The tables below list what is detected and tested. For power supplies, wiring and buying advice, see [Hardware requirements](../get-started/hardware-requirements.mdx).
+
+## Companion computers
+
+| Board | Architecture | Serial port for TELEM | Notes |
+|---|---|---|---|
+| Raspberry Pi 5 | arm64 | GPIO UART (`uart0`) | Best video performance. Needs active cooling for continuous encoding. |
+| Raspberry Pi 4 | arm64 | GPIO UART | Recommended all-round choice. |
+| Raspberry Pi 3 | arm64 | GPIO UART | Fine for telemetry and one camera at moderate settings. |
+| Raspberry Pi Zero 2 W | arm64 | GPIO UART | Works, but slow to install and limited for video. One camera, low resolution. |
+| Raspberry Pi Compute Module | arm64 | Depends on carrier board | Installer support fixed in v6.3.1. |
+| NVIDIA Jetson (Nano, Orin Nano, Xavier NX, AGX, TX2) | arm64 | `ttyTHS*` on the 40-pin header | USB cameras. Jetson CSI cameras aren't handled by the camera server; they need a hand-written **Custom Pipeline**. |
+| Orange Pi (Zero, Zero 2, 3, 4, 5, Plus) | arm64 | `ttyS*`, model dependent | USB cameras. The UART may need enabling in the device tree. |
+| Banana Pi and other arm64 boards | arm64 | Model dependent | USB cameras. |
+| x86 mini PC, Intel NUC, laptop | amd64 | USB-serial adapter | USB cameras. |
+
+:::note Non-Raspberry Pi arm64 boards
+Jetson, Orange Pi, Banana Pi and other arm64 boards that aren't a Raspberry Pi need UAVcast-Pro 6.5.3 or later. Older installers stop on them with *Device is not a Raspberry Pi*.
+:::
+
+**Raspberry Pi only:** CSI cameras (rpicam/libcamera) need a Raspberry Pi, and on a Pi the installer enables the UART, removes the serial console and, on Pi 3/4/Zero 2 W, disables Bluetooth so the full UART is free.
+
+## Operating systems
+
+| OS | Status |
+|---|---|
+| Raspberry Pi OS (64-bit) | Recommended on Raspberry Pi. Needed for CSI cameras. |
+| Debian (64-bit) | Supported. |
+| Ubuntu (64-bit), including Ubuntu for Raspberry Pi | Supported. CSI cameras on a Pi don't work on Ubuntu, because the Raspberry Pi camera stack isn't packaged; USB cameras do. |
+| Any 32-bit OS | **Not supported.** The installer stops with *No installation candidate*. |
+
+## Flight controllers
+
+UAVcast-Pro v6 works with any MAVLink flight controller over USB or a TELEM port: ArduPilot (Copter, Plane, Rover, VTOL and other vehicle types) and PX4, on Pixhawk and Cube family boards, Matek, Holybro, CUAV and others. Flight-mode names and mode buttons in the Flight Map and Fleet Manager follow ArduPilot; with PX4, change modes from your ground station.
+
+## Cameras
+
+| Type | Examples | Notes |
+|---|---|---|
+| Raspberry Pi CSI | Camera Module 2 and 3, HQ Camera, other libcamera sensors (imx219, imx708 …) | Raspberry Pi OS or Debian. Two CSI cameras on boards with two connectors (Pi 5, Compute Module). |
+| USB (UVC) | Logitech C920, C615 and most UVC webcams | Any OS. |
+| Other sources | IP cameras, HDMI capture | Through a **Custom Pipeline**. |
+
+Up to two cameras, switched or streamed at the same time. Audio from a USB microphone or a camera's built-in microphone.
+
+## LTE / 4G modems
+
+| Type | How it works | Examples |
+|---|---|---|
+| **HiLink** | The modem is a small router and appears as a network adapter (`cdc_ether`, `huawei_cdc_ncm`, `rndis_host` drivers) | Huawei E3372h, E8372h |
+| **Traditional (PPP)** | Managed by ModemManager; UAVcast-Pro connects it, picks the APN and reconnects | Huawei E3372s, Quectel and Sierra Wireless modules on USB carriers |
+
+Traditional modems must be supported by ModemManager: see the [ModemManager supported devices list](https://www.freedesktop.org/wiki/Software/ModemManager/SupportedDevices/). Pick a model whose bands match your carrier.
+
+## RTK GPS receivers
+
+NTRIP corrections need an RTK-capable (carrier-phase) receiver on the flight controller, for example u-blox ZED-F9P based modules, CubePilot Here3+ or Septentrio Mosaic. Standard navigation modules such as M8N, M9N or M10 can't use RTK corrections.

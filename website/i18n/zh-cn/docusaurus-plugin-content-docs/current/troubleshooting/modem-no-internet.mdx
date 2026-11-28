@@ -1,0 +1,98 @@
+---
+title: "4G 调制解调器已连接但 Raspberry Pi 无法上网"
+sidebar_label: 调制解调器无互联网
+description: "LTE 调制解调器显示信号和运营商，但无人机无法上网？请检查调制解调器类型、APN、SIM 卡 PIN 和数据、网络优先级以及默认路由。"
+sidebar_position: 8
+---
+
+# 4G 调制解调器已连接但无互联网 {/* #4g-modem-connected-but-no-internet */}
+
+**调制解调器** 页面显示信号、运营商，甚至可能显示 IP 地址，但无人机仍无法访问互联网：VPN 无法连接，许可证无法检查，视频和遥测也无法通过 LTE 到达地面站。
+
+<SymptomTable rows={[
+  {symptom: '未连接调制解调器', cause: 'Linux 未识别到调制解调器，或其供电不足', start: '#check-1'},
+  {symptom: '提及 HiLink 调制解调器的错误，或 USB 棒没有连接按钮', cause: '调制解调器类型错误', start: '#check-2'},
+  {symptom: '已注册到网络，但没有 IPv4 地址', cause: 'APN 或 PIN 错误，或 SIM 卡没有数据流量', start: '#check-3'},
+  {symptom: '调制解调器已有 IP 地址，但互联网仍通过 Wi-Fi 访问', cause: '网络优先级偏向 Wi-Fi', start: '#check-4'},
+  {symptom: '在家中可用，在外场不可用（或相反）', cause: '漫游、覆盖范围，或家庭网络与调制解调器子网冲突', start: '#check-5'},
+]} />
+
+<Screenshot id="uavcast-pro/modem" alt="UAVcast-Pro 调制解调器页面，已选择传统 (PPP)，并显示未连接调制解调器面板" caption="调制解调器页面已选择传统 (PPP)，且未插入调制解调器。连接调制解调器后，右侧卡片会显示信号质量、状态、运营商和 IPv4 信息。" />
+
+## 检查 1：是否检测到调制解调器？ {/* #check-1 */}
+
+如果页面显示 **未连接调制解调器**：
+
+<Steps>
+
+1. 检查调制解调器的电源指示灯是否亮起，并确认其已牢固插入 USB 端口。
+2. 调制解调器的耗电量可能超过 Raspberry Pi USB 端口的供电能力。请关注仪表盘中的 **电源供应** 行。如果显示 **电压过低，请使用更强的电源**，请先解决供电问题：[欠压与降频](./undervoltage-and-throttling.mdx)。
+3. 在 Pi 上运行 `lsusb` 查看调制解调器，运行 `mmcli -L` 查看 ModemManager 是否已找到它。HiLink 调制解调器不会出现在 `mmcli` 中；它会在 `ip addr` 中以网络接口的形式出现。
+
+</Steps>
+
+调制解调器一经检测到，就会自动显示在页面上。
+
+## 检查 2：选择正确的调制解调器类型 {/* #check-2 */}
+
+USB 调制解调器分为两种，**调制解调器类型** 必须与您的设备相符。
+
+| | **HiLink** | **传统 (PPP)** |
+|---|---|---|
+| Linux 识别方式 | 网络适配器（调制解调器本身就是一个小型路由器） | 由 ModemManager 管理的调制解调器 |
+| 连接方式 | 调制解调器自行自动连接 | UAVcast-Pro 通过 **连接** 和 **断开连接** 按钮进行连接 |
+| 华为示例 | E3372**h** | E3372**s** |
+
+如果为 HiLink 调制解调器选择了 **传统 (PPP)**，日志会显示 *HiLink modem detected … Please change your modem type to 'HiLink' in settings.* 将 **调制解调器类型** 更改为 HiLink 后，该错误即会消失。
+
+## 检查 3：APN、PIN 与 SIM 卡 {/* #check-3 */}
+
+对于 **传统 (PPP)** 调制解调器：
+
+<Steps>
+
+1. 先将 **接入点名称（可选）** 留空。UAVcast-Pro 会尝试您所在网络的默认 APN 以及该 SIM 卡已知的 APN，并记住可用的那个（日志中会显示 *Found a working … it will be used from now on*）。
+2. 如果失败，请输入运营商提供的移动数据 APN。部分运营商还需要 **用户名（可选）** 和 **密码（可选）**。
+3. 如果 SIM 卡设有 PIN，请在 **PIN 码（可选）** 中输入，或将 SIM 卡放入手机中禁用 PIN。**调制解调器信息** 下的 **需要解锁** 会显示 SIM 卡是否被锁定。
+4. 将 SIM 卡放入手机中，确认移动数据可用且套餐仍有剩余流量。
+
+</Steps>
+
+对于 **HiLink** 调制解调器，APN 需在调制解调器自身的网页中设置，通常位于 `http://192.168.8.1`。可以从 Pi 上打开该页面，或将调制解调器插入笔记本电脑后访问。
+
+:::note 系统会持续重试
+传统调制解调器会在启动时连接，并在信号丢失后自动重新连接。如果调制解调器已连接但未获得地址，UAVcast-Pro 会将其切换为原始 IP 模式并再次尝试。请在启动后稍等片刻，再更改设置。
+:::
+
+## 检查 4：将调制解调器设为默认路由 {/* #check-4 */}
+
+如果 Pi 同时连接了 Wi-Fi 或以太网，流量会通过优先级最高的接口发出，不一定经过调制解调器。
+
+<Steps>
+
+1. 前往 **网络**。
+2. 在 **网络优先级** 下，飞行前选择 **调制解调器优先（户外模式）**。**WiFi 优先（室内模式）** 可在家中节省蜂窝数据，但会将所有流量通过 Wi-Fi 发送。
+3. 在 **网络接口** 中，确认调制解调器接口被标记为 **默认**，并且 **默认网关** 显示为经由调制解调器接口（*via*）。
+
+</Steps>
+
+<Screenshot id="uavcast-pro/networks" alt="网络页面，网络优先级设为自动，接口表显示 wlan0 为默认接口" caption="网络页面，已启用自动（系统默认），Wi-Fi (wlan0) 为默认路由。在此选择 **调制解调器优先（户外模式）** 即可通过调制解调器路由。" />
+
+在 Pi 上仅通过调制解调器进行测试：
+
+```bash
+ping -c 3 -I wwan0 1.1.1.1   # Traditional modem (interface name may differ)
+ip route                     # the first "default via" line is the route in use
+```
+
+## 检查 5：仅在外场出现的问题 {/* #check-5 */}
+
+- **漫游**：在国外使用的 SIM 卡可能需要运营商启用漫游。请用同一张 SIM 卡在手机上进行检查。
+- **覆盖范围**：查看 **信号质量** 和 **技术**。某些物联网 SIM 卡仅能在特定频段或技术制式下工作。
+- **子网冲突**：HiLink 调制解调器分配 `192.168.8.x` 地址段。如果您的家庭或办公网络也使用 `192.168.8.0/24`，路由就会出现故障。请更改局域网或调制解调器的子网。
+
+## 仍然无法上网？ {/* #still-no-internet */}
+
+在选中 **Modem Manager** 的情况下[下载日志](./collect-logs.mdx)，附上 `mmcli -m 0` 和 `ip route` 的输出，然后将其与调制解调器型号和运营商一同发送至 **support@uavmatrix.com**。
+
+相关内容：[蜂窝调制解调器](../uavcast-pro/connectivity/cellular-modem.mdx) · [网络](../uavcast-pro/connectivity/networks.mdx)

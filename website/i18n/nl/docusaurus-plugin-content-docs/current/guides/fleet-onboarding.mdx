@@ -1,0 +1,84 @@
+---
+title: "Een vloot drones onboarden met Fleet Manager"
+sidebar_label: Een vloot onboarden
+description: "Plan licenties en geef 20+ UAVcast-Pro-drones een naam, koppel ze en verbind ze met UAVmatrix Fleet Manager, met teamrollen, de organisatie-VPN en streambindingen."
+sidebar_position: 9
+---
+
+# Een vloot drones onboarden met Fleet Manager {/* #onboard-a-fleet-of-drones-with-fleet-manager */}
+
+Deze handleiding beschrijft hoe u in één keer een vloot van bijvoorbeeld 20 drones in [UAVmatrix Fleet Manager](../fleet-manager/index.mdx) brengt: licenties, naamgeving, koppelen, de organisatie-VPN en het koppelen van grondstations aan drones. Ervan uitgaande dat elke drone al UAVcast-Pro draait met de vluchtcontroller verbonden en internettoegang heeft.
+
+## 1. Licenties plannen {/* #1-plan-the-licenses */}
+
+Twee regels bepalen of een drone gekoppeld kan worden:
+
+- **Elke drone heeft een actieve UAVcast-Pro-licentie** nodig op het apparaat. Eén licentie kan meerdere drones dekken: het aantal **Toegestane apparaten** is het aantal plekken. Voor 20 drones hebt u in totaal 20 plekken nodig, verdeeld over één of meer licenties.
+- **De licentie moet eigendom zijn van een lid van de organisatie** waarin u koppelt. Fleet Manager koppelt het e-mailadres van het storeaccount dat de licentie heeft gekocht aan de e-mailadressen van de leden. Heeft de aankoop de licenties op een ander account gezet, nodig dat account uit voor de organisatie, of vraag support om het e-mailadres van de aankoop aan uw gebruiker toe te voegen.
+
+Controleer dit vóór de koppeldag: een drone waarvan de licentie van een buitenstaander is, wordt geweigerd met **License is not owned by any member of this organization**.
+
+## 2. De organisatie en het team instellen {/* #2-set-up-the-organization-and-team */}
+
+<Steps>
+
+1. Meld u aan op [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com) met uw uavmatrix.com-account en maak de organisatie aan. Zie [Een organisatie instellen](../fleet-manager/set-up-organization.mdx).
+2. Nodig onder **Team** uw mensen uit. Owners en Admins kunnen drones koppelen, besturen en verwijderen; Viewers kunnen alleen meekijken. Zie [Rollen en rechten](../fleet-manager/team/roles-and-permissions.mdx).
+3. Verdeel het koppelwerk over twee of drie Admins als u veel drones hebt. Elke gebruiker kan 5 koppelingen per minuut doen; de limiet voorkomt brute-force-raden en vertraagt ook één persoon die 20 drones achter elkaar koppelt.
+
+</Steps>
+
+## 3. Geef elke drone een naam voordat u koppelt {/* #3-name-every-drone-before-pairing */}
+
+De naam die een drone in UAVcast-Pro heeft, wordt zijn naam in Fleet Manager. Spreek een patroon af, bijvoorbeeld `SURVEY-01` … `SURVEY-20`, en label de frames dienovereenkomstig.
+
+Open op elke drone UAVcast-Pro → **Fleet Management** en vul **Device Name** in. Zonder naam verschijnt de drone met zijn hostnaam. U kunt hem later in Fleet Manager hernoemen.
+
+## 4. Elke drone koppelen {/* #4-pair-each-drone */}
+
+Herhaal dit voor elke drone. Met twee browservensters naast elkaar (de UAVcast-Pro van de drone en Fleet Manager) duurt elke koppeling ongeveer een minuut.
+
+<Steps>
+
+1. Open in UAVcast-Pro **Fleet Management** en druk op **Connect to Fleet Manager**. Er verschijnt een 8-cijferige **Pairing Code** (koppelcode). Die verloopt na 5 minuten.
+2. Ga in Fleet Manager naar **Fleet → Pair Device**.
+3. **Select Organization**, daarna **Enter Pairing Code**.
+4. **Confirm Device**: controleer de naam, hostnaam, architectuur en UAVcast-versie, zodat u de drone koppelt die u denkt te koppelen.
+5. **VPN Connection**: vink **Enable VPN for this UAV** aan als grondstations de drone via de VPN van de organisatie moeten bereiken. Gebruikt de drone al Tailscale, dan verplaatst **Replace existing VPN with Fleet Manager network** hem naar het netwerk van de organisatie.
+6. **Complete Pairing**. In UAVcast-Pro verandert **Fleet Connection** in **Verbonden**.
+
+</Steps>
+
+<Screenshot id="fleet-manager/pair-device--confirm" alt="Koppelwizard van Fleet Manager op de stap Confirm Device met de UAV-naam, hostnaam, architectuur en UAVcast-versie" caption="Fleet → Pair Device, stap Confirm Device." />
+
+Fouten en wat ze betekenen: [Koppelcode ongeldig of verlopen](../troubleshooting/pairing-code-invalid.mdx). De volledige wizard wordt beschreven in [Uw eerste UAV koppelen](../fleet-manager/pair-uav.mdx).
+
+## 5. De vloot controleren {/* #5-check-the-fleet */}
+
+Open **Fleet**. Elke drone moet als online worden weergegeven. Op de **Fleet Map** verschijnt elke drone op zijn GPS-positie zodra de vluchtcontroller een fix heeft. Een drone die **Offline** toont, heeft 20 seconden niets gemeld: zie [Drone offline in Fleet Manager](../troubleshooting/drone-offline-fleet-manager.mdx).
+
+## 6. De grondstations verbinden {/* #6-connect-the-ground-stations */}
+
+<Steps>
+
+1. Ga naar **Network** en druk op **Enable VPN Network** als de VPN van de organisatie nog niet aan staat.
+2. Druk op **Connect a Device**, kies **Ground Control Station (GCS)** en kopieer het **GCS Connection Command**. Voer het uit in een terminal **op de laptop van het grondstation**, met Tailscale geïnstalleerd. Plak het niet in UAVcast-Pro.
+3. Het grondstation verschijnt onder **Ground Stations** zodra het verbonden is.
+4. Druk onder **Stream Bindings** op **Add Stream Binding** en koppel elke drone aan het grondstation dat hem moet ontvangen. De drone moet online zijn, omdat Fleet Manager de bestemming naar hem stuurt.
+5. Elke binding krijgt een eigen blok poorten op dat grondstation: de eerste drone gebruikt de standaardwaarden, 5600 (video) en 14550 (telemetrie), en elke volgende drone krijgt het volgende vrije blok. Stel de grondstationsoftware in met de poorten die bij elke binding worden getoond.
+
+</Steps>
+
+<Screenshot id="fleet-manager/network--stream-bindings" alt="Netwerkpagina van Fleet Manager met streambindingen die meerdere drones aan één grondstation koppelen, met automatisch toegewezen poorten" caption="Network → Stream Bindings: elke binding toont het grondstation en de video- en telemetriepoorten." />
+
+Details: [Een grondstation verbinden met de Fleet Manager-VPN](../fleet-manager/connect-gcs.mdx) en [Streambindingen](../fleet-manager/network/stream-bindings.mdx).
+
+:::note Dubbele stream en audio
+Elke binding krijgt een eigen blok poorten op het grondstation, met ruimte voor de tweede camera van de drone en audio na de videopoort, zodat meerdere drones één grondstation kunnen delen.
+:::
+
+## 7. Dagelijks gebruik {/* #7-day-to-day */}
+
+- **Re-pair required**: wanneer Fleet Manager deze badge toont, koppelt u de drone één keer opnieuw vanuit UAVcast-Pro. Hij behoudt zijn naam en geschiedenis. Zie [Een drone opnieuw koppelen, verwijderen of overdragen in Fleet Manager](../fleet-manager/fleet/remove-or-transfer.mdx).
+- **Een SD-kaart of bord van een drone vervangen** maakt op zichzelf geen plek vrij: schrijf het oude apparaat uit onder **Applicatie → Licentie Beheer → Geactiveerde apparaten** op elke drone die dezelfde licentie gebruikt, en koppel daarna de nieuwe.
+- **Op afstand werken aan een drone**: de UAV-detailpagina in Fleet Manager heeft een terminal, logs en acties zoals herstarten. Zie [UAV-details](../fleet-manager/fleet/uav-details.mdx).

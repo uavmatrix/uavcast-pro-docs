@@ -1,0 +1,68 @@
+---
+title: "UAVcast-Pro kurulumu başarısız oluyor"
+description: "No installation candidate found veya failed dependencies gibi UAVcast-Pro yükleyici hatalarını düzeltin: 64 bit işletim sistemini, internet bağlantısını, diski ve yükleyici günlüğünü kontrol edin."
+sidebar_position: 10
+---
+
+# Kurulum başarısız oluyor {/* #installation-fails */}
+
+`curl -fsSL https://install.uavmatrix.com | sudo bash` komutunu çalıştırdınız ve bir hatayla durdu, takıldı veya çalışan bir web arayüzü olmadan bitti.
+
+<SymptomTable rows={[
+  {symptom: 'No installation candidate for … found!', cause: '32 bit işletim sistemi veya desteklenmeyen mimari', start: '#check-1'},
+  {symptom: 'Failed to update package lists, or Failed to install dependencies', cause: 'İnternet yok veya bozuk bir apt kurulumu', start: '#check-2'},
+  {symptom: 'Bir Pi Zero 2 W üzerinde uzun süre takılıyor', cause: 'Düşük bellek ve yavaş depolama', start: '#check-3'},
+  {symptom: 'Service failed to start', cause: 'Kurulumdan sonra bir bileşen başlatılamadı', start: '#check-4'},
+]} />
+
+## Kontrol 1: 64 bit işletim sistemi {/* #check-1 */}
+
+UAVcast-Pro v6, 64 bit işletim sistemi gerektirir: arm64 veya amd64 (x86 PC'ler). arm64 üzerinde Raspberry Pi dışındaki kartlar (Jetson ve diğer ARM kartları) için UAVcast-Pro 6.5.3 veya daha yenisi gerekir; eski yükleyiciler *Device is not a Raspberry Pi* mesajıyla durur.
+
+```bash
+dpkg --print-architecture   # must print arm64 or amd64
+uname -m                    # aarch64 or x86_64
+```
+
+`armhf`, `armv7l` veya `i686` görürseniz 32 bit bir işletim sistemindesiniz. **Raspberry Pi OS (64-bit)** sürümünü Raspberry Pi Imager ile yazın ve kurulumu yeniden yapın. Desteklenen sistemler Raspberry Pi OS, Debian ve Ubuntu'dur; bkz. [Desteklenen donanım](../reference/supported-hardware.mdx).
+
+## Kontrol 2: İnternet ve apt {/* #check-2 */}
+
+Yükleyici UAVcast-Pro ve sistem paketlerini indirir, ayrıca ZeroTier ve Tailscale'i kurar.
+
+<Steps>
+
+1. İnternet erişimini kontrol edin: `curl -I https://install.uavmatrix.com`.
+2. `sudo apt update` komutunu elle çalıştırın ve gösterdiği hataları düzeltin; örneğin süresi dolmuş bir anahtara sahip üçüncü taraf bir depo gibi.
+3. Yükleyiciyi yeniden çalıştırın. Birden fazla kez çalıştırmak güvenlidir.
+
+</Steps>
+
+## Kontrol 3: Düşük güçlü kartlar {/* #check-3 */}
+
+Raspberry Pi Zero 2 W üzerinde kurulum, Pi 4 veya 5'e göre çok daha uzun sürer ve yükleyici bir süre tahmini gösterir. Bitmesini bekleyin. Hızlı bir SD kart ve kararlı bir güç kaynağı kullanın: kurulum sırasında düşük gerilim kaynaklı bir sıfırlama, yarım kalmış bir kurulum bırakır.
+
+## Kontrol 4: Yükleyici günlüğünü okuyun {/* #check-4 */}
+
+Yükleyici her şeyi `/opt/uavcast-pro/installer.log` dosyasına yazar.
+
+```bash
+sudo tail -n 100 /opt/uavcast-pro/installer.log
+```
+
+Son hata satırlarına bakın. Yükleyici `/opt/uavcast-pro` dizinini oluşturamadan başarısız olursa günlük `/tmp/uavcast-installer.log` dosyasındadır.
+
+## Belirli bir sürümü kurun {/* #install-a-specific-version */}
+
+Mimariniz için kullanılabilir sürümleri listelemek veya bunlardan birini kurmak için:
+
+```bash
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l          # list versions
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.2  # install 6.5.2
+```
+
+## Hâlâ başarısız mı? {/* #still-failing */}
+
+`/opt/uavcast-pro/installer.log` dosyasını, `cat /etc/os-release` ve `dpkg --print-architecture` çıktılarını ve kart modelinizi **support@uavmatrix.com** adresine gönderin.
+
+İlgili: [UAVcast-Pro kurulumu](../get-started/installation.mdx)

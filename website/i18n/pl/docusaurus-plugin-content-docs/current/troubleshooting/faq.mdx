@@ -1,0 +1,106 @@
+---
+title: "Najczęściej zadawane pytania o UAVcast-Pro i Fleet Manager"
+sidebar_label: FAQ
+description: "Krótkie odpowiedzi o sprzęcie UAVcast-Pro, modemach LTE, stacjach naziemnych, portach, pracy offline, licencjach, aktualizacjach, nagrywaniu i parowaniu z Fleet Manager."
+sidebar_position: 17
+---
+
+# Często zadawane pytania {/* #frequently-asked-questions */}
+
+## Sprzęt i konfiguracja {/* #hardware-and-setup */}
+
+### Czy potrzebuję modemu LTE? {/* #do-i-need-an-lte-modem */}
+
+Nie. UAVcast-Pro działa przez każde połączenie IP: 4G/LTE, Wi-Fi lub Ethernet. Modem pozwala latać poza zasięgiem Wi-Fi. Wielu operatorów testuje na Wi-Fi, a przed lotem przełącza się na modem w **Sieci → Priorytet Sieci → Modem Priority (Outdoor Mode)**.
+
+### Które komputery mogą uruchomić UAVcast-Pro? {/* #which-computers-can-run-uavcast-pro */}
+
+Dowolna 64-bitowa płytka lub komputer PC z Linuksem na arm64 lub amd64, z Raspberry Pi OS, Debian lub Ubuntu: Raspberry Pi Zero 2 W, 3, 4 i 5, NVIDIA Jetson, Orange Pi oraz miniaturowe komputery x86. Raspberry Pi 4 lub 5 to wygodny wybór do wideo. Zobacz [Obsługiwany sprzęt](../reference/supported-hardware.mdx).
+
+### Które kontrolery lotu są obsługiwane? {/* #which-flight-controllers-are-supported */}
+
+Każdy kontroler lotu, który mówi MAVLink przez USB lub port TELEM: ArduPilot (Copter, Plane, Rover, VTOL i pozostałe typy pojazdów) oraz PX4, na płytach z rodziny Pixhawk i Cube, Matek i podobnych. Telemetria, wideo i przekazywanie do stacji naziemnych działają z każdym z nich. Przyciski trybów lotu na **Mapie Lotu** i w Fleet Manager używają nazw trybów ArduPilot. Przy PX4 zmieniaj tryby z poziomu stacji naziemnej.
+
+### Czy mogę połączyć się przez port USB kontrolera lotu? {/* #can-i-connect-over-the-flight-controllers-usb-port */}
+
+Tak, i to najprostsza opcja: podłącz kabel i zostaw **Port** na **Automatic**. Użyj krótkiego kabla przesyłającego dane. Jeśli kontroler nie zostanie znaleziony, zobacz [Brak heartbeat MAVLink](./no-mavlink-heartbeat.mdx).
+
+## Stacje naziemne i sieć {/* #ground-stations-and-network */}
+
+### Które stacje naziemne działają? {/* #which-ground-stations-work */}
+
+Każde oprogramowanie przyjmujące MAVLink przez UDP, w tym QGroundControl, Mission Planner i MAVProxy. Wideo to H.264 przez RTP/UDP, które QGroundControl i Mission Planner odtwarzają bezpośrednio. GStreamer i VLC również działają: zobacz [Stacje naziemne i wideo](../uavcast-pro/ground-stations/index.mdx).
+
+### Czy kilka stacji naziemnych może oglądać jednocześnie? {/* #can-several-ground-stations-watch-at-the-same-time */}
+
+Tak. Dodaj jedno miejsce docelowe na komputer w **Stacje Naziemne**, każde z własnymi przełącznikami wideo i telemetrii. Użyj **Read Only** dla stacji, które mają tylko podglądać. Zobacz [Strumieniowanie do wielu stacji naziemnych](../guides/multiple-ground-stations.mdx).
+
+### Których portów używa UAVcast-Pro? {/* #which-ports-does-uavcast-pro-use */}
+
+Domyślnie telemetria idzie na UDP **14550**, a wideo na UDP **5600** na każdej stacji naziemnej. Druga kamera używa portu wideo + 1, a dźwięk portu wideo + 2. Interfejs webowy działa na porcie **80**. Pełna lista znajduje się w [Porty i protokoły](../reference/ports-and-protocols.mdx).
+
+### Czy potrzebuję przekierowania portów na routerze? {/* #do-i-need-port-forwarding-on-my-router */}
+
+Nie. Przy 4G umieść dron i stację naziemną w tej samej sieci VPN: w VPN Fleet Manager (wliczonym w licencję) albo we własnej sieci Tailscale lub ZeroTier. Dron wysyła telemetrię i wideo na adres VPN stacji naziemnej. Zobacz [Lot poza zasięgiem wzroku przez 4G](../guides/bvlos-4g.mdx).
+
+### Czy nadal mogę połączyć się przez TCP 5760? {/* #can-i-still-connect-over-tcp-5760 */}
+
+Nie. Od wersji v6.5.0 port TCP 5760 jest zamknięty, więc dane dostają tylko stacje naziemne, które dodasz. Dodaj swój komputer jako miejsce docelowe i używaj UDP.
+
+### Czy działa bez internetu? {/* #does-it-work-without-internet */}
+
+Tak. Połączenie z kontrolerem lotu, telemetria i wideo startują po włączeniu zasilania, bez czekania na internet, więc działa lokalna sieć Wi-Fi lub łącze radiowe. Aktywacja licencji wymaga internetu jednorazowo. Potem nieudane sprawdzenie licencji z powodu utraty połączenia nie wyłącza urządzenia.
+
+## Licencja i konto {/* #license-and-account */}
+
+<BuyLicense />
+
+### Licencja nie aktywuje się. Co teraz? {/* #my-license-wont-activate-what-now */}
+
+Zobacz [Licencja nie aktywuje się](./license-activation-failed.mdx). Zwykle przyczyną jest źle przepisany klucz, brak wolnego miejsca na urządzenie lub brak internetu na urządzeniu.
+
+### Co się dzieje, gdy licencja wygasa? {/* #what-happens-when-my-license-expires */}
+
+UAVcast-Pro zostaje zablokowany: interfejs webowy otwiera tylko **Aplikacja**, a telemetria, wideo i pozostałe usługi zatrzymują się, dopóki nie odnowisz licencji. Odnów ją w sklepie przed datą wygaśnięcia, a potem zweryfikuj klucz na dronie. Zobacz [Gdy licencja wygasa](../get-started/license-activation.mdx#when-a-license-expires).
+
+### Czy Fleet Manager jest wliczony w licencję? {/* #is-fleet-manager-included-with-my-license */}
+
+Tak. Fleet Manager, wraz z jego VPN, jest wliczony w licencję UAVcast-Pro bez dodatkowych opłat.
+
+### Wymieniłem kartę SD. Czy potrzebuję nowej licencji? {/* #i-replaced-the-sd-card-do-i-need-a-new-license */}
+
+Nie, ale urządzenie liczy się jako nowe i zajmuje miejsce. Wyrejestruj stary wpis w **Aplikacja → Menedżer Licencji → Activated Devices**.
+
+### Czy Fleet Manager to osobny produkt? {/* #is-fleet-manager-a-separate-product */}
+
+Fleet Manager to panel webowy UAVmatrix do zarządzania wieloma dronami pod adresem [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com). Jest wliczony w licencję UAVcast-Pro. Logujesz się kontem uavmatrix.com, a każdy sparowany dron potrzebuje aktywnej licencji UAVcast-Pro należącej do członka Twojej organizacji. Zobacz [Fleet Manager](../fleet-manager/index.mdx).
+
+### Jak sparować dron z Fleet Manager? {/* #how-do-i-pair-a-drone-with-fleet-manager */}
+
+W UAVcast-Pro otwórz **Fleet Management** i naciśnij **Connect to Fleet Manager**. Wpisz 8-cyfrowy kod w Fleet Manager w **Fleet → Pair Device** w ciągu 5 minut. Zobacz [Sparuj pierwsze UAV](../fleet-manager/pair-uav.mdx), a jeśli się nie uda, [Kod parowania nieprawidłowy lub wygasły](./pairing-code-invalid.mdx).
+
+## Aktualizacje i dane {/* #updates-and-data */}
+
+### Jak zaktualizować UAVcast-Pro? {/* #how-do-i-update-uavcast-pro */}
+
+Przejdź do **Aplikacja → Aktualizacja Aplikacji**, wybierz wersję w **Wybierz wersję do aktualizacji** i naciśnij **Aktualizuj Teraz**. Jeśli karta pokazuje **Pending Restart**, naciśnij **Zrestartuj Teraz**. Możesz też uruchomić instalator ponownie.
+
+### Czy mogę zaimportować ustawienia z v4 lub v5? {/* #can-i-import-settings-from-v4-or-v5 */}
+
+Nie. v6 używa nowej bazy danych, więc po świeżej instalacji skonfiguruj wszystko od nowa. W obrębie v6 użyj **Aplikacja → Baza Danych → Kopia Zapasowa Bazy Danych** i **Przywróć Bazę Danych**, aby przenieść ustawienia między instalacjami.
+
+### Czy UAVcast-Pro może nagrywać wideo? {/* #can-uavcast-pro-record-video */}
+
+Tak, od wersji v6.5.1. Nagrywa kamerę 1 i 2 z mapy lotu albo automatycznie po uzbrojeniu drona, razem z logiem telemetrii. Zobacz [Nagrywanie lotów i ich przegląd](../guides/recording-flight-review.mdx).
+
+### Gdzie UAVcast-Pro przechowuje swoje pliki? {/* #where-does-uavcast-pro-keep-its-files */}
+
+W `/opt/uavcast-pro`: baza danych `uavcast.db`, `logs/`, `recordings/` i `missions/`. Zobacz [Usługi i pliki](../reference/services-and-files.mdx).
+
+### Zapomniałem hasła administratora. {/* #i-forgot-the-admin-password */}
+
+W interfejsie webowym nie ma resetu hasła. Inny administrator może usunąć Twojego użytkownika w **Users** i utworzyć go ponownie. Jeśli byłeś jedynym administratorem, odzyskanie dostępu nie jest samoobsługowe: skontaktuj się z **support@uavmatrix.com** i podaj szczegóły wymienione w [Zapomniane hasło administratora](../uavcast-pro/users.mdx#forgot-the-admin-password).
+
+### Gdzie uzyskać pomoc? {/* #where-do-i-get-help */}
+
+Zbierz logi zgodnie z [Zbierz logi dla pomocy technicznej](./collect-logs.mdx) i napisz na **support@uavmatrix.com** albo zapytaj na [UAVmatrix Discord](https://discord.gg/xwqMTXh).

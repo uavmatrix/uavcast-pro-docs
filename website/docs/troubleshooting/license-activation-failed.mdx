@@ -1,0 +1,90 @@
+---
+title: "UAVcast-Pro license won't activate"
+sidebar_label: License won’t activate
+description: "Fix Invalid license key, Maximum activations reached and License activation failed in UAVcast-Pro: the key, internet, free slots and replaced hardware."
+sidebar_position: 7
+---
+
+# UAVcast-Pro license won't activate
+
+You enter the key under **Application → License Manager**, press **Validate**, and get an error instead of **License activated successfully**. Until a license is active on this device, every page sends you back to **Application**.
+
+<BuyLicense />
+
+<Screenshot id="uavcast-pro/application--license-activated" alt="Application page License Manager with license key field, License Details and the Activated Devices table" caption="Application → License Manager on an activated device: License Details and the Activated Devices table, with this device marked Current." />
+
+<SymptomTable rows={[
+  {symptom: 'Invalid license key, or Invalid license key format', cause: 'Typo, extra spaces, or a key for another product', start: '#check-1'},
+  {symptom: 'Maximum activations reached', cause: 'All device slots on the key are in use', start: '#check-2'},
+  {symptom: 'Worked before, asks again after a new SD card or new board', cause: 'The device counts as a new device', start: '#check-3'},
+  {symptom: 'License activation failed, or nothing happens', cause: 'No internet, or the wrong time on the device', start: '#check-4'},
+  {symptom: 'Cannot connect to license service', cause: 'The UAVcast-Pro background service is not running', start: '#check-5'},
+  {symptom: 'License Status: Expired', cause: 'A time-limited license ran out', start: '#check-6'},
+]} />
+
+## Check 1: The key itself {/* #check-1 */}
+
+<Steps>
+
+1. Copy the key from your order e-mail or your account on [uavmatrix.com](https://uavmatrix.com), and paste it into the **License Key** field. Typing it by hand is the most common source of errors.
+2. Make sure there are no spaces before or after the key.
+3. Press **Validate**.
+
+</Steps>
+
+## Check 2: Free a device slot {/* #check-2 */}
+
+Each license allows a fixed number of devices (**Allowed Devices**). When **Remaining Devices** is 0, activation fails with **Maximum activations reached. Please deactivate another device first or upgrade your license.**
+
+<Steps>
+
+1. On any device where the license is active, open **Application → License Manager → Activated Devices**.
+2. Find the device you no longer use and press **Unregister**. The slot is freed straight away.
+3. Activate the new device.
+
+</Steps>
+
+If you can't reach any activated device, contact **support@uavmatrix.com** with the license key and they can free a slot. To add slots, buy more devices for the license on [uavmatrix.com](https://uavmatrix.com).
+
+## Check 3: You replaced the SD card or the board {/* #check-3 */}
+
+The license is tied to the hardware, including the storage device. A fresh SD card, a new SSD or a new board counts as a new device and takes a new slot. Unregister the old entry in **Activated Devices** before or after you move, as in check 2. **License already activated on this device** is not an error: the key was already active here.
+
+## Check 4: Internet access and time {/* #check-4 */}
+
+Activation contacts the UAVmatrix license server over HTTPS (port 443), so the device needs working internet at that moment.
+
+<Steps>
+
+1. On the device, run `curl -I https://uavmatrix.com`. You should get an HTTP response, not a timeout.
+2. If you are on a cellular modem, check that it actually has internet: [Modem connected, no internet](./modem-no-internet.mdx).
+3. Check the date with `date`. A device with a wrong clock can't open HTTPS connections. Boards without a real-time clock set the time from the internet after boot, so wait a minute after boot and try again.
+
+</Steps>
+
+## Check 5: Cannot connect to license service {/* #check-5 */}
+
+This message means the web interface can't reach UAVcast-Pro's own background service, not the internet. Restart it and try again:
+
+```bash
+sudo systemctl restart uavcast-factory
+sudo systemctl status uavcast-factory
+```
+
+If it doesn't stay **active (running)**, [collect the logs](./collect-logs.mdx) with **License Manager** selected.
+
+## Check 6: Expired license {/* #check-6 */}
+
+The license details show **License Status:** and **Expiration Date:**. An expired license must be renewed on [uavmatrix.com](https://uavmatrix.com).
+
+:::note 64-bit operating system
+UAVcast-Pro v6 only runs on a 64-bit OS. If you got this far, the OS is fine; on a 32-bit OS the installer already stops with *No installation candidate*.
+:::
+
+## Still failing?
+
+[Download the logs](./collect-logs.mdx) with **License Manager** selected. They contain the response code from the license server, for example `code 550` for no free slots. Send them with the first and last four characters of your key to **support@uavmatrix.com**.
+
+Using Fleet Manager? A license that activates fine can still be refused at pairing. See [Pairing code invalid or expired](./pairing-code-invalid.mdx).
+
+Related: [Activate your license](../get-started/license-activation.mdx)

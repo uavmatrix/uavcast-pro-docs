@@ -1,0 +1,57 @@
+---
+title: "Planifica y sube una misión de puntos de ruta desde el navegador"
+description: "Planifica una misión de puntos de ruta en la pestaña Planificador de Misión de UAVcast-Pro, define el marco de altitud y el radio, guárdala como archivo .waypoints y súbela al controlador de vuelo ArduPilot."
+sidebar_position: 2
+sidebar_label: "Planificador de Misión"
+---
+
+# Pestaña Planificador de Misión {/* #mission-planner-tab */}
+
+La pestaña Planificador de Misión te permite planificar una misión sencilla de puntos de ruta en el navegador y subirla al controlador de vuelo a través de UAVcast-Pro, desde cualquier lugar donde la interfaz web sea accesible. Las misiones se guardan en el mismo formato `.waypoints` (QGC WPL 110) que usan Mission Planner y QGroundControl, así que puedes moverlas entre herramientas. Abre **Mapa de Vuelo → Planificador de Misión**.
+
+<Screenshot id="uavcast-pro/flight-map--mission-planner" alt="Pestaña Planificador de Misión con un mapa satelital, una tabla de puntos de ruta vacía y los botones Guardar, Cargar, Subir, Leer y Limpiar" caption="Mapa de Vuelo → Planificador de Misión antes de añadir puntos de ruta. Haz clic en el mapa para añadir uno." />
+
+## Planificar una misión {/* #plan-a-mission */}
+
+<Steps>
+
+1. Haz clic en el mapa donde debe estar el primer punto de ruta. La primera vez, **Establecer Valores Predeterminados** pide **Altitud Predeterminada (metros)**, **Radio de Punto de Ruta (metros)** y **Marco de Altitud**. Selecciona **Continuar**.
+2. Sigue haciendo clic para añadir puntos de ruta. Arrastra un marcador para moverlo.
+3. Ajusta cada punto de ruta en la tabla: **Alt (m)**, **Marco** y **Radio (m)**. Elimina un punto de ruta en la columna **Acción**.
+4. Revisa **Puntos de Ruta** y **Distancia** para ver la ruta total.
+
+</Steps>
+
+| Predeterminado | Valor | Opciones |
+|---|---|---|
+| **Altitud Predeterminada (metros)** | `100` | cualquiera |
+| **Radio de Punto de Ruta (metros)** | `30` | cualquiera |
+| **Marco de Altitud** | **Relativa** | **Relativa** (sobre el origen), **Absoluta** (sobre el nivel medio del mar), **Terreno** (sobre el suelo; requiere datos de terreno en el controlador de vuelo) |
+
+En la tabla, los marcos se abrevian como **Rel**, **Abs** y **Ter**. Los puntos de ruta se envían como `MAV_CMD_NAV_WAYPOINT`.
+
+## Subir al controlador de vuelo {/* #upload-to-the-flight-controller */}
+
+<Steps>
+
+1. En **Controlador de Vuelo**, selecciona **Subir**.
+2. Confirma **Subir Misión**. El cuadro de diálogo advierte que reemplaza la misión en el controlador de vuelo.
+3. Verás *Misión subida al controlador de vuelo*.
+
+</Steps>
+
+- **Leer** descarga la misión que está en el controlador de vuelo al planificador.
+- **Limpiar** elimina los puntos de ruta del planificador.
+
+Para volar la misión, usa **Iniciar** en la pestaña **Acciones** del Mapa de Vuelo, o cambia a AUTO desde tu transmisor o estación de control en tierra.
+
+## Guardar y cargar archivos {/* #save-and-load-files */}
+
+En **Archivos**:
+
+- **Guardar** descarga la misión como `mission.waypoints`.
+- **Cargar** abre un archivo `.waypoints` o `.txt` en formato QGC WPL, por ejemplo uno guardado desde Mission Planner.
+
+## Límites {/* #limits */}
+
+Este planificador solo maneja puntos de ruta simples. **Cargar** conserva la posición, la altitud, el marco y el radio de cada fila, pero convierte cada fila en un punto de ruta simple: los comandos de despegue, aterrizaje, loiter y DO (disparo de cámara, servo) no se conservan, y un comando sin posición se convierte en un punto de ruta en 0, 0. Para los comandos de despegue y aterrizaje, los comandos DO, las cuadrículas de levantamiento, las geovallas y los puntos de reagrupación, planifica y sube la misión directamente desde Mission Planner o QGroundControl.

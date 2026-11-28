@@ -1,0 +1,7 @@
+{
+  "label": "Flight Controller",
+  "position": 4,
+  "collapsible": true,
+  "collapsed": true,
+  "link": { "type": "doc", "id": "uavcast-pro/flight-controller/index" }
+}

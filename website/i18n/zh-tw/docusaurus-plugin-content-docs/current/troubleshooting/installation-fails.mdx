@@ -1,0 +1,68 @@
+---
+title: "UAVcast-Pro 安裝失敗"
+description: "修正 UAVcast-Pro 安裝程式的錯誤，例如 No installation candidate found 或 failed dependencies：請檢查 64 位元作業系統、網際網路連線、磁碟空間與安裝程式日誌。"
+sidebar_position: 10
+---
+
+# 安裝失敗 {/* #installation-fails */}
+
+您執行了 `curl -fsSL https://install.uavmatrix.com | sudo bash`，但它在出現錯誤後停止、卡住，或在完成後仍無法使用網頁介面。
+
+<SymptomTable rows={[
+  {symptom: '找不到 … 的安裝候選項目！（No installation candidate for … found!）', cause: '32 位元作業系統或不支援的架構', start: '#check-1'},
+  {symptom: 'Failed to update package lists，或 Failed to install dependencies', cause: '沒有網際網路，或 apt 設定損壞', start: '#check-2'},
+  {symptom: 'Raspberry Pi Zero 2 W 上長時間卡住', cause: '記憶體不足，且儲存裝置速度慢', start: '#check-3'},
+  {symptom: 'Service failed to start', cause: '安裝後有元件無法啟動', start: '#check-4'},
+]} />
+
+## 檢查 1：64 位元作業系統 {/* #check-1 */}
+
+UAVcast-Pro v6 需要 64 位元作業系統：arm64 或 amd64（x86 電腦）。在 arm64 上，非 Raspberry Pi 的開發板（Jetson 及其他 ARM 開發板）需要 UAVcast-Pro 6.5.3 或更新版本；較舊的安裝程式會因 *Device is not a Raspberry Pi*（裝置不是 Raspberry Pi）而停止。
+
+```bash
+dpkg --print-architecture   # must print arm64 or amd64
+uname -m                    # aarch64 or x86_64
+```
+
+若您看到 `armhf`、`armv7l` 或 `i686`，表示您使用的是 32 位元作業系統。請使用 Raspberry Pi Imager 燒錄 **Raspberry Pi OS (64-bit)**，然後重新安裝。支援的系統為 Raspberry Pi OS、Debian 與 Ubuntu；請參閱[支援的硬體](../reference/supported-hardware.mdx)。
+
+## 檢查 2：網際網路與 apt {/* #check-2 */}
+
+安裝程式會下載 UAVcast-Pro 與系統套件，並安裝 ZeroTier 與 Tailscale。
+
+<Steps>
+
+1. 檢查網際網路連線：`curl -I https://install.uavmatrix.com`。
+2. 手動執行 `sudo apt update`，並修正它顯示的任何錯誤，例如第三方軟體庫的金鑰已過期。
+3. 再次執行安裝程式。重複執行是安全的。
+
+</Steps>
+
+## 檢查 3：低功耗開發板 {/* #check-3 */}
+
+在 Raspberry Pi Zero 2 W 上，安裝所需時間遠長於 Pi 4 或 5，安裝程式會顯示預估時間。請等待其完成。請使用快速的 SD 卡與穩定的電源供應：若安裝過程中因電壓不足而重置，會留下未完成的安裝。
+
+## 檢查 4：讀取安裝程式日誌 {/* #check-4 */}
+
+安裝程式會將所有輸出寫入 `/opt/uavcast-pro/installer.log`。
+
+```bash
+sudo tail -n 100 /opt/uavcast-pro/installer.log
+```
+
+請查看最後幾行錯誤訊息。若安裝程式在建立 `/opt/uavcast-pro` 之前就失敗，日誌會位於 `/tmp/uavcast-installer.log`。
+
+## 安裝特定版本 {/* #install-a-specific-version */}
+
+若要列出適用於您架構的版本，或安裝其中一個版本：
+
+```bash
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l          # list versions
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.2  # install 6.5.2
+```
+
+## 仍然失敗？ {/* #still-failing */}
+
+請將 `/opt/uavcast-pro/installer.log`、`cat /etc/os-release` 與 `dpkg --print-architecture` 的輸出，以及您的開發板型號，寄送至 **support@uavmatrix.com**。
+
+相關頁面：[安裝 UAVcast-Pro](../get-started/installation.mdx)

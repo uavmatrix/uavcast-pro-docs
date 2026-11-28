@@ -1,0 +1,91 @@
+---
+title: "Uçuş kontrolcüsünden MAVLink heartbeat alınamıyor"
+sidebar_label: MAVLink heartbeat yok
+description: "UAVcast-Pro No heartbeat veya Waiting for device mesajı mı gösteriyor? USB kablosunu, TELEM bağlantısını, SERIAL protokolünü ve baud hızını kontrol edin, ardından Otomatik algıla seçeneğini kullanın."
+sidebar_position: 4
+---
+
+# Uçuş kontrolcüsünden MAVLink heartbeat alınamıyor {/* #no-mavlink-heartbeat-from-the-flight-controller */}
+
+**Uçuş Kontrolcüsü → Bağlantı** sayfası **No heartbeat**, **Waiting for device**, **Detecting baud rate** veya **Searching** durumunu gösteriyor ve kontrol panelindeki **Uçuş kontrolcüsü** satırı hiçbir zaman yeşile dönmüyor. UAVcast-Pro henüz uçuş kontrolcüsünü duyamıyor.
+
+Sayfada canlı bir **Bağlantı kontrolü** bulunur. Her adımı saniyede bir test eder ve bulduğu ilk sorunu açıklar. Önce buna bakın; genellikle bu sayfadan daha hızlı sonuç verir.
+
+<Screenshot id="uavcast-pro/flight-controller--connection-check" alt="Dört satırlı Bağlantı kontrolü kartı: uçuş kontrolcüsü takılı, okunabilir uçuş kontrolcüsü verisi, uçuş kontrolcüsü yanıt veriyor ve yer kontrol istasyonuna gönderiyor" caption="Çalışan bir bağlantıda Bağlantı kontrolü: dört adımın tamamı geçer. Bağlantı başarısız olduğunda ilk başarısız adım işaretlenir ve açıklanır." />
+
+<SymptomTable rows={[
+  {symptom: 'Waiting for device veya Flight controller plugged in: Not detected', cause: 'Veri kablosu yok veya kart güçlendirilmemiş', start: '#check-1'},
+  {symptom: 'Hatta sinyal var, ama okunabilir veri yok', cause: 'Yanlış baud hızı, TX/RX ters bağlanmış veya port MAVLink olarak ayarlanmamış', start: '#check-2'},
+  {symptom: 'Okunabilir veri yüksek bir yüzde bozuk gösteriyor', cause: 'Gevşek veya uzun kablo, eksik toprak bağlantısı veya elektriksel gürültü', start: '#check-3'},
+  {symptom: 'Port başka bir programda kullanımda görünüyor', cause: 'Seri portu başka bir program tutuyor', start: '#check-4'},
+  {symptom: 'Durum Off veya Stopped', cause: 'Bağlantı kapalı', start: '#check-5'},
+]} />
+
+## Kontrol 1: Uçuş kontrolcüsü hiç görülüyor mu? {/* #check-1 */}
+
+**USB üzerinden:**
+
+<Steps>
+
+1. Uçuş kontrolcüsünün güçlendirildiğinden ve USB kablosunun eşlik eden bilgisayara bağlandığından emin olun.
+2. Başka bir kablo deneyin. Birçok USB kablosu yalnızca şarj eder, veri taşımaz. Kart yanıyor ama **Flight controller plugged in** satırı **Not detected** diyorsa, asıl neden genellikle kablodur.
+3. **Bağlantı türü** altında **USB** seçin ve **Port** alanını **Otomatik** bırakın. Otomatik, uçuş kontrolcüsünü bulur ve cihaz numarası değişirse onu izler.
+
+</Steps>
+
+**TELEM portu üzerinden (UART / Serial):**
+
+<Steps>
+
+1. **Bağlantı türü** altında **UART / Serial** seçin.
+2. Kabloları kontrol edin: uçuş kontrolcüsünün **TX → RX** (eşlik eden bilgisayarda), **RX → TX** ve **GND → GND** bağlantıları. Eksik toprak kablosu sık görülen bir nedendir.
+3. Raspberry Pi'yi hiçbir zaman TELEM portundan beslemeyin. Ayrı olarak güç verin.
+
+</Steps>
+
+:::note Raspberry Pi seri portu
+Kurulum programı Pi'nin UART'ını etkinleştirir ve `cmdline.txt` dosyasından seri konsolu kaldırır. Pi 3, 4 veya Zero 2 W üzerinde ayrıca Bluetooth'u devre dışı bırakır, böylece tam UART serbest kalır. UAVcast-Pro'dan sonra işletim sistemini yeniden kurduysanız, kurulum programını tekrar çalıştırın.
+:::
+
+## Kontrol 2: Uçuş kontrolcüsündeki port ayarlarını eşleştirin {/* #check-2 */}
+
+TELEM portunda uçuş kontrolcüsü, UAVcast-Pro'nun dinlediği hızda MAVLink kullanmalıdır. USB bağlantıları baud hızı kullanmaz.
+
+<Steps>
+
+1. Uçuş kontrolcüsünü USB üzerinden Mission Planner veya QGroundControl'e bağlayın.
+2. Tüm parametre listesini açın ve kablosunu bağladığınız seri portu bulun: TELEM1 için `SERIAL1`, TELEM2 için `SERIAL2`.
+3. `SERIALx_PROTOCOL` değerini `2` (MAVLink2) olarak ayarlayın. Parametreleri yazın ve uçuş kontrolcüsünü yeniden başlatın.
+4. `SERIALx_BAUD` değerini not edin. UAVcast-Pro'da **Baud hızı** alanını **Otomatik** bırakın veya aynı değeri seçin.
+
+</Steps>
+
+**Otomatik** seçiliyken UAVcast-Pro sırasıyla 57600, 115200, 921600, 1500000, 460800, 230400 ve 500000 baud değerlerini dener ve çalışan hızı hatırlar. Arama sırasında durum *Trying … baud (n of 7)* gösterir.
+
+:::tip UAVcast-Pro'nun sizin yerinize aramasına izin verin
+**Otomatik algıla** düğmesine basın. Bağlantı duraklatılır, her port ve baud hızı dinlenir, ardından bulunanlar kaydedilir. Bu işlem bir dakikaya kadar sürebilir. *No flight controller found* mesajı çıkarsa, denenen her port ve hızı görmek için **Denenenleri göster** seçeneğini açın.
+:::
+
+## Kontrol 3: Bozuk veri {/* #check-3 */}
+
+**Readable flight controller data** satırı bir yüzdeyi *damaged* olarak gösteriyorsa, bayt gelmekte ama bozulmuş durumdadır. Bu genellikle gevşek veya uzun bir kablo, eksik toprak kablosu ya da motor ve güç kablolarından gelen gürültü anlamına gelir.
+
+- Konektörleri yeniden takın ve kabloyu kısaltın.
+- Sinyal kablolarını ESC ve batarya kablolarından uzak tutun.
+- Daha düşük bir `SERIALx_BAUD` değeri deneyin, örneğin 57600 veya 115200.
+
+## Kontrol 4: Port kullanımda {/* #check-4 */}
+
+**Port** listesi, başka bir programın tuttuğu portları işaretler (*in use by …*). Bu programı durdurun (örneğin kendi başlattığınız bir MAVProxy veya ikinci bir yönlendirici) ya da başka bir port seçin.
+
+## Kontrol 5: Bağlantı açık mı? {/* #check-5 */}
+
+Sayfanın üstünde **Link enabled** açık olmalıdır. Durum **Link stopped** diyorsa **Bağlan** düğmesine basın. Ayarlar yeniden başlatma gerektirmeden hemen uygulanır.
+
+## Hâlâ heartbeat yok mu? {/* #still-no-heartbeat */}
+
+**Mavlink Yöneticisi** seçiliyken [günlükleri indirin](./collect-logs.mdx). İçerdiği `diagnostics.txt` dosyası seri aygıtları, bunları hangi programın tuttuğunu ve çekirdekten gelen USB ve güç olaylarını listeler. Bağlantı sorunları için destek ekibinin ihtiyaç duyduğu bilgi budur.
+
+Uçuş kontrolcüsü **Connected** gösterdikten sonra yer kontrol istasyonunuz hâlâ bekliyorsa, [yer kontrol istasyonunda telemetri yok](./no-telemetry-in-gcs.mdx) sayfasına gidin.
+
+İlgili: [Uçuş kontrolcüsü bağlantısı](../uavcast-pro/flight-controller/index.mdx) · [Donanım gereksinimleri](../get-started/hardware-requirements.mdx)

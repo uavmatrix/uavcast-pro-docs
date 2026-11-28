@@ -1,0 +1,194 @@
+---
+title: "在 Raspberry Pi、Debian 或 Ubuntu 上安装 UAVcast-Pro"
+description: "在 64 位 Raspberry Pi OS、Debian 或 Ubuntu 系统（arm64 或 amd64）上通过一条命令安装 UAVcast-Pro，然后打开网页界面并创建管理员用户。"
+sidebar_position: 4
+sidebar_label: "安装"
+keywords: [安装, 如何安装, 安装链接, 安装命令, 安装指令, 安装程序, 一行安装, curl 安装, 安装脚本, 下载 UAVcast-Pro]
+---
+
+# 安装 UAVcast-Pro {/* #install-uavcast-pro */}
+
+<InstallCommand />
+
+<BuyLicense />
+
+UAVcast-Pro 只需一条命令即可在任何基于 Debian 的 64 位 Linux 系统上安装：Raspberry Pi OS、Debian 或 Ubuntu，架构为 arm64 或 amd64。安装程序会下载最新版本、安装其依赖项和服务，并在完成后显示网页界面的地址。安装约需 10 分钟；在 Pi Zero 2 W、2 或 3 上约需 30 分钟。
+
+## 开始之前 {/* #before-you-begin */}
+
+- 伴随计算机上需运行 64 位操作系统。使用 `uname -m` 检查，输出必须为 `aarch64` 或 `x86_64`。
+- 根磁盘至少有 500 MB 可用空间（`df -h /`）。
+- 安装期间设备需要能够访问互联网。
+- 可通过 SSH 或直接使用键盘和显示器操作设备，并拥有具备 `sudo` 权限的用户。
+
+## 步骤 1：烧录操作系统 {/* #step-1-flash-the-operating-system */}
+
+<Tabs groupId="os">
+<TabItem value="rpi" label="Raspberry Pi" default>
+
+<Steps>
+
+1. 打开 [Raspberry Pi Imager](https://www.raspberrypi.com/software/)，并选择 Pi 型号。
+2. 选择 **Raspberry Pi OS (64-bit)**。**Lite** 版本已经足够，并可为视频留出更多 CPU 资源。
+3. 打开操作系统自定义设置。设置主机名、用户名和密码、Wi-Fi 网络和国家/地区，并启用 SSH。
+4. 将镜像写入存储卡，将存储卡插入树莓派并通电。
+
+</Steps>
+
+适用于树莓派的 64 位 Ubuntu Server 同样可用。
+
+</TabItem>
+<TabItem value="other" label="其他 arm64 主板">
+
+刷写厂商提供的 64 位 Ubuntu 或 Debian 镜像（例如 NVIDIA Jetson 上的 JetPack Ubuntu），完成首次启动设置并启用 SSH。
+
+非树莓派的 arm64 主板需要 UAVcast-Pro 6.5.3 或更高版本；较旧的安装程序会因提示 *Device is not a Raspberry Pi* 而停止。
+
+</TabItem>
+<TabItem value="amd64" label="x86-64 电脑">
+
+安装 64 位 Debian 或 Ubuntu（Server 或 Desktop 版本）。安装程序不会检查发行版版本，因此请使用当前受支持的版本，例如 Ubuntu 22.04 LTS 或更新版本。
+
+</TabItem>
+</Tabs>
+
+然后通过 SSH 登录并更新系统：
+
+```bash
+sudo apt update && sudo apt full-upgrade -y
+```
+
+## 步骤 2：运行安装程序 {/* #step-2-run-the-installer */}
+
+在无人机上执行：
+
+<InstallCommand variant="step" />
+
+安装程序将执行以下操作：
+
+1. 检测架构，并将匹配的发行版下载到 `/opt/uavcast-pro`。
+2. 安装所需的系统软件包：NetworkManager、ModemManager、GStreamer、v4l-utils、Redis、Python 等。
+3. 在树莓派上，为飞控释放 GPIO UART（从 `cmdline.txt` 中移除串口控制台，并将蓝牙从 UART 上移开），并为双摄像头配置提高摄像头内存池。原始的 `config.txt` 和 `cmdline.txt` 会先行备份。
+4. 安装 ZeroTier、Tailscale、mavlink-router 和 MediaMTX。
+5. 安装并启动 UAVcast-Pro 服务。
+6. 检查关键工具是否存在，并显示网页地址。
+
+安装完成后会显示：
+
+```text
+✅ Installation completed successfully!
+
+Please reboot your device to complete the installation.
+
+To access the UAVcast-Pro web interface, open your browser and navigate to:
+http://192.168.1.50
+```
+
+重启设备，使 UART 和摄像头的更改生效：
+
+```bash
+sudo reboot
+```
+
+:::tip 耐心等待较慢的主板
+在 Pi Zero 2 W 上，进度条可能会停滞数分钟，这是 apt 正在工作。请勿再启动一次安装：安装程序会拒绝重复运行，而第二个副本只会拖慢第一个的进度。完整日志位于 `/opt/uavcast-pro/installer.log`。
+:::
+
+### 安装指定版本 {/* #install-a-specific-version */}
+
+列出适用于当前架构的版本：
+
+```bash
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l
+```
+
+使用 `-b` 安装其中一个版本：
+
+```bash
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.2
+```
+
+之后也可以在网页界面中切换版本。参见[更新 UAVcast-Pro](./updating.mdx)。
+
+## 步骤 3：打开网页界面 {/* #step-3-open-the-web-interface */}
+
+在同一网络中的电脑上打开浏览器，访问安装程序显示的地址，例如 `http://192.168.1.50`。网页界面运行在端口 **80** 上。
+
+如果不知道地址，可以尝试以下方法：
+
+- 尝试在 Raspberry Pi Imager 中设置的主机名，例如 `http://raspberrypi.local`。这需要 mDNS 支持，在大多数家庭网络以及 macOS、Linux 和 Windows 10 或更新版本上均可使用。
+- 在路由器的已连接客户端列表中查找该设备。
+- 在设备上运行 `hostname -I`。
+
+首次看到的页面是**应用程序**，因为 UAVcast-Pro 尚未获得许可证。在设备获得许可证之前，侧边栏将保持灰色（*此功能需要许可证*）。
+
+## 步骤 4：激活许可证 {/* #step-4-activate-your-license */}
+
+在**应用程序 → 许可证管理器**中，将密钥粘贴到**输入许可证密钥**中，然后选择**验证**。设备需要访问互联网才能完成此操作。完整流程、设备名额以及迁移许可证的说明，参见[许可证与激活](./license-activation.mdx)。
+
+## 步骤 5：创建管理员用户 {/* #step-5-create-an-admin-user */}
+
+全新安装时**没有用户，也没有登录验证**：任何能够访问网页界面的人都拥有完全的管理员权限。在无人机接入共享网络或互联网之前，请先创建管理员账户。
+
+<Steps>
+
+1. 在侧边栏中进入**用户**（位于**管理**下）。
+2. 选择**添加用户**。
+3. 输入**用户名**（至少 3 个字符）和**密码**（至少 6 个字符）。第一个用户始终为**管理员**。
+4. 选择**创建用户**。
+
+</Steps>
+
+此后，网页界面将要求登录。会话有效期为 7 天。只读账户请参见[用户与访问](../uavcast-pro/users.mdx)。
+
+## 安装内容 {/* #what-gets-installed */}
+
+| 项目 | 位置 |
+|---|---|
+| 应用程序、二进制文件、数据库（`uavcast.db`）、日志 | `/opt/uavcast-pro` |
+| 安装日志 | `/opt/uavcast-pro/installer.log` |
+| systemd 服务 | `uavcast-web`、`uavcast-factory`、`mavlink-manager`、`uavcast-camera`、`uavcast-ntrip`、`uavcast-dns`、`mediamtx`、`internet-check` |
+| MAVLink 路由器配置 | `/etc/mavlink-router/main.conf`（由 UAVcast-Pro 生成，请勿编辑） |
+
+检查网页服务是否正在运行：
+
+```bash
+sudo systemctl status uavcast-web
+```
+
+## 卸载 {/* #uninstall */}
+
+安装程序具有卸载模式。它会停止并移除所有 UAVcast-Pro 服务、设置数据库以及 `/opt/uavcast-pro` 中的程序文件；如果 ZeroTier、Tailscale 和 Redis 是由 UAVcast-Pro 安装的，也会将其清除。NetworkManager、ModemManager 和 GStreamer 等常用软件包将保留。
+
+```bash
+sudo /opt/uavcast-pro/factory/ApplicationInstaller --uninstall
+```
+
+从 UAVcast-Pro 6.5.3 起，`/opt/uavcast-pro/recordings` 中的飞行录像会被保留。添加 `--delete-recordings` 可一并删除录像；添加 `--purge-deps` 可同时移除在 UAVcast-Pro 之前就已安装的 ZeroTier、Tailscale 和 Redis。在更早的版本中，卸载会删除整个 `/opt/uavcast-pro` 文件夹（包括录像），因此请先复制要保留的录像。
+
+:::warning 请先注销许可证
+卸载不会释放许可证名额。请先在**应用程序 → 许可证管理器**中注销该设备，再将其清除；否则，只能借助另一台设备才能释放该名额。参见[注销设备](./license-activation.mdx#unregister-a-device)。
+:::
+
+## 从 UAVcast-Pro 4.x 或 5.x 升级 {/* #upgrading-from-uavcast-pro-4x-or-5x */}
+
+版本 6 是完全重写的版本，无法导入 4.x 或 5.x 的设置。请记录地面站、摄像头和调制解调器的设置，刷写全新的 64 位操作系统，然后安装版本 6。
+
+如果安装程序提示 *An older version of UAVcast-Pro has been detected at /opt/UAVcast-Pro*，请先将其删除。此操作会删除旧设置：
+
+```bash
+sudo rm -rf /opt/UAVcast-Pro
+```
+
+## 安装失败时 {/* #if-the-install-fails */}
+
+| 消息或现象 | 解决方法 |
+|---|---|
+| *No installation candidate for … found!* | 操作系统为 32 位，或架构不受支持。请使用 `uname -m` 检查，并使用 64 位镜像重新烧录。 |
+| *Not enough free space. … need 500MB* | 释放空间，或使用更大的存储卡。 |
+| *Another process is currently using the system package manager* | 系统正在运行自动更新。请等待几分钟后再次运行安装程序。 |
+| *Another installer is already running* | 请等待第一个安装程序完成。 |
+| *Installation completed with errors*，并显示红色 ✗ | 再次运行安装程序。如果问题重复出现，请将 `/opt/uavcast-pro/installer.log` 发送至 support@uavmatrix.com。 |
+| 网页无法加载 | 检查 `sudo systemctl status uavcast-web`，尝试使用 IP 地址代替主机名，并确保没有其他程序占用端口 80。 |
+
+更多修复方法：[安装失败](../troubleshooting/installation-fails.mdx)和[网页界面无法打开](../troubleshooting/web-interface-wont-open.mdx)。

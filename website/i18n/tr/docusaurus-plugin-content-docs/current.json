@@ -1,0 +1,74 @@
+{
+  "version.label": {
+    "message": "Sonraki",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Get started": {
+    "message": "Başlarken",
+    "description": "The label for category 'Get started' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.UAVcast-Pro": {
+    "message": "UAVcast-Pro",
+    "description": "The label for category 'UAVcast-Pro' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Flight Controller": {
+    "message": "Uçuş Kontrolcüsü",
+    "description": "The label for category 'Flight Controller' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Flight Map": {
+    "message": "Uçuş Haritası",
+    "description": "The label for category 'Flight Map' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Ground stations & video": {
+    "message": "Yer kontrol istasyonları ve video",
+    "description": "The label for category 'Ground stations & video' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity": {
+    "message": "Bağlantı",
+    "description": "The label for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity.link.generated-index.title": {
+    "message": "Bağlantı: modem, VPN, DNS ve ağlar",
+    "description": "The generated-index page title for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity.link.generated-index.description": {
+    "message": "UAVcast-Pro’yu 4G/LTE üzerinden internete bağlayın, bir VPN üzerinden erişin, dinamik DNS ile yayımlayın ve trafiği hangi ağın taşıyacağını seçin.",
+    "description": "The generated-index page description for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Camera & video": {
+    "message": "Kamera ve video",
+    "description": "The label for category 'Camera & video' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fleet Manager": {
+    "message": "Fleet Manager",
+    "description": "The label for category 'Fleet Manager' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Team & roles": {
+    "message": "Ekip ve roller",
+    "description": "The label for category 'Team & roles' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fleet & UAVs": {
+    "message": "Filo ve drone’lar",
+    "description": "The label for category 'Fleet & UAVs' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Live map": {
+    "message": "Canlı harita",
+    "description": "The label for category 'Live map' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Network & VPN": {
+    "message": "Ağ ve VPN",
+    "description": "The label for category 'Network & VPN' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Kılavuzlar",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Troubleshooting & FAQ": {
+    "message": "Sorun giderme ve SSS",
+    "description": "The label for category 'Troubleshooting & FAQ' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Reference": {
+    "message": "Başvuru",
+    "description": "The label for category 'Reference' in sidebar 'docs'"
+  }
+}

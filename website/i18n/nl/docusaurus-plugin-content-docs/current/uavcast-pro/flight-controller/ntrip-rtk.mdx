@@ -1,0 +1,78 @@
+---
+title: "RTK-GPS via 4G: NTRIP-correcties met UAVcast-Pro"
+description: "Stream RTCM3-correcties van een NTRIP-caster via 4G/LTE naar uw vluchtcontroller voor RTK Vaste positionering. Instellingen voor caster, mountpoint, VRS en GGA."
+sidebar_position: 2
+sidebar_label: "NTRIP / RTK"
+---
+
+# NTRIP / RTK-correcties {/* #ntrip--rtk-corrections */}
+
+UAVcast-Pro heeft een ingebouwde NTRIP-client. Die maakt verbinding met een NTRIP v1- of v2-caster via de internetverbinding van de drone, ontvangt RTCM3-correcties en geeft ze als MAVLink `GPS_RTCM_DATA` door aan de vluchtcontroller, op dezelfde manier als "Inject GPS" in Mission Planner, maar vanuit de drone zelf. U hebt geen grondstation of basisstation ter plaatse nodig. Open het onder **Vluchtcontroller → NTRIP / RTK**.
+
+## Voordat u begint {/* #before-you-begin */}
+
+- Een RTK-geschikte GPS op de vluchtcontroller: een multi-frequentie-ontvanger met carrier-phase, zoals u-blox F9P, Holybro H-RTK, CUAV C-RTK, Here3+ of Septentrio Mosaic. Een standaard M8/M10-GPS negeert correcties.
+- Een account bij een NTRIP-caster: een nationaal CORS-netwerk, een commerciële dienst (Trimble, Hexagon, Topcon en andere) of [RTK2go](http://rtk2go.com). U hebt de host, poort, mountpoint en meestal een gebruikersnaam en wachtwoord nodig.
+- Internet op de drone en een verbonden vluchtcontroller.
+
+## De NTRIP-client instellen {/* #set-up-the-ntrip-client */}
+
+<Steps>
+
+1. Ga naar **Vluchtcontroller → NTRIP / RTK**.
+2. Voer onder **Caster** de **Caster-host** in (bijvoorbeeld `ntrip.example.com`) en de **Poort** (`2101` voor de meeste casters).
+3. Voer onder **Authenticatie** de **Gebruikersnaam** en het **Wachtwoord** in. Selecteer **Verbinding testen** om ze te controleren: *Caster accepteerde de inloggegevens.*
+4. Selecteer **Mountpoints bekijken**, kies het dichtstbijzijnde in de lijst en selecteer **Selecteren**. Of typ het in bij **Mountpoint**.
+5. Als het mountpoint een VRS- of "dichtstbijzijnde basis"-stream is (in de kolom **NMEA** staat **Verplicht**), laat dan **GGA upstream verzenden** aan staan.
+6. Zet **NTRIP-client inschakelen** aan.
+
+</Steps>
+
+De kaart **Status** verandert naar **Correcties worden gestreamd** en toont **Totaal ontvangen**, **Doorvoer**, **Laatste RTCM-frame** en **Recente berichttypen**. Bij een helder zicht gaat **RTK-fix van vluchtcontroller** van **3D fix** naar **RTK Zwevend** en daarna naar **RTK Vast**, meestal binnen een minuut of twee.
+
+<Screenshot id="uavcast-pro/flight-controller--ntrip" alt="Tabblad NTRIP / RTK met het statuspaneel met Disabled en nulwaarden in de tellers, en de kaart met GPS-kwaliteit" caption="Vluchtcontroller → NTRIP / RTK voordat er een caster is ingesteld: status Disabled, tellers op nul en geen GPS-fix." />
+
+## Overzicht van instellingen {/* #settings-reference */}
+
+| Instelling | Standaard | Waarden | Opmerkingen |
+|---|---|---|---|
+| **NTRIP-client inschakelen** | Uit | Aan, uit | |
+| **Caster-host** | leeg | hostnaam of IP | Vereist. |
+| **Poort** | `2101` | 1–65535 | Sommige TLS-casters gebruiken 2102 of 443. |
+| **Mountpoint** | leeg | naam van het mountpoint van de caster | Vereist. Gebruik **Mountpoints bekijken** om de sourcetable van de caster te lezen. |
+| **TLS gebruiken (HTTPS)** | Uit | Aan, uit | Voor casters die TLS vereisen. De meeste publieke casters gebruiken gewone TCP. |
+| **Gebruikersnaam** / **Wachtwoord** | leeg | | Leeg laten voor anonieme casters. RTK2go wil als gebruikersnaam een echt e-mailadres en geen wachtwoord. |
+| **GGA upstream verzenden** | Aan | Aan, uit | Stuurt uw positie als NMEA `$GPGGA`, zodat VRS- en dichtstbijzijnde-mountpoint-casters correcties voor uw locatie kunnen maken. |
+| **Verzendinterval (seconden)** | `10` | seconden | Hoe vaak GGA wordt verzonden. |
+| **Positiebron** | **Live positie van vluchtcontroller** | **Live positie van vluchtcontroller**, **Vaste handmatige positie** | |
+| **Breedtegraad** / **Lengtegraad** / **Hoogte (m)** | `0` | | Handmatige positie. Wordt ook als terugvalwaarde gebruikt tot de vluchtcontroller een GPS-fix heeft. |
+
+## De GPS-kwaliteitskaart lezen {/* #read-the-gps-quality-card */}
+
+**GPS-kwaliteit** toont de live fix van de vluchtcontroller, plus een meting die niet afhangt van de eigen schatting van de ontvanger:
+
+- **Fix-type** en **Satellieten**.
+- **Horizontale nauwkeurigheid** en **Verticale nauwkeurigheid**: de eigen schatting van de ontvanger.
+- **Positiestabiliteit (1σ)**: hoeveel de positie daadwerkelijk beweegt terwijl de drone stilstaat, gemeten over een korte periode. Tijdens de vlucht toont het **Bewegend**.
+- **Laatste correctie**: tijd sinds het laatste doorgestuurde RTCM-frame. Als dit blijft oplopen, zijn de correcties gestopt.
+
+Als u **Geen RTK-status van ontvanger** ziet, heeft de vluchtcontroller nooit RTK-status gerapporteerd. Meestal is de GPS niet RTK-geschikt. Correcties worden wel nog doorgestuurd.
+
+## Over een mobiele verbinding {/* #over-a-cellular-link */}
+
+Correcties zijn klein (meestal 1 tot 5 kbit/s), dus ze passen makkelijk naast telemetrie en video. Na een korte internetonderbreking maakt de client binnen enkele seconden opnieuw verbinding. Een stille casterverbinding wordt binnen 15 seconden gedetecteerd en opnieuw geopend.
+
+Het [Dashboard](../dashboard.mdx) toont de status van de client in de rij **RTK-correcties**.
+
+## Probleemoplossing {/* #troubleshooting */}
+
+| Symptoom | Controleer |
+|---|---|
+| Status **Fout**, **Caster-antwoord** toont `401` | Verkeerde gebruikersnaam of wachtwoord, of het account mag dit mountpoint niet gebruiken. |
+| **Verbonden**, maar geen RTCM-frames | Het mountpoint vereist GGA. Zet **GGA upstream verzenden** aan en controleer of de vluchtcontroller een 3D-fix heeft, of stel een handmatige positie in. |
+| RTCM komt binnen, fix blijft op **3D fix** | De GPS is niet RTK-geschikt, of de GNSS-systemen van het mountpoint komen niet overeen met uw ontvanger. Controleer de kolom **GNSS** in de sourcetable. |
+| **RTK Zwevend**, nooit **Vast** | Basis te ver weg (streef naar minder dan 20 tot 30 km), slechte zichtbaarheid van de hemel of multipath. Probeer een dichterbij gelegen mountpoint. |
+
+Het **NTRIP-servicelogboek** onderaan de pagina toont elke verbinding, herverbinding en caster-antwoord.
+
+Meer controles: [RTK-correcties komen niet aan](../../troubleshooting/rtk-corrections-not-arriving.mdx).

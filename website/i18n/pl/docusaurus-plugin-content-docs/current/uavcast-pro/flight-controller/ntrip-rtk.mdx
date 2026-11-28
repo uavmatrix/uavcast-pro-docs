@@ -1,0 +1,78 @@
+---
+title: "GPS RTK przez 4G: korekcje NTRIP w UAVcast-Pro"
+description: "Strumieniuj korekcje RTCM3 z castera NTRIP przez 4G/LTE do kontrolera lotu, aby uzyskać pozycjonowanie RTK Fixed. Ustawienia castera, mountpointu, VRS i GGA."
+sidebar_position: 2
+sidebar_label: "NTRIP / RTK"
+---
+
+# Korekcje NTRIP / RTK {/* #ntrip--rtk-corrections */}
+
+UAVcast-Pro ma wbudowanego klienta NTRIP. Łączy się z casterem NTRIP w wersji 1 lub 2 przez łącze internetowe drona, odbiera korekcje RTCM3 i przekazuje je do kontrolera lotu jako MAVLink `GPS_RTCM_DATA`. Działa to tak samo jak „Inject GPS” w Mission Planner, ale odbywa się bezpośrednio z drona. Nie potrzebujesz na miejscu stacji naziemnej ani stacji bazowej. Otwórz to w **Kontroler Lotu → NTRIP / RTK**.
+
+## Zanim zaczniesz {/* #before-you-begin */}
+
+- Odbiornik GPS z obsługą RTK podłączony do kontrolera lotu: wieloczęstotliwościowy odbiornik z pomiarem fazy nośnej, na przykład u-blox F9P, Holybro H-RTK, CUAV C-RTK, Here3+ lub Septentrio Mosaic. Standardowy GPS M8/M10 ignoruje korekcje.
+- Konto u castera NTRIP: krajowa sieć CORS, komercyjna usługa (Trimble, Hexagon, Topcon i inne) albo [RTK2go](http://rtk2go.com). Potrzebujesz hosta, portu, mountpointu, a zwykle nazwy użytkownika i hasła.
+- Internet na dronie i podłączony kontroler lotu.
+
+## Konfiguracja klienta NTRIP {/* #set-up-the-ntrip-client */}
+
+<Steps>
+
+1. Przejdź do **Kontroler Lotu → NTRIP / RTK**.
+2. W sekcji **Caster** wpisz **Host castera** (na przykład `ntrip.example.com`) i **Port** (`2101` dla większości casterów).
+3. Wpisz **Nazwa użytkownika** i **Hasło** w sekcji **Uwierzytelnianie**. Wybierz **Testuj połączenie**, aby je sprawdzić: *Caster zaakceptował dane logowania.*
+4. Wybierz **Przeglądaj mountpointy**, wskaż najbliższy na liście i wybierz **Wybierz**. Możesz też wpisać go w polu **Mountpoint**.
+5. Jeśli mountpoint jest strumieniem VRS albo „najbliższej stacji bazowej” (w kolumnie **NMEA** widnieje **Wymagane**), zostaw włączoną opcję **Wysyłaj GGA w górę**.
+6. Włącz **Włącz klienta NTRIP**.
+
+</Steps>
+
+Karta **Status** zmieni się na **Strumieniowanie korekcji** i pokaże **Łącznie odebrano**, **Przepustowość**, **Ostatnia ramka RTCM** i **Ostatnie typy wiadomości**. Przy czystym niebie **Fix RTK z kontrolera lotu** przechodzi z **Pozycja 3D** na **RTK Float**, a potem na **RTK Fixed**, zwykle w ciągu minuty lub dwóch.
+
+<Screenshot id="uavcast-pro/flight-controller--ntrip" alt="Zakładka NTRIP / RTK z panelem statusu pokazującym Wyłączone i zerowe liczniki oraz kartą jakości GPS" caption="Kontroler Lotu → NTRIP / RTK przed konfiguracją castera: status Wyłączone, liczniki na zero i brak pozycji GPS." />
+
+## Opis ustawień {/* #settings-reference */}
+
+| Ustawienie | Domyślnie | Wartości | Uwagi |
+|---|---|---|---|
+| **Włącz klienta NTRIP** | Wyłączony | Włączony, wyłączony | |
+| **Host castera** | puste | nazwa hosta lub IP | Wymagane. |
+| **Port** | `2101` | 1–65535 | Niektóre casters z TLS używają 2102 lub 443. |
+| **Mountpoint** | puste | nazwa mountpointu castera | Wymagane. Użyj **Przeglądaj mountpointy**, aby odczytać sourcetable castera. |
+| **Użyj TLS (HTTPS)** | Wyłączony | Włączony, wyłączony | Dla casterów wymagających TLS. Większość publicznych casterów używa zwykłego TCP. |
+| **Nazwa użytkownika** / **Hasło** | puste | | Zostaw puste dla casterów anonimowych. RTK2go wymaga jako nazwy użytkownika prawdziwego adresu e-mail i braku hasła. |
+| **Wysyłaj GGA w górę** | Włączony | Włączony, wyłączony | Wysyła Twoją pozycję jako NMEA `$GPGGA`, aby casters VRS i najbliższego mountpointu mogły wyliczyć korekcje dla Twojej lokalizacji. |
+| **Interwał wysyłania (sekundy)** | `10` | sekundy | Jak często wysyłana jest GGA. |
+| **Źródło pozycji** | **Pozycja na żywo z kontrolera lotu** | **Pozycja na żywo z kontrolera lotu**, **Ręczna stała pozycja** | |
+| **Szerokość geograficzna** / **Długość geograficzna** / **Wysokość (m)** | `0` | | Pozycja ręczna. Używana też jako zapas, dopóki kontroler lotu nie ma fixa GPS. |
+
+## Odczytywanie karty jakości GPS {/* #read-the-gps-quality-card */}
+
+**Jakość GPS** pokazuje bieżący fix z kontrolera lotu oraz pomiar, który nie opiera się na szacunku odbiornika:
+
+- **Typ fixa** i **Satelity**.
+- **Dokładność pozioma** i **Dokładność pionowa**: szacunek samego odbiornika.
+- **Stabilność pozycji (1σ)**: jak bardzo pozycja faktycznie się przesuwa, gdy dron stoi, mierzone w krótkim oknie. W locie pokazuje **W ruchu**.
+- **Ostatnia poprawka**: czas od ostatniej przekazanej ramki RTCM. Jeśli ta wartość stale rośnie, korekcje przestały napływać.
+
+Jeśli widzisz **Brak statusu RTK z odbiornika**, kontroler lotu nigdy nie zgłosił statusu RTK. Zwykle oznacza to, że GPS nie obsługuje RTK. Korekcje są mimo to przekazywane.
+
+## Przez łącze komórkowe {/* #over-a-cellular-link */}
+
+Korekcje są małe (zwykle 1–5 kbit/s), więc mieszczą się obok telemetrii i wideo. Po krótkim zaniku internetu klient łączy się ponownie w ciągu kilku sekund. Ciche połączenie z casterem jest wykrywane w ciągu 15 sekund i otwierane ponownie.
+
+[Panel Główny](../dashboard.mdx) pokazuje stan klienta w wierszu **RTK corrections**.
+
+## Rozwiązywanie problemów {/* #troubleshooting */}
+
+| Objaw | Co sprawdzić |
+|---|---|
+| Status **Błąd**, **Odpowiedź castera** pokazuje `401` | Zły login lub hasło albo konto nie ma dostępu do tego mountpointu. |
+| **Połączono**, ale brak ramek RTCM | Mountpoint wymaga GGA. Włącz **Wysyłaj GGA w górę** i upewnij się, że kontroler lotu ma fix 3D, albo ustaw ręczną pozycję. |
+| Ramki RTCM przychodzą, ale fix pozostaje na **Pozycja 3D** | GPS nie obsługuje RTK albo systemy GNSS mountpointu nie pasują do odbiornika. Sprawdź kolumnę **GNSS** w sourcetable. |
+| **RTK Float**, nigdy **Fixed** | Stacja bazowa jest za daleko (celuj w mniej niż 20–30 km), słaby widok nieba lub wielodrogowość. Spróbuj bliższego mountpointu. |
+
+**Dziennik usługi NTRIP** na dole strony pokazuje każde połączenie, ponowne połączenie i odpowiedź castera.
+
+Więcej sprawdzeń: [Korekcje RTK nie docierają](../../troubleshooting/rtk-corrections-not-arriving.mdx).

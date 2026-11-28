@@ -1,0 +1,87 @@
+---
+title: "Impostazioni dell'applicazione, log e backup di UAVcast-Pro"
+description: "Cambia la porta web e la lingua di UAVcast-Pro, scarica i log per l'assistenza con la modalità debug ed esegui il backup, il ripristino o il reset del database delle impostazioni dalla pagina Applicazione."
+sidebar_position: 11
+sidebar_label: "Impostazioni applicazione e log"
+---
+
+# Impostazioni dell'applicazione, log e backup {/* #application-settings-logs-and-backups */}
+
+La pagina **Applicazione** contiene tutto ciò che riguarda UAVcast-Pro stesso: la licenza, gli aggiornamenti, le impostazioni dell'interfaccia, il download dei log e il database delle impostazioni. È visibile solo agli amministratori ed è l'unica pagina che funziona prima che il dispositivo abbia una licenza attiva. Apri **Gestione → Applicazione**.
+
+<Screenshot id="uavcast-pro/application" alt="Pagina Applicazione con Gestore Licenze e Aggiorna Applicazione a sinistra, e le schede Impostazioni, Registrazione Log e Database a destra" caption="Gestione → Applicazione." />
+
+| Scheda | Trattata in |
+|---|---|
+| **Gestore Licenze** | [Licenza e attivazione](../get-started/license-activation.mdx) |
+| **Aggiorna Applicazione** | [Aggiornare UAVcast-Pro](../get-started/updating.mdx) |
+| **Impostazioni**, **Registrazione Log**, **Database** | Questa pagina |
+
+## Impostazioni {/* #settings */}
+
+| Impostazione | Predefinito | Valori | Note |
+|---|---|---|---|
+| **Fai un Tour** | | | Riavvia il tour guidato dell'interfaccia. |
+| **Tema Scuro** | Attivo | Attivo, disattivato | Salvato per browser. Presente anche nel selettore del tema nella barra superiore. |
+| **Porta Server** | `80` | 1–65535 | Porta dell'interfaccia web. Vedi sotto. |
+| **Lingua** | Lingua del browser, altrimenti inglese | Inglese, Español, 简体中文, 繁體中文, Italiano, Nederlands, Polski, Português, Русский, Türkçe | Presente anche nel menu utente in fondo alla barra laterale. |
+
+### Cambiare la porta dell'interfaccia web {/* #change-the-web-interface-port */}
+
+<Steps>
+
+1. Inserisci la nuova porta in **Porta Server**.
+2. Seleziona **Invia e riavvia server**. Una finestra mostra il **Nuovo URL**, ad esempio `http://192.168.1.50:8080`.
+3. Attendi qualche secondo e apri il nuovo URL.
+
+</Steps>
+
+I segnalibri e i link al vecchio indirizzo smettono di funzionare. Una porta modificata mostra l'avviso *The server port has been changed from the default port 80.* A partire da UAVcast-Pro 6.5.3 la porta viene mantenuta quando aggiorni; le versioni precedenti la reimpostano a 80.
+
+## Registrazione Log {/* #logging */}
+
+UAVcast-Pro registra separatamente i log di ogni servizio. Scaricali quando qualcosa va storto e inviali all'assistenza.
+
+<Steps>
+
+1. Attiva la **Modalità Debug** per avere più dettagli. Riproduci il problema.
+2. In **Seleziona log da scaricare**, lascia **Tutti i Log** oppure scegline uno.
+3. In **Seleziona intervallo di tempo**, scegli un intervallo che copra il problema (da **Ultimi 10 minuti** a **Tutto il Tempo**).
+4. Seleziona **Scarica**. Otterrai un file zip.
+5. Invia il file via email a support@uavmatrix.com con una breve descrizione di quanto è successo. Disattiva di nuovo la **Modalità Debug** al termine.
+
+</Steps>
+
+Il download include uno snapshot `diagnostics.txt` (impostazioni, porte seriali, eventi di alimentazione e USB) che accelera l'assistenza.
+
+| Log | Copre |
+|---|---|
+| **Mavlink Manager**, **Mavlink Publisher** | Collegamento con il controllore di volo, instradamento verso le stazioni di controllo a terra |
+| **Camera Server**, **Camera Detector** | Pipeline video, rilevamento delle telecamere |
+| **Modem Manager**, **Modem Detector** | Connessione del modem, tentativi di APN |
+| **VPN Manager** | ZeroTier e Tailscale |
+| **NTRIP Client** | Correzioni RTK |
+| **DNS Manager** | Aggiornamenti del DNS dinamico |
+| **License Manager** | Attivazione e controllo della licenza ogni 4 ore |
+| **Application Updater**, **Application Installer** | Aggiornamenti e installazioni |
+| **Backend API Server** | L'API interna |
+
+**Elimina Tutti i Log** cancella tutti i file di log. Non può essere annullato; eseguilo prima di riprodurre un problema se vuoi un log pulito. Sul drone, i log si trovano in `/opt/uavcast-pro/logs`.
+
+Ogni pagina ha inoltre una console **Registro Azioni** che mostra il log in tempo reale del servizio di quella pagina.
+
+## Database {/* #database */}
+
+Tutte le impostazioni (stazioni di controllo a terra, controllore di volo, telecamera, modem, VPN, NTRIP, utenti, dashboard, iniettori, dati di licenza) risiedono in un unico database SQLite, `/opt/uavcast-pro/uavcast.db`.
+
+| Azione | Cosa fa |
+|---|---|
+| **Backup Database** | Scarica il database come `uavcast_backup.db`. |
+| **Ripristina Database** | Carica un backup `.db` e sostituisce le impostazioni attuali, utenti inclusi. |
+| **Reset Database** | Ripristina ai valori predefiniti le impostazioni di stazioni di controllo a terra, controllore di volo, telecamera, VPN e DNS dinamico. Utenti, licenza, modem, NTRIP, impostazioni di registrazione, dashboard, iniettori e l'abbinamento con Fleet Manager vengono mantenuti. Non può essere annullato. |
+
+Usa i backup per conservare una configurazione funzionante prima di apportare modifiche, oppure per configurare allo stesso modo un secondo drone. Riavvia dopo un ripristino, così ogni servizio parte con le impostazioni ripristinate.
+
+:::note Ripristino su hardware diverso
+I dati di licenza nel database sono legati al dispositivo da cui provengono. Dopo aver ripristinato un backup su un altro Pi o su un'altra scheda SD, attiva la licenza sul nuovo dispositivo. Il ripristino importa anche utenti e password dal backup.
+:::

@@ -1,0 +1,66 @@
+---
+title: "UAVcast-Pro 支援的硬體與作業系統"
+sidebar_label: 支援的硬體
+description: "可搭配 UAVcast-Pro v6 運作的開發板、作業系統、飛行控制器、攝影機、LTE 數據機與 RTK 接收器：Raspberry Pi、Jetson 及其他 arm64 開發板，以及 x86 電腦。"
+sidebar_position: 4
+---
+
+# 支援的硬體 {/* #supported-hardware */}
+
+UAVcast-Pro v6 可在任何 64 位元 Linux 電腦上執行，只要該電腦執行 Raspberry Pi OS、Debian 或 Ubuntu，並採用 **arm64** 或 **amd64** 架構（非 Raspberry Pi 的 arm64 開發板須使用 UAVcast-Pro 6.5.3 或更新版本）。下表列出已偵測與已測試的項目。有關電源供應、接線與採購建議，請參閱 [硬體需求](../get-started/hardware-requirements.mdx)。
+
+## 伴隨電腦 {/* #companion-computers */}
+
+| 開發板 | 架構 | TELEM 序列連接埠 | 備註 |
+|---|---|---|---|
+| Raspberry Pi 5 | arm64 | GPIO UART（`uart0`） | 視訊效能最佳。持續編碼時需要主動散熱。 |
+| Raspberry Pi 4 | arm64 | GPIO UART | 建議的全面性選擇。 |
+| Raspberry Pi 3 | arm64 | GPIO UART | 適合遙測，以及中等設定下的單一攝影機。 |
+| Raspberry Pi Zero 2 W | arm64 | GPIO UART | 可以運作，但安裝較慢，視訊能力有限。適用單一攝影機與低解析度。 |
+| Raspberry Pi Compute Module | arm64 | 依載板而定 | 安裝程式支援已於 v6.3.1 修正。 |
+| NVIDIA Jetson（Nano、Orin Nano、Xavier NX、AGX、TX2） | arm64 | 40 腳位接頭上的 `ttyTHS*` | USB 攝影機。Jetson 的 CSI 攝影機不受攝影機伺服器支援，需要手動撰寫 **自訂管道**。 |
+| Orange Pi（Zero、Zero 2、3、4、5、Plus） | arm64 | `ttyS*`，依機型而定 | USB 攝影機。可能需要在裝置樹中啟用 UART。 |
+| Banana Pi 及其他 arm64 開發板 | arm64 | 依機型而定 | USB 攝影機。 |
+| x86 迷你電腦、Intel NUC、筆電 | amd64 | USB 序列轉接器 | USB 攝影機。 |
+
+:::note 非 Raspberry Pi 的 arm64 開發板
+Jetson、Orange Pi、Banana Pi 及其他非 Raspberry Pi 的 arm64 開發板，需要 UAVcast-Pro 6.5.3 或更新版本。舊版安裝程式會在這些開發板上停止，並顯示 *Device is not a Raspberry Pi*。
+:::
+
+**僅限 Raspberry Pi：** CSI 攝影機（rpicam／libcamera）需要 Raspberry Pi。在 Pi 上，安裝程式會啟用 UART、移除序列主控台；若為 Pi 3／4／Zero 2 W，還會停用藍牙，以釋出完整的 UART。
+
+## 作業系統 {/* #operating-systems */}
+
+| 作業系統 | 狀態 |
+|---|---|
+| Raspberry Pi OS（64 位元） | Raspberry Pi 建議使用。CSI 攝影機必須使用此系統。 |
+| Debian（64 位元） | 支援。 |
+| Ubuntu（64 位元），包括適用於 Raspberry Pi 的 Ubuntu | 支援。Pi 上的 CSI 攝影機無法在 Ubuntu 上運作，因為 Raspberry Pi 攝影機堆疊未封裝；USB 攝影機則可以。 |
+| 任何 32 位元作業系統 | **不支援。** 安裝程式會以 *No installation candidate* 停止。 |
+
+## 飛行控制器 {/* #flight-controllers */}
+
+UAVcast-Pro v6 可搭配任何透過 USB 或 TELEM 連接埠連線的 MAVLink 飛行控制器：ArduPilot（Copter、Plane、Rover、VTOL 及其他飛行器類型）與 PX4，適用於 Pixhawk 與 Cube 系列開發板、Matek、Holybro、CUAV 等。飛行地圖與 Fleet Manager 中的飛行模式名稱與模式按鈕遵循 ArduPilot；使用 PX4 時，請在地面站中切換模式。
+
+## 攝影機 {/* #cameras */}
+
+| 類型 | 範例 | 備註 |
+|---|---|---|
+| Raspberry Pi CSI | Camera Module 2 與 3、HQ Camera，以及其他 libcamera 感測器（imx219、imx708 …） | Raspberry Pi OS 或 Debian。在具備兩個連接器的開發板上（Pi 5、Compute Module）可接兩台 CSI 攝影機。 |
+| USB（UVC） | Logitech C920、C615 及大多數 UVC 網路攝影機 | 任何作業系統。 |
+| 其他來源 | IP 攝影機、HDMI 擷取 | 透過 **自訂管道**。 |
+
+最多可同時切換或串流兩台攝影機。音訊可來自 USB 麥克風或攝影機內建的麥克風。
+
+## LTE／4G 數據機 {/* #lte--4g-modems */}
+
+| 類型 | 運作方式 | 範例 |
+|---|---|---|
+| **HiLink** | 數據機本身是一台小型路由器，以網路介面卡的形式出現（驅動程式為 `cdc_ether`、`huawei_cdc_ncm`、`rndis_host`） | Huawei E3372h、E8372h |
+| **傳統型（PPP）** | 由 ModemManager 管理；UAVcast-Pro 負責連線、選擇 APN 並重新連線 | USB 載板上的 Huawei E3372s、Quectel 與 Sierra Wireless 模組 |
+
+傳統型數據機必須受 ModemManager 支援：請參閱 [ModemManager 支援裝置清單](https://www.freedesktop.org/wiki/Software/ModemManager/SupportedDevices/)。請選擇頻段與您的電信業者相符的機型。
+
+## RTK GPS 接收器 {/* #rtk-gps-receivers */}
+
+NTRIP 校正需要飛行控制器上具備 RTK（載波相位）功能的接收器，例如以 u-blox ZED-F9P 為基礎的模組、CubePilot Here3+ 或 Septentrio Mosaic。M8N、M9N 或 M10 等標準導航模組無法使用 RTK 校正。

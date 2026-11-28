@@ -1,0 +1,104 @@
+---
+title: "Envía la telemetría y el video del dron a tu estación de control en tierra"
+description: "Añade destinos de estación de control en tierra en UAVcast-Pro para transmitir la telemetría MAVLink (UDP 14550) y el video H.264 (UDP 5600) a Mission Planner, QGroundControl o varias PC."
+sidebar_position: 1
+sidebar_label: "Destinos"
+---
+
+# Estaciones de control en tierra {/* #ground-control-stations */}
+
+Un destino indica a UAVcast-Pro adónde enviar la telemetría y el video. Cada uno es una dirección IP más un puerto de telemetría y un puerto de video. UAVcast-Pro envía a todos los destinos habilitados al mismo tiempo por UDP, así que Mission Planner en una computadora portátil y QGroundControl en una tableta pueden recibir el dron a la vez. Abre **Control en Tierra** en la barra lateral.
+
+<Screenshot id="uavcast-pro/ground-control" alt="Página de Control en Tierra con dos tarjetas de destino y el botón Añadir Destino" caption="Dos tarjetas de destino: una deshabilitada y vacía, y otra habilitada con telemetría y video activados." />
+
+## Añadir un destino {/* #add-a-destination */}
+
+<Steps>
+
+1. Selecciona **Añadir Destino**. Aparece una tarjeta nueva. (Una instalación nueva ya trae una tarjeta vacía).
+2. Escribe un **Nombre**, por ejemplo `Computadora del piloto`.
+3. Escribe la dirección IPv4 de la computadora de la estación de control en tierra en **IP o Host de Destino** y presiona Enter. Una marca verde indica que se guardó.
+4. Revisa **Puerto de Telemetría** (predeterminado `14550`) y **Puerto de Video** (predeterminado `5600`). Usa los puertos en los que escucha tu estación de control en tierra.
+5. Activa **Habilitar Telemetría** y, si quieres video, **Habilitar Video**.
+
+</Steps>
+
+Cada campo se guarda al presionar Enter o al salir de él. No hay botón de guardar. El enrutamiento de telemetría toma el cambio en unos segundos.
+
+:::warning Usa una dirección IPv4, no un nombre de host
+A pesar de la etiqueta **IP o Host de Destino**, UAVcast-Pro solo acepta una dirección IPv4 como `192.168.1.20` o una dirección VPN como `10.147.17.5`. Los nombres de host se rechazan con el mensaje *Escribe una dirección IPv4 válida, por ejemplo 192.168.1.10.*
+:::
+
+## Qué dirección IP usar {/* #which-ip-address-to-use */}
+
+| Dónde está la estación de control en tierra | Usa |
+|---|---|
+| Misma red Wi-Fi o Ethernet que el dron | La dirección LAN de la estación de control en tierra, por ejemplo `192.168.1.20`. |
+| En cualquier lugar, por 4G/LTE | La dirección **VPN** de la estación de control en tierra (ZeroTier, Tailscale o Fleet Manager). Consulta [VPN](../connectivity/vpn.mdx). |
+| Varias computadoras | Un destino por computadora. |
+
+## Ajustes del destino {/* #destination-settings */}
+
+| Ajuste | Predeterminado | Valores | Notas |
+|---|---|---|---|
+| **Habilitar Endpoint** | Activado | Activado, desactivado | Interruptor principal. Desactivado detiene la telemetría, el video y el audio hacia este destino, pero conserva sus ajustes. |
+| **Nombre** | vacío | hasta 49 caracteres | Se muestra en la tarjeta y en el tablero. |
+| **IP o Host de Destino** | vacío | dirección IPv4 | Obligatorio antes de activar la telemetría o el video. |
+| **Puerto de Telemetría** | `14550` | 1–65535 | Puerto UDP en el que la estación de control en tierra escucha MAVLink. |
+| **Puerto de Video** | `5600` | 1–65535 | Puerto UDP para el video RTP H.264 (cámara 1). |
+| **Puerto de Video (Cámara 2)** | vacío = Puerto de Video + 1 | 1–65535 | Solo se muestra cuando el [doble stream](../camera/multi-camera.mdx) está activado. |
+| **Habilitar Video** | Desactivado | Activado, desactivado | Envía el stream de la cámara a este destino. |
+| **Habilitar Telemetría** | Desactivado | Activado, desactivado | Envía MAVLink a este destino y acepta comandos desde él. |
+| **Read Only** | Desactivado | Activado, desactivado | Requiere **Habilitar Telemetría**. La estación de control en tierra recibe la telemetría, pero no puede cambiar nada en el vehículo: los comandos, el armado, los cambios de modo, la escritura de parámetros y de misiones, el RC override y el control manual desde ella quedan bloqueados. Esto se aplica a partir de UAVcast-Pro 6.5.3; en versiones anteriores, Read Only no bloquea la escritura de parámetros. |
+
+El audio, cuando activas **Enviar audio a estaciones de control en tierra** en la página Cámara, va a cada destino que recibe video, en **Puerto de Video + 2** (por ejemplo `5602`). Consulta [Audio](../camera/audio.mdx).
+
+Así, cada destino ocupa tres puertos del lado del video: **Puerto de Video**, + 1 (cámara 2) y + 2 (audio). Si dos destinos apuntan a la misma computadora, separa sus puertos de video por 3, por ejemplo `5600` y `5603`. Consulta [Dos estaciones en una computadora](../../guides/multiple-ground-stations.mdx#3-two-stations-on-one-computer).
+
+## Configurar el lado receptor {/* #set-up-the-receiving-side */}
+
+Elige el programa que usas en tierra. Cada página tiene la configuración exacta, el paso del firewall y las soluciones a los errores comunes.
+
+| Estación de control en tierra | Telemetría | Video | Página |
+|---|---|---|---|
+| Mission Planner (Windows) | UDP 14550 | Fuente GStreamer en 5600 | [Mission Planner](./mission-planner.mdx) |
+| QGroundControl (Windows, macOS, Linux) | UDP 14550, se conecta sola | UDP h.264 en 5600 | [QGroundControl](./qgroundcontrol.mdx) |
+| Tableta o teléfono Android | QGroundControl, UDP 14550 | UDP h.264 en 5600 | [Android y tabletas](./android.mdx) |
+| GStreamer en Windows | – | `gst-launch-1.0` en 5600 | [GStreamer en Windows](./gstreamer-windows.mdx) |
+| GStreamer en Linux | – | `gst-launch-1.0` en 5600 | [GStreamer en Linux](./gstreamer-linux.mdx) |
+| GStreamer en macOS | – | `gst-launch-1.0` en 5600 | [GStreamer en macOS](./gstreamer-macos.mdx) |
+| VLC, o extraer RTSP del dron | – | Archivo SDP, o RTSP en 8554 | [VLC y RTSP](./vlc-and-rtsp.mdx) |
+
+### Lo que envía el dron {/* #what-the-drone-sends */}
+
+| Flujo | Formato | Puerto en la estación de control en tierra |
+|---|---|---|
+| Telemetría | MAVLink sobre UDP | **Puerto de Telemetría** (predeterminado `14550`) |
+| Video de la cámara 1 | H.264 en RTP, tipo de payload 96, sobre UDP | **Puerto de Video** (predeterminado `5600`) |
+| Video de la cámara 2 (doble stream) | H.264 en RTP, tipo de payload 96, sobre UDP | **Puerto de Video (Cámara 2)** (predeterminado Puerto de Video + 1, `5601`) |
+| Audio (opcional) | Opus en RTP, tipo de payload 97, 48 kHz, sobre UDP | Puerto de Video + 2 (`5602`) |
+
+El dron envía cada flujo al destino. Nada necesita conectarse con el dron, pero el firewall de la estación de control en tierra debe permitir la entrada de los paquetes UDP.
+
+## Varias estaciones de control en tierra {/* #several-ground-stations */}
+
+Añade un destino por computadora. Si dos estaciones de control en tierra se ejecutan en la **misma** computadora (por ejemplo, QGroundControl y una herramienta de registro), dales puertos de telemetría distintos, como `14550` y `14551`, y configura cada aplicación con su puerto.
+
+Usa **Read Only** para observadores, operadores de carga útil o una segunda pantalla: ven todo, pero no pueden comandar el vehículo.
+
+## Destinos desde Fleet Manager {/* #destinations-from-fleet-manager */}
+
+Cuando el dron está emparejado con Fleet Manager y creas allí una vinculación de stream, Fleet Manager añade el destino por ti. Estas tarjetas muestran un icono de nube (*Managed by Fleet Manager*). Cámbialas en Fleet Manager en lugar de aquí. Consulta [Emparejar con Fleet Manager](../fleet-pairing.mdx).
+
+## Verifica que los datos fluyan {/* #check-that-data-is-flowing */}
+
+- El [Tablero](../dashboard.mdx), en la fila **Estación de control en tierra**, muestra *Sending · 16 packets/s* o *Sending to 2 · … packets/s*.
+- **Controlador de Vuelo → Conexión → Verificación de conexión** enumera cada destino con su tasa de paquetes.
+- *1 set up · waiting for flight controller* significa que el destino está bien, pero aún no llega telemetría del controlador de vuelo.
+
+Los usuarios de solo lectura ven esta página, pero no pueden cambiarla.
+
+## Resolución de problemas {/* #troubleshooting */}
+
+- [Sin telemetría en la estación de control en tierra](../../troubleshooting/no-telemetry-in-gcs.mdx)
+- [Sin video en QGroundControl o Mission Planner](../../troubleshooting/no-video-in-gcs.mdx)

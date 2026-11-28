@@ -1,0 +1,60 @@
+---
+title: "Documentación de UAVcast-Pro: cada página de la interfaz web"
+description: "Referencia de la interfaz web de UAVcast-Pro: tablero, controlador de vuelo, mapa de vuelo, estaciones de control en tierra, cámara, módem, VPN, vinculación con Fleet Manager, usuarios y ajustes."
+sidebar_position: 1
+sidebar_label: "Descripción general"
+---
+
+# UAVcast-Pro {/* #uavcast-pro */}
+
+Esta sección explica cada página de la interfaz web de UAVcast-Pro, en el orden de la barra lateral de la aplicación. Cada página indica para qué sirve la pantalla, cómo configurarla y enumera cada ajuste con su valor por defecto. ¿Nuevo en UAVcast-Pro? Empieza con la [Guía de inicio rápido](../get-started/quick-start.mdx).
+
+## Operaciones {/* #operations */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/dashboard/" title="Tablero" description="Estado del controlador de vuelo, GPS, enlaces, video y energía de un vistazo." />
+  <Card href="/uavcast-pro/data-streams/" title="Flujos de Datos" description="Tableros en vivo personalizados para cualquier valor de MAVLink o de sensor." />
+  <Card href="/uavcast-pro/flight-controller/" title="Controlador de Vuelo" description="Enlace USB o UART con detección automática de puerto y tasa de baudios, NTRIP/RTK e inyectores." />
+  <Card href="/uavcast-pro/flight-map/" title="Mapa de Vuelo" description="Mapa en vivo, HUD de cabina, armar/desarmar, modos, misiones, radio, inspector y análisis de registros." />
+  <Card href="/uavcast-pro/ground-stations/" title="Estaciones de control en tierra y video" description="Destinos, más configuración paso a paso de Mission Planner, QGroundControl, GStreamer, Android y VLC." />
+</CardGrid>
+
+## Conectividad {/* #connectivity */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/connectivity/cellular-modem/" title="Módem" description="Módems HiLink y tradicionales 4G/LTE con APN automático." />
+  <Card href="/uavcast-pro/connectivity/vpn/" title="Red Privada Virtual" description="La VPN de Fleet Manager, o tu propia red de Tailscale o ZeroTier." />
+  <Card href="/uavcast-pro/connectivity/dynamic-dns/" title="DNS Dinámico" description="Mantén un nombre de host apuntando a la IP pública del dron." />
+  <Card href="/uavcast-pro/connectivity/networks/" title="Redes" description="Interfaces y prioridad Wi-Fi frente a módem." />
+</CardGrid>
+
+## Medios {/* #media */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/camera/" title="Ajustes de cámara" description="Cámaras CSI y USB, resolución, tasa de bits y H.264 de baja latencia sobre UDP." />
+  <Card href="/uavcast-pro/camera/multi-camera/" title="Dos cámaras" description="Cambio por canal de radiocontrol o doble stream." />
+  <Card href="/uavcast-pro/camera/audio/" title="Audio" description="Audio del micrófono en la vista previa y hacia las estaciones de control en tierra." />
+  <Card href="/uavcast-pro/camera/recordings/" title="Grabaciones" description="Grabación de video y telemetría en el dron, con revisión de vuelo." />
+</CardGrid>
+
+## Gestión {/* #management */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/fleet-pairing/" title="Fleet Management" description="Vincula el dron con UAVmatrix Fleet Manager." />
+  <Card href="/uavcast-pro/users/" title="Usuarios" description="Inicio de sesión de administrador y usuarios de solo lectura." />
+  <Card href="/uavcast-pro/application-settings/" title="Aplicación" description="Puerto, idioma, registros para soporte, respaldo y restauración de la base de datos." />
+</CardGrid>
+
+## Puertos de un vistazo {/* #ports-at-a-glance */}
+
+| Puerto | Dirección | Uso |
+|---|---|---|
+| TCP 80 | Navegador → dron | Interfaz web (configurable) e inyectores HTTP |
+| UDP 14550 | Dron → estación de control | Telemetría MAVLink (por destino, configurable) |
+| UDP 5600 | Dron → estación de control | Video, cámara 1 (por destino, configurable) |
+| UDP 5601 | Dron → estación de control | Video, cámara 2 con doble stream (Puerto de Video + 1 por defecto) |
+| UDP 5602 | Dron → estación de control | Audio (Puerto de Video + 2) |
+| TCP 8889, UDP 8189 | Navegador → dron | Vista previa en vivo (señalización y medios WebRTC) |
+| TCP 8883 | Dron → Fleet Manager | Conexión con Fleet Manager (MQTT sobre TLS) |
+| TCP 2101 | Dron → caster NTRIP | Correcciones RTK (puerto del caster) |
+| UDP 14600 | Sensor → dron | Inyector UDP (por defecto, configurable) |

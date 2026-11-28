@@ -1,0 +1,45 @@
+---
+title: 遠端開啟無人機的 UAVcast-Pro 網頁介面
+sidebar_label: 遠端開啟 UAVcast-Pro
+description: 透過 Fleet Manager 從任何地方存取無人機的 UAVcast-Pro 設定，可使用內建代理而不需 VPN，也可直接透過組織的 VPN 連線。
+sidebar_position: 4
+---
+
+# 遠端開啟 UAVcast-Pro {/* #open-uavcast-pro-remotely */}
+
+您可以在不與無人機位於同一網路的情況下，變更其 UAVcast-Pro 設定（攝影機、數據機、地面站等）。在 [UAV page](./uav-details.mdx) 上，**UAVcast Application** 卡片有兩個按鈕：
+
+| 按鈕 | 連線方式 | 用途 |
+|---|---|---|
+| **Open via Proxy** | 透過 Fleet Manager 與無人機之間的加密連線。適用於任何在線上的無人機，不需要 VPN。 | 設定變更與基本管理。 |
+| **Open via VPN** | 直接開啟 `http://<drone VPN address>`。只有在無人機位於組織的 VPN 上時才會顯示，且您的電腦也必須位於該 VPN 上。 | 所有功能，包括即時飛行地圖與遙測。 |
+
+代理供 Owner 與 Admin 使用。Fleet Manager 會拒絕 Viewer 使用，並顯示 **Access denied. Only administrators can access UAVcast remotely.**
+
+## 透過代理開啟 {/* #open-via-proxy */}
+
+<Steps>
+
+1. 在 UAV page 上，選擇 **Open via Proxy**。
+2. 閱讀 **Remote UAVcast Access via Proxy** 對話框，然後選擇 **Continue**。
+3. UAVcast-Pro 會在新分頁中開啟其**應用程式**頁面。請使用該無人機的 UAVcast-Pro 使用者登入：代理不會傳遞您的 Fleet Manager 登入資訊。（尚未建立 UAVcast-Pro 使用者的無人機會直接開啟，不需登入。）
+
+</Steps>
+
+<Screenshot id="fleet-manager/drone-detail--proxy-warning" alt="透過代理遠端存取 UAVcast 的對話框，列出無法使用的功能" caption="透過代理遠端存取 UAVcast 的對話框，列出無法使用的 WebSocket 功能：即時遙測、MAVLink 連線狀態與飛行地圖。" />
+
+代理只負責一般的頁面請求，不支援即時連線。**WebSocket features unavailable** 表示以下功能無法透過代理使用：
+
+- 即時遙測與即時更新
+- MAVLink 連線狀態
+- 飛行地圖
+
+每個請求有 30 秒可以完成。在慢速連線上，較大的頁面可能會逾時，並顯示 **Request timed out. UAVcast may be unreachable.**。若無人機離線，您會看到 **Drone is offline. UAVcast interface is not available.**
+
+:::warning 透過代理時請小心網路設定
+代理會經由無人機自身的網際網路連線運作。若您變更數據機、網路優先順序或 VPN 設定，導致無人機失去網際網路，代理也會一併中斷，屆時您需要本地存取才能修復。
+:::
+
+## 透過 VPN 開啟 {/* #open-via-vpn */}
+
+以與地面站相同的方式，將您的電腦加入組織的 VPN（請參閱[連接地面站](../connect-gcs.mdx)）。之後，**Open via VPN** 會直接開啟無人機的介面，並提供所有即時功能。若您要做的不只是變更設定，這是較好的選擇。

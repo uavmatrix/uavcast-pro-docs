@@ -1,0 +1,74 @@
+{
+  "version.label": {
+    "message": "Следующая",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Get started": {
+    "message": "Начало работы",
+    "description": "The label for category 'Get started' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.UAVcast-Pro": {
+    "message": "UAVcast-Pro",
+    "description": "The label for category 'UAVcast-Pro' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Flight Controller": {
+    "message": "Полётный контроллер",
+    "description": "The label for category 'Flight Controller' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Flight Map": {
+    "message": "Карта Полёта",
+    "description": "The label for category 'Flight Map' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Ground stations & video": {
+    "message": "Наземные станции и видео",
+    "description": "The label for category 'Ground stations & video' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity": {
+    "message": "Связь",
+    "description": "The label for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity.link.generated-index.title": {
+    "message": "Связь: модем, VPN, DNS и сети",
+    "description": "The generated-index page title for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity.link.generated-index.description": {
+    "message": "Подключите UAVcast-Pro к интернету через 4G/LTE, получите доступ к нему через VPN, опубликуйте его с помощью динамического DNS и выберите сеть, по которой пойдёт трафик.",
+    "description": "The generated-index page description for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Camera & video": {
+    "message": "Камера и видео",
+    "description": "The label for category 'Camera & video' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fleet Manager": {
+    "message": "Fleet Manager",
+    "description": "The label for category 'Fleet Manager' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Team & roles": {
+    "message": "Команда и роли",
+    "description": "The label for category 'Team & roles' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fleet & UAVs": {
+    "message": "Парк и дроны",
+    "description": "The label for category 'Fleet & UAVs' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Live map": {
+    "message": "Карта в реальном времени",
+    "description": "The label for category 'Live map' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Network & VPN": {
+    "message": "Сеть и VPN",
+    "description": "The label for category 'Network & VPN' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Руководства",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Troubleshooting & FAQ": {
+    "message": "Устранение неполадок и FAQ",
+    "description": "The label for category 'Troubleshooting & FAQ' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Reference": {
+    "message": "Справочник",
+    "description": "The label for category 'Reference' in sidebar 'docs'"
+  }
+}

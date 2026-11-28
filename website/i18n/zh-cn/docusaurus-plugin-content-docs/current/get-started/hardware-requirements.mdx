@@ -1,0 +1,100 @@
+---
+title: "UAVcast-Pro 硬件要求（树莓派、飞控、摄像头、调制解调器）"
+description: "哪些树莓派或 Linux 电脑、飞控、摄像头和 4G/LTE 调制解调器可与 UAVcast-Pro 配合使用，以及接线、供电和存储要求。"
+sidebar_position: 3
+sidebar_label: "硬件要求"
+---
+
+# 硬件要求 {/* #hardware-requirements */}
+
+UAVcast-Pro 运行在 64 位 Linux 伴随计算机上，并连接任意 MAVLink 飞控（ArduPilot 或 PX4）。如需视频，可添加摄像头；如需在 Wi-Fi 覆盖范围之外飞行，可添加 4G/LTE 调制解调器。最常见的组合是搭配树莓派摄像头和 USB 调制解调器的树莓派 4 或 5。
+
+## 伴随计算机 {/* #companion-computer */}
+
+UAVcast-Pro 可安装在任何运行 Raspberry Pi OS、Debian 或 Ubuntu、采用 **arm64** 或 **amd64（x86-64）** CPU 的 **64 位** Linux 主板或 PC 上。不支持 32 位系统（`armv7l`、`i686`）。
+
+| 主板 | 状态 | 说明 |
+|---|---|---|
+| Raspberry Pi 5 | 支持 | 没有硬件 H.264 编码器。视频由软件编码，因此在使用高分辨率或两路视频流时，请留意摄像头页面上的 **系统负载** 指示器。 |
+| Raspberry Pi 4 | 支持，推荐 | 在 CPU 性能、功耗和价格之间取得了良好平衡。需要 2 GB 或更多内存。 |
+| Raspberry Pi 3 / 3B+ | 支持 | 适用于遥测和一路 720p 视频流。安装约需 30 分钟。 |
+| Raspberry Pi Zero 2 W | 支持 | 体积最小、重量最轻。安装约需 30 分钟；视频请保持适中的分辨率和码率。 |
+| Raspberry Pi Compute Module 3+/4 | 支持 | 与对应的 Pi 型号相同。 |
+| NVIDIA Jetson、Orange Pi、Banana Pi 及其他 arm64 主板 | 支持 | 请使用厂商提供的 64 位 Ubuntu 或 Debian 镜像。UAVcast-Pro 可识别这些主板，并为飞控推荐其串口。请使用 USB 摄像头（树莓派 CSI 摄像头仅适用于树莓派）。 |
+| x86-64 PC（Intel NUC、迷你 PC、笔记本电脑） | 支持 | 使用 amd64 版本。USB 串口适配器显示为 `/dev/ttyUSB*` 或 `/dev/ttyACM*`。 |
+
+在主板上运行 `uname -m` 可检查架构，结果应为 `aarch64` 或 `x86_64`。
+
+:::note 非树莓派 arm64 主板
+Jetson、Orange Pi、Banana Pi 及其他非树莓派的 arm64 主板需要 UAVcast-Pro 6.5.3 或更高版本。较旧的安装程序会因提示 *Device is not a Raspberry Pi* 而停止。
+:::
+
+### 存储 {/* #storage */}
+
+- **根磁盘至少需要 500 MB 可用空间**，否则安装程序将停止。实际使用中，最小建议容量为 8 GB 的 microSD 卡；如果需要在无人机上录制视频，建议使用 32 GB 或更大的卡。
+- 请使用性能良好的 A1/A2 级 microSD 卡，或从 SSD 启动。录像也可以保存到 USB 闪存盘或 SSD（参见 [录制](../uavcast-pro/camera/recordings.mdx)）。
+
+:::note 许可证与存储设备绑定
+UAVcast-Pro 通过 CPU 序列号加上启动盘（SD 卡或 SSD）的序列号来识别设备。更换为新的 SD 卡即视为新设备，请先注销旧设备。参见[将许可证迁移到新硬件](./license-activation.mdx#move-to-new-hardware)。
+:::
+
+### 电源 {/* #power */}
+
+树莓派需要稳定的 **5.1 V** 供电，且供电能力须足以支持树莓派及其所有 USB 接口上的设备。4G 调制解调器在发射时可能消耗超过 500 mA 的电流，USB 摄像头还会增加更多负载。
+
+- 请使用专为整个负载选配的 5 V BEC 或稳压器为树莓派单独供电。飞控的 TELEM 或 USB 接口无法为树莓派供电。
+- 如果调制解调器导致树莓派欠压，请使用带独立电源的 USB 集线器，或使用单独的 5 V 电源供电。
+- 在[仪表盘](../uavcast-pro/dashboard.mdx)中检查 **电源** 一行。*电压过低 - 请使用功率更大的电源* 表示树莓派当前欠压。*已降速（过热或供电不足）* 表示 CPU 正在降频。
+
+## 飞行控制器 {/* #flight-controller */}
+
+UAVcast-Pro 支持**任何 MAVLink 飞控**：包括 ArduPilot（Copter、Plane、Rover、Sub）和 PX4，适用于 Pixhawk 和 Cube 系列、Matek、Holybro、CUAV、mRo 以及大多数其他主板。推荐使用 MAVLink 2。
+
+飞行模式名称及模式按钮（位于飞行地图和 Fleet Manager 中）采用 ArduPilot 对 Copter、Plane、Rover 和 Sub 的模式。使用 PX4 飞控时，遥测、视频、转发至地面站、地图和 HUD 的工作方式相同；请使用地面站更改 PX4 飞行模式。
+
+连接方式有以下两种：
+
+| 连接方式 | 接线 | 适用场景 |
+|---|---|---|
+| **USB** | 使用 USB 线将飞控的 USB 接口连接到伴随计算机。 | 最简单，无需设置波特率。请使用短而质量好的数据线。 |
+| **UART / Serial** | TELEM 接口的 TX 接计算机 RX，RX 接计算机 TX，GND 接 GND。或使用 USB 串口（FTDI）线。 | 当 USB 接口被其他用途占用，或希望安装更整洁时使用。需在该端口上启用 MAVLink：ArduPilot 上设置 `SERIALx_PROTOCOL = 2`（MAVLink2），PX4 上设置 `MAV_x_CONFIG`。 |
+
+**仅适用于树莓派：** GPIO UART 为 `/dev/serial0`（GPIO 14 TX，GPIO 15 RX）。安装程序会为飞控释放该串口：禁用串口登录控制台，并且在树莓派 3、4 和 Zero 2 W 上，将蓝牙从 UART 上移开。当两者各自拥有独立供电时，切勿将飞控的 5 V 引脚连接到树莓派。
+
+在其他主板上，请使用该主板自带的 UART（例如 Jetson 上的 `ttyTHS*`，Orange Pi 上的 `ttyS*`），或使用 USB 串口适配器。
+
+| 飞控 TELEM 接口 | 树莓派 GPIO 接口 |
+|---|---|
+| TX | GPIO 15（RXD），第 10 脚 |
+| RX | GPIO 14（TXD），第 8 脚 |
+| GND | GND，例如第 6 脚 |
+
+TX 始终接 RX。请勿连接 TELEM 接口的 5 V 引脚。
+
+UAVcast-Pro 会自动查找端口和波特率。参见[连接飞行控制器](../uavcast-pro/flight-controller/index.mdx)。
+
+## 摄像头 {/* #cameras */}
+
+| 摄像头 | 说明 |
+|---|---|
+| 树莓派摄像头模块（v1、v2、v3、HQ、Global Shutter）及其他 libcamera CSI 摄像头 | 延迟最低。Raspberry Pi 5 和 Compute Module 可同时运行两个 CSI 摄像头。 |
+| USB（UVC）网络摄像头，例如 Logitech C920 或 C615 | 即插即用。以 `/dev/video*` 形式识别。 |
+| HDMI 信号源（GoPro、相机云台） | 通过 HDMI 转 CSI 桥接器（显示为 CSI 摄像头），或通过 USB HDMI 采集棒（显示为 USB 摄像头）。 |
+| IP 摄像头及 GStreamer 可读取的其他任何设备 | 通过[自定义管道](../uavcast-pro/camera/custom-pipeline.mdx)。 |
+
+两个摄像头可以同时运行，既可以通过 RC 通道切换，也可以一起推流。参见[双摄像头与 RC 切换](../uavcast-pro/camera/multi-camera.mdx)。音频方面，任何 USB 麦克风或内置麦克风的网络摄像头均可使用。参见[音频](../uavcast-pro/camera/audio.mdx)。
+
+## 4G/LTE 调制解调器 {/* #4glte-modems */}
+
+UAVcast-Pro 支持两种 USB 调制解调器：
+
+| 类型 | 工作方式 | 示例 |
+|---|---|---|
+| **HiLink** | 调制解调器本身是一个小型路由器。它显示为一块网卡（通常为 `eth1` 或 `usb0`）并自动连接。无需在 UAVcast-Pro 中进行任何配置。 | Huawei E3372**h**（HiLink 固件）、E8372，以及大多数"带网页界面的 LTE USB 网卡" |
+| **传统（PPP）** | 由 ModemManager 和 NetworkManager 管理。UAVcast-Pro 负责连接、查找 APN，并在断线后重新连接。 | Huawei E3372**s**（棒式固件）、Quectel EC25 / EG25 / EM06，以及 USB 转接板中的 Sierra Wireless 模块 |
+
+任何列在 [ModemManager 支持设备列表](https://www.freedesktop.org/wiki/Software/ModemManager/SupportedDevices/)上的调制解调器都可作为传统调制解调器使用。请使用适用于所在地区且带有数据套餐的 SIM 卡，并确认运营商是否阻止入站流量（VPN 可以解决此问题）。参见[蜂窝调制解调器](../uavcast-pro/connectivity/cellular-modem.mdx)。
+
+## 地面站电脑 {/* #ground-station-computer */}
+
+任何运行 Mission Planner、QGroundControl 或其他 MAVLink 地面站软件的电脑均可使用。默认情况下，它通过 UDP 14550 接收遥测数据，通过 UDP 5600 接收视频。若要在 Mission Planner 中查看视频，需要安装 GStreamer；QGroundControl 已内置 GStreamer。

@@ -1,0 +1,44 @@
+---
+title: "Vuela un dron UAVcast-Pro desde una tableta Android con QGroundControl"
+description: "Recibe la telemetría y el video en vivo de UAVcast-Pro en un teléfono o tableta Android con QGroundControl, por Wi-Fi o 4G a través de una VPN, además de la opción de navegador para iPad."
+sidebar_position: 7
+sidebar_label: "Android y tabletas"
+---
+
+# Android y tabletas {/* #android-and-tablets */}
+
+QGroundControl para Android recibe la telemetría de UAVcast-Pro por UDP 14550 y el video por UDP 5600, igual que la versión de escritorio. Por 4G, instala en la tableta la app Tailscale o ZeroTier para que el dron pueda llegar a ella.
+
+## Configurar QGroundControl en Android {/* #set-up-qgroundcontrol-on-android */}
+
+<Steps>
+
+1. Instala **QGroundControl** desde [Google Play](https://play.google.com/store/apps/details?id=org.mavlink.qgroundcontrol).
+2. Conecta la tableta a la red a la que envía el dron:
+   - **Mismo Wi-Fi**: busca la IP de la tableta en **Ajustes → Wi-Fi → (tu red) → Avanzado** o en una opción similar.
+   - **Por 4G**: instala la app [ZeroTier One](https://play.google.com/store/apps/details?id=com.zerotier.one) o [Tailscale](https://play.google.com/store/apps/details?id=com.tailscale.ipn), únete a la misma red que el dron (consulta [VPN](../connectivity/vpn.mdx)) y anota la dirección VPN de la tableta.
+3. En el dron, añade un destino en [Control en Tierra](./index.mdx) con la IP de la tableta, y activa **Habilitar Telemetría** y **Habilitar Video**.
+4. Abre QGroundControl. El vehículo aparece cuando llega la telemetría.
+5. Para el video: icono **Q** → **Application Settings** → **Video** (en versiones anteriores, la sección **Video** de **General**), configura **Source** en **UDP h.264 Video Stream** y verifica que la dirección UDP use el puerto `5600`.
+
+</Steps>
+
+Cuando funciona, la vista **Fly** muestra el dron en el mapa con su modo de vuelo y su batería en la barra de herramientas, y la imagen de la cámara en la pequeña ventana de video de la esquina. Toca la ventana para intercambiar el video y el mapa.
+
+:::tip Mantén conectada la app VPN
+Android puede detener las apps VPN en segundo plano para ahorrar batería. Excluye ZeroTier o Tailscale de la optimización de batería y mantén la VPN activada mientras vuelas.
+:::
+
+Los detalles de la configuración de video, el modo de baja latencia y los problemas comunes están en la [página de QGroundControl](./qgroundcontrol.mdx).
+
+## iPad, iPhone y otros dispositivos: usa el navegador {/* #ipad-iphone-and-other-devices-use-the-browser */}
+
+La interfaz web de UAVcast-Pro funciona en cualquier navegador moderno. En un iPad o un teléfono, abre `http://<drone-ip>` (la dirección VPN por 4G) y usa el [Mapa de Vuelo](../flight-map/index.mdx): mapa en vivo, HUD de cabina, video de la cámara, armado y desarmado, y RTL. El video ahí es la vista previa en vivo (WebRTC), así que el navegador debe poder llegar al puerto 8889 del dron.
+
+## Problemas comunes {/* #common-problems */}
+
+| Síntoma | Solución |
+|---|---|
+| El vehículo nunca aparece por 4G | La app VPN de la tableta está apagada o el destino usa la IP de Wi-Fi. Usa la dirección VPN de la tableta. |
+| Funciona hasta que se apaga la pantalla | Android pausó la app VPN. Desactiva la optimización de batería para ella. |
+| La telemetría funciona, pero no hay video | Revisa **Habilitar Video**, la cámara y la configuración de la fuente de video en QGroundControl. |

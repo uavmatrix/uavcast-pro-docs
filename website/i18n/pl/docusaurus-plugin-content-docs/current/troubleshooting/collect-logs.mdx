@@ -1,0 +1,61 @@
+---
+title: "Zbierz logi UAVcast-Pro dla pomocy technicznej"
+sidebar_label: Zbierz logi dla pomocy technicznej
+description: "Pobierz archiwum logów UAVcast-Pro z plikiem diagnostics.txt z Aplikacji, Logowania lub przez SSH i wyślij je do supportu UAVmatrix z odpowiednimi szczegółami."
+sidebar_position: 16
+---
+
+# Zbierz logi dla pomocy technicznej {/* #collect-logs-for-support */}
+
+Jedno pobranie logów odpowiada na większość pytań, które support zadałby w przeciwnym razie. Każde archiwum zawiera wybrane logi usług oraz migawkę `diagnostics.txt`: wersję, system operacyjny i płytkę, ustawienia, wygenerowaną konfigurację routera telemetrii, urządzenia szeregowe i to, kto je trzyma, a także zdarzenia zasilania i USB z jądra. Hasła, klucze i tokeny nigdy nie są dołączane.
+
+## Pobieranie z interfejsu webowego {/* #download-from-the-web-interface */}
+
+<Steps>
+
+1. Przejdź do **Aplikacja** i przewiń do **Logowanie**.
+2. Na pierwszej liście zostaw **All Logs** albo wybierz usługę pasującą do problemu (zob. tabelę).
+3. Na drugiej liście wybierz zakres czasu obejmujący problem. Domyślnie to **Last 2 hours**.
+4. Naciśnij **Pobierz**. Przeglądarka zapisze plik `.zip`.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/application--logging" alt="Strona Aplikacja, karta Logowanie z listą logów ustawioną na All Logs, zakresem czasu Last 2 hours i przyciskiem Pobierz" caption="Aplikacja → Logowanie z wybranymi All Logs i Last 2 hours." />
+
+| Problem | Wybierz na liście logów |
+|---|---|
+| Połączenie z kontrolerem lotu, brak heartbeat, brak telemetrii | **Mavlink Manager** |
+| Kamera, wideo, podgląd | **Camera Server** |
+| Modem, sieć komórkowa | **Modem Manager** |
+| ZeroTier, Tailscale | **VPN Manager** |
+| RTK, NTRIP | **NTRIP Client** |
+| Licencja | **License Manager** |
+| Dynamiczny DNS | **DNS Manager** |
+| Instalacja | **Application Installer** |
+| Nie wiesz? | **All Logs** |
+
+Tylko administratorzy mogą pobierać logi. **Wyczyść Wszystkie Logi** usuwa każdy plik logu i nie można tego cofnąć, więc najpierw pobierz logi.
+
+## Z wiersza poleceń {/* #from-the-command-line */}
+
+Jeśli interfejs webowy się nie otwiera, zbierz logi przez SSH:
+
+```bash
+sudo tar czf ~/uavcast-logs.tar.gz /opt/uavcast-pro/logs /opt/uavcast-pro/installer.log
+journalctl -u uavcast-web -u uavcast-factory -u mavlink-manager -u uavcast-camera --since "2 hours ago" > ~/uavcast-journal.txt
+```
+
+Skopiuj oba pliki na swój komputer, na przykład przez `scp`.
+
+## Wyślij je do supportu {/* #send-them-to-support */}
+
+Napisz e-mail na **support@uavmatrix.com** i dołącz:
+
+- archiwum logów,
+- wersję UAVcast-Pro (widoczną na dole panelu bocznego),
+- płytkę, system operacyjny, kontroler lotu, kamerę i modem, których używasz,
+- czego się spodziewałeś, co się stało i co już sprawdziłeś na tych stronach.
+
+Możesz też zapytać na [UAVmatrix Discord](https://discord.gg/xwqMTXh). Nie publikuj plików logów publicznie: zawierają adresy IP i nazwy urządzeń.
+
+Powiązane: [Ustawienia aplikacji](../uavcast-pro/application-settings.mdx)

@@ -1,0 +1,47 @@
+---
+title: "Wi-Fi or 4G first: network priority on a UAVcast-Pro drone"
+description: "See every network interface on the drone and choose whether Wi-Fi or the 4G/LTE modem carries the traffic, so the link stays on cellular when you fly out of Wi-Fi range."
+sidebar_position: 4
+sidebar_label: "Networks"
+---
+
+# Networks
+
+The Networks page shows every network interface on the drone (Ethernet, Wi-Fi, modem, VPN) and which one is the default route. It's also where you choose whether Wi-Fi or the cellular modem is preferred when both are connected. Open **Networks** in the sidebar.
+
+<Screenshot id="uavcast-pro/networks" alt="Networks page with summary cards, Network Priority set to Auto, and the interfaces table listing eth0 and wlan0" caption="Networks with Auto (System Default) active and Wi-Fi as the default route." />
+
+## Choose the network priority
+
+When Wi-Fi and the modem are both connected, Linux sends traffic through the one with the lowest route metric. **Network Priority** sets those metrics for you:
+
+| Option | Use it when | Effect |
+|---|---|---|
+| **WiFi Priority (Indoor Mode)** | On the bench or at home, to save mobile data. | Wi-Fi metric 100, modem metric 600. |
+| **Modem Priority (Outdoor Mode)** | Before every flight over cellular. | Modem metric 100, Wi-Fi metric 600. |
+| **Auto (System Default)** | You don't want UAVcast-Pro to change anything. | NetworkManager's own metrics. |
+
+:::warning Switch to Modem Priority before take-off
+If the drone takes off on Wi-Fi priority, the link stays on Wi-Fi until Wi-Fi is lost, then has to fail over to the modem in the air. That causes a gap in telemetry and video. Select **Modem Priority (Outdoor Mode)** on the ground.
+:::
+
+The change applies to the active connections without restarting them (*Applying changes...*).
+
+:::note Which connections are changed
+The Wi-Fi metric is set on the NetworkManager connection named `preconfigured`, which is the name Raspberry Pi Imager gives the Wi-Fi you enter while flashing. Wi-Fi set up any other way keeps its own metric, and Ethernet is never changed.
+:::
+
+## Interface information
+
+The summary cards show **Active Interfaces**, **Default Gateway** (and the interface it goes through) and **Total Interfaces**. **Network Interfaces** lists each interface with **Name**, **IP Address**, **Gateway**, **Status** (**Active**, **Inactive**, **VPN**), **Speed**, **Type** and which one is **Default**.
+
+Common interface names:
+
+| Name | What it is |
+|---|---|
+| `eth0`, `end0` | Wired Ethernet |
+| `wlan0` | Wi-Fi |
+| `ppp0`, `wwan0` | Traditional modem |
+| `usb0`, `eth1` | HiLink modem |
+| `zt…` | ZeroTier |
+| `tailscale0` | Tailscale |

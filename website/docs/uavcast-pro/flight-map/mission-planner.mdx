@@ -1,0 +1,57 @@
+---
+title: "Plan and upload a waypoint mission from the browser"
+description: "Plan a waypoint mission in the UAVcast-Pro Mission Planner tab, set altitude frame and radius, save it as a .waypoints file and upload it to the ArduPilot flight controller."
+sidebar_position: 2
+sidebar_label: "Mission Planner"
+---
+
+# Mission Planner tab
+
+The Mission Planner tab lets you plan a simple waypoint mission in the browser and upload it to the flight controller through UAVcast-Pro, from anywhere the web interface is reachable. Missions are saved in the same `.waypoints` format (QGC WPL 110) that Mission Planner and QGroundControl use, so you can move them between tools. Open **Flight Map → Mission Planner**.
+
+<Screenshot id="uavcast-pro/flight-map--mission-planner" alt="Mission Planner tab with a satellite map, an empty waypoint table and the Save, Load, Upload, Read and Clear buttons" caption="Flight Map → Mission Planner before any waypoint is added. Click the map to add one." />
+
+## Plan a mission
+
+<Steps>
+
+1. Click the map where the first waypoint should be. The first time, **Set Default Values** asks for **Default Altitude (meters)**, **Waypoint Radius (meters)** and **Altitude Frame**. Select **Continue**.
+2. Keep clicking to add waypoints. Drag a marker to move it.
+3. Adjust each waypoint in the table: **Alt (m)**, **Frame** and **Radius (m)**. Remove a waypoint in the **Action** column.
+4. Check **Waypoints** and **Distance** for the total route.
+
+</Steps>
+
+| Default | Value | Options |
+|---|---|---|
+| **Default Altitude (meters)** | `100` | any |
+| **Waypoint Radius (meters)** | `30` | any |
+| **Altitude Frame** | **Relative** | **Relative** (above home), **Absolute** (above mean sea level), **Terrain** (above the ground, needs terrain data on the flight controller) |
+
+In the table the frames are shortened to **Rel**, **Abs** and **Ter**. Waypoints are sent as `MAV_CMD_NAV_WAYPOINT`.
+
+## Upload to the flight controller
+
+<Steps>
+
+1. Under **Flight Controller**, select **Upload**.
+2. Confirm **Upload Mission**. The dialog warns that it replaces the mission on the flight controller.
+3. You see *Mission uploaded to flight controller*.
+
+</Steps>
+
+- **Read** downloads the mission that's on the flight controller into the planner.
+- **Clear** removes the waypoints from the planner.
+
+To fly the mission, use **Start** in the Flight Map's **Actions** tab, or switch to AUTO from your transmitter or ground station.
+
+## Save and load files
+
+Under **Files**:
+
+- **Save** downloads the mission as `mission.waypoints`.
+- **Load** opens a `.waypoints` or `.txt` file in QGC WPL format, for example one saved from Mission Planner.
+
+## Limits
+
+This planner handles plain waypoints only. **Load** keeps each row's position, altitude, frame and radius, but turns every row into a plain waypoint: takeoff, land, loiter and DO commands (camera trigger, servo) are not kept, and a command without a position becomes a waypoint at 0, 0. For takeoff and land commands, DO commands, survey grids, fences and rally points, plan and upload from Mission Planner or QGroundControl directly.

@@ -1,0 +1,93 @@
+---
+title: "Odbieraj wideo z drona przez GStreamer na Linuksie (Ubuntu, Debian)"
+description: "Zainstaluj GStreamer na Ubuntu, Debianie lub Fedorze i odtwarzaj wideo H.264 z drona UAVcast-Pro oraz dźwięk Opus za pomocą gst-launch-1.0, z drugą kamerą, niskim opóźnieniem i ufw."
+sidebar_position: 5
+sidebar_label: "GStreamer na Linuksie"
+---
+
+# GStreamer na Linuksie {/* #gstreamer-on-linux */}
+
+GStreamer odtwarza strumień wideo UAVcast-Pro w oknie jednym poleceniem. Użyj go, aby przetestować ścieżkę wideo, obejrzeć drugą kamerę lub usłyszeć dźwięk. Działa na każdym desktopowym Linuksie, w tym na Raspberry Pi używanym jako stacja naziemna.
+
+## Zanim zaczniesz {/* #before-you-begin */}
+
+Na dronie dodaj miejsce docelowe w [Stacjach Naziemnych](./index.mdx) z adresem IP tego komputera (`ip -4 addr`; przy 4G użyj adresu VPN) i włącz **Włącz Wideo**.
+
+## Instalacja GStreamer {/* #install-gstreamer */}
+
+<Tabs groupId="linux-distro">
+<TabItem value="debian" label="Ubuntu / Debian / Raspberry Pi OS" default>
+
+```bash
+sudo apt update
+sudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav
+```
+
+`gstreamer1.0-libav` zapewnia dekoder H.264 (`avdec_h264`). Bez niego poniższe polecenie się nie powiedzie.
+
+</TabItem>
+<TabItem value="fedora" label="Fedora">
+
+```bash
+sudo dnf install gstreamer1 gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugin-libav
+```
+
+Repozytoria Fedory pomijają większość obsługi H.264 z powodów patentowych, więc `avdec_h264` może nadal brakować po tej instalacji. Jeśli poniższe sprawdzenie się nie powiedzie, włącz [RPM Fusion](https://rpmfusion.org/) i postępuj zgodnie z jego przewodnikiem multimedialnym, aby uzyskać pełne biblioteki kodeków.
+
+</TabItem>
+</Tabs>
+
+Sprawdź, czy dekoder H.264 jest dostępny:
+
+```bash
+gst-inspect-1.0 avdec_h264
+```
+
+Polecenie wypisuje szczegóły elementu. Komunikat *No such element or plugin* oznacza, że dekodera brakuje.
+
+## Odtwarzanie wideo {/* #play-the-video */}
+
+```bash title="Kamera 1, port 5600"
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+Okno otworzy się, gdy dotrze pierwsza klatka kluczowa. Naciśnij **Ctrl+C**, aby zatrzymać.
+
+:::tip Czego się spodziewać
+
+1. Terminal wypisuje `Setting pipeline to PLAYING ...` i czeka na wideo.
+2. Gdy dotrą pierwsze pakiety, `-v` wypisuje linie zawierające `caps = application/x-rtp`.
+3. Otworzy się okno wideo z obrazem z kamery.
+
+Jeśli zatrzyma się po kroku 1, wideo nie dociera do tego komputera: zobacz tabelę rozwiązywania problemów poniżej.
+:::
+
+- **Kamera 2** w [podwójnym strumieniu](../camera/multi-camera.mdx): uruchom ponownie z `port=5601`.
+- **Niższe opóźnienie** przy dobrym łączu: zamień `rtpjitterbuffer` na `rtpjitterbuffer latency=0`. Przy 4G zostaw wartość domyślną.
+
+## Odsłuchiwanie dźwięku {/* #hear-the-audio */}
+
+Gdy włączona jest opcja **Send audio to ground stations**, dźwięk trafia na **Port Wideo** + 2:
+
+```bash title="Audio, port 5602"
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp, media=(string)audio, clock-rate=(int)48000, encoding-name=(string)OPUS, payload=(int)97" ! rtpjitterbuffer ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+## Zapora sieciowa {/* #firewall */}
+
+Większość desktopowych dystrybucji nie blokuje przychodzącego UDP. Jeśli `ufw` jest aktywne:
+
+```bash
+sudo ufw allow 5600:5602/udp
+sudo ufw allow 14550/udp
+```
+
+## Rozwiązywanie problemów {/* #troubleshooting */}
+
+| Komunikat lub objaw | Rozwiązanie |
+|---|---|
+| *no element "avdec_h264"* | Zainstaluj `gstreamer1.0-libav`. |
+| *no element "rtph264depay"* | Zainstaluj `gstreamer1.0-plugins-good`. |
+| Działa, ale nie otwiera się okno | Nic nie dociera. Sprawdź adres IP docelowy na dronie, **Włącz Wideo** i zaporę. `sudo tcpdump -ni any udp port 5600` pokazuje, czy pakiety docierają do komputera. |
+| Błąd bind przy starcie | Inny program (QGroundControl, inny GStreamer) nasłuchuje na tym porcie. Zamknij go. |
+| Okno się otwiera, ale obraz jest szary i rozmazany | Utrata pakietów. Obniż bitrate na dronie i ustaw **Szybkość Odzyskiwania Strumienia** na 15–30 klatek. |

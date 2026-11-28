@@ -1,0 +1,148 @@
+---
+title: "Drone telemetry and 4G glossary"
+sidebar_label: Glossary
+description: "Plain explanations of terms in the UAVcast-Pro and Fleet Manager docs: MAVLink, GCS, heartbeat, APN, HiLink, NTRIP, RTCM, VRS, ZeroTier, Tailscale."
+sidebar_position: 6
+---
+
+# Glossary
+
+### AGL / AMSL
+
+Altitude above ground level (here: above the take-off point) and above mean sea level. UAVcast-Pro uses these terms since v6.5.0, replacing REL and MSL.
+
+### APN (Access Point Name)
+
+The name of the carrier's gateway a cellular modem connects through. UAVcast-Pro detects it automatically when **Access Point Name (Optional)** is empty.
+
+### ArduPilot
+
+Open-source autopilot firmware for multicopters, planes, VTOL, rovers and boats. UAVcast-Pro works with ArduPilot and with any other MAVLink flight controller, such as PX4. Its flight-mode buttons use ArduPilot's mode names.
+
+### Auth key
+
+A Tailscale key that logs a device in to a tailnet without a browser. Fleet Manager uses auth keys to put ground stations on the organization's VPN.
+
+### Bitrate
+
+How many bits per second the video encoder produces. It has to fit inside the uplink of your connection, with headroom.
+
+### CSI camera
+
+A camera on the Raspberry Pi's ribbon-cable connector, such as Camera Module 3.
+
+### Destination
+
+In UAVcast-Pro, a ground station entry under **Ground Control Stations**: an IP address with a telemetry port and a video port.
+
+### Dual stream
+
+Streaming two cameras to the ground station at the same time, on two video ports.
+
+### Fleet Manager
+
+UAVmatrix's web dashboard for monitoring and controlling many UAVcast-Pro drones in one organization.
+
+### GCS (ground control station)
+
+The software, and the computer it runs on, that you use to monitor and command the drone: QGroundControl, Mission Planner, MAVProxy.
+
+### GCS failsafe
+
+A flight controller setting that makes the drone act on its own (return, land, loiter) when it stops hearing the ground station.
+
+### GGA
+
+An NMEA sentence with your position. VRS and nearest-mountpoint NTRIP casters need it to compute corrections for your location.
+
+### H.264
+
+The video compression format UAVcast-Pro sends. Every common ground station can decode it.
+
+### Heartbeat
+
+The MAVLink message a flight controller sends about once per second to say "I'm here". *No heartbeat* means the link carries no readable MAVLink.
+
+### HiLink modem
+
+A USB modem with a built-in router that connects by itself and appears to Linux as a network adapter.
+
+### Injector
+
+A UAVcast-Pro listener (HTTP, UDP or serial) that turns your own sensor values into MAVLink `NAMED_VALUE_FLOAT` messages.
+
+### Keyframe
+
+A complete video frame the decoder can start from. More frequent keyframes recover faster from packet loss. Set with **Stream Recovery Rate**.
+
+### MAVLink
+
+The messaging protocol between flight controllers and ground stations.
+
+### Mountpoint
+
+A named correction stream on an NTRIP caster, usually tied to one base station or a VRS service.
+
+### MQTT
+
+The messaging protocol drones use to talk to Fleet Manager, encrypted with TLS on port 8883.
+
+### NTRIP / NTRIP caster
+
+A protocol, and the server, for streaming GNSS corrections over the internet.
+
+### Pairing code
+
+The 8-digit code UAVcast-Pro shows when you connect a drone to Fleet Manager. Valid for 5 minutes, once.
+
+### Read Only (destination)
+
+A ground station destination that receives telemetry but can't change anything on the vehicle: commands, mode changes, parameter and mission writes from it are blocked. This applies from UAVcast-Pro 6.5.3; on earlier versions, Read Only does not block parameter writes.
+
+### Read Only (user)
+
+A UAVcast-Pro user role that can view pages but can't change settings or control the drone.
+
+### RTCM3
+
+The standard message format for GNSS corrections.
+
+### RTK, RTK Float, RTK Fixed
+
+Real-time kinematic positioning with corrections. Float is an approximate solution; Fixed is the centimetre-level solution.
+
+### RTP / UDP
+
+The transport UAVcast-Pro uses for video and telemetry: fast, no retransmissions, which keeps latency low.
+
+### SERIALx_PROTOCOL / SERIALx_BAUD
+
+ArduPilot parameters that set what a serial port speaks (2 = MAVLink2) and how fast.
+
+### Stream binding
+
+In Fleet Manager, a link that sends one drone's video and telemetry to one ground station on its own ports.
+
+### sysid / compid
+
+MAVLink system ID (which vehicle) and component ID (which part of it). The flight controller is usually sysid 1, compid 1.
+
+### Tailnet
+
+A private Tailscale network.
+
+### Tailscale
+
+A WireGuard-based VPN. UAVcast-Pro can join your tailnet, or the Fleet Manager organization network.
+
+### UAVnet
+
+UAVmatrix's hosted ZeroTier network controller at uavnet.uavmatrix.com. It is being discontinued in favour of the Fleet Manager VPN; existing users should move to Fleet Manager.
+
+### VRS (virtual reference station)
+
+A correction service that computes corrections for your position from a network of base stations. Needs GGA upstream.
+
+### ZeroTier
+
+A peer-to-peer VPN. UAVcast-Pro can join your own ZeroTier network.

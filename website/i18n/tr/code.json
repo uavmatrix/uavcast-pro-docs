@@ -1,0 +1,1245 @@
+{
+  "doc.readingTime": {
+    "message": "{n} dk okuma"
+  },
+  "doc.copyPageTitle": {
+    "message": "Bu sayfayı Markdown olarak kopyalayın; notlar veya bir yapay zeka asistanı için"
+  },
+  "doc.copied": {
+    "message": "Kopyalandı"
+  },
+  "doc.copyFailed": {
+    "message": "Kopyalama başarısız"
+  },
+  "doc.copyPage": {
+    "message": "Sayfayı kopyala"
+  },
+  "doc.edit": {
+    "message": "Düzenle"
+  },
+  "feedback.question": {
+    "message": "Bu sayfa yardımcı oldu mu?"
+  },
+  "feedback.yes": {
+    "message": "Evet"
+  },
+  "feedback.no": {
+    "message": "Hayır"
+  },
+  "feedback.thanks": {
+    "message": "Bize bildirdiğiniz için teşekkürler."
+  },
+  "feedback.what": {
+    "message": "Neyin eksik veya yanlış olduğunu yazın. Her bildirimi okuyoruz."
+  },
+  "feedback.placeholder": {
+    "message": "Örneğin: Bu ayar, sürümümde farklı bir adla geçiyor"
+  },
+  "feedback.send": {
+    "message": "Geri bildirimi gönder"
+  },
+  "feedback.or": {
+    "message": "veya"
+  },
+  "feedback.issue": {
+    "message": "GitHub üzerinde bir sorun açın"
+  },
+  "feedback.or2": {
+    "message": "/"
+  },
+  "feedback.email": {
+    "message": "destek ekibine e-posta gönderin"
+  },
+  "q.mp": {
+    "message": "Mission Planner videosu"
+  },
+  "q.qgc": {
+    "message": "QGroundControl videosu"
+  },
+  "q.gstWin": {
+    "message": "Windows üzerinde GStreamer"
+  },
+  "q.pairing": {
+    "message": "Eşleştirme kodu"
+  },
+  "q.apn": {
+    "message": "APN ayarları"
+  },
+  "q.heartbeat": {
+    "message": "MAVLink heartbeat yok"
+  },
+  "goal.first.tag": {
+    "message": "Buradan başlayın"
+  },
+  "goal.first.title": {
+    "message": "İlk drone’umu kuruyorum"
+  },
+  "goal.first.body": {
+    "message": "UAVcast-Pro’yu yardımcı bilgisayara kurun, uçuş kontrolcüsünü bağlayın ve yer kontrol istasyonunuzda canlı video alın."
+  },
+  "goal.first.quick": {
+    "message": "Hızlı başlangıç"
+  },
+  "goal.first.mp": {
+    "message": "Mission Planner’da video"
+  },
+  "goal.first.qgc": {
+    "message": "QGroundControl’de video"
+  },
+  "goal.first.gcs": {
+    "message": "Yer kontrol istasyonunuzu ekleyin"
+  },
+  "goal.first.license": {
+    "message": "Lisansınızı etkinleştirin"
+  },
+  "goal.first.hw": {
+    "message": "Donanım gereksinimleri"
+  },
+  "goal.fleet.tag": {
+    "message": "Sahipler ve yöneticiler"
+  },
+  "goal.fleet.title": {
+    "message": "Bir filoyu yönetiyorum"
+  },
+  "goal.fleet.body": {
+    "message": "Drone’ları, yer kontrol istasyonlarını ve lisansları tek bir kuruluşta toplayın, her uçuşu canlı harita üzerinden takip edin ve ekibinize doğru erişim yetkilerini verin."
+  },
+  "goal.fleet.org": {
+    "message": "Bir kuruluş oluşturun"
+  },
+  "goal.fleet.pair": {
+    "message": "Drone’u bir kodla eşleştirin"
+  },
+  "goal.fleet.team": {
+    "message": "Sahip, Yönetici ve Görüntüleyici rolleri"
+  },
+  "goal.fleet.overview": {
+    "message": "Fleet Manager’a genel bakış"
+  },
+  "goal.api.tag": {
+    "message": "HTTP · UDP · MAVLink"
+  },
+  "goal.api.title": {
+    "message": "API üzerinden entegre ediyorum"
+  },
+  "goal.api.body": {
+    "message": "Kendi sensör değerlerinizi MAVLink akışına gönderin, videoyu kendi yazılımınızda alın ve telemetriyi daha fazla araca yönlendirin."
+  },
+  "goal.api.injectors": {
+    "message": "Telemetri enjektörleri (HTTP, UDP, seri)"
+  },
+  "goal.api.video": {
+    "message": "Windows üzerinde GStreamer ile video alın"
+  },
+  "goal.api.ports": {
+    "message": "Portlar ve protokoller"
+  },
+  "goal.api.streams": {
+    "message": "Veri Akışları panoları"
+  },
+  "goal.broken.tag": {
+    "message": "Belirtiden başlayın"
+  },
+  "goal.broken.title": {
+    "message": "Bir şey çalışmıyor"
+  },
+  "goal.broken.body": {
+    "message": "Her çözüm, çoğu durumu çözen sırayla kontrolleri ve bakmanız gereken tam ayarı listeler."
+  },
+  "goal.broken.video": {
+    "message": "Yer kontrol istasyonunda video yok"
+  },
+  "goal.broken.hb": {
+    "message": "MAVLink heartbeat yok"
+  },
+  "goal.broken.logs": {
+    "message": "Destek için günlükleri toplayın"
+  },
+  "goal.broken.all": {
+    "message": "Tüm sorun giderme"
+  },
+  "feat.video": {
+    "message": "Video akışı"
+  },
+  "feat.video.desc": {
+    "message": "UDP üzerinden H.264, iki kamera, kayıt"
+  },
+  "feat.gcs": {
+    "message": "Telemetri ve YKİ"
+  },
+  "feat.gcs.desc": {
+    "message": "Mission Planner, QGroundControl ve daha fazlası"
+  },
+  "feat.modem": {
+    "message": "Hücresel modemler"
+  },
+  "feat.modem.desc": {
+    "message": "HiLink ve çubuk modemler, otomatik APN"
+  },
+  "feat.vpn": {
+    "message": "VPN"
+  },
+  "feat.vpn.desc": {
+    "message": "Port yönlendirme olmadan drone’a erişin"
+  },
+  "feat.rtk": {
+    "message": "RTK / NTRIP"
+  },
+  "feat.rtk.desc": {
+    "message": "Hücresel bağlantı üzerinden santimetre hassasiyetinde konumlandırma"
+  },
+  "feat.inj": {
+    "message": "Enjektörler"
+  },
+  "feat.inj.desc": {
+    "message": "Sensörleriniz yerel MAVLink değerleri olarak"
+  },
+  "pl.u.install": {
+    "message": "Kurulum"
+  },
+  "pl.u.camera": {
+    "message": "Video akışı"
+  },
+  "pl.u.modem": {
+    "message": "Hücresel modemler"
+  },
+  "pl.u.rtk": {
+    "message": "RTK / NTRIP"
+  },
+  "pl.f.org": {
+    "message": "Kuruluşunuzu ayarlayın"
+  },
+  "pl.f.pair": {
+    "message": "İlk drone’unuzu eşleştirin"
+  },
+  "pl.f.map": {
+    "message": "Canlı harita ve telemetri"
+  },
+  "pl.f.team": {
+    "message": "Üyeler ve roller"
+  },
+  "start.quick.meta": {
+    "message": "Eğitim · Raspberry Pi"
+  },
+  "start.quick.title": {
+    "message": "Hızlı başlangıç"
+  },
+  "start.quick.desc": {
+    "message": "Boş bir SD karttan yer kontrol istasyonunuzda canlı video ve telemetriye kadar."
+  },
+  "start.quick.step0": {
+    "message": "64 bit işletim sistemini yazın"
+  },
+  "start.quick.step1": {
+    "message": "Yükleyiciyi çalıştırın"
+  },
+  "start.quick.step2": {
+    "message": "Uçuş kontrolcüsünü bağlayın"
+  },
+  "start.quick.step3": {
+    "message": "Yer kontrol istasyonunuzu ekleyin"
+  },
+  "start.hw.meta": {
+    "message": "Başvuru"
+  },
+  "start.hw.title": {
+    "message": "Donanım gereksinimleri"
+  },
+  "start.hw.desc": {
+    "message": "Yardımcı bilgisayarlar, uçuş kontrolcüleri, kameralar ve modemler. Parça satın almadan önce bunları kontrol edin."
+  },
+  "start.hw.b0": {
+    "message": "Raspberry Pi, NVIDIA Jetson, Orange Pi"
+  },
+  "start.hw.b1": {
+    "message": "Herhangi bir arm64 veya amd64 Linux bilgisayarı"
+  },
+  "start.hw.b2": {
+    "message": "Herhangi bir MAVLink uçuş kontrolcüsü (ArduPilot, PX4)"
+  },
+  "start.hw.b3": {
+    "message": "USB ve HiLink LTE modemleri"
+  },
+  "start.license.meta": {
+    "message": "Lisanslama"
+  },
+  "start.license.title": {
+    "message": "Lisansınızı etkinleştirin"
+  },
+  "start.license.desc": {
+    "message": "Bir cihazda anahtar etkinleştirin, yeni donanıma taşıyın ve cihaz yuvalarının nasıl çalıştığını görün."
+  },
+  "start.license.step0": {
+    "message": "UAVmatrix mağazasından bir anahtar satın alın"
+  },
+  "start.license.step1": {
+    "message": "Uygulama › Lisans Yöneticisi’ni açın"
+  },
+  "start.license.step2": {
+    "message": "Çevrimiçiyken anahtarı girin"
+  },
+  "pop.mp": {
+    "message": "Mission Planner: telemetri ve video"
+  },
+  "pop.mp.desc": {
+    "message": "UDP 14550 üzerinden telemetri ve HUD için GStreamer video kaynağı."
+  },
+  "pop.qgc": {
+    "message": "QGroundControl: telemetri ve video"
+  },
+  "pop.qgc.desc": {
+    "message": "Masaüstü ve Android’de UDP 5600 üzerinden telemetri ve H.264 video."
+  },
+  "pop.gstwin": {
+    "message": "Windows üzerinde GStreamer ile video alın"
+  },
+  "pop.gstwin.desc": {
+    "message": "Doğru GStreamer sürümünü kurun ve drone’dan gelen akışı oynatın."
+  },
+  "pop.4g": {
+    "message": "Görsel menzil ötesinde 4G üzerinden uçuş"
+  },
+  "pop.4g.desc": {
+    "message": "Modem, Fleet Manager VPN, telemetri ve QGroundControl veya Mission Planner’a video."
+  },
+  "pop.pair": {
+    "message": "Fleet Manager ile bir drone eşleştirin"
+  },
+  "pop.pair.desc": {
+    "message": "UAVcast-Pro’nun gösterdiği 8 haneli kodu Fleet Manager’a girin."
+  },
+  "pop.modem": {
+    "message": "Hücresel modem kurun"
+  },
+  "pop.modem.desc": {
+    "message": "HiLink veya çubuk modem, APN ve otomatik bağlantı."
+  },
+  "pop.gcs": {
+    "message": "Mission Planner veya QGroundControl bağlayın"
+  },
+  "pop.gcs.desc": {
+    "message": "Her yer kontrol istasyonuna UDP 14550 üzerinden telemetri ve UDP 5600 üzerinden video."
+  },
+  "pop.rtk": {
+    "message": "NTRIP yayıncısı ile 4G üzerinden RTK"
+  },
+  "pop.rtk.desc": {
+    "message": "RTK Sabit için bir yayıncıdan uçuş kontrolcüsüne RTCM3 düzeltmeleri."
+  },
+  "pop.bind": {
+    "message": "Akış bağlamaları ve port ataması"
+  },
+  "pop.bind.desc": {
+    "message": "Birden fazla drone bir yer kontrol istasyonunu nasıl paylaşır."
+  },
+  "pop.rec": {
+    "message": "Uçuşları kaydedin ve inceleyin"
+  },
+  "pop.rec.desc": {
+    "message": "Drone üzerinde video ve telemetri, tek bir zaman çizelgesinde yeniden oynatılır."
+  },
+  "pop.ts": {
+    "message": "Tailscale ile uzaktan erişim"
+  },
+  "pop.ts.desc": {
+    "message": "LTE üzerinden tailnet’inizde drone’a port yönlendirme olmadan erişin."
+  },
+  "pop.multi": {
+    "message": "Birden fazla yer kontrol istasyonuna akış"
+  },
+  "pop.multi.desc": {
+    "message": "Bir drone üzerinde pilot, faydalı yük operatörü ve gözlemciler."
+  },
+  "pop.onboard": {
+    "message": "Fleet Manager ile bir filoyu devreye alın"
+  },
+  "pop.onboard.desc": {
+    "message": "Birçok drone için lisanslar, adlandırma, eşleştirme, VPN ve akış bağlamaları."
+  },
+  "ts.video": {
+    "message": "QGroundControl veya Mission Planner’da video yok"
+  },
+  "ts.hb": {
+    "message": "Uçuş kontrolcüsünden MAVLink heartbeat gelmiyor"
+  },
+  "ts.telemetry": {
+    "message": "Yer kontrol istasyonunda telemetri yok"
+  },
+  "ts.license": {
+    "message": "Lisans anahtarı etkinleşmiyor"
+  },
+  "ts.modem": {
+    "message": "Modem bağlanıyor ancak internet yok"
+  },
+  "ts.web": {
+    "message": "Web arayüzü açılmıyor"
+  },
+  "ts.offline": {
+    "message": "Drone, Fleet Manager’da Çevrimdışı görünüyor"
+  },
+  "ts.power": {
+    "message": "Düşük gerilim ve kısma"
+  },
+  "recent.2026-11-24": {
+    "message": "Başka bir e-posta adresiyle satın alınan lisanslar hesabınıza bağlanabilir."
+  },
+  "recent.2026-11-21": {
+    "message": "Kamera düzeltmeleri: “Yetersiz izinler” hatası kaldırıldı ve canlı önizleme kapalıyken video çalışmaya devam ediyor."
+  },
+  "recent.2026-11-16": {
+    "message": "Kamera kaydı, depolama yönetimi ve uçuş incelemesi oynatıcısı."
+  },
+  "recent.2026-11-09": {
+    "message": "Opus üzerinden kamera sesi ve bağlantı kesildikten sonra daha hızlı NTRIP/RTK kurtarma."
+  },
+  "area.getStarted": {
+    "message": "Başlarken"
+  },
+  "area.getStarted.blurb": {
+    "message": "İlk kez kurun, etkinleştirin ve uçurun"
+  },
+  "area.uavcastPro": {
+    "message": "UAVcast-Pro"
+  },
+  "area.uavcastPro.blurb": {
+    "message": "Drone’un yardımcı bilgisayarı için yazılım"
+  },
+  "area.fleetManager": {
+    "message": "Fleet Manager"
+  },
+  "area.fleetManager.blurb": {
+    "message": "Drone’lar, yer kontrol istasyonları ve kişiler tek bir yerde"
+  },
+  "area.guides": {
+    "message": "Kılavuzlar"
+  },
+  "area.guides.blurb": {
+    "message": "Göreve dayalı adım adım anlatımlar"
+  },
+  "area.troubleshooting": {
+    "message": "Sorun giderme"
+  },
+  "area.troubleshooting.blurb": {
+    "message": "Belirtiden başlayın"
+  },
+  "area.reference": {
+    "message": "Başvuru"
+  },
+  "area.reference.blurb": {
+    "message": "Portlar, ayarlar, desteklenen donanım"
+  },
+  "nav.getStarted": {
+    "message": "Başlarken"
+  },
+  "nav.guides": {
+    "message": "Kılavuzlar"
+  },
+  "nav.troubleshooting": {
+    "message": "Sorun giderme"
+  },
+  "nav.reference": {
+    "message": "Başvuru"
+  },
+  "nav.changelog": {
+    "message": "Değişiklik günlüğü"
+  },
+  "product.uavcast": {
+    "message": "UAVcast-Pro"
+  },
+  "product.uavcast.sub": {
+    "message": "Drone’un yardımcı bilgisayarı için yazılım"
+  },
+  "product.fleet": {
+    "message": "Fleet Manager"
+  },
+  "product.fleet.sub": {
+    "message": "Drone’lar, lisanslar ve kişiler tek bir yerde"
+  },
+  "product.all": {
+    "message": "Tüm dokümantasyon"
+  },
+  "product.all.sub": {
+    "message": "Başlangıç sayfası, kılavuzlar ve başvuru"
+  },
+  "home.eyebrow": {
+    "message": "UAVmatrix dokümantasyonu · UAVcast-Pro {version}"
+  },
+  "home.title": {
+    "message": "Bağlı drone’lar kurun, uçurun ve yönetin."
+  },
+  "home.sub": {
+    "message": "Drone’un yardımcı bilgisayarındaki UAVcast-Pro ve tarayıcıdaki Fleet Manager için kılavuzlar ve başvuru; ilk açılıştan 4G üzerinden video ve telemetri akışı yapan bir filoya kadar."
+  },
+  "home.searchPlaceholder": {
+    "message": "Kılavuzlarda, ayarlarda ve hata mesajlarında ara"
+  },
+  "home.popular": {
+    "message": "Popüler:"
+  },
+  "home.goals.kicker": {
+    "message": "Hedefinizle başlayın"
+  },
+  "home.goals.title": {
+    "message": "Yaptığınızla eşleşen yolu seçin"
+  },
+  "home.products.kicker": {
+    "message": "Ürünler"
+  },
+  "home.products.title": {
+    "message": "Ürüne göre göz atın"
+  },
+  "home.uavcast.kicker": {
+    "message": "Drone üzerinde"
+  },
+  "home.uavcast.body": {
+    "message": "Raspberry Pi gibi drone’un yardımcı bilgisayarında çalışır. 4G/5G, Wi-Fi veya VPN üzerinden Mission Planner veya QGroundControl’e düşük gecikmeli H.264 video ve MAVLink telemetri akışı yapar."
+  },
+  "home.uavcast.go": {
+    "message": "UAVcast-Pro’yu keşfedin"
+  },
+  "home.fleet.kicker": {
+    "message": "Tarayıcıda"
+  },
+  "home.fleet.badge": {
+    "message": "Yeni dokümanlar"
+  },
+  "home.fleet.body": {
+    "message": "Kuruluşunuz için tek bir yer: drone’ları 8 haneli kodla eşleştirin, her uçuşu canlı harita üzerinden takip edin, video ve telemetriyi yer kontrol istasyonlarına bağlayın ve ekibinizi yönetin."
+  },
+  "home.fleet.go": {
+    "message": "Fleet Manager’ı keşfedin"
+  },
+  "home.start.kicker": {
+    "message": "Buradan başlayın"
+  },
+  "home.start.title": {
+    "message": "UAVcast-Pro’da yeni misiniz?"
+  },
+  "home.popular.kicker": {
+    "message": "Popüler makaleler"
+  },
+  "home.popular.filter": {
+    "message": "Makaleleri filtrele"
+  },
+  "home.popular.all": {
+    "message": "Tümü"
+  },
+  "home.popular.allGuides": {
+    "message": "Tüm kılavuzlar"
+  },
+  "home.trouble.title": {
+    "message": "Bir şey çalışmıyor mu?"
+  },
+  "home.trouble.all": {
+    "message": "Tüm çözümler"
+  },
+  "home.trouble.foot": {
+    "message": "Destekle mi iletişime geçiyorsunuz? UAVcast-Pro içindeki {path} konumundan günlük arşivini ekleyin."
+  },
+  "home.trouble.path": {
+    "message": "Uygulama › Günlük Kaydı",
+    "description": "Menu path in the UAVcast-Pro web app; use the app’s own translated labels"
+  },
+  "home.trouble.how": {
+    "message": "Nasıl"
+  },
+  "home.copy": {
+    "message": "{value} kopyala"
+  },
+  "home.support.kicker": {
+    "message": "Destekle iletişime geçin"
+  },
+  "home.support.title": {
+    "message": "Hâlâ takıldınız mı? Bunu geliştiren kişilerle konuşun."
+  },
+  "home.support.body": {
+    "message": "Destek, UAVcast-Pro geliştiricileri tarafından sağlanır. UAVcast-Pro sürümünüzü ve günlük arşivini ekleyin; genellikle tek bir yanıtta cevap verebiliriz."
+  },
+  "home.support.email": {
+    "message": "E-posta"
+  },
+  "home.support.emailBody": {
+    "message": "Lisans, kurulum ve uçuş sorunları. Günlük dosyalarınızı ekleyin."
+  },
+  "home.support.discord": {
+    "message": "Discord topluluğu"
+  },
+  "home.support.discordBody": {
+    "message": "Diğer pilotlara sorun, kurulumları paylaşın ve sürüm haberlerini ilk siz öğrenin."
+  },
+  "home.support.join": {
+    "message": "Sunucuya katılın"
+  },
+  "home.support.fm": {
+    "message": "Fleet Manager içinde"
+  },
+  "home.support.fmBody": {
+    "message": "Sahipler ve yöneticiler, uygulama içindeki FleetBot ve destek talepleriyle yardım alır."
+  },
+  "home.support.fmLink": {
+    "message": "Fleet Manager desteği"
+  },
+  "home.recent.kicker": {
+    "message": "Son değişiklikler"
+  },
+  "home.recent.all": {
+    "message": "Tam değişiklik günlüğü"
+  },
+  "home.metaTitle": {
+    "message": "UAVmatrix Dokümanlar: UAVcast-Pro ve Fleet Manager dokümantasyonu"
+  },
+  "home.metaDescription": {
+    "message": "UAVcast-Pro’yu kurun, drone videosunu ve MAVLink telemetrisini 4G/LTE üzerinden Mission Planner veya QGroundControl’e aktarın ve filonuzu UAVmatrix Fleet Manager ile yönetin."
+  },
+  "searchPage.title": {
+    "message": "Dokümanlarda ara"
+  },
+  "search.placeholder": {
+    "message": "Kılavuzlarda, ayarlarda ve hata mesajlarında ara"
+  },
+  "search.dialog": {
+    "message": "Dokümantasyonda ara"
+  },
+  "search.all": {
+    "message": "Tümü"
+  },
+  "search.noIndex": {
+    "message": "Arama dizini üretim derlemesiyle oluşturulur. npm run build, ardından npm run serve komutunu çalıştırın."
+  },
+  "searchPage.count": {
+    "message": "“{q}” için {n} sonuç"
+  },
+  "searchPage.metaTitle": {
+    "message": "Ara"
+  },
+  "searchPage.metaDescription": {
+    "message": "UAVmatrix dokümantasyonunda arama yapın."
+  },
+  "home.schematic": {
+    "message": "Veri akışı: Yardımcı bilgisayardaki UAVcast-Pro, durumu TLS ile 8883 portu üzerinden MQTT ile Fleet Manager’a; videoyu ve MAVLink telemetrisini UDP 5600 ve 14550 portlarından yer kontrol istasyonuna, doğrudan veya WireGuard VPN üzerinden gönderir."
+  },
+  "home.schematic.aircraft": {
+    "message": "DRONE"
+  },
+  "home.schematic.companion": {
+    "message": "Yardımcı bilgisayar"
+  },
+  "home.schematic.modem": {
+    "message": "LTE modem · 4G/5G"
+  },
+  "home.schematic.cloud": {
+    "message": "BULUT"
+  },
+  "home.schematic.cloudBody": {
+    "message": "Durum, konum, lisanslar"
+  },
+  "home.schematic.ground": {
+    "message": "YER"
+  },
+  "home.schematic.gcs": {
+    "message": "Yer kontrol istasyonu"
+  },
+  "home.schematic.gcsVpn": {
+    "message": "Doğrudan veya WireGuard VPN üzerinden"
+  },
+  "home.schematic.link": {
+    "message": "BAĞLANTI · HÜCRESEL / WI-FI / ETHERNET"
+  },
+  "home.mini.temp": {
+    "message": "Sıcaklık"
+  },
+  "home.mini.uplink": {
+    "message": "Yukarı bağlantı · son 60 sn"
+  },
+  "home.mini.armed": {
+    "message": "SİLAHLI"
+  },
+  "home.mini.online": {
+    "message": "ÇEVRİMİÇİ"
+  },
+  "home.mini.ago": {
+    "message": "4 saat önce"
+  },
+  "shot.close": {
+    "message": "Kapat"
+  },
+  "shot.placeholder": {
+    "message": "Ekran görüntüsü yer tutucusu: {id}"
+  },
+  "shot.soon": {
+    "message": "Ekran görüntüsü yakında"
+  },
+  "shot.enlarge": {
+    "message": "Ekran görüntüsünü büyüt: {alt}"
+  },
+  "symptom.check": {
+    "message": "Kontrol {n}"
+  },
+  "symptom.step": {
+    "message": "Adım {n}"
+  },
+  "symptom.go": {
+    "message": "Git"
+  },
+  "symptom.see": {
+    "message": "Ne görürsünüz"
+  },
+  "symptom.cause": {
+    "message": "Olası neden"
+  },
+  "symptom.start": {
+    "message": "Başlangıç"
+  },
+  "sketch.alt.mpConnect": {
+    "message": "Mission Planner çizimi: sağ üst köşede bağlantı türü UDP olarak ayarlı ve Bağlan düğmesi; ardından dinleme portu sorulan bir iletişim kutusunda 14550 girilmiş."
+  },
+  "sketch.alt.mpGstreamer": {
+    "message": "Mission Planner çizimi: HUD üzerindeki sağ tık menüsünde Video vurgulanmış ve alt menü öğesi Set GStreamer Source."
+  },
+  "sketch.alt.qgcVideo": {
+    "message": "QGroundControl Uygulama Ayarları çizimi: Kaynağı UDP h.264 Video Stream olarak ayarlanmış Video sayfası, UDP adresi 0.0.0.0:5600 ve Düşük Gecikme Modu."
+  },
+  "sketch.tag": {
+    "message": "Çizim"
+  },
+  "search.other": {
+    "message": "Diğer"
+  },
+  "search.close": {
+    "message": "Aramayı kapat"
+  },
+  "search.scope": {
+    "message": "Sonuçları şununla sınırla"
+  },
+  "search.recent": {
+    "message": "Son"
+  },
+  "search.try": {
+    "message": "Deneyin"
+  },
+  "search.none": {
+    "message": "“{q}” için sonuç yok."
+  },
+  "search.noneHint": {
+    "message": "Bir ayarın adını veya tam hata mesajını deneyin ya da Discord’da sorun."
+  },
+  "search.loading": {
+    "message": "Arama dizini yükleniyor…"
+  },
+  "search.navigate": {
+    "message": "gezinmek için"
+  },
+  "search.open": {
+    "message": "açmak için"
+  },
+  "search.toClose": {
+    "message": "kapatmak için"
+  },
+  "search.offline": {
+    "message": "çevrimdışı dizin"
+  },
+  "footer.store": {
+    "message": "UAVmatrix mağazası"
+  },
+  "footer.quickStart": {
+    "message": "Hızlı başlangıç"
+  },
+  "footer.guides": {
+    "message": "Kılavuzlar"
+  },
+  "footer.troubleshooting": {
+    "message": "Sorun giderme"
+  },
+  "footer.reference": {
+    "message": "Başvuru"
+  },
+  "footer.changelog": {
+    "message": "Değişiklik günlüğü"
+  },
+  "footer.contact": {
+    "message": "Destekle iletişime geçin"
+  },
+  "nav.brandDocs": {
+    "message": "Belgeler"
+  },
+  "footer.tagline": {
+    "message": "Profesyonel drone operatörleri için bağlantı yazılımı: drone üzerinde UAVcast-Pro, tarayıcıda Fleet Manager."
+  },
+  "footer.products": {
+    "message": "Ürünler"
+  },
+  "footer.resources": {
+    "message": "Kaynaklar"
+  },
+  "footer.community": {
+    "message": "Topluluk"
+  },
+  "footer.language": {
+    "message": "Dil"
+  },
+  "nav.languageSoon": {
+    "message": "Yakında"
+  },
+  "footer.privacy": {
+    "message": "Gizlilik"
+  },
+  "footer.terms": {
+    "message": "Koşullar"
+  },
+  "footer.source": {
+    "message": "GitHub’da dokümantasyon kaynağı"
+  },
+  "search.button": {
+    "message": "Dokümantasyonda ara…"
+  },
+  "toc.feedback": {
+    "message": "Geri bildirim verin"
+  },
+  "theme.common.editThisPage": {
+    "message": "Bu sayfayı düzenle",
+    "description": "The link label to edit the current page"
+  },
+  "toc.top": {
+    "message": "Başa dön"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "Bu sayfada",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "Kopyalandı",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "Kodu panoya kopyala",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "Kopyala",
+    "description": "The copy button label on code blocks"
+  },
+  "codeblock.code": {
+    "message": "Kod"
+  },
+  "doc.lastUpdated": {
+    "message": "Son güncelleme {date}"
+  },
+  "doc.reportIssue": {
+    "message": "Sorun bildirin"
+  },
+  "nav.homeAria": {
+    "message": "UAVmatrix Dokümanlar ana sayfası"
+  },
+  "product.allShort": {
+    "message": "Tüm ürünler"
+  },
+  "product.menuLabel": {
+    "message": "Ürünler"
+  },
+  "nav.language": {
+    "message": "Dil"
+  },
+  "nav.languageLabel": {
+    "message": "Dil · UAVcast-Pro uygulamasıyla aynı"
+  },
+  "nav.languageFoot": {
+    "message": "Çeviriler yolda. Ürün arayüzü bu dillerin tamamında zaten kullanılabilir."
+  },
+  "nav.theme": {
+    "message": "Koyu ve açık mod arasında geçiş yapın"
+  },
+  "nav.openMenu": {
+    "message": "Gezinmeyi aç"
+  },
+  "nav.primary": {
+    "message": "Birincil"
+  },
+  "nav.openFleet": {
+    "message": "Fleet Manager’ı aç"
+  },
+  "notFound.kicker": {
+    "message": "Sayfa bulunamadı"
+  },
+  "theme.NotFound.title": {
+    "message": "Sayfa Bulunamadı",
+    "description": "The title of the 404 page"
+  },
+  "theme.NotFound.p1": {
+    "message": "Aradığınız şeyi bulamadık.",
+    "description": "The first paragraph of the 404 page"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "Belgeler kenar çubuğu",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "sidebar.filter": {
+    "message": "Sayfaları filtrele"
+  },
+  "sidebar.noMatch": {
+    "message": "Hiçbir sayfa başlığı eşleşmiyor. Aramayı deneyin (⌘K)."
+  },
+  "breadcrumbs.docs": {
+    "message": "Belgeler"
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "Gezinme çubuğunu kapat",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "drawer.areas": {
+    "message": "Dokümantasyon"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← Ana menüye dön",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "Bu sayfa çöktü.",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "Sayfa başına dön",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "Arşiv",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "Arşiv",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "Blog gönderi sayfası navigasyonu",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "Yeni Girdiler",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "Eski Girdiler",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "Blog gönderi sayfası navigasyonu",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "Daha Yeni Gönderi",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "Daha Eski Gönderi",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "Tüm Etiketleri Görüntüle",
+    "description": "The label of the link targeting the tag list page"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "sistem modu",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "Aydınlık mod",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "Karanlık mod",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "Karanlık ve aydınlık mod arasında geçiş yapın (şu anda {mode})",
+    "description": "The ARIA label for the color mode toggle"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "Gezinti yolu",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "Dokümanlar sayfası",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "Önceki",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Sonraki",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "Bir doküman etiketlendi|{count} doküman etiketlendi",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "\"{tagName}\" ile etiketlenmiş {nDocsTagged}",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "Versiyon: {versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "Bu, {siteTitle} {versionLabel} sürümü için yayınlanmamış dokümantasyondur.",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "Bu, {siteTitle} {versionLabel} dokümantasyonudur ve bakımı sonlanmıştır.",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "Güncel belgeler için bkz. {latestVersionLink} ({versionLabel}).",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "en son sürüm",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "{heading} doğrudan bağlantı",
+    "description": "Title for link to heading"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": " {date} tarihinde",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": " {user} tarafından",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "En son {atDate} {byUser} güncellendi",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "Versiyonlar",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "Etiketler:",
+    "description": "The label alongside a tag list"
+  },
+  "theme.admonition.caution": {
+    "message": "uyarı",
+    "description": "The default label used for the Caution admonition (:::caution)"
+  },
+  "theme.admonition.danger": {
+    "message": "tehlike",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "bilgi",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.note": {
+    "message": "not",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "ipucu",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.warning": {
+    "message": "uyarı",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "Kapat",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "Blog son gönderiler navigasyonu",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "Kenar çubuğu kategorisini genişlet '{label}'",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "Kenar çubuğu kategorisini daralt '{label}'",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.IconExternalLink.ariaLabel": {
+    "message": "(yeni sekmede açılır)",
+    "description": "The ARIA label for the external link icon"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "Ana menü",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "Diller",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.NotFound.p2": {
+    "message": "Lütfen sizi orijinal URL'ye yönlendiren sitenin sahibiyle iletişime geçin ve bağlantısının bozuk olduğunu bildirin.",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.blog.post.readMore": {
+    "message": "Daha Fazla",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "{title} hakkında daha fazla bilgi edinin",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "{readingTime} dakikalık okuma|{readingTime} dakikalık okuma",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "Kelime kaydırmayı aç/kapat",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Ana sayfa",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "Kenar çubuğunu daralt",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Kenar çubuğunu daralt",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "Gezinme çubuğunu aç/kapat",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
+    "message": "Açılır menüyü genişlet",
+    "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
+    "message": "Açılır menüyü daralt",
+    "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Kenar çubuğunu genişlet",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "Kenar çubuğunu genişlet",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.blog.post.plurals": {
+    "message": "Bir gönderi|{count} gönderi",
+    "description": "Pluralized label for \"{count} posts\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.blog.tagTitle": {
+    "message": "\"{tagName}\" ile etiketlenmiş {nPosts}",
+    "description": "The title of the page for a blog tag"
+  },
+  "theme.blog.author.pageTitle": {
+    "message": "{authorName} - {nPosts}",
+    "description": "The title of the page for a blog author"
+  },
+  "theme.blog.authorsList.pageTitle": {
+    "message": "Yazarlar",
+    "description": "The title of the authors page"
+  },
+  "theme.blog.authorsList.viewAll": {
+    "message": "Tüm Yazarları Görüntüle",
+    "description": "The label of the link targeting the blog authors page"
+  },
+  "theme.blog.author.noPosts": {
+    "message": "Bu yazar henüz herhangi bir yazı yazmadı.",
+    "description": "The text for authors with 0 blog post"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "Listelenmeyen sayfa",
+    "description": "The unlisted content banner title"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "Bu sayfa listelenmemiş. Arama motorları dizine eklemez ve yalnızca doğrudan bağlantısı olan kullanıcılar buna erişebilir.",
+    "description": "The unlisted content banner message"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "Taslak sayfa",
+    "description": "The draft content banner title"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "Bu sayfa bir taslaktır. Sadece dev'de görünür olacak ve üretim yapısından hariç tutulacaktır.",
+    "description": "The draft content banner message"
+  },
+  "theme.docs.DocCard.categoryDescription.plurals": {
+    "message": "1 öğe|{count} öğe",
+    "description": "The default description for a category card in the generated index about how many items this category includes"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "Tekrar deneyin",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Ana içeriğe geç",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "Etiketler",
+    "description": "The title of the tag list page"
+  },
+  "install.copied": {
+    "message": "Kopyalandı"
+  },
+  "install.copyAria": {
+    "message": "Kurulum komutunu kopyala"
+  },
+  "install.copy": {
+    "message": "Kopyala"
+  },
+  "install.oneCommand": {
+    "message": "Tek komutla kurulum"
+  },
+  "install.docNote": {
+    "message": "Bunu yardımcı bilgisayarda çalıştırın (internet bağlantılı 64 bit Raspberry Pi OS, Debian veya Ubuntu). Aşağıdaki adımlar ne yaptığını ve cihazı nasıl hazırlayacağınızı açıklar."
+  },
+  "install.heroLabel": {
+    "message": "UAVcast-Pro’yu kur"
+  },
+  "install.moreLink": {
+    "message": "Diğer yöntemler ve gereksinimler"
+  },
+  "footer.install": {
+    "message": "UAVcast-Pro’yu kur"
+  },
+  "nav.installTitle": {
+    "message": "UAVcast-Pro’yu kur: tek satırlık kurulum komutu"
+  },
+  "nav.install": {
+    "message": "Kur"
+  },
+  "drawer.install": {
+    "message": "UAVcast-Pro’yu kur"
+  },
+  "drawer.installGuide": {
+    "message": "Kurulum kılavuzu"
+  },
+  "buy.cta": {
+    "message": "UAVcast-Pro satın al"
+  },
+  "buy.plans": {
+    "message": "Planları ve fiyatları gör"
+  },
+  "buy.boxAria": {
+    "message": "UAVcast-Pro lisansı satın al"
+  },
+  "buy.activateText": {
+    "message": "Drone'u etkinleştirmek için bir UAVcast-Pro lisansına ihtiyacınız var. UAVmatrix mağazasından satın alın."
+  },
+  "buy.fleetText": {
+    "message": "Fleet Manager, UAVcast-Pro lisansına dahildir. Eşleştirdiğiniz her drone için bir lisans gerekir."
+  },
+  "buy.license": {
+    "message": "Lisans satın al"
+  },
+  "nav.buy": {
+    "message": "Satın al"
+  },
+  "nav.buyTitle": {
+    "message": "UAVcast-Pro'yu UAVmatrix mağazasından satın alın"
+  },
+  "drawer.buy": {
+    "message": "Lisans"
+  }
+}

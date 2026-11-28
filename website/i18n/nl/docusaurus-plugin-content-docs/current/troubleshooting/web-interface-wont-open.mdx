@@ -1,0 +1,80 @@
+---
+title: "De webinterface van UAVcast-Pro opent niet na de installatie"
+sidebar_label: Webinterface opent niet
+description: "UAVcast-Pro niet te openen op http://device-ip na de installatie? Zoek het juiste adres en controleer de uavcast-web-service, de serverpoort en poort 80."
+sidebar_position: 9
+---
+
+# Webinterface opent niet {/* #web-interface-wont-open */}
+
+Het installatieprogramma is klaar, maar `http://<device-ip>/` loopt in een time-out, weigert de verbinding of toont de pagina van een ander programma.
+
+<SymptomTable rows={[
+  {symptom: 'Time-out, of de pagina laadt nooit', cause: 'Verkeerd adres, of uw computer zit op een ander netwerk', start: '#check-1'},
+  {symptom: 'Connection refused', cause: 'De webservice draait niet', start: '#check-2'},
+  {symptom: 'Een andere webpagina, bijvoorbeeld van nginx of Apache', cause: 'Iets anders gebruikt poort 80', start: '#check-3'},
+  {symptom: 'Werkte eerder, gestopt na een wijziging van de instellingen', cause: 'De serverpoort is gewijzigd', start: '#check-4'},
+  {symptom: 'Laadt, maar elke pagina springt naar Applicatie', cause: 'Er is nog geen actieve licentie', start: '#check-5'},
+]} />
+
+## Controle 1: Gebruik het juiste adres {/* #check-1 */}
+
+De webinterface draait standaard op **poort 80**, dus het adres is gewoon `http://<device-ip>/`.
+
+<Steps>
+
+1. Zoek het IP-adres van het apparaat. Het installatieprogramma toont het aan het einde. Op het apparaat kunt u ook `hostname -I` uitvoeren.
+2. Op een Raspberry Pi met de standaard hostnaam probeert u `http://raspberrypi.local/`.
+3. Gebruik `http://`, niet `https://`. De webinterface gebruikt geen HTTPS.
+4. Zorg dat uw computer op hetzelfde netwerk zit als het apparaat, of op dezelfde VPN. Via 4G moet u het VPN-adres van de drone gebruiken.
+
+</Steps>
+
+## Controle 2: Draait de webservice? {/* #check-2 */}
+
+Voer op het apparaat dit uit:
+
+```bash
+sudo systemctl status uavcast-web
+```
+
+Er moet **active (running)** staan. Zo niet, start hem dan en lees waarom hij is gestopt:
+
+```bash
+sudo systemctl restart uavcast-web
+journalctl -u uavcast-web --since "1 hour ago"
+```
+
+De webinterface heeft ook de achtergrondservices nodig. Controleer die op dezelfde manier: `uavcast-factory`, `mavlink-manager`, `uavcast-camera` en `redis-server`. De volledige lijst staat in [Services en bestanden](../reference/services-and-files.mdx).
+
+## Controle 3: Poort 80 is al in gebruik {/* #check-3 */}
+
+Als er een andere webserver op het apparaat is geïnstalleerd, kan die poort 80 bezet houden. Zoek uit wie er luistert:
+
+```bash
+sudo ss -ltnp | grep ':80 '
+```
+
+Stop en schakel de andere server uit (bijvoorbeeld `sudo systemctl disable --now nginx`), en herstart daarna `uavcast-web`.
+
+## Controle 4: De serverpoort is gewijzigd {/* #check-4 */}
+
+**Applicatie → Instellingen → Serverpoort** verplaatst de webinterface naar een andere poort, en het adres wordt `http://<device-ip>:<port>/`. Weet u de poort niet meer, lees hem dan op het apparaat:
+
+```bash
+grep SERVER_PORT /etc/systemd/system/uavcast-web.service
+```
+
+## Controle 5: Elke pagina gaat naar Applicatie {/* #check-5 */}
+
+Dat is normaal totdat er op het apparaat een licentie actief is. Activeer die onder **Applicatie → Licentie Beheer**. Lukt dat niet, zie [Licentie activeert niet](./license-activation-failed.mdx).
+
+## Controle 6: Het installatieprogramma is niet voltooid {/* #check-6 */}
+
+Als `uavcast-web` niet bestaat (`Unit uavcast-web.service could not be found`), is de installatie vroegtijdig gestopt. Zie [Installatie mislukt](./installation-fails.mdx).
+
+## Nog steeds geen resultaat? {/* #still-no-luck */}
+
+Stuur de uitvoer van `systemctl status uavcast-web` en `journalctl -u uavcast-web --since yesterday`, plus `/opt/uavcast-pro/installer.log`, naar **support@uavmatrix.com**.
+
+Gerelateerd: [UAVcast-Pro installeren](../get-started/installation.mdx) · [Applicatie-instellingen](../uavcast-pro/application-settings.mdx)

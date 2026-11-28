@@ -1,0 +1,90 @@
+---
+title: "UAVcast-Pro lisansı etkinleşmiyor"
+sidebar_label: Lisans etkinleşmiyor
+description: "UAVcast-Pro'da Invalid license key, Maximum activations reached ve License activation failed hatalarını düzeltin: anahtar, internet, boş yuvalar ve değiştirilen donanım."
+sidebar_position: 7
+---
+
+# UAVcast-Pro lisansı etkinleşmiyor {/* #uavcast-pro-license-wont-activate */}
+
+Anahtarı **Uygulama → Lisans Yöneticisi** bölümüne girip **Doğrula** düğmesine basıyorsunuz ve **Lisans başarıyla etkinleştirildi** yerine bir hata alıyorsunuz. Bu cihazda etkin bir lisans olana kadar her sayfa sizi **Uygulama** bölümüne geri gönderir.
+
+<BuyLicense />
+
+<Screenshot id="uavcast-pro/application--license-activated" alt="Lisans anahtarı alanı, Lisans Ayrıntıları ve Aktif Cihazlar tablosu bulunan Uygulama sayfasındaki Lisans Yöneticisi" caption="Uygulama → Lisans Yöneticisi, etkinleştirilmiş bir cihazda: Lisans Detayları ve Aktif Cihazlar tablosu; bu cihaz Current olarak işaretli." />
+
+<SymptomTable rows={[
+  {symptom: 'Invalid license key veya Invalid license key format', cause: 'Yazım hatası, fazla boşluk veya başka bir ürüne ait anahtar', start: '#check-1'},
+  {symptom: 'Maximum activations reached', cause: 'Anahtardaki tüm cihaz yuvaları kullanımda', start: '#check-2'},
+  {symptom: 'Yeni SD karttan veya yeni karttan sonra yeniden istiyor', cause: 'Cihaz yeni bir cihaz olarak sayılıyor', start: '#check-3'},
+  {symptom: 'License activation failed veya hiçbir şey olmuyor', cause: 'İnternet yok veya cihazda saat yanlış', start: '#check-4'},
+  {symptom: 'Cannot connect to license service', cause: 'UAVcast-Pro arka plan servisi çalışmıyor', start: '#check-5'},
+  {symptom: 'Lisans Durumu: Expired', cause: 'Süreli bir lisansın süresi doldu', start: '#check-6'},
+]} />
+
+## Kontrol 1: Anahtarın kendisi {/* #check-1 */}
+
+<Steps>
+
+1. Anahtarı sipariş e-postanızdan veya [uavmatrix.com](https://uavmatrix.com) üzerindeki hesabınızdan kopyalayıp **Lisans Anahtarı** alanına yapıştırın. Anahtarı elle yazmak hataların en yaygın kaynağıdır.
+2. Anahtarın önünde veya sonunda boşluk olmadığından emin olun.
+3. **Doğrula** düğmesine basın.
+
+</Steps>
+
+## Kontrol 2: Bir cihaz yuvası açın {/* #check-2 */}
+
+Her lisans sabit sayıda cihaza izin verir (**İzin Verilen Cihazlar**). **Kalan Cihazlar** 0 olduğunda etkinleştirme **Maximum activations reached. Please deactivate another device first or upgrade your license.** hatasıyla başarısız olur.
+
+<Steps>
+
+1. Lisansın etkin olduğu herhangi bir cihazda **Uygulama → Lisans Yöneticisi → Aktif Cihazlar** bölümünü açın.
+2. Artık kullanmadığınız cihazı bulun ve **Kaydı Sil** düğmesine basın. Yuva hemen serbest kalır.
+3. Yeni cihazı etkinleştirin.
+
+</Steps>
+
+Etkinleştirilmiş hiçbir cihaza ulaşamazsanız, lisans anahtarıyla **support@uavmatrix.com** adresine yazın; yuvayı açabilirler. Yuva eklemek için [uavmatrix.com](https://uavmatrix.com) üzerinden lisansınıza daha fazla cihaz satın alın.
+
+## Kontrol 3: SD kartı veya kartı değiştirdiniz {/* #check-3 */}
+
+Lisans donanıma bağlıdır; depolama aygıtı dahil. Yeni bir SD kart, yeni bir SSD veya yeni bir kart yeni cihaz sayılır ve yeni bir yuva kullanır. Taşımadan önce veya sonra, kontrol 2'deki gibi **Aktif Cihazlar** içindeki eski kaydı **Kaydı Sil** ile kaldırın. **License already activated on this device** bir hata değildir: anahtar zaten bu cihazda etkindi.
+
+## Kontrol 4: İnternet erişimi ve saat {/* #check-4 */}
+
+Etkinleştirme, UAVmatrix lisans sunucusuyla HTTPS (443 portu) üzerinden iletişim kurar; bu nedenle cihazın o anda çalışan bir internet bağlantısına ihtiyacı vardır.
+
+<Steps>
+
+1. Cihazda `curl -I https://uavmatrix.com` komutunu çalıştırın. Zaman aşımı değil, bir HTTP yanıtı almalısınız.
+2. Hücresel modem kullanıyorsanız internetinin gerçekten çalıştığını kontrol edin: [Modem bağlı, ancak internet yok](./modem-no-internet.mdx).
+3. Tarihi `date` komutuyla kontrol edin. Yanlış saate sahip bir cihaz HTTPS bağlantısı açamaz. Gerçek zaman saati olmayan kartlar saati açılıştan sonra internetten alır; bu nedenle açıldıktan sonra bir dakika bekleyip yeniden deneyin.
+
+</Steps>
+
+## Kontrol 5: Lisans servisine bağlanılamıyor {/* #check-5 */}
+
+Bu mesaj, web arayüzünün internete değil, UAVcast-Pro'nun kendi arka plan servisine ulaşamadığı anlamına gelir. Servisi yeniden başlatın ve tekrar deneyin:
+
+```bash
+sudo systemctl restart uavcast-factory
+sudo systemctl status uavcast-factory
+```
+
+Servis **active (running)** durumunda kalmazsa, **Lisans Yöneticisi** seçiliyken [günlükleri toplayın](./collect-logs.mdx).
+
+## Kontrol 6: Süresi dolmuş lisans {/* #check-6 */}
+
+Lisans ayrıntılarında **Lisans Durumu:** ve **Bitiş Tarihi:** alanları görünür. Süresi dolmuş bir lisansın [uavmatrix.com](https://uavmatrix.com) üzerinden yenilenmesi gerekir.
+
+:::note 64 bit işletim sistemi
+UAVcast-Pro v6 yalnızca 64 bit işletim sistemi üzerinde çalışır. Buraya kadar geldiyseniz işletim sistemi uygundur; 32 bit işletim sisteminde yükleyici zaten *No installation candidate* hatasıyla durur.
+:::
+
+## Hâlâ başarısız mı? {/* #still-failing */}
+
+**Lisans Yöneticisi** seçiliyken [günlükleri indirin](./collect-logs.mdx). Günlükler, lisans sunucusundan gelen yanıt kodunu içerir; örneğin boş yuva olmadığında `code 550`. Bunları anahtarınızın ilk ve son dört karakteriyle birlikte **support@uavmatrix.com** adresine gönderin.
+
+Fleet Manager kullanıyorsanız, sorunsuz etkinleşen bir lisans eşleştirme sırasında yine de reddedilebilir. Bkz. [Eşleştirme kodu geçersiz veya süresi dolmuş](./pairing-code-invalid.mdx).
+
+İlgili: [Lisansınızı etkinleştirin](../get-started/license-activation.mdx)

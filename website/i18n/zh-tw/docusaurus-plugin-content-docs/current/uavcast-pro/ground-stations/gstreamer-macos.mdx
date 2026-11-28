@@ -1,0 +1,82 @@
+---
+title: "在 macOS 上使用 GStreamer 接收無人機影像"
+description: "使用 Homebrew 或官方套件在 Mac 上安裝 GStreamer，並以 gst-launch-1.0 播放 UAVcast-Pro H.264 無人機影像與 Opus 音訊，同時說明 macOS 防火牆提示。"
+sidebar_position: 6
+sidebar_label: "macOS 上的 GStreamer"
+---
+
+# macOS 上的 GStreamer {/* #gstreamer-on-macos */}
+
+GStreamer 可在「終端機」中以視窗播放 UAVcast-Pro 影像串流。您可以用它測試影像路徑、在 QGroundControl 旁觀看第二台攝影機，或收聽音訊。適用於 Apple 晶片與 Intel 架構的 Mac。
+
+## 開始之前 {/* #before-you-begin */}
+
+在無人機上，於 [地面控制站](./index.mdx) 新增目標，填入此 Mac 的 IP 位址（**系統設定 → 網路**；透過 4G 時使用 VPN 位址），並開啟**啟用視訊**。
+
+## 安裝 GStreamer {/* #install-gstreamer */}
+
+<Tabs groupId="mac-install">
+<TabItem value="brew" label="Homebrew" default>
+
+```bash
+brew install gstreamer
+```
+
+Homebrew 套件包含 base、good、bad、ugly 與 libav 外掛集，因此 `avdec_h264` 會存在。
+</TabItem>
+<TabItem value="pkg" label="官方套件">
+
+<Steps>
+
+1. 從 [gstreamer.freedesktop.org/download](https://gstreamer.freedesktop.org/download/) 下載 macOS **runtime** 套件並安裝。
+2. 在終端機中將其加入 PATH：
+
+   ```bash
+   echo 'export PATH="/Library/Frameworks/GStreamer.framework/Versions/1.0/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+
+</Steps>
+
+</TabItem>
+</Tabs>
+
+使用 `gst-launch-1.0 --version` 確認安裝，並使用 `gst-inspect-1.0 avdec_h264` 檢查 H.264 解碼器（它會印出該元件的詳細資訊；*No such element or plugin* 表示缺少它）。
+
+## 播放影像 {/* #play-the-video */}
+
+```bash title="攝影機 1，連接埠 5600"
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+首次執行時，macOS 會詢問是否允許 `gst-launch-1.0` 接受傳入的網路連線。請選擇**允許**。偵測到第一個關鍵影格後會開啟視窗；在終端機中按下 **Ctrl+C** 即可停止。
+
+:::tip 您應該看到的畫面
+
+1. 終端機會印出 `Setting pipeline to PLAYING ...` 並等待影像。
+2. 第一批封包抵達後，`-v` 會印出包含 `caps = application/x-rtp` 的行。
+3. 影像視窗會顯示攝影機畫面。
+
+若在第 1 步之後停止，表示沒有影像抵達此電腦：請參閱下方的疑難排解表格。
+:::
+
+- **攝影機 2**（[雙路串流](../camera/multi-camera.mdx)）：以 `port=5601` 再次執行。
+- **較低延遲**（連線品質良好時）：將 `rtpjitterbuffer` 替換為 `rtpjitterbuffer latency=0`。
+- 若封包已抵達但沒有視窗出現，請將 `autovideosink` 替換為 `osxvideosink`。
+
+## 收聽音訊 {/* #hear-the-audio */}
+
+```bash title="音訊，連接埠 5602"
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp, media=(string)audio, clock-rate=(int)48000, encoding-name=(string)OPUS, payload=(int)97" ! rtpjitterbuffer ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+音訊需要在無人機的**攝影機**頁面中開啟**音訊**與**傳送音訊到地面站**。
+
+## 疑難排解 {/* #troubleshooting */}
+
+| 訊息或現象 | 解決方式 |
+|---|---|
+| *command not found: gst-launch-1.0* | Homebrew：執行 `brew doctor`。官方套件：依上述方式將框架的 `bin` 資料夾加入 PATH。 |
+| *no element "avdec_h264"* | 缺少 libav 外掛。請使用 Homebrew 重新安裝，或安裝完整的官方 runtime 套件。 |
+| 執行正常，但沒有視窗 | 沒有任何資料抵達。請檢查目標 IP、**啟用視訊**，並確認您已允許傳入連線（**系統設定 → 網路 → 防火牆 → 選項**）。 |
+| 啟動時出現綁定錯誤 | QGroundControl 或另一個 GStreamer 已在使用該連接埠。請關閉它。 |

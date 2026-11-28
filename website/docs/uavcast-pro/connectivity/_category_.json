@@ -1,0 +1,7 @@
+{
+  "label": "Connectivity",
+  "position": 7,
+  "collapsible": true,
+  "collapsed": true,
+  "link": { "type": "generated-index", "slug": "/uavcast-pro/connectivity", "title": "Connectivity: modem, VPN, DNS and networks", "description": "Connect UAVcast-Pro to the internet over 4G/LTE, reach it through a VPN, publish it with dynamic DNS and choose which network carries the traffic." }
+}

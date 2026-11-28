@@ -1,0 +1,57 @@
+---
+title: "Il drone risulta Offline in Fleet Manager"
+sidebar_label: Drone offline in Fleet Manager
+description: "L'UAV accoppiato risulta Offline o Re-pair required in Fleet Manager? Controlla la connessione internet del drone, la porta 8883 in uscita, Fleet Management di UAVcast-Pro e la licenza."
+sidebar_position: 14
+---
+
+# Il drone risulta Offline in Fleet Manager {/* #drone-shows-offline-in-fleet-manager */}
+
+L'UAV è accoppiato, ma Fleet Manager lo mostra come **Offline** (in grigio sulla mappa della flotta), la sua telemetria è ferma, oppure ha il badge **Re-pair required**.
+
+Fleet Manager segna un UAV come offline quando non riceve nulla da esso per 20 secondi. Il drone comunica con Fleet Manager tramite una connessione MQTT cifrata, sulla propria connessione internet.
+
+<SymptomTable rows={[
+  {symptom: "Offline, e Fleet Management in UAVcast-Pro indica Disconnected", cause: "Il drone non ha internet, oppure la porta 8883 è bloccata", start: '#check-1'},
+  {symptom: "Badge Re-pair required, oppure This UAV must be re-paired", cause: "Il drone ha un certificato vecchio", start: '#check-2'},
+  {symptom: "Offline subito dopo aver reinstallato o ripristinato UAVcast-Pro", cause: "L'accoppiamento è stato rimosso sul drone", start: '#check-3'},
+  {symptom: "Online, ma senza posizione né batteria", cause: "Controllore di volo non collegato a UAVcast-Pro", start: '#check-4'},
+]} />
+
+## Verifica 1: la connessione del drone a Fleet Manager {/* #check-1 */}
+
+<Steps>
+
+1. Apri UAVcast-Pro sul drone e vai su **Fleet Management**. **Fleet Connection** mostra **Connected** oppure **Disconnected**, e **Last Connected**.
+2. Se è **Disconnected**, verifica che il drone abbia internet: la riga **Cellular** della dashboard, oppure `curl -I https://fleet-manager.uavmatrix.com` sul dispositivo. Risolvi prima il collegamento con [Modem connesso, ma senza internet](./modem-no-internet.mdx).
+3. Il drone deve poter aprire una **connessione TCP in uscita sulla porta 8883** (MQTT su TLS). Alcune reti aziendali, il Wi-Fi pubblico e alcuni piani SIM IoT consentono solo le porte web. Prova un'altra rete, oppure chiedi al provider di aprire la porta 8883.
+4. Controlla data e ora sul dispositivo con `date`. La connessione usa certificati, che falliscono su un dispositivo con l'orologio sbagliato.
+5. Assicurati che la licenza del drone sia ancora attiva (**Applicazione → Gestore Licenze**).
+
+</Steps>
+
+## Verifica 2: Re-pair required {/* #check-2 */}
+
+Fleet Manager ha cambiato il modo in cui i droni si connettono, e gli UAV accoppiati prima di quel cambiamento devono essere accoppiati di nuovo una volta. Non si perde nulla: l'UAV mantiene nome e storico, e non serve rimuoverlo in Fleet Manager.
+
+<Steps>
+
+1. In UAVcast-Pro sul drone, apri **Fleet Management** e premi **Disconnect from Fleet**, poi conferma.
+2. Premi **Connect to Fleet Manager**. Compare un **Pairing Code** a 8 cifre con un conto alla rovescia.
+3. In Fleet Manager, vai su **Fleet → Pair Device**, scegli l'organizzazione e inserisci il codice.
+
+</Steps>
+
+## Verifica 3: il drone ha perso l'accoppiamento {/* #check-3 */}
+
+Una reinstallazione con reset del database, **Reset Database** oppure **Disconnect from Fleet**, rimuove l'accoppiamento sul drone, che quindi smette di riportare dati. Riaccoppialo come nella verifica 2. Accoppiarlo nella stessa organizzazione riutilizza la voce UAV esistente.
+
+## Verifica 4: online, ma senza telemetria {/* #check-4 */}
+
+Posizione, batteria e modalità di volo provengono dal controllore di volo. Se l'UAV è online ma questi campi sono vuoti, UAVcast-Pro non riesce a sentire il controllore di volo: vedi [Nessun heartbeat MAVLink](./no-mavlink-heartbeat.mdx).
+
+## Ancora offline? {/* #still-offline */}
+
+[Scarica i log](./collect-logs.mdx) dal drone con **Tutti i Log** selezionato e inviali a **support@uavmatrix.com**, indicando il nome dell'UAV e l'organizzazione. Altri problemi di Fleet Manager sono trattati in [Risoluzione dei problemi di Fleet Manager](../fleet-manager/troubleshooting.mdx).
+
+Correlati: [Accoppiamento Fleet Manager in UAVcast-Pro](../uavcast-pro/fleet-pairing.mdx)

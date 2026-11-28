@@ -1,0 +1,148 @@
+---
+title: "无人机遥测与 4G 术语表"
+sidebar_label: 术语表
+description: "UAVcast-Pro 和 Fleet Manager 文档中术语的通俗解释：MAVLink、GCS、心跳、APN、HiLink、NTRIP、RTCM、VRS、ZeroTier、Tailscale。"
+sidebar_position: 6
+---
+
+# 术语表 {/* #glossary */}
+
+### AGL / AMSL（离地高度 / 海拔高度） {/* #agl--amsl */}
+
+离地高度（此处指相对于起飞点的高度）和平均海平面以上的高度。UAVcast-Pro 自 v6.5.0 起使用这些术语，取代了 REL 和 MSL。
+
+### APN（接入点名称） {/* #apn-access-point-name */}
+
+蜂窝调制解调器连接时所使用的运营商网关名称。当 **接入点名称（可选）** 为空时，UAVcast-Pro 会自动检测该名称。
+
+### ArduPilot {/* #ardupilot */}
+
+开源的多旋翼、固定翼、VTOL、地面车和船只自动驾驶仪固件。UAVcast-Pro 同时支持 ArduPilot 以及其他任何 MAVLink 飞行控制器，例如 PX4。其飞行模式按钮使用 ArduPilot 的模式名称。
+
+### 认证密钥（Auth key） {/* #auth-key */}
+
+一种 Tailscale 密钥，可在无需浏览器的情况下将设备登录到 tailnet。Fleet Manager 使用认证密钥将地面站加入组织的 VPN。
+
+### 比特率（Bitrate） {/* #bitrate */}
+
+视频编码器每秒产生的比特数。它必须在您的网络上行带宽范围内，并留有余量。
+
+### CSI 摄像头 {/* #csi-camera */}
+
+连接在 Raspberry Pi 排线接口上的摄像头，例如 Camera Module 3。
+
+### 目标地址（Destination） {/* #destination */}
+
+在 UAVcast-Pro 中，位于 **地面控制站** 下的一项地面站条目：包含一个 IP 地址、一个遥测端口和一个视频端口。
+
+### 双流（Dual stream） {/* #dual-stream */}
+
+同时向地面站传输两台摄像头的视频，使用两个视频端口。
+
+### Fleet Manager {/* #fleet-manager */}
+
+UAVmatrix 的 Web 管理面板，用于在一个组织内监控和控制多架 UAVcast-Pro 无人机。
+
+### GCS（地面控制站） {/* #gcs-ground-control-station */}
+
+用于监控和指挥无人机的软件，以及运行该软件的计算机：QGroundControl、Mission Planner、MAVProxy。
+
+### GCS 故障保护 {/* #gcs-failsafe */}
+
+飞行控制器的一项设置，当其停止接收地面站信号时，无人机会自动执行相应动作（返航、降落或悬停）。
+
+### GGA {/* #gga */}
+
+包含您位置信息的 NMEA 语句。VRS 和就近挂载点类型的 NTRIP 播发站需要此信息，以便为您的位置计算改正数据。
+
+### H.264 {/* #h264 */}
+
+UAVcast-Pro 发送的视频压缩格式。所有常见的地面站软件均可解码。
+
+### 心跳（Heartbeat） {/* #heartbeat */}
+
+飞行控制器约每秒发送一次的 MAVLink 消息，用于表明“我在线”。*没有心跳* 表示链路中不包含可读取的 MAVLink 数据。
+
+### HiLink 调制解调器 {/* #hilink-modem */}
+
+一种内置路由器的 USB 调制解调器，可自动连接，并在 Linux 中显示为网络适配器。
+
+### 注入器（Injector） {/* #injector */}
+
+UAVcast-Pro 的一种监听器（HTTP、UDP 或串口），可将您自己的传感器数值转换为 MAVLink `NAMED_VALUE_FLOAT` 消息。
+
+### 关键帧（Keyframe） {/* #keyframe */}
+
+解码器可以从中开始解码的完整视频帧。关键帧越频繁，从丢包中恢复得越快。通过 **流恢复速率** 进行设置。
+
+### MAVLink {/* #mavlink */}
+
+飞行控制器与地面站之间的消息协议。
+
+### 挂载点（Mountpoint） {/* #mountpoint */}
+
+NTRIP 播发站上的一个命名改正数据流，通常对应一个基准站或一项 VRS 服务。
+
+### MQTT {/* #mqtt */}
+
+无人机与 Fleet Manager 通信所使用的消息协议，通过 TLS 加密，端口为 8883。
+
+### NTRIP / NTRIP 播发站 {/* #ntrip--ntrip-caster */}
+
+一种通过互联网传输 GNSS 改正数据的协议，以及提供该服务的服务器。
+
+### 配对码（Pairing code） {/* #pairing-code */}
+
+当您将无人机连接到 Fleet Manager 时，UAVcast-Pro 显示的 8 位数字代码。有效期为 5 分钟，且只能使用一次。
+
+### 只读（目标地址） {/* #read-only-destination */}
+
+一种接收遥测数据但无法更改飞行器任何设置的地面站目标地址：从该地面站发出的命令、模式切换、参数和任务写入均会被阻止。 此行为自 UAVcast-Pro 6.5.3 起生效；在更早的版本中，只读不会阻止参数写入。
+
+### 只读（用户） {/* #read-only-user */}
+
+UAVcast-Pro 的一种用户角色，可查看页面，但不能更改设置或控制无人机。
+
+### RTCM3 {/* #rtcm3 */}
+
+GNSS 改正数据的标准消息格式。
+
+### RTK、RTK Float、RTK Fixed {/* #rtk-rtk-float-rtk-fixed */}
+
+借助改正数据实现的实时动态定位。Float 为近似解；Fixed 为厘米级解。
+
+### RTP / UDP {/* #rtp--udp */}
+
+UAVcast-Pro 用于视频和遥测的传输方式：速度快、无重传，从而保持较低的延迟。
+
+### SERIALx_PROTOCOL / SERIALx_BAUD {/* #serialx_protocol--serialx_baud */}
+
+ArduPilot 参数，用于设置串口所使用的协议（2 = MAVLink2）及其波特率。
+
+### 流绑定（Stream binding） {/* #stream-binding */}
+
+在 Fleet Manager 中，将一架无人机的视频和遥测数据通过各自端口发送至某一地面站的链路。
+
+### sysid / compid {/* #sysid--compid */}
+
+MAVLink 系统 ID（哪一台飞行器）和组件 ID（该飞行器的哪一个部件）。飞行控制器通常为 sysid 1、compid 1。
+
+### Tailnet {/* #tailnet */}
+
+一个私有的 Tailscale 网络。
+
+### Tailscale {/* #tailscale */}
+
+基于 WireGuard 的 VPN。UAVcast-Pro 可以加入您的 tailnet，或 Fleet Manager 组织网络。
+
+### UAVnet {/* #uavnet */}
+
+UAVmatrix 托管的 ZeroTier 网络控制器，地址为 uavnet.uavmatrix.com。该服务即将停止，将由 Fleet Manager VPN 取代；现有用户应迁移至 Fleet Manager。
+
+### VRS（虚拟参考站） {/* #vrs-virtual-reference-station */}
+
+一种改正数据服务，通过基准站网络为您的位置计算改正数据。需要上行 GGA 信息。
+
+### ZeroTier {/* #zerotier */}
+
+一种点对点 VPN。UAVcast-Pro 可以加入您自己的 ZeroTier 网络。

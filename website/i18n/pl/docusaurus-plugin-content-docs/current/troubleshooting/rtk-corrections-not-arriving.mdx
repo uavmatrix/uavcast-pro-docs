@@ -1,0 +1,85 @@
+---
+title: "Poprawki NTRIP RTK nie docierają"
+sidebar_label: Poprawki RTK nie docierają
+description: "NTRIP utknął na Łączenie, nie przekazano RTCM albo brak RTK Fixed? Sprawdź host castera, port, mountpoint, dane logowania, GGA upstream i odbiornik GPS."
+sidebar_position: 12
+---
+
+# Poprawki RTK nie docierają {/* #rtk-corrections-not-arriving */}
+
+W **Kontroler Lotu → NTRIP / RTK** status nie dochodzi do **Strumieniowanie korekcji**, licznik **Przekazane wiadomości RTCM** zostaje na zero albo poprawki docierają, ale kontroler lotu nigdy nie przechodzi ze stanu **Fix 3D** ani **RTK Float**.
+
+Łańcuch ma cztery ogniwa: internet → caster → UAVcast-Pro → kontroler lotu → odbiornik GPS. Znajdź pierwsze, które się zrywa.
+
+<Screenshot id="uavcast-pro/flight-controller--ntrip" alt="Zakładka NTRIP / RTK z panelem statusu, licznikami i linią Caster response oraz kartą Jakość GPS" caption="Kontroler Lotu → NTRIP / RTK na urządzeniu bez skonfigurowanego castera: status Wyłączone, liczniki na zero i puste pole Odpowiedź castera. Stan prawidłowy to Strumieniowanie korekcji, odpowiedź castera 200 i rosnące liczniki." />
+
+<SymptomTable rows={[
+  {symptom: 'Status Łączenie lub Błąd, brak odpowiedzi castera', cause: 'Zły host lub port, niezgodność TLS albo brak internetu', start: '#check-1'},
+  {symptom: 'Odpowiedź castera 401 Unauthorized', cause: 'Zła nazwa użytkownika, hasło lub mountpoint', start: '#check-2'},
+  {symptom: 'Log mówi, że caster zwrócił sourcetable', cause: 'Nazwa mountpointu jest błędna', start: '#check-2'},
+  {symptom: 'Połączono, ale brak danych RTCM, połączenie zrywa się co kilka sekund', cause: 'Caster najpierw potrzebuje pozycji GGA', start: '#check-3'},
+  {symptom: 'RTCM przekazane, a fix pozostaje na Fix 3D', cause: 'Łącze z kontrolerem lotu nie działa albo odbiornik nie obsługuje RTK', start: '#check-4'},
+  {symptom: 'RTK Float, nigdy RTK Fixed', cause: 'Widoczność nieba, odległość od bazy lub czas', start: '#check-5'},
+]} />
+
+## Sprawdzenie 1: Połącz się z casterem {/* #check-1 */}
+
+<Steps>
+
+1. Sprawdź **Host castera** i **Port**. Większość publicznych casterów używa zwykłego TCP na porcie `2101`.
+2. **Użyj TLS (HTTPS)** musi zgadzać się z casterem. Komercyjne castery (Trimble, Hexagon, Topcon i inne) często wymagają TLS, zwykle nadal na porcie 2101, czasem na 2102 lub 443. Publiczne castery zwykle nie używają TLS.
+3. Upewnij się, że dron ma internet. **Panel Główny → Cellular** powinien być połączony. Jeśli nie, zobacz [Modem połączony, brak internetu](./modem-no-internet.mdx).
+4. Niektóre plany komórkowe blokują nietypowe porty wychodzące. Jeśli caster oferuje port 443, spróbuj go.
+
+</Steps>
+
+## Sprawdzenie 2: Dane logowania i mountpoint {/* #check-2 */}
+
+<Steps>
+
+1. Naciśnij **Testuj połączenie**. Komunikat **Caster accepted the credentials.** oznacza, że nazwa użytkownika i hasło są poprawne.
+2. Dla rtk2go.com użyj jako **Nazwa użytkownika** prawdziwego adresu e-mail, a **Hasło** zostaw puste.
+3. Naciśnij **Przeglądaj mountpointy** i wybierz mountpoint z listy zamiast wpisywać nazwę. Wybieraj ten najbliższy miejscu, w którym latasz.
+
+</Steps>
+
+Jeśli caster zamiast danych zwraca swoją tablicę *sourcetable*, dziennik NTRIP podaje *caster returned sourcetable — check mountpoint*. Nazwa mountpointu jest błędna albo już nie istnieje.
+
+## Sprawdzenie 3: Wyślij GGA w górę {/* #check-3 */}
+
+Castery VRS i z najbliższym mountpointem wysyłają poprawki dopiero wtedy, gdy znają twoją pozycję. Kolumna **NMEA** w przeglądarce mountpointów pokazuje **Required** dla takich mountpointów.
+
+<Steps>
+
+1. Włącz **Send GGA upstream** (domyślnie włączone). **Interwał wysyłania (sekundy)** domyślnie wynosi 10.
+2. **Źródło pozycji**: **Live position from flight controller** jest właściwe w locie. Dopóki kontroler lotu nie zgłasza fixa GPS, UAVcast-Pro używa **Fixed manual position**, więc przy testach na stanowisku wpisz szerokość i długość geograficzną blisko siebie.
+3. Obserwuj, jak aktualizuje się **Last GGA sent**.
+
+</Steps>
+
+Gdy caster przestaje odpowiadać, UAVcast-Pro sam się ponownie łączy, a dziennik pokazuje *no data from caster for …s — reconnecting*. Po krótkim zerwaniu internetu poprawki wznawiają się w ciągu kilku sekund.
+
+## Sprawdzenie 4: Od UAVcast-Pro do odbiornika {/* #check-4 */}
+
+Poprawki docierają do GPS przez łącze z kontrolerem lotu, jako MAVLink `GPS_RTCM_DATA`.
+
+<Steps>
+
+1. Kontroler lotu musi być **Połączono** na **Kontroler Lotu → Połączenie**. Jeśli nie, zobacz [Brak heartbeat MAVLink](./no-mavlink-heartbeat.mdx).
+2. Spójrz na kartę **Jakość GPS**. **No RTK status from receiver** oznacza, że kontroler lotu nigdy nie zgłaszał statusu RTK. Podłączony GPS zwykle nie obsługuje RTK: RTK wymaga odbiornika z pomiarem fazy nośnej, na przykład u-blox F9P, Here3+ lub Septentrio Mosaic. Zwykły moduł nawigacyjny M8N lub M10 nie wystarczy do RTK.
+3. **Recent message types** powinno zawierać konstelacje, których używa twój odbiornik (na przykład 1077 GPS, 1087 GLONASS, 1097 Galileo, 1127 BeiDou), oraz komunikat pozycji bazy (1005 lub 1006).
+
+</Steps>
+
+## Sprawdzenie 5: Float, ale nigdy Fixed {/* #check-5 */}
+
+- Zapewnij antenie otwarte niebo. Drzewa, budynki i elektronika samego drona powodują wielodrogowość i szumy.
+- Czekaj. Zimny start może zająć minutę lub dwie nawet w dobrych warunkach.
+- Wybierz bliższą bazę. Dokładność i szansa na fix maleją wraz z odległością od stacji bazowej.
+- **Ostatnia poprawka** w **Jakość GPS** powinna utrzymywać się na poziomie kilku sekund. Jeśli rośnie, poprawki są tracone w łączu.
+
+## Nadal nie działa? {/* #still-not-working */}
+
+[Pobierz logi](./collect-logs.mdx) z zaznaczonym **NTRIP Client** i wyślij je wraz z dostawcą castera i modelem GPS na **support@uavmatrix.com**. Pełna konfiguracja znajduje się w [Konfiguracja RTK z casterem NTRIP](../guides/rtk-ntrip-caster.mdx).
+
+Powiązane: [Ustawienia NTRIP / RTK](../uavcast-pro/flight-controller/ntrip-rtk.mdx)

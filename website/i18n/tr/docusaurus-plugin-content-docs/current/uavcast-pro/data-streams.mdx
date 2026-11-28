@@ -1,0 +1,68 @@
+---
+title: "Herhangi bir MAVLink değeri için canlı telemetri panoları oluşturun"
+description: "Herhangi bir MAVLink alanı veya NAMED_VALUE_FLOAT sensör değeri için grafikler, göstergeler ve karolarla UAVcast-Pro Veri Akışları panoları oluşturun; eşikler, geçmiş ve JSON içe/dışa aktarma desteklenir."
+sidebar_position: 3
+sidebar_label: "Veri Akışları"
+---
+
+# Veri Akışları {/* #data-streams */}
+
+Veri Akışları, kendi canlı telemetri panolarınızı oluşturmanızı sağlar. Sayısal karolar, çizgi grafikler, göstergeler, çubuklar ve durum ışıkları ekleyin; her birini uçuş kontrolcüsünün gönderdiği herhangi bir MAVLink değerine veya bir sensörden ya da [enjektörden](./flight-controller/injectors.mdx) gelen herhangi bir `NAMED_VALUE_FLOAT` sinyaline bağlayın. Panolar drone'da saklanır; bu nedenle web arayüzünü açan herkes aynı panoları görür. Kenar çubuğunda **Veri Akışları** bölümünü açın.
+
+Tipik kullanımlar: sensör değerlerini gösteren bir yük operatörü ekranı, RSRP ve SINR değerli bir LTE bağlantı paneli veya uzun uçuşlar için bir batarya ve güç paneli.
+
+<Screenshot id="uavcast-pro/mission-data" alt="Henüz pano yok yazan ve Pano oluştur düğmesi bulunan Veri Akışları sayfası" caption="İlk panodan önce Veri Akışları: Pano oluştur ile bir pano başlatılır." />
+
+## Pano oluşturma {/* #create-a-dashboard */}
+
+<Steps>
+
+1. **Pano oluştur** seçeneğini seçin (zaten bir panonuz varsa **Yeni pano**), bir **Ad** verin ve **Oluştur** seçeneğini seçin.
+2. Düzenleme moduna girmek için **Düzenle** seçeneğini, ardından **Widget ekle** seçeneğini ve bir tür seçin.
+3. **Kaynak** sekmesinde bir sinyal arayıp seçin. Yeşil bir nokta, örneklerin geldiğini gösterir.
+4. Başlık, birim ve ondalık basamakları **Görünüm** sekmesinde, sınırlar ve renk eşiklerini **Aralık** sekmesinde, grafik seçeneklerini ise **Grafik** sekmesinde ayarlayın. **Kaydet** seçeneğini seçin.
+5. Widget'ları sürükleyip yeniden boyutlandırın, ardından **Bitti** seçeneğini seçin.
+
+</Steps>
+
+Panoları yalnızca yöneticiler oluşturabilir ve düzenleyebilir. Salt okunur kullanıcılar panoları görüntüleyebilir.
+
+## Widget türleri {/* #widget-types */}
+
+| Tür | Gösterdiği |
+|---|---|
+| **Sayısal karo** | Mevcut değer, büyük yazıyla; isteğe bağlı önek ve son ek ile. |
+| **Mini grafik** | Değerin altında küçük bir eğilim çizgisi. |
+| **Çizgi grafik** | Bir zaman aralığı boyunca bir veya daha fazla sinyal. |
+| **Gösterge** | Renkli eşiklerle yuvarlak bir ölçek üzerinde değer. |
+| **Çubuk gösterge** | Min ve maks arasında bir çubuk olarak değer. |
+| **Durum** | Eşiklerden elde edilen renkli bir durum, örneğin Tamam / uyarı / alarm. |
+| **Adlandırılmış değer tablosu** | **Değer**, **Yaş** ve **Kaynak** ile birlikte tüm `NAMED_VALUE_FLOAT` sinyalleri. **Filtre** alanı bir alt dizge veya `*.glob` kabul eder. |
+
+Bir widget, 5 saniye boyunca hiç örnek gelmediğinde **Eski** gösterir; sinyal hiç görülmemişse *Henüz örnek yok* yazar.
+
+## Sinyaller {/* #signals */}
+
+- **MAVLink alanları**: uçuş kontrolcüsünün gönderdiği her sayısal alan (tutum, VFR HUD, batarya, GPS, ev konumu, RTK, failsafe, heartbeat ve durum değerleri) bilinen yerlerde anlaşılır adlar ve birimlerle otomatik olarak görünür.
+- **Adlandırılmış değerler**: `NAMED_VALUE_FLOAT` sinyalleri, `NAME@sysid:compid` biçiminde gösterilir; örneğin `LTE_RSRP@1:194`.
+
+Henüz göndermeyen bir sinyali yazıp Enter tuşuna basarak ekleyebilirsiniz; böylece sensörü bağlamadan önce panoyu hazırlayabilirsiniz. Seçili bir kaynak üzerindeki kalem simgesini kullanarak ona bir görünen ad verebilirsiniz.
+
+## Grafik seçenekleri {/* #chart-options */}
+
+| Seçenek | Değerler |
+|---|---|
+| **Pencere** | **1 dk**, **5 dk**, **15 dk**, **1 saat** veya **Özel (saniye)** |
+| **Eğri** | **Doğrusal**, **Yumuşak (monoton)**, **Basamak**, **Önce basamak**, **Sonra basamak**, **Basis spline** |
+| Diğer | **Açıklamayı göster**, **Izgarayı göster**, **Çizgi kalınlığı**, **Alan dolgusu**, **Veri noktalarını göster**, **Eşik referans çizgileri**, **Y ekseni etiketi** |
+
+## Geçmiş {/* #history */}
+
+UAVcast-Pro, drone üzerinde her sinyal için kısa bir geçmiş tutar (sinyal başına en fazla 3600 örnek, 1 Hz'de yaklaşık bir saat). Bu sayede bir panoyu açtığınızda, sayfayı yenilemeniz sonrasında bile grafikler hemen dolar.
+
+## Panoları paylaşma {/* #share-dashboards */}
+
+- **JSON dışa aktar** panoyu panoya kopyalar.
+- **JSON içe aktar** yapıştırılan JSON'dan bir pano oluşturur. Bir panoyu başka bir drone'a kopyalamak için kullanın.
+- **Çoğalt** ve **Yeniden adlandır** araç çubuğunda bulunur; **Sil** bir panoyu ve widget'larını kaldırır.
+- **Tam ekran** diğer arayüzü gizler; ayrılmış bir monitör için kullanışlıdır.

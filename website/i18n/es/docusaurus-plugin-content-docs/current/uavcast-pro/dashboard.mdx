@@ -1,0 +1,58 @@
+---
+title: "Tablero de UAVcast-Pro: estado del dron, enlace y energía"
+description: "Lee el tablero de UAVcast-Pro para revisar el controlador de vuelo, el GPS, la batería, el enlace con la estación de control, la red celular, la VPN, RTK, el video y la energía, la temperatura y la limitación de CPU de la Raspberry Pi."
+sidebar_position: 2
+sidebar_label: "Tablero"
+---
+
+# Tablero {/* #dashboard */}
+
+El tablero es la lista de verificación previa al vuelo del computador de a bordo. Una tarjeta de estado indica si el controlador de vuelo, el GPS, la batería, el enlace con la estación de control, el módem, la VPN, RTK, el video y la fuente de alimentación están en buen estado, con un resumen como *Todos los sistemas normales* o *2 problemas*. Debajo encontrarás la información del sistema, el tráfico de red, la memoria y el almacenamiento. Abre **Tablero** en la barra lateral.
+
+<Screenshot id="uavcast-pro/dashboard" alt="Tablero de UAVcast-Pro con la tarjeta de estado mostrando 2 problemas, información del sistema con temperatura y el gráfico de tráfico de red" caption="Tablero en una unidad de prueba en banco: dos problemas (sin fijación GPS, VPN no conectada), información del sistema y tráfico de red." />
+
+## Tarjeta de estado {/* #status-card */}
+
+La tarjeta tiene tres grupos. Cada fila tiene un punto de color: verde es correcto, ámbar es una advertencia y rojo es un problema.
+
+| Fila | Valores de ejemplo | Qué hacer si no está en verde |
+|---|---|---|
+| **Flight controller** | *Armado*, *Desarmado*, *Enlace detenido*, *Conectando…* | Consulta [Controlador de vuelo](./flight-controller/index.mdx). |
+| **GPS** | *Fijación 3D · 14 satélites*, *RTK fijo*, *Sin fijación*, *Sin GPS* | Espera a tener fijación al aire libre o revisa el cableado del GPS. |
+| **Battery** | voltaje y porcentaje | Carga la batería o revisa la configuración del monitor de batería del controlador de vuelo. |
+| **Ground station** | *Enviando a 2 · 16 paquetes/s*, *Sin envío*, *1 configurada · esperando al controlador de vuelo*, *Ninguna configurada* | Consulta [Estaciones de control en tierra](./ground-stations/index.mdx). |
+| **Cellular** | operadora y señal, *No se detectó módem* | Consulta [Módem celular](./connectivity/cellular-modem.mdx). |
+| **VPN** | *Conectado*, *No conectado*, *Desactivado* | Consulta [VPN](./connectivity/vpn.mdx). |
+| **RTK corrections** | *Conectando…*, *Error: revisa la configuración*, *Desactivado* | Consulta [NTRIP / RTK](./flight-controller/ntrip-rtk.mdx). |
+| **Video** | *En ejecución*, *Detenido*, *Desactivado* | Consulta [Cámara](./camera/index.mdx). |
+| **Dynamic DNS** | *En ejecución*, *Desactivado* | Consulta [DNS Dinámico](./connectivity/dynamic-dns.mdx). |
+| **Power supply** | *Estable*, *Voltaje demasiado bajo: usa una fuente de alimentación más potente*, *Reducida (calor o energía)*, *El voltaje bajó desde el arranque* | Consulta [Energía](#power-and-temperature). |
+
+*Fallo del servicio, reiniciando* en cualquier fila significa que el servicio falló y se está reiniciando automáticamente. Si sigue apareciendo, descarga los registros desde **Aplicación → Registro**.
+
+## Energía y temperatura {/* #power-and-temperature */}
+
+En una Raspberry Pi, **Información del Sistema** muestra **Energía**, **Limitación de CPU** y **Temperatura**:
+
+- **Voltaje demasiado bajo: usa una fuente de alimentación más potente**: la Pi tiene bajo voltaje en este momento. Esto provoca reinicios del USB, así que el módem o el controlador de vuelo pueden desconectarse. Corrige la fuente de alimentación antes de volar.
+- **El voltaje bajó desde el arranque**: ocurrió en algún momento desde el arranque. Suele deberse a los picos de transmisión del módem.
+- **Reducida (calor o energía)**: la CPU está limitada. La codificación de video es la primera afectada. Añade un disipador o ventilación, o corrige la fuente de alimentación.
+
+La barra de temperatura se pone roja a medida que la Pi se acerca a su punto de limitación.
+
+## Otras tarjetas {/* #other-cards */}
+
+| Tarjeta | Muestra |
+|---|---|
+| **Información del Sistema** | **Sistema Operativo**, **Hardware** (CPU y núcleos), **Tiempo de Actividad**, **Energía** y **Temperatura**. |
+| **Tráfico de Red** | Totales y tasas de recepción y transmisión por interfaz. Elige entre **Last 50** y **Last 1000** muestras. Útil para ver cuánto consume el video en el módem. |
+| **Uso de Memoria** | **Total**, **Usado** y **Libre**. Los datos se recopilan cada 10 segundos. |
+| **Almacenamiento** | **Total**, **Usado** y **Libre** por partición. |
+
+Los gráficos necesitan unos minutos de datos después del arranque antes de mostrar algo.
+
+## Recorrido guiado {/* #guided-tour */}
+
+La primera vez que abras la interfaz web, un recorrido te ofrecerá guiarte por las páginas principales. Puedes elegir **Saltar Recorrido** o **No mostrar nunca más**. Inícialo de nuevo desde **Aplicación → Ajustes → Tomar un Recorrido**.
+
+Problemas de energía en detalle: [Subvoltaje y limitación de CPU](../troubleshooting/undervoltage-and-throttling.mdx).

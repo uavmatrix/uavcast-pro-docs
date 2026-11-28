@@ -1,0 +1,106 @@
+---
+title: "UAVcast-Pro 與 Fleet Manager 常見問題"
+sidebar_label: 常見問題
+description: "關於 UAVcast-Pro 硬體、LTE 數據機、地面站、連接埠、離線使用、授權、更新、錄製與 Fleet Manager 配對的簡短解答。"
+sidebar_position: 17
+---
+
+# 常見問題 {/* #frequently-asked-questions */}
+
+## 硬體與設定 {/* #hardware-and-setup */}
+
+### 我需要 LTE 數據機嗎？ {/* #do-i-need-an-lte-modem */}
+
+不需要。UAVcast-Pro 可透過任何 IP 連線運作：4G/LTE、Wi-Fi 或乙太網路。數據機可讓您在 Wi-Fi 範圍之外飛行。許多操作人員會先在 Wi-Fi 下測試，並在飛行前切換至數據機：前往**網路 → 網路優先順序 → 數據機優先（戶外模式）**。
+
+### 哪些電腦可以執行 UAVcast-Pro？ {/* #which-computers-can-run-uavcast-pro */}
+
+任何採用 arm64 或 amd64 架構、並執行 Raspberry Pi OS、Debian 或 Ubuntu 的 64 位元 Linux 開發板或電腦皆可：Raspberry Pi Zero 2 W、3、4 與 5、NVIDIA Jetson、Orange Pi，以及 x86 迷你電腦。若要處理視訊，Raspberry Pi 4 或 5 是較理想的選擇。請參閱[支援的硬體](../reference/supported-hardware.mdx)。
+
+### 支援哪些飛行控制器？ {/* #which-flight-controllers-are-supported */}
+
+任何透過 USB 或 TELEM 連接埠使用 MAVLink 通訊的飛行控制器皆可：適用於 Pixhawk 與 Cube 系列開發板、Matek 及類似產品的 ArduPilot（Copter、Plane、Rover、VTOL 及其他飛行器類型）與 PX4。遙測、視訊以及傳送至地面站的路由功能，皆可搭配上述任一飛行控制器使用。飛行地圖與 Fleet Manager 中的飛行模式按鈕，使用的是 ArduPilot 的模式名稱；若使用 PX4，請從地面站切換模式。
+
+### 可以透過飛行控制器的 USB 連接埠連線嗎？ {/* #can-i-connect-over-the-flight-controllers-usb-port */}
+
+可以，這是最簡單的選項：插上後保持**連接埠**為**自動**即可。請使用可傳輸資料的短傳輸線。若找不到飛行控制器，請參閱[沒有 MAVLink 心跳](./no-mavlink-heartbeat.mdx)。
+
+## 地面站與網路 {/* #ground-stations-and-network */}
+
+### 哪些地面站可以使用？ {/* #which-ground-stations-work */}
+
+任何支援透過 UDP 接收 MAVLink 的軟體皆可使用，包括 QGroundControl、Mission Planner 與 MAVProxy。視訊為透過 RTP/UDP 傳輸的 H.264，QGroundControl 與 Mission Planner 可直接播放。GStreamer 與 VLC 也可以使用：請參閱[地面站與視訊](../uavcast-pro/ground-stations/index.mdx)。
+
+### 多個地面站可以同時觀看嗎？ {/* #can-several-ground-stations-watch-at-the-same-time */}
+
+可以。在**地面控制站**下為每台電腦各新增一個目標位址，並分別設定視訊與遙測的開關。若某些站台只需觀看，請使用 **Read Only**。請參閱[串流至多個地面站](../guides/multiple-ground-stations.mdx)。
+
+### UAVcast-Pro 使用哪些連接埠？ {/* #which-ports-does-uavcast-pro-use */}
+
+預設情況下，遙測會發送至各地面站的 UDP **14550** 連接埠，視訊則發送至 UDP **5600** 連接埠；第二台攝影機使用視訊連接埠 + 1，音訊則使用視訊連接埠 + 2。網頁介面位於連接埠 **80**。完整清單請參閱[連接埠與協定](../reference/ports-and-protocols.mdx)。
+
+### 我需要在路由器上設定連接埠轉送嗎？ {/* #do-i-need-port-forwarding-on-my-router */}
+
+不需要。透過 4G 時，請讓無人機與地面站位於同一個 VPN 中：Fleet Manager VPN（包含於您的授權中），或您自己的 Tailscale 或 ZeroTier 網路。無人機會將遙測與視訊發送至地面站的 VPN 位址。請參閱[透過 4G 超視距飛行](../guides/bvlos-4g.mdx)。
+
+### 我仍然可以透過 TCP 5760 連線嗎？ {/* #can-i-still-connect-over-tcp-5760 */}
+
+不行。自 v6.5.0 起，TCP 5760 已關閉，因此只有您新增的目標位址才會接收資料。請將您的電腦新增為目標位址，並使用 UDP。
+
+### 沒有網際網路可以使用嗎？ {/* #does-it-work-without-internet */}
+
+可以。飛行控制器連線、遙測與視訊會在開機時即開始運作，無需等待網際網路，因此本地 Wi-Fi 網路或無線電連結皆可使用。啟用授權時需要一次網際網路連線。之後，若因連線中斷導致授權檢查失敗，裝置不會被停用。
+
+## 授權與帳戶 {/* #license-and-account */}
+
+<BuyLicense />
+
+### 我的授權無法啟用，該怎麼辦？ {/* #my-license-wont-activate-what-now */}
+
+請參閱[授權無法啟用](./license-activation-failed.mdx)。常見原因包括金鑰輸入錯誤、沒有可用的裝置名額，或裝置沒有網際網路連線。
+
+### 授權到期時會發生什麼事？ {/* #what-happens-when-my-license-expires */}
+
+UAVcast-Pro 會被鎖定：網頁介面只會開啟**應用程式**，遙測、視訊及其他服務都會停止，直到您續約為止。請在到期日前於商店續約，然後在裝置上驗證金鑰。請參閱[授權到期時](../get-started/license-activation.mdx#when-a-license-expires)。
+
+### Fleet Manager 包含在我的授權中嗎？ {/* #is-fleet-manager-included-with-my-license */}
+
+是的。Fleet Manager（包括其 VPN）已包含在您的 UAVcast-Pro 授權中，無需額外付費。
+
+### 我更換了 SD 卡，需要新的授權嗎？ {/* #i-replaced-the-sd-card-do-i-need-a-new-license */}
+
+不需要，但裝置會被視為新裝置，並佔用一個名額。請在**應用程式 → 許可證管理器 → 已啟動設備**下取消註冊舊的項目。
+
+### Fleet Manager 是獨立的產品嗎？ {/* #is-fleet-manager-a-separate-product */}
+
+Fleet Manager 是 UAVmatrix 的網頁儀表板，用於管理多架無人機，網址為 [fleet-manager.uavmatrix.com](https://fleet-manager.uavmatrix.com)。它已包含在您的 UAVcast-Pro 授權中。您可以使用 uavmatrix.com 帳戶登入，而您配對的每架無人機都需要一個由您組織的成員擁有的有效 UAVcast-Pro 授權。請參閱 [Fleet Manager](../fleet-manager/index.mdx)。
+
+### 如何將無人機與 Fleet Manager 配對？ {/* #how-do-i-pair-a-drone-with-fleet-manager */}
+
+在 UAVcast-Pro 中開啟 **Fleet Management**，然後按下 **Connect to Fleet Manager**。請在 5 分鐘內，於 Fleet Manager 的 **Fleet → Pair Device** 下輸入 8 位數代碼。請參閱[配對您的第一架無人機](../fleet-manager/pair-uav.mdx)；若配對失敗，請參閱[配對碼無效或已過期](./pairing-code-invalid.mdx)。
+
+## 更新與資料 {/* #updates-and-data */}
+
+### 如何更新 UAVcast-Pro？ {/* #how-do-i-update-uavcast-pro */}
+
+前往**應用程式 → 更新應用**，在**選擇要更新的版本**中選擇版本，然後按下**立即更新**。若卡片顯示**等待重啟**，請按下**立即重啟**。您也可以再次執行安裝程式。
+
+### 可以從 v4 或 v5 匯入設定嗎？ {/* #can-i-import-settings-from-v4-or-v5 */}
+
+不行。v6 使用新的資料庫，因此在全新安裝後需要重新設定。在 v6 中，您可以使用**應用程式 → 資料庫 → 備份資料庫**與**恢復資料庫**，在不同的安裝之間移動設定。
+
+### UAVcast-Pro 可以錄製視訊嗎？ {/* #can-uavcast-pro-record-video */}
+
+可以，自 v6.5.1 起支援。它可以從飛行地圖錄製攝影機 1 與 2，或在無人機解鎖時自動錄製，並同時記錄遙測記錄。請參閱[錄製飛行並回放](../guides/recording-flight-review.mdx)。
+
+### UAVcast-Pro 會將檔案保存在哪裡？ {/* #where-does-uavcast-pro-keep-its-files */}
+
+檔案位於 `/opt/uavcast-pro` 之下：資料庫 `uavcast.db`、`logs/`、`recordings/` 與 `missions/`。請參閱[服務與檔案](../reference/services-and-files.mdx)。
+
+### 我忘記了管理員密碼。 {/* #i-forgot-the-admin-password */}
+
+網頁介面沒有密碼重設功能。其他管理員可以在**使用者**中刪除您的使用者帳號，然後重新建立。若您是唯一的管理員，則無法自行復原：請依照[忘記管理員密碼](../uavcast-pro/users.mdx#forgot-the-admin-password)中列出的資訊，聯絡 **support@uavmatrix.com**。
+
+### 我在哪裡可以取得協助？ {/* #where-do-i-get-help */}
+
+請依照[為支援收集日誌](./collect-logs.mdx)的說明收集日誌，並寄送電子郵件至 **support@uavmatrix.com**，或在 [UAVmatrix Discord](https://discord.gg/xwqMTXh) 中提問。

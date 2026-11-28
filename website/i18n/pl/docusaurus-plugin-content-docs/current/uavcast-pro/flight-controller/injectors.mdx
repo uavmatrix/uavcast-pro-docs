@@ -1,0 +1,115 @@
+---
+title: "Wysyłaj własne dane z czujników do MAVLink (NAMED_VALUE_FLOAT)"
+description: "Użyj wstrzykiwaczy UAVcast-Pro, aby przesyłać odczyty czujników ze skryptów, Arduino lub modemu LTE do strumienia MAVLink przez HTTP, UDP albo port szeregowy, tak aby QGC i Mission Planner je widziały."
+sidebar_position: 3
+sidebar_label: "Wstrzykiwacze"
+---
+
+# Wstrzykiwacze {/* #injectors */}
+
+Wstrzykiwacz przekazuje dane spoza UAVcast-Pro, na przykład ze skryptu Python, Arduino albo czujnika w sieci, do strumienia MAVLink jako komunikaty `NAMED_VALUE_FLOAT` (lub `NAMED_VALUE_INT`). Każda podłączona stacja naziemna odbiera wartości jak zwykłą telemetrię: Mission Planner pokazuje je na karcie **Status**, a QGroundControl w Inspektorze MAVLink. Pojawiają się też automatycznie w tablicach [Strumieni Danych](../data-streams.mdx). Otwórz **Kontroler Lotu → Wstrzykiwacze**.
+
+Typowe zastosowania: czujniki promieniowania, gazu lub pogody na komputerze towarzyszącym, wartości sygnału LTE (RSRP, SINR) do monitorowania łącza albo wartości wyliczane przez Twoje własne skrypty.
+
+## Wybór transportu {/* #pick-a-transport */}
+
+| Typ | Jak dane docierają | Najlepsze do |
+|---|---|---|
+| **HTTP** | POST z JSON na unikalny adres URL z tajnym tokenem | Najprostsze. Dla wszystkiego, co potrafi wysłać żądanie HTTP. |
+| **UDP** | Pakiety na port drona, jako wiersze `NAME=VALUE` albo JSON | Najmniejszy narzut, zaufane sieci lokalne. Bez uwierzytelniania. |
+| **Serial** | Wiersze odczytywane z urządzenia `/dev/tty*` | Czujniki podłączone na stałe, na przykład Arduino przez USB. |
+
+Typu nie można zmienić po utworzeniu wstrzykiwacza.
+
+## Tworzenie wstrzykiwacza {/* #create-an-injector */}
+
+<Steps>
+
+1. Przejdź do **Kontroler Lotu → Wstrzykiwacze** i wybierz **Dodaj wstrzykiwacz**.
+2. Wpisz **Nazwę** (widoczną tylko w interfejsie) i wybierz **Typ wejścia**.
+3. Pozostaw **MAVLink sysid** jako `1`, aby wartości należały do tego samego pojazdu co kontroler lotu, oraz **MAVLink compid** jako `194` (ładunek użytkownika), chyba że potrzebujesz czegoś innego.
+4. Opcjonalnie ustaw **Prefiks nazwy**, na przykład `BAL_`, aby `RAD1` było wysyłane jako `BAL_RAD1`.
+5. Dla UDP lub Serial wypełnij ustawienia nasłuchu. Następnie wybierz **Utwórz**.
+6. Na karcie wstrzykiwacza wybierz **Wyślij sygnał testowy**, aby wysłać wartość i sprawdzić ją w stacji naziemnej.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/flight-controller--injectors" alt="Zakładka Wstrzykiwacze z komunikatem Brak wstrzykiwaczy, typowymi zastosowaniami, transportami HTTP, UDP i Serial oraz przyciskiem Dodaj wstrzykiwacz" caption="Kontroler Lotu → Wstrzykiwacze przed pierwszym wstrzykiwaczem: typowe zastosowania i trzy transporty." />
+
+## Wysyłanie danych {/* #send-data */}
+
+<Tabs groupId="injector">
+<TabItem value="http" label="HTTP" default>
+
+Po utworzeniu wstrzykiwacza HTTP jego karta pokazuje **Endpoint HTTP**. Adres ma postać `http://<drone-ip>/api/inject/<token>` i korzysta z normalnego portu interfejsu WWW. **Kopiuj URL** kopiuje go do schowka.
+
+```bash title="Jedna wartość"
+curl -X POST http://192.168.1.50/api/inject/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"name":"RAD1","value":0.077}'
+```
+
+```bash title="Kilka wartości w jednym żądaniu"
+curl -X POST http://192.168.1.50/api/inject/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"samples":[{"name":"TEMP","value":21.4},{"name":"HUM","value":48}]}'
+```
+
+Odpowiedź podaje wynik: `{"accepted":2,"rateLimited":0,"rejected":0}`. Jedynym zabezpieczeniem jest token. Jeśli wycieknie, wybierz **Wymień token** i zaktualizuj swojego klienta.
+
+</TabItem>
+<TabItem value="udp" label="UDP">
+
+Wstrzykiwacz domyślnie nasłuchuje na **Port** `14600` i **Adres nasłuchu** `0.0.0.0` (wszystkie interfejsy). Użyj `127.0.0.1`, jeśli nadawca działa bezpośrednio na dronie.
+
+```bash title="Protokół Key=Value"
+echo "RAD1=0.077" | nc -u -w1 192.168.1.50 14600
+```
+
+```python title="Protokół JSON"
+import json, socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.sendto(json.dumps({"name": "RAD1", "value": 0.077}).encode(), ("192.168.1.50", 14600))
+```
+
+</TabItem>
+<TabItem value="serial" label="Serial">
+
+Wstrzykiwacz odczytuje wiersze zakończone znakiem nowej linii z **Ścieżka urządzenia** (domyślnie `/dev/ttyUSB0`) przy **Prędkość bodów** (domyślnie `115200`). Każdy wiersz to jedna próbka: `NAME=VALUE` dla protokołu Key=Value albo obiekt JSON. Po odłączeniu urządzenia łączy się ponownie samoczynnie.
+
+```cpp title="Szkic Arduino"
+void setup() { Serial.begin(115200); }
+void loop() {
+  Serial.print("LIGHT=");
+  Serial.println(analogRead(A0));
+  delay(200);
+}
+```
+
+</TabItem>
+</Tabs>
+
+:::warning Nazwy MAVLink mają 10 znaków
+Nazwy `NAMED_VALUE_FLOAT` są ograniczone do 10 znaków, wliczając prefiks. Trzymaj prefiks krótki (do 8 znaków), a nazwy zwięzłe.
+:::
+
+## Opis ustawień {/* #settings-reference */}
+
+| Ustawienie | Domyślnie | Wartości | Uwagi |
+|---|---|---|---|
+| **Nazwa** | puste | tekst | Etykieta tylko w interfejsie. |
+| **Typ wejścia** | **HTTP** | **HTTP**, **UDP**, **Serial** | Ustalany po utworzeniu. |
+| **Włączony** | Włączony | Włączony, wyłączony | Wyłączenie zachowuje konfigurację, ale zatrzymuje nasłuch. |
+| **MAVLink sysid** | `1` | 1–255 | Ta sama wartość co kontroler lotu grupuje wartości z danym pojazdem. |
+| **MAVLink compid** | `194` | 0–255 | 194 jest częste dla czujników ładunku użytkownika. |
+| **Prefiks nazwy** | puste | do 8 znaków ASCII | Dodawany przed każdą nazwą sygnału. |
+| **Limit (Hz na sygnał)** | `10` | próbek na sekundę | Nadmiarowe próbki są odrzucane i liczone jako **Rate-limited**. Chroni łącze przed niekontrolowanym nadawcą. |
+| **Protokół** (UDP, Serial) | **Key=Value (line-delimited)** | **Key=Value (line-delimited)**, **JSON** (`{name, value}`) | |
+| **Port** (UDP) | `14600` | 1–65535 | |
+| **Adres nasłuchu** (UDP) | `0.0.0.0` | adres IP | `127.0.0.1` przyjmuje tylko lokalnych nadawców. |
+| **Ścieżka urządzenia** (Serial) | `/dev/ttyUSB0` | ścieżka urządzenia | Uruchom `ls /dev/tty*`, aby ją znaleźć. |
+| **Prędkość bodów** (Serial) | `115200` | | Musi być zgodna z nadawcą. |
+
+Każda karta pokazuje liczniki **Accepted**, **Rate-limited** i **Rejected**, dzięki którym widzisz, czy dane docierają i czy są poprawne.
+
+Wstrzykiwacze działają w ramach usług UAVcast-Pro i startują razem z systemem, więc wartości płyną dalej nawet przy zamkniętym interfejsie WWW.

@@ -1,0 +1,91 @@
+---
+title: "Geen MAVLink-heartbeat van de vluchtcontroller"
+sidebar_label: Geen MAVLink-heartbeat
+description: "UAVcast-Pro toont No heartbeat of Waiting for device? Controleer de USB-kabel, de TELEM-bekabeling, het SERIAL-protocol en de baudrate, en gebruik daarna Auto-detect."
+sidebar_position: 4
+---
+
+# Geen MAVLink-heartbeat van de vluchtcontroller {/* #no-mavlink-heartbeat-from-the-flight-controller */}
+
+De pagina **Vluchtcontroller → Verbinding** toont **No heartbeat**, **Waiting for device**, **Detecting baud rate** of **Searching**, en de rij **Vluchtcontroller** op het dashboard wordt nooit groen. UAVcast-Pro kan de vluchtcontroller nog niet horen.
+
+De pagina heeft een live **Connection check** die elke stap eenmaal per seconde test en het eerste probleem dat het vindt, uitlegt. Lees die eerst: dat is meestal sneller dan deze pagina.
+
+<Screenshot id="uavcast-pro/flight-controller--connection-check" alt="Connection check-kaart met vier rijen: vluchtcontroller aangesloten, leesbare gegevens van de vluchtcontroller, vluchtcontroller reageert en stuurt naar het grondstation" caption="De Connection check bij een werkende verbinding: alle vier de stappen slagen. Wanneer de verbinding faalt, wordt de eerste mislukte stap gemarkeerd en uitgelegd." />
+
+<SymptomTable rows={[
+  {symptom: 'Waiting for device, of Flight controller plugged in: Not detected', cause: 'Geen datakabel, of het bord heeft geen voeding', start: '#check-1'},
+  {symptom: 'Signaal op de draad, maar geen leesbare gegevens', cause: 'Verkeerde baudrate, TX/RX omgewisseld, of de poort staat niet op MAVLink', start: '#check-2'},
+  {symptom: 'Leesbare gegevens tonen een hoog % damaged', cause: 'Losse of lange draad, ontbrekende GND-draad, of elektrische ruis', start: '#check-3'},
+  {symptom: 'Poort wordt getoond als in use by another program', cause: 'Een ander programma houdt de seriële poort bezet', start: '#check-4'},
+  {symptom: 'Status Off of Stopped', cause: 'De verbinding is uitgeschakeld', start: '#check-5'},
+]} />
+
+## Controle 1: Wordt de vluchtcontroller wel gezien? {/* #check-1 */}
+
+**Via USB:**
+
+<Steps>
+
+1. Zorg dat de vluchtcontroller van stroom voorzien is en dat de USB-kabel naar de companion computer gaat.
+2. Probeer een andere kabel. Veel USB-kabels zijn alleen voor opladen en dragen geen data. Als het bord oplicht maar **Flight controller plugged in** **Not detected** toont, is de kabel meestal de oorzaak.
+3. Kies onder **Link type** **USB** en laat **Port** op **Automatic** staan. Automatic zoekt de vluchtcontroller en volgt hem als het apparaatnummer verandert.
+
+</Steps>
+
+**Via een TELEM-poort (UART / Serial):**
+
+<Steps>
+
+1. Kies onder **Link type** **UART / Serial**.
+2. Controleer de bekabeling: vluchtcontroller **TX → RX** op de companion computer, **RX → TX**, en **GND → GND**. Een ontbrekende GND-draad is een veelvoorkomende oorzaak.
+3. Voed de Raspberry Pi nooit via de TELEM-poort. Voed hem apart.
+
+</Steps>
+
+:::note Seriële poort van de Raspberry Pi
+Het installatieprogramma schakelt de UART van de Pi in en verwijdert de seriële console uit `cmdline.txt`. Op een Pi 3, 4 of Zero 2 W schakelt het ook Bluetooth uit, zodat de volledige UART vrij is. Als u het besturingssysteem opnieuw hebt geïnstalleerd nadat UAVcast-Pro was geïnstalleerd, voer dan het installatieprogramma opnieuw uit.
+:::
+
+## Controle 2: Stem de poortinstellingen op de vluchtcontroller af {/* #check-2 */}
+
+Op een TELEM-poort moet de vluchtcontroller MAVLink spreken met de snelheid waarop UAVcast-Pro luistert. USB-verbindingen gebruiken geen baudrate.
+
+<Steps>
+
+1. Verbind de vluchtcontroller via USB met Mission Planner of QGroundControl.
+2. Open de volledige parameterlijst en zoek de seriële poort die u hebt aangesloten: `SERIAL1` voor TELEM1, `SERIAL2` voor TELEM2.
+3. Stel `SERIALx_PROTOCOL` in op `2` (MAVLink2). Schrijf de parameters weg en herstart de vluchtcontroller.
+4. Noteer `SERIALx_BAUD`. Laat in UAVcast-Pro **Baudrate** op **Automatic** staan, of kies dezelfde waarde.
+
+</Steps>
+
+Bij **Automatic** probeert UAVcast-Pro 57600, 115200, 921600, 1500000, 460800, 230400 en 500000 baud, en onthoudt de snelheid die werkte. De status toont *Trying … baud (n of 7)* tijdens het zoeken.
+
+:::tip Laat UAVcast-Pro voor u zoeken
+Druk op **Auto-detect**. Het pauzeert de verbinding, luistert op elke poort en baudrate, en slaat op wat het vindt. Dit kan tot een minuut duren. Als er **No flight controller found** wordt gemeld, open dan **Show what was tried** om elke poort en snelheid te zien die is getest.
+:::
+
+## Controle 3: Beschadigde gegevens {/* #check-3 */}
+
+Als **Readable flight controller data** een percentage *damaged* toont, komen er bytes binnen maar zijn ze beschadigd. Dit betekent meestal een losse of lange draad, een ontbrekende GND-draad, of ruis van motoren en voedingskabels.
+
+- Steek de connectoren opnieuw in en maak de kabel korter.
+- Leid de signaaldraden weg van ESC- en accukabels.
+- Probeer een lagere `SERIALx_BAUD`, bijvoorbeeld 57600 of 115200.
+
+## Controle 4: Poort in gebruik {/* #check-4 */}
+
+In de lijst **Port** zijn poorten gemarkeerd die een ander programma bezet houdt (*in use by …*). Stop dat programma, bijvoorbeeld een MAVProxy of een tweede router die u zelf hebt gestart, of kies een andere poort.
+
+## Controle 5: Staat de verbinding aan? {/* #check-5 */}
+
+Bovenaan de pagina moet **Link enabled** aan staan. Als de status **Link stopped** zegt, druk dan op **Verbinden**. Instellingen worden direct toegepast, zonder herstart.
+
+## Nog steeds geen heartbeat? {/* #still-no-heartbeat */}
+
+[Download de logboeken](./collect-logs.mdx) met **Mavlink Beheer** geselecteerd. Het meegeleverde `diagnostics.txt` toont de seriële apparaten, welk programma ze bezet houdt, en de USB- en voedingsgebeurtenissen van de kernel. Dat is wat de support nodig heeft bij verbindingsproblemen.
+
+Zodra de vluchtcontroller **Verbonden** toont maar uw grondstation nog wacht, ga naar [Geen telemetrie in het grondstation](./no-telemetry-in-gcs.mdx).
+
+Gerelateerd: [Verbinding met de vluchtcontroller](../uavcast-pro/flight-controller/index.mdx) · [Hardwarevereisten](../get-started/hardware-requirements.mdx)

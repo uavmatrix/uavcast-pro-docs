@@ -1,0 +1,115 @@
+---
+title: "Send custom sensor data into MAVLink (NAMED_VALUE_FLOAT)"
+description: "Use UAVcast-Pro injectors to push sensor readings from scripts, Arduinos or the LTE modem into the MAVLink stream over HTTP, UDP or serial, so QGC and Mission Planner see them."
+sidebar_position: 3
+sidebar_label: "Injectors"
+---
+
+# Injectors
+
+An injector feeds data from outside UAVcast-Pro, such as a Python script, an Arduino or a sensor on the network, into the MAVLink stream as `NAMED_VALUE_FLOAT` (or `NAMED_VALUE_INT`) messages. Every connected ground station receives the values as normal telemetry: Mission Planner shows them in the **Status** tab and QGroundControl in the MAVLink Inspector. They also appear automatically in [Data Streams](../data-streams.mdx) dashboards. Open **Flight Controller → Injectors**.
+
+Typical uses: radiation, gas or weather sensors on the companion computer, LTE signal values (RSRP, SINR) for link monitoring, or values your own scripts compute.
+
+## Pick a transport
+
+| Type | How data arrives | Best for |
+|---|---|---|
+| **HTTP** | POST JSON to a unique URL with a secret token | Easiest. Anything that can make an HTTP request. |
+| **UDP** | Packets to a port on the drone, as `NAME=VALUE` lines or JSON | Lowest overhead, trusted local networks. No authentication. |
+| **Serial** | Lines read from a `/dev/tty*` device | Hard-wired sensors such as an Arduino over USB. |
+
+The type can't be changed after you create the injector.
+
+## Create an injector
+
+<Steps>
+
+1. Go to **Flight Controller → Injectors** and select **Add injector**.
+2. Enter a **Name** (only shown in the UI) and pick the **Input type**.
+3. Keep **MAVLink sysid** `1` so the values belong to the same vehicle as the flight controller, and **MAVLink compid** `194` (user payload) unless you need something else.
+4. Optional: set a **Name prefix**, for example `BAL_`, so `RAD1` is sent as `BAL_RAD1`.
+5. For UDP or Serial, fill in the listener settings. Then select **Create**.
+6. Select **Send test signal** on the injector's card to send a value and check it in your ground station.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/flight-controller--injectors" alt="Injectors tab with No injectors yet, typical uses, the HTTP, UDP and Serial transports and the Add injector button" caption="Flight Controller → Injectors before the first injector: typical uses and the three transports." />
+
+## Send data
+
+<Tabs groupId="injector">
+<TabItem value="http" label="HTTP" default>
+
+After you create an HTTP injector, its card shows the **HTTP endpoint**. The URL has the form `http://<drone-ip>/api/inject/<token>` and goes through the normal web interface port. **Copy URL** copies it.
+
+```bash title="One value"
+curl -X POST http://192.168.1.50/api/inject/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"name":"RAD1","value":0.077}'
+```
+
+```bash title="Several values in one request"
+curl -X POST http://192.168.1.50/api/inject/<token> \
+  -H "Content-Type: application/json" \
+  -d '{"samples":[{"name":"TEMP","value":21.4},{"name":"HUM","value":48}]}'
+```
+
+The reply counts what happened: `{"accepted":2,"rateLimited":0,"rejected":0}`. The token is the only protection. If it leaks, select **Rotate token** and update your client.
+
+</TabItem>
+<TabItem value="udp" label="UDP">
+
+The injector listens on **Port** `14600` and **Bind address** `0.0.0.0` (all interfaces) by default. Use `127.0.0.1` if the sender runs on the drone itself.
+
+```bash title="Key=Value protocol"
+echo "RAD1=0.077" | nc -u -w1 192.168.1.50 14600
+```
+
+```python title="JSON protocol"
+import json, socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.sendto(json.dumps({"name": "RAD1", "value": 0.077}).encode(), ("192.168.1.50", 14600))
+```
+
+</TabItem>
+<TabItem value="serial" label="Serial">
+
+The injector reads newline-terminated lines from **Device path** (default `/dev/ttyUSB0`) at **Baud rate** (default `115200`). Each line is one sample: `NAME=VALUE` for the Key=Value protocol, or a JSON object. It reconnects by itself if the device is unplugged.
+
+```cpp title="Arduino sketch"
+void setup() { Serial.begin(115200); }
+void loop() {
+  Serial.print("LIGHT=");
+  Serial.println(analogRead(A0));
+  delay(200);
+}
+```
+
+</TabItem>
+</Tabs>
+
+:::warning MAVLink names are 10 characters
+`NAMED_VALUE_FLOAT` names are limited to 10 characters, prefix included. Keep the prefix short (up to 8 characters) and the names compact.
+:::
+
+## Settings reference
+
+| Setting | Default | Values | Notes |
+|---|---|---|---|
+| **Name** | empty | text | Label in the UI only. |
+| **Input type** | **HTTP** | **HTTP**, **UDP**, **Serial** | Fixed after creation. |
+| **Enabled** | On | On, off | Off keeps the configuration but stops the listener. |
+| **MAVLink sysid** | `1` | 1–255 | Same as the flight controller groups the values with that vehicle. |
+| **MAVLink compid** | `194` | 0–255 | 194 is common for user payload sensors. |
+| **Name prefix** | empty | up to 8 ASCII characters | Added in front of every signal name. |
+| **Rate limit (Hz per signal)** | `10` | samples per second | Extra samples are dropped and counted as **Rate-limited**. Protects the link from a runaway sender. |
+| **Protocol** (UDP, Serial) | **Key=Value (line-delimited)** | **Key=Value (line-delimited)**, **JSON** (`{name, value}`) | |
+| **Port** (UDP) | `14600` | 1–65535 | |
+| **Bind address** (UDP) | `0.0.0.0` | IP address | `127.0.0.1` accepts only local senders. |
+| **Device path** (Serial) | `/dev/ttyUSB0` | device path | Run `ls /dev/tty*` to find it. |
+| **Baud rate** (Serial) | `115200` | | Must match the sender. |
+
+Each card shows **Accepted**, **Rate-limited** and **Rejected** counters, so you can see whether data arrives and whether it's valid.
+
+Injectors run inside the UAVcast-Pro services and start at boot, so values keep flowing without the web interface open.

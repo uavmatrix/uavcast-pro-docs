@@ -1,0 +1,58 @@
+---
+title: Fleet Manager 支援：FleetBot 與支援工單
+sidebar_label: 支援
+description: "在 Fleet Manager 中取得協助：詢問 FleetBot 助理、附上截圖開啟支援工單、追蹤工單狀態，並查看系統狀態。"
+sidebar_position: 15
+---
+
+# 支援與 FleetBot {/* #support-and-fleetbot */}
+
+在 Fleet Manager 的每個頁面上都能立即取得協助：右下角的圓形支援按鈕會開啟一個面板，內含兩個分頁：**FleetBot** 與 **Ticket**。
+
+## 詢問 FleetBot {/* #ask-fleetbot */}
+
+**FleetBot** 是一個 AI 助理，熟悉 Fleet Manager 的頁面與功能。您可以問它諸如「如何連接第二個地面站？」之類的問題，它會回覆並附上通往正確頁面的連結。
+
+<Screenshot id="fleet-manager/support-bubble--fleetbot" alt="支援面板的 FleetBot 分頁，包含一個問題與一則連結到 Network 頁面的回答" caption="支援面板的 FleetBot 分頁，回答如何新增串流綁定，並附上通往 Network → Stream Bindings 的連結。" />
+
+- 在 **Ask FleetBot...** 中輸入您的問題並送出。
+- 每段對話最多 20 則訊息，每則最多 2,000 個字元。若達到上限，請開始新的對話。
+- FleetBot 可能會出錯，尤其是數字。若它與本文件的內容不一致，以本文件為準。
+
+:::note FleetBot 會看到什麼
+FleetBot 只會接收您在聊天中輸入的內容，不會接收無人機的資料。訊息會傳送至 Anthropic 的 Claude AI 模型以產生回答。請勿貼上驗證金鑰、密碼或授權金鑰。
+:::
+
+## 開啟支援工單 {/* #open-a-support-ticket */}
+
+<Steps>
+
+1. 開啟支援面板，並選擇 **Ticket** 分頁。
+2. 選擇 **Category**：**Bug Report**、**Feature Request**、**General Inquiry** 或 **Question**。
+3. 輸入 **Subject**（5 到 200 個字元）與 **Message**（20 到 5,000 個字元）。請說明是哪一架無人機、您做了什麼，以及您預期的結果。
+4. 選填：附上截圖。**Capture** 會透過您的瀏覽器擷取畫面（由您選擇視窗），**Upload** 則可附加最大 5 MB 的圖片檔。
+5. 選擇 **Submit Ticket**。
+
+</Steps>
+
+<Screenshot id="fleet-manager/support-bubble--ticket" alt="支援面板的 Ticket 分頁，包含分類、主旨、訊息與截圖欄位" caption="Ticket 分頁已填寫為一則 Bug Report，內容是一架無人機卡在 PAIRING，並可用 Capture 或 Upload 附上選填截圖。" />
+
+您會取得一組工單編號，例如 `SUP-7KQ2XA`。Fleet Manager 也會記錄您所在的頁面與瀏覽器，讓支援人員能重現問題。
+
+:::tip 無人機問題請附上記錄檔
+對於無人機端的問題，記錄檔最有幫助。工單只接受圖片，因此請將 UAVcast-Pro 記錄檔包（ZIP 檔，請參閱[收集記錄檔](../troubleshooting/collect-logs.mdx)），或無人機 **Logs** 分頁中的 **Download logs** 檔案，寄送到 **support@uavmatrix.com**，並在主旨中附上您的工單編號（例如 `SUP-7KQ2XA`）。
+:::
+
+## 追蹤您的工單 {/* #follow-your-tickets */}
+
+**Settings → Support** 會列出您的工單及其狀態：**Open**、**In Progress**、**Resolved** 或 **Closed**。開啟工單即可查看詳細資料與附加的截圖。問題解決後，請選擇 **Close Ticket**。您也可以在該處選擇 **Create Support Ticket** 建立工單。
+
+## 隱藏支援按鈕 {/* #hide-the-support-button */}
+
+選擇面板標題列中的隱藏圖示（**Hide support bubble**），或在 **Settings → Support** 中關閉 **Support Chat Bubble**。若要重新顯示，請在同一處開啟。您隨時都可以從 **Settings → Support** 開啟工單。
+
+## 其他取得協助的方式 {/* #other-ways-to-get-help */}
+
+- **系統狀態：**前往 **System → Status**，可查看進行中與過去的事件。若大量無人機同時離線，請先查看此處。請參閱[狀態指示器與通知](./alerts-and-status.mdx#status-page)。
+- **電子郵件：**support@uavmatrix.com。
+- **社群：**[UAVmatrix Discord](https://discord.gg/xwqMTXh)。

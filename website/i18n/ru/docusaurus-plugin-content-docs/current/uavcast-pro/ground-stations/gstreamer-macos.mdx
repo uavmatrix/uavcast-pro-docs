@@ -1,0 +1,82 @@
+---
+title: "Приём видео с дрона через GStreamer на macOS"
+description: "Установите GStreamer на Mac через Homebrew или официальный пакет и воспроизводите H.264-видео дрона UAVcast-Pro и аудио Opus командой gst-launch-1.0, а также запрос брандмауэра macOS."
+sidebar_position: 6
+sidebar_label: "GStreamer на macOS"
+---
+
+# GStreamer на macOS {/* #gstreamer-on-macos */}
+
+GStreamer воспроизводит видеопоток UAVcast-Pro в окне из Терминала. Используйте его, чтобы проверить видеоканал, посмотреть вторую камеру рядом с QGroundControl или услышать звук. Работает на Mac с Apple silicon и на Intel Mac.
+
+## Перед началом {/* #before-you-begin */}
+
+На дроне добавьте пункт назначения в разделе [Наземные станции](./index.mdx) с IP-адресом этого Mac (**Системные настройки → Сеть**; при 4G используйте VPN-адрес) и включите **Включить видео**.
+
+## Установка GStreamer {/* #install-gstreamer */}
+
+<Tabs groupId="mac-install">
+<TabItem value="brew" label="Homebrew" default>
+
+```bash
+brew install gstreamer
+```
+
+Формула Homebrew включает наборы плагинов base, good, bad, ugly и libav, поэтому `avdec_h264` входит в состав.
+</TabItem>
+<TabItem value="pkg" label="Официальный пакет">
+
+<Steps>
+
+1. Скачайте пакет **runtime** для macOS с [gstreamer.freedesktop.org/download](https://gstreamer.freedesktop.org/download/) и установите его.
+2. Добавьте его в PATH в Терминале:
+
+   ```bash
+   echo 'export PATH="/Library/Frameworks/GStreamer.framework/Versions/1.0/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+
+</Steps>
+
+</TabItem>
+</Tabs>
+
+Проверьте установку командой `gst-launch-1.0 --version`, а декодер H.264 — командой `gst-inspect-1.0 avdec_h264` (она выведет сведения об элементе; *No such element or plugin* означает, что его нет).
+
+## Воспроизведение видео {/* #play-the-video */}
+
+```bash title="Камера 1, порт 5600"
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+В первый раз macOS спросит, может ли `gst-launch-1.0` принимать входящие сетевые соединения. Выберите **Разрешить**. Окно откроется, когда придёт первый ключевой кадр; чтобы остановить воспроизведение, нажмите **Ctrl+C** в Терминале.
+
+:::tip Что должно появиться
+
+1. Терминал выведет `Setting pipeline to PLAYING ...` и будет ждать видео.
+2. Когда придут первые пакеты, `-v` выведет строки с `caps = application/x-rtp`.
+3. Откроется окно видео с изображением камеры.
+
+Если выполнение остановилось на шаге 1, видео не доходит до этого компьютера: см. таблицу устранения неполадок ниже.
+:::
+
+- **Камера 2** в режиме [Два потока](../camera/multi-camera.mdx): запустите команду снова с `port=5601`.
+- **Меньшая задержка** на хорошем канале: замените `rtpjitterbuffer` на `rtpjitterbuffer latency=0`.
+- Если окно не появляется, хотя пакеты приходят, замените `autovideosink` на `osxvideosink`.
+
+## Прослушивание звука {/* #hear-the-audio */}
+
+```bash title="Звук, порт 5602"
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp, media=(string)audio, clock-rate=(int)48000, encoding-name=(string)OPUS, payload=(int)97" ! rtpjitterbuffer ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+Для звука на странице **Камера** дрона нужно включить **Audio** и **Передавать звук на наземные станции**.
+
+## Устранение неполадок {/* #troubleshooting */}
+
+| Сообщение или симптом | Решение |
+|---|---|
+| *command not found: gst-launch-1.0* | Homebrew: выполните `brew doctor`. Официальный пакет: добавьте папку `bin` фреймворка в PATH, как показано выше. |
+| *no element "avdec_h264"* | Не хватает плагина libav. Переустановите через Homebrew или установите полный официальный пакет runtime. |
+| Команда работает, но окна нет | Ничего не приходит. Проверьте IP пункта назначения, **Включить видео** и то, что вы разрешили входящие соединения (**Системные настройки → Сеть → Брандмауэр → Параметры**). |
+| Ошибка привязки при запуске | QGroundControl или другой GStreamer уже использует порт. Закройте его. |

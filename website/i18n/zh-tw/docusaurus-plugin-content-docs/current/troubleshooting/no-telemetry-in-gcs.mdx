@@ -1,0 +1,69 @@
+---
+title: "QGroundControl 或 Mission Planner 沒有遙測"
+sidebar_label: 地面站沒有遙測
+description: "UAVcast-Pro 已將飛行控制器顯示為已連接，但 QGroundControl 或 Mission Planner 仍在等待？請檢查啟用遙測、IP、UDP 14550 與 VPN。"
+sidebar_position: 5
+---
+
+# QGroundControl 或 Mission Planner 沒有遙測 {/* #no-telemetry-in-qgroundcontrol-or-mission-planner */}
+
+UAVcast-Pro 將飛行控制器顯示為**已連接**，但 QGroundControl 顯示*Waiting for vehicle connection*，或 Mission Planner 因*No heartbeat packets received*而逾時。無人機能夠接收飛行控制器的資料，只是遙測沒有送到您的地面站。
+
+若 UAVcast-Pro 本身顯示**無心跳訊號**，請先解決這個問題：[沒有 MAVLink 心跳訊號](./no-mavlink-heartbeat.mdx)。
+
+<SymptomTable rows={[
+  {symptom: '儀表板：地面站顯示未設定，或未傳送', cause: '沒有目標位址，或未開啟啟用遙測', start: '#check-1'},
+  {symptom: '儀表板顯示傳送中，但地面站什麼都沒看到', cause: 'IP 錯誤、防火牆，或地面站監聽的是其他連接埠', start: '#check-2'},
+  {symptom: '在 Wi-Fi 下正常，透過 4G 則沒有資料', cause: '目標位址是本地 IP，而非 VPN IP', start: '#check-3'},
+  {symptom: '過去透過 TCP 5760 連線，更新後失效', cause: 'TCP 5760 已在 v6.5.0 中關閉', start: '#check-4'},
+  {symptom: '遙測有顯示，但指令與模式變更沒有作用', cause: '此目標位址已開啟唯讀', start: '#check-5'},
+]} />
+
+## 檢查 1：是否正在傳送遙測？ {/* #check-1 */}
+
+<Steps>
+
+1. 開啟**儀表板**，閱讀狀態卡中的**地面站**列。
+   - **未設定**：沒有目標位址。請在步驟 2 新增一個。
+   - **未傳送**：目標位址已存在，但沒有任何資料送出。
+   - **傳送至 … · n 封包/秒**：遙測已從無人機送出。請前往檢查 2。
+2. 前往**地面控制站**。若清單是空的，請按下**新增目標位址**。
+3. 在您電腦的卡片上，開啟**啟用終端**與**啟用遙測**。新的目標位址預設關閉視訊與遙測。
+4. 在**目標IP或主機**中輸入電腦的 IPv4 位址，並將**遙測連接埠**保持為 `14550`。
+
+</Steps>
+
+<Screenshot id="uavcast-pro/ground-control--telemetry-enabled" alt="目標位址的遙測區段：啟用遙測已開啟，唯讀已關閉" caption="地面控制站：已開啟啟用遙測的目標位址。" />
+
+:::note 無效的位址會被略過
+UAVcast-Pro 只接受 IPv4 位址，例如 `192.168.1.10`。若您嘗試儲存主機名稱，會出現錯誤訊息：*Enter a valid IPv4 address, for example 192.168.1.10.*。缺少或無效的位址會被排除在遙測路由器之外，並且會列在飛行控制器頁面的**連線檢查**中。
+:::
+
+## 檢查 2：確認地面站正在監聽 {/* #check-2 */}
+
+UAVcast-Pro 會以 UDP 將 MAVLink 傳送到您設定的位址與連接埠。地面站必須監聽該連接埠。
+
+- **QGroundControl** 預設監聽 UDP 14550。若您變更了**遙測連接埠**，請在 **Application Settings → Comm Links** 中新增使用相同連接埠的 UDP 通訊連結。
+- **Mission Planner**：在右上角的連線下拉選單中選擇 **UDP**，按下 **Connect**，並接受連接埠 `14550`。
+- 同一個連接埠只能由一個程式監聽。請關閉 MAVProxy、第二個 QGroundControl，或其他可能佔用 14550 的工具。
+- 請在防火牆中允許傳入的 UDP 14550。相關指令請見[沒有視訊（檢查 3）](./no-video-in-gcs.mdx#check-3)。
+
+## 檢查 3：透過 4G 時使用 VPN 位址 {/* #check-3 */}
+
+透過 4G 時，無人機無法連到像 `192.168.1.20` 這樣的本地位址。請將您電腦的 VPN 位址（Fleet Manager VPN、Tailscale 或 ZeroTier）填入**目標IP或主機**。
+
+請從電腦 ping 無人機的 VPN 位址。若 ping 失敗，問題出在 VPN：請參閱 [VPN 已連線但無法連到無人機](./vpn-cant-reach-drone.mdx)。
+
+## 檢查 4：TCP 5760 已無法使用 {/* #check-4 */}
+
+自 v6.5.0 起，遙測路由器不再接受連接埠 5760 的 TCP 連線，因此只有您新增並開啟的地面站才會收到資料。若您過去是透過 TCP 5760 連接 Mission Planner，請將您的電腦新增為目標位址，並改用 UDP 連線。
+
+## 檢查 5：指令被忽略 {/* #check-5 */}
+
+若遙測有顯示，但解鎖、模式變更或任務上傳都沒有作用，請檢查該目標位址的**唯讀**設定。唯讀會阻擋所有會改變飛行器的操作（指令、模式變更、參數與任務寫入），因此地面站只能監看。此行為自 UAVcast-Pro 6.5.3 起適用；在較早的版本中，唯讀不會阻擋參數寫入。 有些地面站在此模式下會顯示警告，因為它們的部分請求沒有收到回應。
+
+## 仍然沒有資料？ {/* #still-nothing */}
+
+在選取 **MAVLink 管理器**的情況下[下載日誌](./collect-logs.mdx)，並寄送至 **support@uavmatrix.com**。請說明您使用的地面站及其 IP 位址。
+
+相關頁面：[地面控制站](../uavcast-pro/ground-stations/index.mdx) · [連接埠與通訊協定](../reference/ports-and-protocols.mdx)

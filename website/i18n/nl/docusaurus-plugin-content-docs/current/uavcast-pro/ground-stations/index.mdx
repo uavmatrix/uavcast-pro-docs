@@ -1,0 +1,104 @@
+---
+title: "Drone-telemetrie en video naar uw grondstation sturen"
+description: "Voeg grondstationbestemmingen toe in UAVcast-Pro om MAVLink-telemetrie (UDP 14550) en H.264-video (UDP 5600) te streamen naar Mission Planner, QGroundControl of meerdere pc's."
+sidebar_position: 1
+sidebar_label: "Bestemmingen"
+---
+
+# Grondcontrolestations {/* #ground-control-stations */}
+
+Een bestemming vertelt UAVcast-Pro waar telemetrie en video naartoe moeten. Elke bestemming bestaat uit een IP-adres plus een telemetriepoort en een videopoort. UAVcast-Pro stuurt tegelijkertijd naar elke ingeschakelde bestemming via UDP, zodat Mission Planner op de ene laptop en QGroundControl op een tablet beide de drone kunnen ontvangen. Open **Grondcontrolestations** in de zijbalk.
+
+<Screenshot id="uavcast-pro/ground-control" alt="Pagina Grondcontrolestation met twee bestemmingskaarten en de knop Bestemming Toevoegen" caption="Twee bestemmingskaarten: een uitgeschakelde, lege kaart en een ingeschakelde bestemming met telemetrie en video aan." />
+
+## Een bestemming toevoegen {/* #add-a-destination */}
+
+<Steps>
+
+1. Selecteer **Bestemming Toevoegen**. Er verschijnt een nieuwe kaart. (Een nieuwe installatie heeft al één lege kaart.)
+2. Voer een **Naam** in, bijvoorbeeld `Pilot laptop`.
+3. Voer het IPv4-adres van de grondstationcomputer in bij **Bestemmings-IP of Host** en druk op Enter. Een groen vinkje betekent dat het is opgeslagen.
+4. Controleer de **Telemetriepoort** (standaard `14550`) en de **Videopoort** (standaard `5600`). Gebruik de poorten waarop uw grondstation luistert.
+5. Zet **Telemetrie Inschakelen** aan en, als u video wilt, **Video Inschakelen**.
+
+</Steps>
+
+Elk veld wordt opgeslagen wanneer u op Enter drukt of het veld verlaat. Er is geen opslagknop. De telemetrieroutering past de wijziging binnen enkele seconden toe.
+
+:::warning Gebruik een IPv4-adres, geen hostnaam
+Ondanks het label **Bestemmings-IP of Host** accepteert UAVcast-Pro alleen een IPv4-adres, zoals `192.168.1.20`, of een VPN-adres, zoals `10.147.17.5`. Hostnamen worden geweigerd met *Voer een geldig IPv4-adres in, bijvoorbeeld 192.168.1.10.*
+:::
+
+## Welk IP-adres u moet gebruiken {/* #which-ip-address-to-use */}
+
+| Waar het grondstation zich bevindt | Gebruik |
+|---|---|
+| Zelfde Wi-Fi- of Ethernet-netwerk als de drone | Het LAN-adres van het grondstation, bijvoorbeeld `192.168.1.20`. |
+| Overal, via 4G/LTE | Het **VPN**-adres van het grondstation (ZeroTier, Tailscale of Fleet Manager). Zie [VPN](../connectivity/vpn.mdx). |
+| Meerdere computers | Één bestemming per computer. |
+
+## Instellingen van de bestemming {/* #destination-settings */}
+
+| Instelling | Standaard | Waarden | Opmerkingen |
+|---|---|---|---|
+| **Eindpunt Inschakelen** | Aan | Aan, uit | Hoofdschakelaar. Uit stopt telemetrie, video en audio naar deze bestemming, maar behoudt de instellingen. |
+| **Naam** | leeg | tot 49 tekens | Wordt op de kaart en in het dashboard getoond. |
+| **Bestemmings-IP of Host** | leeg | IPv4-adres | Vereist voordat u telemetrie of video kunt inschakelen. |
+| **Telemetriepoort** | `14550` | 1–65535 | UDP-poort waarop het grondstation luistert naar MAVLink. |
+| **Videopoort** | `5600` | 1–65535 | UDP-poort voor H.264 RTP-video (camera 1). |
+| **Videopoort (Camera 2)** | leeg = Videopoort + 1 | 1–65535 | Alleen zichtbaar wanneer [dubbele stream](../camera/multi-camera.mdx) aan staat. |
+| **Video Inschakelen** | Uit | Aan, uit | Stuurt de camerastream naar deze bestemming. |
+| **Telemetrie Inschakelen** | Uit | Aan, uit | Stuurt MAVLink naar deze bestemming en accepteert commando's van daar. |
+| **Read Only** | Uit | Aan, uit | Vereist **Telemetrie Inschakelen**. Het grondstation ontvangt telemetrie maar kan niets op het voertuig wijzigen: commando's, armen, moduswijzigingen, parameterschrijfacties, missieschrijfacties, RC-override en handmatige besturing vanaf dat station worden geblokkeerd. Dit geldt vanaf UAVcast-Pro 6.5.3; in eerdere versies blokkeert Read Only geen parameterschrijfacties. |
+
+Audio, wanneer u **Audio naar grondstations sturen** aanzet op de pagina Camera, gaat naar elke bestemming die video ontvangt, op **Videopoort + 2** (bijvoorbeeld `5602`). Zie [Audio](../camera/audio.mdx).
+
+Elke bestemming gebruikt dus drie video-poorten: **Videopoort**, + 1 (camera 2) en + 2 (audio). Als twee bestemmingen naar dezelfde computer wijzen, plaatst u hun videopoorten 3 uit elkaar, bijvoorbeeld `5600` en `5603`. Zie [Twee stations op één computer](../../guides/multiple-ground-stations.mdx#3-two-stations-on-one-computer).
+
+## De ontvangende kant instellen {/* #set-up-the-receiving-side */}
+
+Kies het programma dat u op de grond gebruikt. Elke pagina bevat de exacte instellingen, de firewallstap en oplossingen voor de gebruikelijke fouten.
+
+| Grondstation | Telemetrie | Video | Pagina |
+|---|---|---|---|
+| Mission Planner (Windows) | UDP 14550 | GStreamer-bron op 5600 | [Mission Planner](./mission-planner.mdx) |
+| QGroundControl (Windows, macOS, Linux) | UDP 14550, maakt zelf verbinding | UDP h.264 op 5600 | [QGroundControl](./qgroundcontrol.mdx) |
+| Android-tablet of -telefoon | QGroundControl, UDP 14550 | UDP h.264 op 5600 | [Android](./android.mdx) |
+| GStreamer op Windows | – | `gst-launch-1.0` op 5600 | [GStreamer op Windows](./gstreamer-windows.mdx) |
+| GStreamer op Linux | – | `gst-launch-1.0` op 5600 | [GStreamer op Linux](./gstreamer-linux.mdx) |
+| GStreamer op macOS | – | `gst-launch-1.0` op 5600 | [GStreamer op macOS](./gstreamer-macos.mdx) |
+| VLC, of RTSP van de drone ophalen | – | SDP-bestand, of RTSP op 8554 | [VLC en RTSP](./vlc-and-rtsp.mdx) |
+
+### Wat de drone verstuurt {/* #what-the-drone-sends */}
+
+| Stream | Formaat | Poort op het grondstation |
+|---|---|---|
+| Telemetrie | MAVLink via UDP | **Telemetriepoort** (standaard `14550`) |
+| Camera 1-video | H.264 in RTP, payloadtype 96, via UDP | **Videopoort** (standaard `5600`) |
+| Camera 2-video (dubbele stream) | H.264 in RTP, payloadtype 96, via UDP | **Videopoort (Camera 2)** (standaard Videopoort + 1, `5601`) |
+| Audio (optioneel) | Opus in RTP, payloadtype 97, 48 kHz, via UDP | Videopoort + 2 (`5602`) |
+
+De drone stuurt elke stream naar de bestemming. Niets hoeft verbinding te maken met de drone, maar de firewall van het grondstation moet de UDP-pakketten doorlaten.
+
+## Meerdere grondstations {/* #several-ground-stations */}
+
+Voeg één bestemming per computer toe. Als twee grondstations op dezelfde computer draaien (bijvoorbeeld QGroundControl en een logtool), geef ze dan verschillende telemetriepoorten, zoals `14550` en `14551`, en stel elke toepassing in op de eigen poort.
+
+Gebruik **Read Only** voor waarnemers, payloadoperators of een tweede scherm: zij zien alles maar kunnen het voertuig niet besturen.
+
+## Bestemmingen van Fleet Manager {/* #destinations-from-fleet-manager */}
+
+Wanneer de drone is gekoppeld aan Fleet Manager en u daar een streamkoppeling aanmaakt, voegt Fleet Manager de bestemming voor u toe. Deze kaarten tonen een wolkpictogram (*Managed by Fleet Manager*). Wijzig ze in Fleet Manager in plaats van hier. Zie [Koppelen met Fleet Manager](../fleet-pairing.mdx).
+
+## Controleren of gegevens binnenkomen {/* #check-that-data-is-flowing */}
+
+- De rij **Grondstation** op het [Dashboard](../dashboard.mdx) toont *Verzenden · 16 packets/s* of *Verzenden naar 2 · … packets/s*.
+- **Vluchtcontroller → Verbinding → Verbindingscontrole** toont elke bestemming met de pakketsnelheid.
+- *1 ingesteld · wachten op vluchtcontroller* betekent dat de bestemming in orde is, maar er nog geen telemetrie van de vluchtcontroller komt.
+
+Alleen-lezen gebruikers zien deze pagina, maar kunnen deze niet wijzigen.
+
+## Probleemoplossing {/* #troubleshooting */}
+
+- [Geen telemetrie in het grondstation](../../troubleshooting/no-telemetry-in-gcs.mdx)
+- [Geen video in QGroundControl of Mission Planner](../../troubleshooting/no-video-in-gcs.mdx)

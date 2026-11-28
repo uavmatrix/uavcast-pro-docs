@@ -1,0 +1,66 @@
+---
+title: "Connect to your drone over 4G with Tailscale"
+sidebar_label: Remote access with Tailscale
+description: "Reach your drone over LTE with Tailscale and UAVcast-Pro, no port forwarding: log in by URL or auth key, add the laptop as a GCS, stop key expiry."
+sidebar_position: 3
+---
+
+# Remote access with Tailscale
+
+Tailscale is a WireGuard-based VPN. If your team already uses it, it is the quickest way to reach a drone over 4G: the drone and your laptop join the same tailnet and talk to each other on their `100.x.y.z` addresses.
+
+Don't have a tailnet? The Fleet Manager VPN, included with your license, does the same without a Tailscale account: see [Fly beyond visual range over 4G](./bvlos-4g.mdx) and [Onboard a fleet](./fleet-onboarding.mdx).
+
+**You need:** UAVcast-Pro with internet on the drone (Wi-Fi or modem), a Tailscale account, and the Tailscale client on your laptop.
+
+## 1. Log the drone in to Tailscale
+
+<Steps>
+
+1. In UAVcast-Pro, open **Virtual Private Network**.
+2. Set **Enable VPN** to **Yes** and **Services** to **Tailscale**.
+3. Choose how to log in:
+   - **Web Login**: press **Generate Login URL**, then **Authenticate this device** and log in with your Tailscale account in the page that opens.
+   - **Auth Key**: create an auth key in the Tailscale admin console, paste it into **Auth Key**, optionally set **Hostname (Optional)**, and press **Connect with Auth Key**. Use this when you set up drones for someone else, or many at once.
+4. Wait for **Connected**. Note the **IPv4 Address** (100.x.y.z).
+
+</Steps>
+
+<Screenshot id="uavcast-pro/private-network" alt="Virtual Private Network page with Enable VPN Yes, Services Tailscale, the Fleet Manager, Web Login and Auth Key tabs, and VPN Information showing Not Connected" caption="Virtual Private Network with Services set to Tailscale, before the drone is logged in (Not Connected). After login, VPN Information shows the connection details." />
+
+:::tip Turn off key expiry for drones
+Tailscale device keys expire, and a drone with an expired key drops off the tailnet until someone logs it in again. The **Expires** field shows when. In the Tailscale admin console, disable key expiry for drones you deploy.
+:::
+
+## 2. Put the laptop on the same tailnet
+
+Install Tailscale on the laptop and log in with the same account or tailnet. Run `tailscale status`: the drone must be in the list. Then:
+
+```bash
+ping <drone tailscale ip>
+```
+
+Open the drone's web interface at `http://<drone tailscale ip>/`.
+
+## 3. Send telemetry and video to the laptop
+
+<Steps>
+
+1. In UAVcast-Pro, go to **Ground Control Stations** and press **Add Destination**.
+2. In **Destination IP or Host**, enter the **laptop's** Tailscale IPv4 address (run `tailscale ip -4` on the laptop).
+3. Switch on **Enable Telemetry** and **Enable Video**.
+4. Allow incoming UDP 14550 and 5600 on the laptop's firewall. Windows often treats the Tailscale adapter as a public network.
+
+</Steps>
+
+Open QGroundControl or Mission Planner. Telemetry arrives on UDP 14550 and video on UDP 5600.
+
+## 4. Check the connection quality
+
+The **Relay** field on the **Virtual Private Network** page shows whether traffic goes through a Tailscale relay. A relayed path works but adds delay. Some cellular carriers don't allow direct connections, so test on the carrier you fly with.
+
+## Troubleshooting
+
+- Can't ping the drone: [VPN connected but can't reach the drone](../troubleshooting/vpn-cant-reach-drone.mdx)
+- Ping works, no telemetry: [No telemetry in the ground station](../troubleshooting/no-telemetry-in-gcs.mdx)
+- If the drone is later paired with Fleet Manager and you choose **Replace existing VPN with Fleet Manager network**, it leaves your tailnet and joins the organization's network.

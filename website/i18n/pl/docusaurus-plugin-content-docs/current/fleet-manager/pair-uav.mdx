@@ -1,0 +1,112 @@
+---
+title: Dodaj pierwszego drona do Fleet Manager
+sidebar_label: Dodaj pierwszego drona
+description: Sparuj drona z UAVcast-Pro z organizacją w Fleet Manager za pomocą 8-cyfrowego kodu parowania, wybierz dostęp do VPN i zobacz drona na żywo na mapie floty.
+sidebar_position: 3
+---
+
+# Dodaj pierwszego drona {/* #add-your-first-drone */}
+
+Parowanie łączy jednego drona z UAVcast-Pro z twoją organizacją. Po sparowaniu dron utrzymuje połączenie uwierzytelnione certyfikatem z Fleet Manager i sam łączy się ponownie po restarcie lub zmianie sieci. Każdego drona parujesz tylko raz, a zajmuje to około dwóch minut.
+
+Pracujesz w dwóch kartach przeglądarki: w interfejsie webowym UAVcast-Pro na dronie oraz w Fleet Manager. Oba okna zostaw otwarte.
+
+## Zanim zaczniesz {/* #before-you-begin */}
+
+- **UAVcast-Pro zainstalowany z aktywowaną licencją.** UAVcast-Pro nie rozpocznie parowania bez licencji i pokazuje komunikat **No valid license found. Please activate your license first.** Zobacz [Aktywacja licencji](../get-started/license-activation.mdx).
+- **Licencja należy do członka twojej organizacji.** Fleet Manager porównuje e-mail właściciela licencji w sklepie UAVmatrix z e-mailami członków twojej organizacji. Zobacz [Licencje](./licenses.mdx).
+- **Rola Owner lub Admin** w organizacji. Viewer nie widzi przycisku **Pair Device**. Zobacz [Role i uprawnienia](./team/roles-and-permissions.mdx).
+- **Dostęp do internetu na dronie** przez Ethernet, Wi-Fi lub modem komórkowy, z otwartym wychodzącym HTTPS (TCP 443) oraz TCP **8883**. Port 8883 przenosi szyfrowane połączenie MQTT z Fleet Manager.
+- **Aktualne wydanie UAVcast-Pro 6.** Parowanie zaczyna się od **Management → Fleet Management** w UAVcast-Pro. Uzbrajanie, rozbrajanie i kalibracja przed lotem z poziomu Fleet Manager wymagają UAVcast-Pro 6.3.0_rc13 lub nowszego. Fleet Manager oznacza je odznaką wersji na starszych dronach.
+
+## Sparuj drona {/* #pair-the-drone */}
+
+<Steps>
+
+1. **Uzyskaj kod parowania w UAVcast-Pro.**
+   Otwórz interfejs webowy drona. W pasku bocznym w sekcji **Management** wybierz **Fleet Management**, a następnie **Connect to Fleet Manager**. UAVcast-Pro pokaże 8-cyfrowy **Pairing Code**, odliczanie **Expires in** oraz komunikat **Waiting for Manager to confirm pairing...**
+
+   <Screenshot id="uavcast-pro/fleet--connect" alt="Karta Connect to Fleet Manager w UAVcast-Pro z przyciskiem Connect to Fleet Manager" caption="UAVcast-Pro → Fleet Management przed parowaniem. Po wybraniu Connect to Fleet Manager pojawia się 8-cyfrowy kod, odliczanie Expires in oraz komunikat Waiting for Manager to confirm pairing..." />
+
+   :::note Kod jest ważny przez 5 minut
+   Jeśli odliczanie skończy się, zanim wpiszesz kod, wybierz ponownie **Connect to Fleet Manager**. Zawsze wpisuj kod widoczny na ekranie: UAVcast-Pro czeka tylko na swój najnowszy kod.
+   :::
+
+2. **Otwórz Pair Device w Fleet Manager.**
+   Przejdź do **Fleet** i wybierz **Pair Device**. Otworzy się kreator **Pair UAV**.
+
+3. **Wybierz organizację.**
+   W kroku **Organization** wybierz organizację, do której ma należeć dron, i wybierz **Continue**. Lista pokazuje tylko organizacje, w których jesteś Owner lub Admin. Jeśli masz tylko jedną, Fleet Manager wybierze ją automatycznie i pominie ten krok.
+
+4. **Wpisz kod.**
+   W kroku **Pairing Code** wpisz 8 cyfr i wybierz **Continue**. Fleet Manager sprawdzi kod i przejdzie do kroku **Confirm Device**.
+
+   <Screenshot id="fleet-manager/pair-device--code" alt="Kreator Pair UAV na kroku Pairing Code z wpisanym 8-cyfrowym kodem" caption="Fleet → Pair Device, krok Pairing Code, z paskiem postępu pokazującym ukończony krok Organization." />
+
+5. **Potwierdź urządzenie.**
+   Sprawdź dane, które wysłało UAVcast-Pro: **Name**, **Hostname**, **OS**, **Architecture** oraz **UAVcast Version**. Upewnij się, że odpowiadają dronowi, który masz przed sobą, a następnie wybierz **Complete Pairing**. Jeśli w organizacji włączony jest VPN, przycisk brzmi **Continue**, a kolejnym krokiem jest VPN.
+
+   <Screenshot id="fleet-manager/pair-device--confirm" alt="Krok Confirm Device z nazwą, hostname, systemem operacyjnym, architekturą i wersją UAVcast" caption="Krok Confirm Device: sprawdź, czy name, hostname, OS, architecture i UAVcast Version odpowiadają dronowi przed tobą." />
+
+6. **Wybierz dostęp do VPN (tylko gdy VPN jest włączony).**
+   Krok **VPN Connection** pojawia się, gdy w organizacji [włączono VPN](./network/index.mdx). Przy włączonym VPN stacje naziemne w sieci twojej organizacji odbierają wideo i telemetrię tego drona bezpośrednio, przez 4G, Wi-Fi lub satelitę, bez przekierowywania portów.
+
+   - **Enable VPN for this UAV** jest domyślnie zaznaczone. UAVcast-Pro dołącza do VPN twojej organizacji zaraz po sparowaniu.
+   - Jeśli dron jest już w sieci Tailscale, Fleet Manager pokaże **Existing VPN Connection Detected** z serwerem i adresem IP tej sieci. Pole zmieni się na **Replace existing VPN with Fleet Manager network** i nie będzie zaznaczone. Zaznacz je tylko wtedy, gdy chcesz, aby dron opuścił dotychczasową sieć.
+
+   Wybierz **Complete Pairing**.
+
+   <Screenshot id="fleet-manager/pair-device--vpn" alt="Krok VPN Connection z zaznaczonym polem Enable VPN for this UAV" caption="Krok VPN Connection z trzema wymienionymi korzyściami i zaznaczonym polem Enable VPN for this UAV." />
+
+   :::warning Zamiana VPN może przerwać sesję SSH
+   Jeśli zamienisz istniejące połączenie Tailscale, a twoja bieżąca sesja SSH lub przeglądarkowa do drona działa przez nie, sesja zostanie przerwana. Połącz się z dronem przez sieć lokalną, zanim przejdziesz dalej, albo użyj jego nowego adresu VPN później.
+   :::
+
+7. **Nazwij drona.**
+   Pojawi się komunikat **Pairing Complete!** z polem **UAV Name**. Wpisz nazwę, którą zespół rozpozna na mapie, na przykład numer rejestracyjny statku lub „Survey-14”, i wybierz **Save**. Nazwa zsynchronizuje się z UAVcast-Pro, gdy dron będzie online. Wybierz **View UAV**, aby otworzyć jego stronę.
+
+   <Screenshot id="fleet-manager/pair-device--complete" alt="Ekran Pairing Complete z polem UAV Name i przyciskiem View UAV" caption="Pairing Complete! z polem UAV Name zmienionym na numer rejestracyjny." />
+
+</Steps>
+
+W międzyczasie UAVcast-Pro, który sprawdza stan co 5 sekund, odbiera certyfikat drona i ustawienia połączenia (oraz klucz VPN, jeśli wybrałeś VPN). Jego strona Fleet Management przełącza się na **Connected**.
+
+## Sprawdź połączenie {/* #check-the-connection */}
+
+Dron pojawia się w **Fleet** oraz na **Fleet Map** w ciągu kilku sekund. Jego odznaka pokazuje:
+
+| Odznaka | Co oznacza |
+|---|---|
+| **PAIRING** | Fleet Manager wydał certyfikat i czeka na pierwszy heartbeat drona. |
+| **ONLINE** | Dron jest połączony. UAVcast-Pro wysyła heartbeat co 5 sekund. |
+| **OFFLINE** | Brak odpowiedzi przez 20 sekund. Karta pokazuje, kiedy dron był ostatnio widziany. |
+
+Jeśli odznaka pozostaje na **PAIRING** lub zmienia się na **OFFLINE**, sprawdź z poziomu drona, czy może połączyć się z Fleet Manager na porcie 8883:
+
+```bash title="Na dronie"
+nc -vz fleet-manager.uavmatrix.com 8883
+```
+
+Linia kończąca się na `succeeded!` oznacza, że port jest otwarty. Każdy inny wynik wskazuje na zaporę sieciową lub operatora, który blokuje port. Zobacz [Dron offline w Fleet Manager](../troubleshooting/drone-offline-fleet-manager.mdx).
+
+## Wysyłanie wideo i telemetrii do stacji naziemnej {/* #send-video-and-telemetry-to-a-ground-station */}
+
+Parowanie nie uruchamia żadnych strumieni. Aby lecieć z QGroundControl lub Mission Planner, [połącz stację naziemną](./connect-gcs.mdx) z VPN i dodaj [powiązanie strumienia](./network/stream-bindings.mdx). Fleet Manager przydziela każdemu powiązaniu własny zestaw portów (wideo, miejsce na kamerę 2 i dźwięk oraz telemetrię), dzięki czemu kilka dronów może jednocześnie przesyłać dane do jednej stacji naziemnej. Pierwszy dron używa wartości domyślnych, 5600 i 14550; pozostałe porty odczytasz z kolumny **Ports** w powiązaniu.
+
+## Gdy parowanie się nie udaje {/* #if-pairing-fails */}
+
+| Komunikat | Przyczyna i rozwiązanie |
+|---|---|
+| **Invalid pairing code** | Nie ma takiego kodu. Sprawdź cyfry lub pobierz nowy kod w UAVcast-Pro. |
+| **This pairing code has expired** | Minęło ponad 5 minut. Wybierz ponownie **Connect to Fleet Manager** w UAVcast-Pro. |
+| **This pairing code has already been used** | Kod został już użyty przez ciebie lub kolegę. Sprawdź dron w **Fleet**, zanim sparujesz go ponownie. |
+| **License is not owned by any member of this organization** | Licencja na dronie należy do adresu e-mail, który nie jest członkiem organizacji. Zaproś tę osobę albo poproś support o dodanie adresu do twojego konta. Zobacz [Licencje](./licenses.mdx#licenses-bought-with-another-email). |
+| **License has expired** / **License has been refunded** | Licencja na dronie nie jest już aktywna. Odnów ją lub aktywuj inną licencję w UAVcast-Pro. |
+| **This UAV is already paired to an organization** | Dron należy do innej organizacji. Najpierw należy go tam usunąć. Zobacz [Usuwanie lub przenoszenie drona](./fleet/remove-or-transfer.mdx). |
+| **Too many attempts. Please wait a minute and try again.** | Przekroczono 10 sprawdzeń kodu lub 5 prób parowania w ciągu minuty. Odczekaj minutę. |
+
+Więcej przyczyn i sprawdzeń: [Kod parowania nieprawidłowy lub wygasły](../troubleshooting/pairing-code-invalid.mdx).
+
+## Ponowne parowanie tego samego drona {/* #pairing-the-same-drone-again */}
+
+Ponowne sparowanie drona z **tą samą** organizacją zachowuje jego nazwę, historię telemetrii i powiązania strumieni, a jedynie odnawia certyfikat. Jest to potrzebne po wybraniu **Disconnect from Fleet** w UAVcast-Pro lub gdy Fleet Manager pokazuje **Re-pair required**. Zobacz [Ponowne parowanie drona](./fleet/remove-or-transfer.mdx#re-pair-a-drone).

@@ -1,0 +1,1245 @@
+{
+  "doc.readingTime": {
+    "message": "{n} min czytania"
+  },
+  "doc.copyPageTitle": {
+    "message": "Skopiuj tę stronę jako Markdown, do notatek lub asystenta AI"
+  },
+  "doc.copied": {
+    "message": "Skopiowano"
+  },
+  "doc.copyFailed": {
+    "message": "Kopiowanie nie powiodło się"
+  },
+  "doc.copyPage": {
+    "message": "Kopiuj stronę"
+  },
+  "doc.edit": {
+    "message": "Edytuj"
+  },
+  "feedback.question": {
+    "message": "Czy ta strona była pomocna?"
+  },
+  "feedback.yes": {
+    "message": "Tak"
+  },
+  "feedback.no": {
+    "message": "Nie"
+  },
+  "feedback.thanks": {
+    "message": "Dziękujemy za informację."
+  },
+  "feedback.what": {
+    "message": "Czego brakowało lub co było błędne? Czytamy każde zgłoszenie."
+  },
+  "feedback.placeholder": {
+    "message": "Na przykład: to ustawienie ma inną nazwę w mojej wersji"
+  },
+  "feedback.send": {
+    "message": "Wyślij opinię"
+  },
+  "feedback.or": {
+    "message": "lub"
+  },
+  "feedback.issue": {
+    "message": "zgłoś problem w GitHub"
+  },
+  "feedback.or2": {
+    "message": "/"
+  },
+  "feedback.email": {
+    "message": "napisz do supportu"
+  },
+  "q.mp": {
+    "message": "Film o Mission Planner"
+  },
+  "q.qgc": {
+    "message": "Film o QGroundControl"
+  },
+  "q.gstWin": {
+    "message": "GStreamer w systemie Windows"
+  },
+  "q.pairing": {
+    "message": "Kod parowania"
+  },
+  "q.apn": {
+    "message": "Ustawienia APN"
+  },
+  "q.heartbeat": {
+    "message": "Brak heartbeat MAVLink"
+  },
+  "goal.first.tag": {
+    "message": "Zacznij tutaj"
+  },
+  "goal.first.title": {
+    "message": "Konfiguruję pierwszego drona"
+  },
+  "goal.first.body": {
+    "message": "Zainstaluj UAVcast-Pro na komputerze towarzyszącym, podłącz kontroler lotu i uzyskaj wideo na żywo w stacji naziemnej."
+  },
+  "goal.first.quick": {
+    "message": "Szybki start"
+  },
+  "goal.first.mp": {
+    "message": "Wideo w Mission Planner"
+  },
+  "goal.first.qgc": {
+    "message": "Wideo w QGroundControl"
+  },
+  "goal.first.gcs": {
+    "message": "Dodaj swoją stację naziemną"
+  },
+  "goal.first.license": {
+    "message": "Aktywuj licencję"
+  },
+  "goal.first.hw": {
+    "message": "Wymagania sprzętowe"
+  },
+  "goal.fleet.tag": {
+    "message": "Właściciele i administratorzy"
+  },
+  "goal.fleet.title": {
+    "message": "Zarządzam flotą"
+  },
+  "goal.fleet.body": {
+    "message": "Połącz drony, stacje naziemne i licencje w jednej organizacji, śledź każdy lot na mapie na żywo i nadaj zespołowi odpowiedni dostęp."
+  },
+  "goal.fleet.org": {
+    "message": "Utwórz organizację"
+  },
+  "goal.fleet.pair": {
+    "message": "Sparuj drona kodem"
+  },
+  "goal.fleet.team": {
+    "message": "Role Owner, Admin i Viewer"
+  },
+  "goal.fleet.overview": {
+    "message": "Przegląd Fleet Manager"
+  },
+  "goal.api.tag": {
+    "message": "HTTP · UDP · MAVLink"
+  },
+  "goal.api.title": {
+    "message": "Integruję się przez API"
+  },
+  "goal.api.body": {
+    "message": "Wysyłaj własne wartości czujników do strumienia MAVLink, odbieraj wideo we własnym oprogramowaniu i kieruj telemetrię do kolejnych narzędzi."
+  },
+  "goal.api.injectors": {
+    "message": "Wstrzykiwacze telemetrii (HTTP, UDP, szeregowe)"
+  },
+  "goal.api.video": {
+    "message": "Odbiór wideo z GStreamer w systemie Windows"
+  },
+  "goal.api.ports": {
+    "message": "Porty i protokoły"
+  },
+  "goal.api.streams": {
+    "message": "Tablice Strumieni Danych"
+  },
+  "goal.broken.tag": {
+    "message": "Zacznij od objawu"
+  },
+  "goal.broken.title": {
+    "message": "Coś nie działa"
+  },
+  "goal.broken.body": {
+    "message": "Każda naprawa wymienia sprawdzenia w kolejności, która rozwiązuje większość przypadków, wraz z dokładnym ustawieniem do sprawdzenia."
+  },
+  "goal.broken.video": {
+    "message": "Brak wideo w stacji naziemnej"
+  },
+  "goal.broken.hb": {
+    "message": "Brak heartbeat MAVLink"
+  },
+  "goal.broken.logs": {
+    "message": "Zbierz logi dla supportu"
+  },
+  "goal.broken.all": {
+    "message": "Wszystkie wskazówki dotyczące rozwiązywania problemów"
+  },
+  "feat.video": {
+    "message": "Strumieniowanie wideo"
+  },
+  "feat.video.desc": {
+    "message": "H.264 przez UDP, dwie kamery, nagrywanie"
+  },
+  "feat.gcs": {
+    "message": "Telemetria i GCS"
+  },
+  "feat.gcs.desc": {
+    "message": "Mission Planner, QGroundControl i inne"
+  },
+  "feat.modem": {
+    "message": "Modemy komórkowe"
+  },
+  "feat.modem.desc": {
+    "message": "Modemy HiLink i USB, automatyczny APN"
+  },
+  "feat.vpn": {
+    "message": "VPN"
+  },
+  "feat.vpn.desc": {
+    "message": "Dostęp do drona bez przekierowania portów"
+  },
+  "feat.rtk": {
+    "message": "RTK / NTRIP"
+  },
+  "feat.rtk.desc": {
+    "message": "Pozycjonowanie z dokładnością do centymetrów przez łącze komórkowe"
+  },
+  "feat.inj": {
+    "message": "Wstrzykiwacze"
+  },
+  "feat.inj.desc": {
+    "message": "Twoje czujniki jako natywne wartości MAVLink"
+  },
+  "pl.u.install": {
+    "message": "Instalacja"
+  },
+  "pl.u.camera": {
+    "message": "Strumieniowanie wideo"
+  },
+  "pl.u.modem": {
+    "message": "Modemy komórkowe"
+  },
+  "pl.u.rtk": {
+    "message": "RTK / NTRIP"
+  },
+  "pl.f.org": {
+    "message": "Skonfiguruj swoją organizację"
+  },
+  "pl.f.pair": {
+    "message": "Sparuj pierwszy UAV"
+  },
+  "pl.f.map": {
+    "message": "Mapa na żywo i telemetria"
+  },
+  "pl.f.team": {
+    "message": "Członkowie i role"
+  },
+  "start.quick.meta": {
+    "message": "Samouczek · Raspberry Pi"
+  },
+  "start.quick.title": {
+    "message": "Szybki start"
+  },
+  "start.quick.desc": {
+    "message": "Od czystej karty SD do wideo na żywo i telemetrii w stacji naziemnej."
+  },
+  "start.quick.step0": {
+    "message": "Wgraj 64-bitowy system"
+  },
+  "start.quick.step1": {
+    "message": "Uruchom instalator"
+  },
+  "start.quick.step2": {
+    "message": "Podłącz kontroler lotu"
+  },
+  "start.quick.step3": {
+    "message": "Dodaj swoją stację naziemną"
+  },
+  "start.hw.meta": {
+    "message": "Referencja"
+  },
+  "start.hw.title": {
+    "message": "Wymagania sprzętowe"
+  },
+  "start.hw.desc": {
+    "message": "Komputery towarzyszące, kontrolery lotu, kamery i modemy. Sprawdź to przed zakupem części."
+  },
+  "start.hw.b0": {
+    "message": "Raspberry Pi, NVIDIA Jetson, Orange Pi"
+  },
+  "start.hw.b1": {
+    "message": "Dowolny komputer z Linuxem na arm64 lub amd64"
+  },
+  "start.hw.b2": {
+    "message": "Dowolny kontroler lotu MAVLink (ArduPilot, PX4)"
+  },
+  "start.hw.b3": {
+    "message": "Modemy USB i LTE HiLink"
+  },
+  "start.license.meta": {
+    "message": "Licencjonowanie"
+  },
+  "start.license.title": {
+    "message": "Aktywuj licencję"
+  },
+  "start.license.desc": {
+    "message": "Aktywuj klucz na urządzeniu, przenieś go na nowy sprzęt i zobacz, jak działają sloty urządzeń."
+  },
+  "start.license.step0": {
+    "message": "Kup klucz w sklepie UAVmatrix"
+  },
+  "start.license.step1": {
+    "message": "Otwórz Aplikacja › Menedżer Licencji"
+  },
+  "start.license.step2": {
+    "message": "Wprowadź klucz, będąc online"
+  },
+  "pop.mp": {
+    "message": "Mission Planner: telemetria i wideo"
+  },
+  "pop.mp.desc": {
+    "message": "Telemetria na UDP 14550 oraz źródło wideo GStreamer dla HUD."
+  },
+  "pop.qgc": {
+    "message": "QGroundControl: telemetria i wideo"
+  },
+  "pop.qgc.desc": {
+    "message": "Telemetria i wideo H.264 na UDP 5600, na komputerze i Androidzie."
+  },
+  "pop.gstwin": {
+    "message": "Odbiór wideo z GStreamer w systemie Windows"
+  },
+  "pop.gstwin.desc": {
+    "message": "Zainstaluj odpowiednią wersję GStreamer i odtwórz strumień z drona."
+  },
+  "pop.4g": {
+    "message": "Lot poza zasięgiem wzroku przez 4G"
+  },
+  "pop.4g.desc": {
+    "message": "Modem, VPN Fleet Manager, telemetria i wideo do QGroundControl lub Mission Planner."
+  },
+  "pop.pair": {
+    "message": "Sparuj drona z Fleet Manager"
+  },
+  "pop.pair.desc": {
+    "message": "Wprowadź 8-cyfrowy kod, który pokazuje UAVcast-Pro, do Fleet Manager."
+  },
+  "pop.modem": {
+    "message": "Skonfiguruj modem komórkowy"
+  },
+  "pop.modem.desc": {
+    "message": "Modem HiLink lub USB, APN i automatyczne połączenie."
+  },
+  "pop.gcs": {
+    "message": "Połącz Mission Planner lub QGroundControl"
+  },
+  "pop.gcs.desc": {
+    "message": "Telemetria na UDP 14550 i wideo na UDP 5600 do każdej stacji naziemnej."
+  },
+  "pop.rtk": {
+    "message": "RTK przez 4G z casterem NTRIP"
+  },
+  "pop.rtk.desc": {
+    "message": "Poprawki RTCM3 z castera do kontrolera lotu dla RTK Fixed."
+  },
+  "pop.bind": {
+    "message": "Powiązania strumieni i przydział portów"
+  },
+  "pop.bind.desc": {
+    "message": "Jak kilka dronów współdzieli jedną stację naziemną."
+  },
+  "pop.rec": {
+    "message": "Nagrywaj loty i przeglądaj je"
+  },
+  "pop.rec.desc": {
+    "message": "Wideo i telemetria na dronie, odtwarzane na jednej osi czasu."
+  },
+  "pop.ts": {
+    "message": "Zdalny dostęp przez Tailscale"
+  },
+  "pop.ts.desc": {
+    "message": "Dostęp do drona w Twojej sieci tailnet przez LTE, bez przekierowania portów."
+  },
+  "pop.multi": {
+    "message": "Strumień do wielu stacji naziemnych"
+  },
+  "pop.multi.desc": {
+    "message": "Pilot, operator ładunku i obserwatorzy na jednym dronie."
+  },
+  "pop.onboard": {
+    "message": "Wdrożenie floty w Fleet Manager"
+  },
+  "pop.onboard.desc": {
+    "message": "Licencje, nazewnictwo, parowanie, VPN i powiązania strumieni dla wielu dronów."
+  },
+  "ts.video": {
+    "message": "Brak wideo w QGroundControl lub Mission Planner"
+  },
+  "ts.hb": {
+    "message": "Brak heartbeat MAVLink z kontrolera lotu"
+  },
+  "ts.telemetry": {
+    "message": "Brak telemetrii w stacji naziemnej"
+  },
+  "ts.license": {
+    "message": "Klucz licencyjny nie aktywuje się"
+  },
+  "ts.modem": {
+    "message": "Modem się łączy, ale nie ma dostępu do internetu"
+  },
+  "ts.web": {
+    "message": "Interfejs webowy się nie otwiera"
+  },
+  "ts.offline": {
+    "message": "Dron pokazuje Offline w Fleet Manager"
+  },
+  "ts.power": {
+    "message": "Podnapięcie i ograniczanie mocy"
+  },
+  "recent.2026-11-24": {
+    "message": "Licencje kupione z innym adresem e-mail można powiązać z Twoim kontem."
+  },
+  "recent.2026-11-21": {
+    "message": "Poprawki kamery: koniec z „Insufficient permissions”, a wideo działa dalej, gdy podgląd na żywo jest wyłączony."
+  },
+  "recent.2026-11-16": {
+    "message": "Nagrywanie z kamery, zarządzanie pamięcią i odtwarzacz przeglądu lotu."
+  },
+  "recent.2026-11-09": {
+    "message": "Dźwięk z kamery przez Opus oraz szybsze odzyskiwanie połączenia NTRIP/RTK po zerwaniu."
+  },
+  "area.getStarted": {
+    "message": "Zacznij"
+  },
+  "area.getStarted.blurb": {
+    "message": "Zainstaluj, aktywuj i wykonaj pierwszy lot"
+  },
+  "area.uavcastPro": {
+    "message": "UAVcast-Pro"
+  },
+  "area.uavcastPro.blurb": {
+    "message": "Oprogramowanie na komputer towarzyszący drona"
+  },
+  "area.fleetManager": {
+    "message": "Fleet Manager"
+  },
+  "area.fleetManager.blurb": {
+    "message": "Drony, stacje naziemne i ludzie w jednym miejscu"
+  },
+  "area.guides": {
+    "message": "Poradniki"
+  },
+  "area.guides.blurb": {
+    "message": "Przewodniki krok po kroku, zorientowane na zadanie"
+  },
+  "area.troubleshooting": {
+    "message": "Rozwiązywanie problemów"
+  },
+  "area.troubleshooting.blurb": {
+    "message": "Zacznij od objawu"
+  },
+  "area.reference": {
+    "message": "Referencja"
+  },
+  "area.reference.blurb": {
+    "message": "Porty, ustawienia, obsługiwany sprzęt"
+  },
+  "nav.getStarted": {
+    "message": "Zacznij"
+  },
+  "nav.guides": {
+    "message": "Poradniki"
+  },
+  "nav.troubleshooting": {
+    "message": "Problemy"
+  },
+  "nav.reference": {
+    "message": "Referencja"
+  },
+  "nav.changelog": {
+    "message": "Zmiany"
+  },
+  "product.uavcast": {
+    "message": "UAVcast-Pro"
+  },
+  "product.uavcast.sub": {
+    "message": "Oprogramowanie na komputer towarzyszący drona"
+  },
+  "product.fleet": {
+    "message": "Fleet Manager"
+  },
+  "product.fleet.sub": {
+    "message": "Drony, licencje i ludzie w jednym miejscu"
+  },
+  "product.all": {
+    "message": "Cała dokumentacja"
+  },
+  "product.all.sub": {
+    "message": "Strona startowa, poradniki i referencja"
+  },
+  "home.eyebrow": {
+    "message": "Dokumentacja UAVmatrix · UAVcast-Pro {version}"
+  },
+  "home.title": {
+    "message": "Buduj, lataj i zarządzaj podłączonymi dronami."
+  },
+  "home.sub": {
+    "message": "Poradniki i referencja dla UAVcast-Pro na komputerze towarzyszącym drona oraz dla Fleet Manager w przeglądarce, od pierwszego uruchomienia po flotę przesyłającą wideo i telemetrię przez 4G."
+  },
+  "home.searchPlaceholder": {
+    "message": "Szukaj poradników, ustawień i komunikatów o błędach"
+  },
+  "home.popular": {
+    "message": "Popularne:"
+  },
+  "home.goals.kicker": {
+    "message": "Zacznij od swojego celu"
+  },
+  "home.goals.title": {
+    "message": "Wybierz ścieżkę, która pasuje do tego, co robisz"
+  },
+  "home.products.kicker": {
+    "message": "Produkty"
+  },
+  "home.products.title": {
+    "message": "Przeglądaj według produktu"
+  },
+  "home.uavcast.kicker": {
+    "message": "Na dronie"
+  },
+  "home.uavcast.body": {
+    "message": "Działa na komputerze towarzyszącym drona, na przykład na Raspberry Pi. Przesyła wideo H.264 o niskim opóźnieniu i telemetrię MAVLink do Mission Planner lub QGroundControl przez 4G/5G, Wi-Fi lub VPN."
+  },
+  "home.uavcast.go": {
+    "message": "Poznaj UAVcast-Pro"
+  },
+  "home.fleet.kicker": {
+    "message": "W przeglądarce"
+  },
+  "home.fleet.badge": {
+    "message": "Nowa dokumentacja"
+  },
+  "home.fleet.body": {
+    "message": "Jedno miejsce dla Twojej organizacji: paruj drony 8-cyfrowym kodem, śledź każdy lot na mapie na żywo, przypisuj wideo i telemetrię do stacji naziemnych i zarządzaj zespołem."
+  },
+  "home.fleet.go": {
+    "message": "Poznaj Fleet Manager"
+  },
+  "home.start.kicker": {
+    "message": "Zacznij tutaj"
+  },
+  "home.start.title": {
+    "message": "Nowy w UAVcast-Pro?"
+  },
+  "home.popular.kicker": {
+    "message": "Popularne artykuły"
+  },
+  "home.popular.filter": {
+    "message": "Filtruj artykuły"
+  },
+  "home.popular.all": {
+    "message": "Wszystkie"
+  },
+  "home.popular.allGuides": {
+    "message": "Wszystkie poradniki"
+  },
+  "home.trouble.title": {
+    "message": "Coś nie działa?"
+  },
+  "home.trouble.all": {
+    "message": "Wszystkie naprawy"
+  },
+  "home.trouble.foot": {
+    "message": "Kontaktujesz się z supportem? Dołącz archiwum logów z {path} w UAVcast-Pro."
+  },
+  "home.trouble.path": {
+    "message": "Aplikacja › Logowanie",
+    "description": "Menu path in the UAVcast-Pro web app; use the app’s own translated labels"
+  },
+  "home.trouble.how": {
+    "message": "Jak"
+  },
+  "home.copy": {
+    "message": "Kopiuj {value}"
+  },
+  "home.support.kicker": {
+    "message": "Kontakt z supportem"
+  },
+  "home.support.title": {
+    "message": "Nadal masz problem? Porozmawiaj z ludźmi, którzy to tworzą."
+  },
+  "home.support.body": {
+    "message": "Support prowadzą twórcy UAVcast-Pro. Podaj wersję UAVcast-Pro i archiwum logów, a zwykle odpowiemy w jednej wiadomości."
+  },
+  "home.support.email": {
+    "message": "E-mail"
+  },
+  "home.support.emailBody": {
+    "message": "Problemy z licencją, instalacją i lotami. Dołącz pliki logów."
+  },
+  "home.support.discord": {
+    "message": "Społeczność na Discordzie"
+  },
+  "home.support.discordBody": {
+    "message": "Pytaj innych pilotów, dziel się konfiguracjami i jako pierwszy poznawaj nowości o wydaniach."
+  },
+  "home.support.join": {
+    "message": "Dołącz do serwera"
+  },
+  "home.support.fm": {
+    "message": "W Fleet Manager"
+  },
+  "home.support.fmBody": {
+    "message": "Właściciele i administratorzy dostają pomoc od FleetBot oraz zgłoszenia do supportu w aplikacji."
+  },
+  "home.support.fmLink": {
+    "message": "Support Fleet Manager"
+  },
+  "home.recent.kicker": {
+    "message": "Ostatnie zmiany"
+  },
+  "home.recent.all": {
+    "message": "Pełna historia zmian"
+  },
+  "home.metaTitle": {
+    "message": "Dokumentacja UAVmatrix: UAVcast-Pro i Fleet Manager"
+  },
+  "home.metaDescription": {
+    "message": "Zainstaluj UAVcast-Pro, przesyłaj wideo z drona i telemetrię MAVLink przez 4G/LTE do Mission Planner lub QGroundControl i zarządzaj flotą w UAVmatrix Fleet Manager."
+  },
+  "searchPage.title": {
+    "message": "Przeszukaj dokumentację"
+  },
+  "search.placeholder": {
+    "message": "Szukaj poradników, ustawień i komunikatów o błędach"
+  },
+  "search.dialog": {
+    "message": "Przeszukaj dokumentację"
+  },
+  "search.all": {
+    "message": "Wszystkie"
+  },
+  "search.noIndex": {
+    "message": "Indeks wyszukiwania tworzy build produkcyjny. Uruchom npm run build, a następnie npm run serve."
+  },
+  "searchPage.count": {
+    "message": "{n} wyników dla „{q}”"
+  },
+  "searchPage.metaTitle": {
+    "message": "Szukaj"
+  },
+  "searchPage.metaDescription": {
+    "message": "Przeszukaj dokumentację UAVmatrix."
+  },
+  "home.schematic": {
+    "message": "Jak płyną dane: UAVcast-Pro na komputerze towarzyszącym wysyła status do Fleet Manager przez MQTT z TLS na porcie 8883, a wideo i telemetria MAVLink trafiają do stacji naziemnej na portach UDP 5600 i 14550, bezpośrednio lub przez VPN WireGuard."
+  },
+  "home.schematic.aircraft": {
+    "message": "STATEK POWIETRZNY"
+  },
+  "home.schematic.companion": {
+    "message": "Komputer towarzyszący"
+  },
+  "home.schematic.modem": {
+    "message": "Modem LTE · 4G/5G"
+  },
+  "home.schematic.cloud": {
+    "message": "CHMURA"
+  },
+  "home.schematic.cloudBody": {
+    "message": "Status, pozycja, licencje"
+  },
+  "home.schematic.ground": {
+    "message": "ZIEMIA"
+  },
+  "home.schematic.gcs": {
+    "message": "Stacja naziemna"
+  },
+  "home.schematic.gcsVpn": {
+    "message": "Bezpośrednio lub przez VPN WireGuard"
+  },
+  "home.schematic.link": {
+    "message": "ŁĄCZE · KOMÓRKOWE / WI-FI / ETHERNET"
+  },
+  "home.mini.temp": {
+    "message": "Temp."
+  },
+  "home.mini.uplink": {
+    "message": "Uplink · ostatnie 60 s"
+  },
+  "home.mini.armed": {
+    "message": "UZBROJONY"
+  },
+  "home.mini.online": {
+    "message": "ONLINE"
+  },
+  "home.mini.ago": {
+    "message": "4 h temu"
+  },
+  "search.other": {
+    "message": "Inne"
+  },
+  "search.close": {
+    "message": "Zamknij wyszukiwanie"
+  },
+  "search.scope": {
+    "message": "Ogranicz wyniki do"
+  },
+  "search.recent": {
+    "message": "Ostatnie"
+  },
+  "search.try": {
+    "message": "Spróbuj"
+  },
+  "search.none": {
+    "message": "Brak wyników dla „{q}”."
+  },
+  "search.noneHint": {
+    "message": "Spróbuj nazwy ustawienia lub dokładnej treści błędu albo zapytaj na Discordzie."
+  },
+  "search.loading": {
+    "message": "Ładowanie indeksu wyszukiwania…"
+  },
+  "search.navigate": {
+    "message": "aby nawigować"
+  },
+  "search.open": {
+    "message": "aby otworzyć"
+  },
+  "search.toClose": {
+    "message": "aby zamknąć"
+  },
+  "search.offline": {
+    "message": "indeks offline"
+  },
+  "shot.close": {
+    "message": "Zamknij"
+  },
+  "shot.placeholder": {
+    "message": "Miejsce na zrzut ekranu: {id}"
+  },
+  "shot.soon": {
+    "message": "Zrzut ekranu wkrótce"
+  },
+  "shot.enlarge": {
+    "message": "Powiększ zrzut ekranu: {alt}"
+  },
+  "symptom.check": {
+    "message": "Sprawdzenie {n}"
+  },
+  "symptom.step": {
+    "message": "Krok {n}"
+  },
+  "symptom.go": {
+    "message": "Przejdź"
+  },
+  "symptom.see": {
+    "message": "Co widzisz"
+  },
+  "symptom.cause": {
+    "message": "Prawdopodobna przyczyna"
+  },
+  "symptom.start": {
+    "message": "Zacznij od"
+  },
+  "sketch.alt.mpConnect": {
+    "message": "Ilustracja Mission Planner: w prawym górnym rogu typ połączenia ustawiony na UDP i przycisk Połącz, a następnie okno z pytaniem o port nasłuchu, z wpisanym 14550."
+  },
+  "sketch.alt.mpGstreamer": {
+    "message": "Ilustracja Mission Planner: menu kontekstowe na HUD z wyróżnioną pozycją Video i elementem podmenu Set GStreamer Source."
+  },
+  "sketch.alt.qgcVideo": {
+    "message": "Ilustracja ustawień aplikacji QGroundControl: strona Video z polem Source ustawionym na UDP h.264 Video Stream, adresem UDP 0.0.0.0:5600 i włączonym Low Latency Mode."
+  },
+  "sketch.tag": {
+    "message": "Ilustracja"
+  },
+  "footer.store": {
+    "message": "Sklep UAVmatrix"
+  },
+  "footer.quickStart": {
+    "message": "Szybki start"
+  },
+  "footer.guides": {
+    "message": "Poradniki"
+  },
+  "footer.troubleshooting": {
+    "message": "Rozwiązywanie problemów"
+  },
+  "footer.reference": {
+    "message": "Referencja"
+  },
+  "footer.changelog": {
+    "message": "Historia zmian"
+  },
+  "footer.contact": {
+    "message": "Kontakt z supportem"
+  },
+  "nav.brandDocs": {
+    "message": "Dokumentacja"
+  },
+  "footer.tagline": {
+    "message": "Oprogramowanie łączności dla profesjonalnych operatorów dronów: UAVcast-Pro na statku powietrznym, Fleet Manager w przeglądarce."
+  },
+  "footer.products": {
+    "message": "Produkty"
+  },
+  "footer.resources": {
+    "message": "Zasoby"
+  },
+  "footer.community": {
+    "message": "Społeczność"
+  },
+  "footer.language": {
+    "message": "Język"
+  },
+  "nav.languageSoon": {
+    "message": "Wkrótce"
+  },
+  "footer.privacy": {
+    "message": "Prywatność"
+  },
+  "footer.terms": {
+    "message": "Regulamin"
+  },
+  "footer.source": {
+    "message": "Źródła dokumentacji na GitHub"
+  },
+  "search.button": {
+    "message": "Przeszukaj dokumentację…"
+  },
+  "toc.feedback": {
+    "message": "Zostaw opinię"
+  },
+  "theme.common.editThisPage": {
+    "message": "Edytuj tę stronę",
+    "description": "The link label to edit the current page"
+  },
+  "toc.top": {
+    "message": "Do góry"
+  },
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "Na tej stronie",
+    "description": "The label used by the button on the collapsible TOC component"
+  },
+  "theme.CodeBlock.copied": {
+    "message": "Skopiowano!",
+    "description": "The copied button label on code blocks"
+  },
+  "theme.CodeBlock.copyButtonAriaLabel": {
+    "message": "Kopiuj do schowka",
+    "description": "The ARIA label for copy code blocks button"
+  },
+  "theme.CodeBlock.copy": {
+    "message": "Kopiuj",
+    "description": "The copy button label on code blocks"
+  },
+  "codeblock.code": {
+    "message": "Kod"
+  },
+  "doc.lastUpdated": {
+    "message": "Ostatnia aktualizacja: {date}"
+  },
+  "doc.reportIssue": {
+    "message": "Zgłoś problem"
+  },
+  "nav.homeAria": {
+    "message": "Strona główna dokumentacji UAVmatrix"
+  },
+  "product.allShort": {
+    "message": "Wszystkie produkty"
+  },
+  "product.menuLabel": {
+    "message": "Produkty"
+  },
+  "nav.language": {
+    "message": "Język"
+  },
+  "nav.languageLabel": {
+    "message": "Język · taki sam jak w aplikacji UAVcast-Pro"
+  },
+  "nav.languageFoot": {
+    "message": "Tłumaczenia są w przygotowaniu. Interfejs produktu jest już dostępny we wszystkich tych językach."
+  },
+  "nav.theme": {
+    "message": "Przełącz między trybem ciemnym i jasnym"
+  },
+  "nav.openMenu": {
+    "message": "Otwórz nawigację"
+  },
+  "nav.primary": {
+    "message": "Główna"
+  },
+  "nav.openFleet": {
+    "message": "Otwórz Fleet Manager"
+  },
+  "notFound.kicker": {
+    "message": "Nie znaleziono strony"
+  },
+  "theme.NotFound.title": {
+    "message": "Strona nie została znaleziona",
+    "description": "The title of the 404 page"
+  },
+  "theme.NotFound.p1": {
+    "message": "Nie mogliśmy znaleźć strony której szukasz.",
+    "description": "The first paragraph of the 404 page"
+  },
+  "breadcrumbs.docs": {
+    "message": "Dokumentacja"
+  },
+  "theme.docs.sidebar.navAriaLabel": {
+    "message": "Panel boczny dokumentów",
+    "description": "The ARIA label for the sidebar navigation"
+  },
+  "sidebar.filter": {
+    "message": "Filtruj strony"
+  },
+  "sidebar.noMatch": {
+    "message": "Żaden tytuł strony nie pasuje. Spróbuj wyszukiwania (⌘K)."
+  },
+  "theme.docs.sidebar.closeSidebarButtonAriaLabel": {
+    "message": "Zamknij panel nawigacji",
+    "description": "The ARIA label for close button of mobile sidebar"
+  },
+  "drawer.areas": {
+    "message": "Dokumentacja"
+  },
+  "theme.navbar.mobileSidebarSecondaryMenu.backButtonLabel": {
+    "message": "← Wróć do menu głównego",
+    "description": "The label of the back button to return to main menu, inside the mobile navbar sidebar secondary menu (notably used to display the docs sidebar)"
+  },
+  "theme.ErrorPageContent.title": {
+    "message": "Ta strona uległa awarii.",
+    "description": "The title of the fallback page when the page crashed"
+  },
+  "theme.BackToTopButton.buttonAriaLabel": {
+    "message": "Przewiń do góry",
+    "description": "The ARIA label for the back to top button"
+  },
+  "theme.blog.archive.title": {
+    "message": "Archiwum",
+    "description": "The page & hero title of the blog archive page"
+  },
+  "theme.blog.archive.description": {
+    "message": "Archiwum",
+    "description": "The page & hero description of the blog archive page"
+  },
+  "theme.blog.paginator.navAriaLabel": {
+    "message": "Nawigacja na stronie listy wpisów na blogu",
+    "description": "The ARIA label for the blog pagination"
+  },
+  "theme.blog.paginator.newerEntries": {
+    "message": "Nowsze wpisy",
+    "description": "The label used to navigate to the newer blog posts page (previous page)"
+  },
+  "theme.blog.paginator.olderEntries": {
+    "message": "Starsze wpisy",
+    "description": "The label used to navigate to the older blog posts page (next page)"
+  },
+  "theme.blog.post.paginator.navAriaLabel": {
+    "message": "Nawigacja na stronie postu na blogu",
+    "description": "The ARIA label for the blog posts pagination"
+  },
+  "theme.blog.post.paginator.newerPost": {
+    "message": "Nowszy post",
+    "description": "The blog post button label to navigate to the newer/previous post"
+  },
+  "theme.blog.post.paginator.olderPost": {
+    "message": "Starszy post",
+    "description": "The blog post button label to navigate to the older/next post"
+  },
+  "theme.tags.tagsPageLink": {
+    "message": "Wyświetl wszystkie tagi",
+    "description": "The label of the link targeting the tag list page"
+  },
+  "theme.colorToggle.ariaLabel.mode.system": {
+    "message": "tryb systemowy",
+    "description": "The name for the system color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.light": {
+    "message": "jasny motyw",
+    "description": "The name for the light color mode"
+  },
+  "theme.colorToggle.ariaLabel.mode.dark": {
+    "message": "ciemny motyw",
+    "description": "The name for the dark color mode"
+  },
+  "theme.colorToggle.ariaLabel": {
+    "message": "Przełącz pomiędzy ciemnym a jasnym motywem (aktualnie ustawiony {mode})",
+    "description": "The ARIA label for the color mode toggle"
+  },
+  "theme.docs.breadcrumbs.navAriaLabel": {
+    "message": "Pasek nawigacji",
+    "description": "The ARIA label for the breadcrumbs"
+  },
+  "theme.docs.paginator.navAriaLabel": {
+    "message": "Strona dokumentacji",
+    "description": "The ARIA label for the docs pagination"
+  },
+  "theme.docs.paginator.previous": {
+    "message": "Poprzednia strona",
+    "description": "The label used to navigate to the previous doc"
+  },
+  "theme.docs.paginator.next": {
+    "message": "Następna strona",
+    "description": "The label used to navigate to the next doc"
+  },
+  "theme.docs.tagDocListPageTitle.nDocsTagged": {
+    "message": "Jedna strona dokumentacji otagowana|{count} strony dokumentacji otagowane|{count} stron dokumentacji otagowanych",
+    "description": "Pluralized label for \"{count} docs tagged\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.docs.tagDocListPageTitle": {
+    "message": "{nDocsTagged} dla \"{tagName}\"",
+    "description": "The title of the page for a docs tag"
+  },
+  "theme.docs.versionBadge.label": {
+    "message": "Wersja: {versionLabel}"
+  },
+  "theme.docs.versions.unreleasedVersionLabel": {
+    "message": "Ta dokumentacja dotyczy najnowszej, jeszcze nieopublikowanej wersji {siteTitle} ({versionLabel}).",
+    "description": "The label used to tell the user that he's browsing an unreleased doc version"
+  },
+  "theme.docs.versions.unmaintainedVersionLabel": {
+    "message": "Ta dokumentacja dotyczy {siteTitle} w wersji {versionLabel} i nie jest już aktywnie aktualizowana.",
+    "description": "The label used to tell the user that he's browsing an unmaintained doc version"
+  },
+  "theme.docs.versions.latestVersionSuggestionLabel": {
+    "message": "Aby zobaczyć bieżącą dokumentację, przejdź do wersji {latestVersionLink} ({versionLabel}).",
+    "description": "The label used to tell the user to check the latest version"
+  },
+  "theme.docs.versions.latestVersionLinkLabel": {
+    "message": "bieżącej wersji",
+    "description": "The label used for the latest version suggestion link label"
+  },
+  "theme.common.headingLinkTitle": {
+    "message": "Bezpośredni link do {heading}",
+    "description": "Title for link to heading"
+  },
+  "theme.lastUpdated.atDate": {
+    "message": " dnia {date}",
+    "description": "The words used to describe on which date a page has been last updated"
+  },
+  "theme.lastUpdated.byUser": {
+    "message": " przez {user}",
+    "description": "The words used to describe by who the page has been last updated"
+  },
+  "theme.lastUpdated.lastUpdatedAtBy": {
+    "message": "Ostatnia aktualizacja{atDate}{byUser}",
+    "description": "The sentence used to display when a page has been last updated, and by who"
+  },
+  "theme.navbar.mobileVersionsDropdown.label": {
+    "message": "Wersje",
+    "description": "The label for the navbar versions dropdown on mobile view"
+  },
+  "theme.tags.tagsListLabel": {
+    "message": "Tagi:",
+    "description": "The label alongside a tag list"
+  },
+  "theme.admonition.caution": {
+    "message": "uwaga",
+    "description": "The default label used for the Caution admonition (:::caution)"
+  },
+  "theme.admonition.danger": {
+    "message": "ważne",
+    "description": "The default label used for the Danger admonition (:::danger)"
+  },
+  "theme.admonition.info": {
+    "message": "informacja",
+    "description": "The default label used for the Info admonition (:::info)"
+  },
+  "theme.admonition.note": {
+    "message": "notatka",
+    "description": "The default label used for the Note admonition (:::note)"
+  },
+  "theme.admonition.tip": {
+    "message": "wskazówka",
+    "description": "The default label used for the Tip admonition (:::tip)"
+  },
+  "theme.admonition.warning": {
+    "message": "ostrzeżenie",
+    "description": "The default label used for the Warning admonition (:::warning)"
+  },
+  "theme.AnnouncementBar.closeButtonAriaLabel": {
+    "message": "Zamknij",
+    "description": "The ARIA label for close button of announcement bar"
+  },
+  "theme.blog.sidebar.navAriaLabel": {
+    "message": "Nawigacja po najnowszych postach na blogu",
+    "description": "The ARIA label for recent posts in the blog sidebar"
+  },
+  "theme.DocSidebarItem.expandCategoryAriaLabel": {
+    "message": "Rozwiń kategorię paska bocznego '{label}'",
+    "description": "The ARIA label to expand the sidebar category"
+  },
+  "theme.DocSidebarItem.collapseCategoryAriaLabel": {
+    "message": "Zwiń kategorię paska bocznego '{label}'",
+    "description": "The ARIA label to collapse the sidebar category"
+  },
+  "theme.IconExternalLink.ariaLabel": {
+    "message": "(otwiera się w nowej karcie)",
+    "description": "The ARIA label for the external link icon"
+  },
+  "theme.NavBar.navAriaLabel": {
+    "message": "Główny",
+    "description": "The ARIA label for the main navigation"
+  },
+  "theme.navbar.mobileLanguageDropdown.label": {
+    "message": "Języki",
+    "description": "The label for the mobile language switcher dropdown"
+  },
+  "theme.NotFound.p2": {
+    "message": "Proszę skontaktuj się z właścicielem strony, z której link doprowadził Cię tutaj, i poinformuj go, że link jest nieprawidłowy.",
+    "description": "The 2nd paragraph of the 404 page"
+  },
+  "theme.blog.post.readMore": {
+    "message": "Czytaj więcej",
+    "description": "The label used in blog post item excerpts to link to full blog posts"
+  },
+  "theme.blog.post.readMoreLabel": {
+    "message": "Czytaj więcej o {title}",
+    "description": "The ARIA label for the link to full blog posts from excerpts"
+  },
+  "theme.blog.post.readingTime.plurals": {
+    "message": "{readingTime} min aby przeczytać|{readingTime} min aby przeczytać|{readingTime} min aby przeczytać",
+    "description": "Pluralized label for \"{readingTime} min read\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.CodeBlock.wordWrapToggle": {
+    "message": "Przełącz zawijanie słów",
+    "description": "The title attribute for toggle word wrapping button of code block lines"
+  },
+  "theme.docs.breadcrumbs.home": {
+    "message": "Strona główna",
+    "description": "The ARIA label for the home page in the breadcrumbs"
+  },
+  "theme.docs.sidebar.collapseButtonTitle": {
+    "message": "Zwiń boczny panel",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.collapseButtonAriaLabel": {
+    "message": "Zwiń boczny panel",
+    "description": "The title attribute for collapse button of doc sidebar"
+  },
+  "theme.docs.sidebar.toggleSidebarButtonAriaLabel": {
+    "message": "Przełączanie panelu nawigacyjnego",
+    "description": "The ARIA label for hamburger menu button of mobile navigation"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.expandAriaLabel": {
+    "message": "Rozwiń listę",
+    "description": "The ARIA label of the button to expand the mobile dropdown navbar item"
+  },
+  "theme.navbar.mobileDropdown.collapseButton.collapseAriaLabel": {
+    "message": "Zwiń listę",
+    "description": "The ARIA label of the button to collapse the mobile dropdown navbar item"
+  },
+  "theme.docs.sidebar.expandButtonTitle": {
+    "message": "Rozszerz boczny panel",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.docs.sidebar.expandButtonAriaLabel": {
+    "message": "Rozszerz boczny panel",
+    "description": "The ARIA label and title attribute for expand button of doc sidebar"
+  },
+  "theme.blog.post.plurals": {
+    "message": "Jeden post|{count} posty|{count} postów",
+    "description": "Pluralized label for \"{count} posts\". Use as much plural forms (separated by \"|\") as your language support (see https://www.unicode.org/cldr/cldr-aux/charts/34/supplemental/language_plural_rules.html)"
+  },
+  "theme.blog.tagTitle": {
+    "message": "{nPosts} z tagiem \"{tagName}\"",
+    "description": "The title of the page for a blog tag"
+  },
+  "theme.blog.author.pageTitle": {
+    "message": "{authorName} - {nPosts}",
+    "description": "The title of the page for a blog author"
+  },
+  "theme.blog.authorsList.pageTitle": {
+    "message": "Autorzy",
+    "description": "The title of the authors page"
+  },
+  "theme.blog.authorsList.viewAll": {
+    "message": "Zobacz wszystkich autorów",
+    "description": "The label of the link targeting the blog authors page"
+  },
+  "theme.blog.author.noPosts": {
+    "message": "Ten autor nie napisał jeszcze żadnych postów.",
+    "description": "The text for authors with 0 blog post"
+  },
+  "theme.contentVisibility.unlistedBanner.title": {
+    "message": "Niepubliczna strona",
+    "description": "The unlisted content banner title"
+  },
+  "theme.contentVisibility.unlistedBanner.message": {
+    "message": "Ta strona jest niepubliczna. Wyszukiwarki nie będą jej indeksować, a dostęp do niej będą mieli tylko użytkownicy posiadający bezpośredni link.",
+    "description": "The unlisted content banner message"
+  },
+  "theme.contentVisibility.draftBanner.title": {
+    "message": "Wersja robocza strony",
+    "description": "The draft content banner title"
+  },
+  "theme.contentVisibility.draftBanner.message": {
+    "message": "Ta strona jest w wersji roboczej. Będzie widoczna tylko w wersji deweloperskiej i zostanie wyłączona z wersji produkcyjnej.",
+    "description": "The draft content banner message"
+  },
+  "theme.docs.DocCard.categoryDescription.plurals": {
+    "message": "1 element|{count} elementy|{count} elementów",
+    "description": "The default description for a category card in the generated index about how many items this category includes"
+  },
+  "theme.ErrorPageContent.tryAgain": {
+    "message": "Spróbuj ponownie",
+    "description": "The label of the button to try again rendering when the React error boundary captures an error"
+  },
+  "theme.common.skipToMainContent": {
+    "message": "Przejdź do głównej zawartości",
+    "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "theme.tags.tagsPageTitle": {
+    "message": "Tagi",
+    "description": "The title of the tag list page"
+  },
+  "install.copied": {
+    "message": "Skopiowano"
+  },
+  "install.copyAria": {
+    "message": "Skopiuj polecenie instalacji"
+  },
+  "install.copy": {
+    "message": "Kopiuj"
+  },
+  "install.oneCommand": {
+    "message": "Instalacja jednym poleceniem"
+  },
+  "install.docNote": {
+    "message": "Uruchom je na komputerze pokładowym (64-bitowy Raspberry Pi OS, Debian lub Ubuntu, z dostępem do internetu). Poniższe kroki wyjaśniają, co robi i jak przygotować urządzenie."
+  },
+  "install.heroLabel": {
+    "message": "Zainstaluj UAVcast-Pro"
+  },
+  "install.moreLink": {
+    "message": "Inne metody i wymagania"
+  },
+  "footer.install": {
+    "message": "Zainstaluj UAVcast-Pro"
+  },
+  "nav.installTitle": {
+    "message": "Zainstaluj UAVcast-Pro: polecenie instalacji w jednej linii"
+  },
+  "nav.install": {
+    "message": "Instalacja"
+  },
+  "drawer.install": {
+    "message": "Zainstaluj UAVcast-Pro"
+  },
+  "drawer.installGuide": {
+    "message": "Przewodnik instalacji"
+  },
+  "buy.cta": {
+    "message": "Kup UAVcast-Pro"
+  },
+  "buy.plans": {
+    "message": "Zobacz plany i ceny"
+  },
+  "buy.boxAria": {
+    "message": "Kup licencję UAVcast-Pro"
+  },
+  "buy.activateText": {
+    "message": "Do aktywacji drona potrzebujesz licencji UAVcast-Pro. Kup ją w sklepie UAVmatrix."
+  },
+  "buy.fleetText": {
+    "message": "Fleet Manager jest w cenie licencji UAVcast-Pro. Każdy sparowany dron potrzebuje własnej licencji."
+  },
+  "buy.license": {
+    "message": "Kup licencję"
+  },
+  "nav.buy": {
+    "message": "Kup"
+  },
+  "nav.buyTitle": {
+    "message": "Kup UAVcast-Pro w sklepie UAVmatrix"
+  },
+  "drawer.buy": {
+    "message": "Licencja"
+  }
+}

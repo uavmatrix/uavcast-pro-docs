@@ -1,0 +1,94 @@
+---
+title: "Set up a 4G/LTE USB modem on a Raspberry Pi drone"
+description: "Connect a HiLink or traditional 4G/LTE USB modem to UAVcast-Pro, with automatic APN detection, SIM PIN, auto-reconnect and modem signal information for flying over cellular."
+sidebar_position: 1
+sidebar_label: "Cellular modem"
+---
+
+# Cellular modem (4G/LTE)
+
+A 4G/LTE modem gives the drone internet access wherever there's cellular coverage, so telemetry and video reach your ground station far beyond Wi-Fi range. UAVcast-Pro supports **HiLink** modems, which connect by themselves, and **Traditional (PPP)** modems, which UAVcast-Pro connects through ModemManager. For traditional modems it finds the APN automatically, connects at boot and reconnects after drops. Open **Modem** in the sidebar.
+
+<Screenshot id="uavcast-pro/modem" alt="Modem page with Traditional (PPP) selected, APN left on Automatic, and the No Modem Connected panel" caption="Modem page with Traditional (PPP) selected and the APN left on Automatic, before a modem is plugged in." />
+
+## Which type is my modem?
+
+| | HiLink | Traditional (PPP) |
+|---|---|---|
+| How it appears | A network card (`usb0` or `eth1`). The modem runs its own router and web page, often at `192.168.8.1`. | A modem device managed by ModemManager. The connection usually appears as `ppp0` or `wwan0`. |
+| Who connects | The modem itself. | UAVcast-Pro, through ModemManager and NetworkManager. |
+| Settings in UAVcast-Pro | None. Set the APN in the modem's own web page if needed. | APN (optional), username, password, PIN. |
+| Examples | Huawei E3372h, E8372 | Huawei E3372s, Quectel EC25 / EG25, Sierra Wireless |
+
+Not sure? Plug it in and run `mmcli -L` on the drone. If ModemManager lists it, use **Traditional (PPP)**. If not, and a new network interface appears in **Networks**, it's HiLink.
+
+## Set up a traditional modem
+
+<Steps>
+
+1. Insert a data SIM and plug the modem into the companion computer.
+2. Go to **Modem**. Set **Enable modem** to **Yes** and **Modem type** to **Traditional (PPP)**.
+3. Leave **Access Point Name (Optional)** empty. UAVcast-Pro detects it.
+4. Enter **PIN code (Optional)** if your SIM asks for one.
+5. Wait 30 to 90 seconds. **Modem Information** shows the operator, technology and **IPv4 Information** once connected.
+
+</Steps>
+
+A plugged-in modem connects automatically. If you select **Disconnect**, it stays disconnected until you connect it again, also after a reboot.
+
+### How the automatic APN works
+
+With the APN field empty, UAVcast-Pro tries, in this order:
+
+1. the APN that worked last time with this SIM's operator,
+2. the network's default (empty APN),
+3. the APN the modem attached to LTE with,
+4. the operator's internet APNs from the mobile broadband provider database.
+
+The first one that gets an internet address is saved for that operator. Put in a new SIM from another operator and it detects again. If your operator needs a special APN (private APN, M2M or corporate SIMs), type it in. A user-set APN is the only one tried.
+
+## Set up a HiLink modem
+
+<Steps>
+
+1. Plug the modem in. Wait until its LED shows a solid connection.
+2. On **Modem**, set **Enable modem** to **Yes** and **Modem type** to **HiLink**.
+3. Check **Hilink Modem Information**: you should see the **Interface** and an **IP Address**.
+
+</Steps>
+
+HiLink modems connect, choose the network and reconnect on their own, so there are no connect buttons. Change the APN, PIN or network mode in the modem's own web page (browse to it from the drone's network, often `http://192.168.8.1`).
+
+## Settings reference
+
+| Setting | Default | Values | Notes |
+|---|---|---|---|
+| **Enable modem** | **Yes** | **Yes**, **No** | |
+| **Modem type** | **Traditional (PPP)** | **HiLink**, **Traditional (PPP)** | |
+| **Access Point Name (Optional)** | empty (**Automatic**) | APN from your operator | Traditional only. |
+| **Username (Optional)** / **Password (Optional)** | empty | | Traditional only. Most operators need neither. |
+| **PIN code (Optional)** | empty | SIM PIN | Traditional only. Leave empty if the SIM has no PIN. |
+
+## Modem information
+
+For traditional modems, **Modem Information** shows **Signal Quality**, **Technology** (LTE, UMTS …), **Unlock Required**, **State**, **Manufacturer**, **IMEI**, the network (**Operator**, **Code**, **Registration**), **IPv4 Information** (**IP Address**, **Gateway**, **DNS**, **MTU**) and **Connection Properties** (**APN**, **IP Type**, **Roaming**).
+
+The dashboard's **Cellular** row shows the same signal summary.
+
+## Before flying over cellular
+
+- On [Networks](./networks.mdx), select **Modem Priority (Outdoor Mode)** so traffic stays on the modem when Wi-Fi is still in range at take-off.
+- Use a [VPN](./vpn.mdx): cellular operators don't give the drone an address your ground station can reach.
+- Turn on the GCS failsafe on the flight controller.
+- Check signal at altitude: coverage is planned for the ground, and the signal changes as you climb.
+
+## Troubleshooting
+
+| Symptom | Check |
+|---|---|
+| *No Modem Connected* | The modem isn't detected. Check the USB connection and the modem's power LED. Use a powered hub if the Pi resets when the modem connects. |
+| **Unlock Required** shows *locked* | Enter the SIM PIN, or disable the PIN in a phone. |
+| Registered, but no IP address | Wrong APN. Type the operator's APN instead of using automatic. |
+| Connects, then drops under load | Usually power. Check the dashboard **Power supply** row. |
+
+The **Action Logs** show each APN attempt and the reason it failed. For more help, see [Modem connected but no internet](../../troubleshooting/modem-no-internet.mdx).

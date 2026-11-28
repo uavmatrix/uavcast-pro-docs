@@ -1,0 +1,51 @@
+---
+title: Fleet Manager ayarları, hesap ve faturalandırma
+sidebar_label: Ayarlar
+description: Profil, organizasyonlar, destek ve geçmiş için Fleet Manager Ayarlar sekmeleri; faturalandırmanın ve faturaların nerede olduğu ve hesabınızın nasıl silineceği.
+sidebar_position: 14
+---
+
+# Ayarlar, hesap ve faturalandırma {/* #settings-account-and-billing */}
+
+**Settings** sayfasını kenar çubuğundan (**Organization → Settings**) veya kullanıcı menüsünden açın. Dört sekmesi vardır: **Profile**, **Organizations**, **Support** ve **History**.
+
+## Profile {/* #profile */}
+
+Adınız, e-postanız, profil fotoğrafınız ve parolanız UAVmatrix hesabınıza aittir. **Profil değişiklikleri UAVMatrix Store üzerinden yönetilir**: değişiklikleri orada yapmak için **Password & Security** altında **UAVMatrix Store** seçin. Fleet Manager değişiklikleri otomatik olarak alır.
+
+<Screenshot id="fleet-manager/settings--profile" alt="Hesap bilgileri, UAVMatrix Store bağlantısı ve Danger Zone bulunan Settings Profile sekmesi" caption="Password & Security satırı ve Danger Zone bulunan Settings → Profile." />
+
+## Organizations {/* #organizations */}
+
+Organizasyonu yeniden adlandırın, açıklamasını düzenleyin veya (yalnızca Owner) organizasyonu silin. Bkz. [Organizasyonunuzu kurun](./set-up-organization.mdx#rename-or-delete-the-organization).
+
+## Support {/* #support */}
+
+Destek taleplerinizi durumlarıyla birlikte ve yüzen destek düğmesini gösteren veya gizleyen **Support Chat Bubble** anahtarını görürsünüz. Bkz. [Destek ve FleetBot](./support.mdx).
+
+## History {/* #history */}
+
+Telemetri saklama, temizleme ve drone bazında geçmiş silme işlemleri, Owner ve Admin rolleri içindir. Bkz. [Uçuş geçmişi](./map/flight-history.mdx#how-long-history-is-kept).
+
+## Faturalandırma {/* #billing */}
+
+Fleet Manager'da bir faturalandırma sayfası yoktur. Lisanslar, cihaz yuvaları, siparişler ve faturalar tümü [uavmatrix.com](https://uavmatrix.com) adresindeki hesabınızda bulunur. Bkz. [Lisanslar ve cihaz yuvaları](./licenses.mdx).
+
+## Hesabınızı silin {/* #delete-your-account */}
+
+**Profile → Danger Zone → Delete Account** Fleet Manager hesabınızı siler. Onaylamak için `DELETE` yazın.
+
+Silinen öğeler:
+
+- Fleet Manager'daki profiliniz ve hesap bilgileriniz
+- tüm organizasyon üyelikleriniz
+- tüm etkin oturumlarınız
+- oluşturduğunuz görevler ve gönderdiğiniz davetler
+
+**Recent Activity** bölümünde yaptığınız kayıtlar, adınız çıkarılarak kalır.
+
+:::warning Owner'lar önce devretmelidir
+Bir organizasyonun sahibiyseniz hesabınızı silemezsiniz. Fleet Manager organizasyonları listeler ve sizden önce [sahipliği devretmenizi](./team/index.mdx#transfer-ownership) veya bunları silmenizi ister.
+:::
+
+Fleet Manager hesabınızı silmek, UAVmatrix mağaza hesabınızı veya lisanslarınızı silmez. Bunları [uavmatrix.com](https://uavmatrix.com) adresinden yönetin.

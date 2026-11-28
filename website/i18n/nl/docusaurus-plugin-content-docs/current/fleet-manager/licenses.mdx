@@ -1,0 +1,65 @@
+---
+title: Fleet Manager-licenties, plaatsen en licentie-e-mails
+sidebar_label: Licenties en plaatsen
+description: Hoe UAVcast-Pro-licenties en apparaatplaatsen bepalen welke drones u kunt koppelen in Fleet Manager, en hoe u licenties gebruikt die met een ander e-mailadres zijn gekocht.
+sidebar_position: 12
+---
+
+# Licenties en plaatsen {/* #licenses-and-seats */}
+
+Fleet Manager is inbegrepen bij uw UAVcast-Pro-licentie. Het heeft geen eigen abonnement, eigen plaatsen of eigen pakketten. Wat u kunt koppelen, wordt bepaald door uw UAVcast-Pro-licenties uit de [UAVmatrix-store](https://uavmatrix.com):
+
+- **Drones:** elke gekoppelde drone draait UAVcast-Pro met een geactiveerde licentie. Elke activering gebruikt één van de **Device Slots** van de licentie in de store ("2 of 5 device slots used"). Meer drones nodig? Koop meer licenties of plaatsen. **Fleet → Need more devices? → View Plans** brengt u naar de store.
+- **Teamleden:** gratis. Fleet Manager beperkt het aantal mensen dat u uitnodigt niet, en leden hebben geen eigen licentie nodig.
+
+<BuyLicense variant="fleet" />
+
+## Wat Fleet Manager controleert bij het koppelen {/* #what-fleet-manager-checks-when-you-pair */}
+
+Wanneer u een koppelcode invoert, zoekt Fleet Manager de licentie op die op die drone is geactiveerd en controleert:
+
+1. of de licentie bestaat en actief is, niet verlopen en niet terugbetaald, en
+2. of het **e-mailadres van de eigenaar** (het store-account dat de licentie heeft gekocht) hoort bij een **lid van de organisatie** waarin u koppelt, in welke rol dan ook.
+
+Als beide waar zijn, wordt de drone gekoppeld. Fleet Manager controleert opnieuw wanneer de drone opnieuw wordt gekoppeld.
+
+| Melding in de koppelwizard | Betekenis |
+|---|---|
+| **License is not owned by any member of this organization** | De licentie hoort bij een store-account waarvan het e-mailadres hier geen lid is. |
+| **License has expired** | De vervaldatum van de licentie is verstreken. |
+| **License has been refunded** | De licentie is teruggegeven. |
+| **Invalid license key** | De store kent de licentie op de drone niet. Controleer de activering in UAVcast-Pro. |
+
+De licentie wordt ook al eerder gecontroleerd, wanneer UAVcast-Pro om een koppelcode vraagt. Als UAVcast-Pro **Ongeldige of inactieve licentie** toont in plaats van een code, is de licentie verlopen, teruggegeven of niet gekoppeld aan een store-account.
+
+Voor activeringsproblemen op de drone zelf, zie [Uw licentie activeren](../get-started/license-activation.mdx) en [Licentie activeert niet](../troubleshooting/license-activation-failed.mdx).
+
+## Wie moet de licenties bezitten {/* #who-should-own-the-licenses */}
+
+Fleet Manager koppelt op e-mailadres, dus bepaal vooraf wie koopt:
+
+- **Eenvoudigst:** de Owner van de organisatie koopt alle licenties met het e-mailadres waarmee hij of zij inlogt op Fleet Manager.
+- **Meerdere kopers:** de licenties van elk lid tellen mee, ook die van Viewers. Een inkopende collega kan Viewer zijn.
+- **Door klanten bezeten drones:** als een klant de licenties heeft gekocht, nodigt u het store-e-mailadres van de klant uit voor uw organisatie (Viewer is voldoende).
+
+## Licenties gekocht met een ander e-mailadres {/* #licenses-bought-with-another-email */}
+
+Een veelvoorkomend geval: licenties zijn gekocht met `purchasing@company.com`, maar de piloot logt in op Fleet Manager als `anna@company.com`. Koppelen mislukt dan met **License is not owned by any member of this organization**.
+
+U heeft twee manieren om dit op te lossen:
+
+1. **Nodig het kopende e-mailadres uit** voor de organisatie. Dat account moet één keer inloggen om de uitnodiging te accepteren.
+2. **Vraag UAVmatrix-support om een licentie-e-mail toe te voegen** aan uw account. Support kan een of meer extra e-mailadressen toevoegen aan een Fleet Manager-gebruiker. Licenties die eigendom zijn van een van die adressen tellen bij het koppelen dan als licenties van die gebruiker, in elke organisatie waarvan de gebruiker lid is.
+
+Om dit aan te vragen, opent u een ticket via de supportbubbel (categorie **General Inquiry**) of stuurt u een e-mail naar support@uavmatrix.com vanaf het adres waarmee u inlogt. Vermeld daarin het andere e-mailadres of de andere e-mailadressen waarmee de licenties zijn gekocht. Zie [Ondersteuning](./support.mdx).
+
+Goed om te weten:
+
+- E-mailadressen worden vergeleken zonder onderscheid tussen hoofd- en kleine letters.
+- Elk extra e-mailadres kan maar bij één Fleet Manager-gebruiker horen.
+- Alleen UAVmatrix-support kan deze e-mailadressen toevoegen of verwijderen. Ze verschijnen niet in uw eigen instellingen.
+- De licenties blijven bij het oorspronkelijke store-account. Dit wijzigt alleen wie Fleet Manager bij het koppelen als eigenaar telt.
+
+## Licenties verplaatsen tussen drones {/* #moving-licenses-between-drones */}
+
+Een licentie wordt per apparaat geactiveerd in UAVcast-Pro, niet in Fleet Manager. Om een licentie te verplaatsen, maakt u de apparaatplaats vrij in UAVcast-Pro of de store, activeert u de licentie op de nieuwe drone en [koppelt u de nieuwe drone](./pair-uav.mdx). Zie [De companion computer vervangen](./fleet/remove-or-transfer.mdx#replace-the-companion-computer).

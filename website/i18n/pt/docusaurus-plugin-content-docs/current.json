@@ -1,0 +1,74 @@
+{
+  "version.label": {
+    "message": "Próxima",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Get started": {
+    "message": "Primeiros passos",
+    "description": "The label for category 'Get started' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.UAVcast-Pro": {
+    "message": "UAVcast-Pro",
+    "description": "The label for category 'UAVcast-Pro' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Flight Controller": {
+    "message": "Controlador de Voo",
+    "description": "The label for category 'Flight Controller' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Flight Map": {
+    "message": "Mapa de Voo",
+    "description": "The label for category 'Flight Map' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Ground stations & video": {
+    "message": "Estações de controle terrestre e vídeo",
+    "description": "The label for category 'Ground stations & video' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity": {
+    "message": "Conectividade",
+    "description": "The label for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity.link.generated-index.title": {
+    "message": "Conectividade: modem, VPN, DNS e redes",
+    "description": "The generated-index page title for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity.link.generated-index.description": {
+    "message": "Conecte o UAVcast-Pro à internet via 4G/LTE, acesse-o por VPN, publique-o com DNS dinâmico e escolha qual rede transporta o tráfego.",
+    "description": "The generated-index page description for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Camera & video": {
+    "message": "Câmera e vídeo",
+    "description": "The label for category 'Camera & video' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fleet Manager": {
+    "message": "Fleet Manager",
+    "description": "The label for category 'Fleet Manager' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Team & roles": {
+    "message": "Equipe e funções",
+    "description": "The label for category 'Team & roles' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fleet & UAVs": {
+    "message": "Frota e UAVs",
+    "description": "The label for category 'Fleet & UAVs' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Live map": {
+    "message": "Mapa ao vivo",
+    "description": "The label for category 'Live map' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Network & VPN": {
+    "message": "Rede e VPN",
+    "description": "The label for category 'Network & VPN' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "Guias",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Troubleshooting & FAQ": {
+    "message": "Solução de problemas e FAQ",
+    "description": "The label for category 'Troubleshooting & FAQ' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Reference": {
+    "message": "Referência",
+    "description": "The label for category 'Reference' in sidebar 'docs'"
+  }
+}

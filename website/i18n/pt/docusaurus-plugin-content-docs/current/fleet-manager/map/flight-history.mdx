@@ -1,0 +1,62 @@
+---
+title: Histórico e reprodução de voos de drones no Fleet Manager
+sidebar_label: Histórico de voo
+description: Reproduza o voo gravado de um drone no mapa do Fleet Manager, veja duração, altitude máxima e velocidade, salve voos nomeados e defina a retenção da telemetria.
+sidebar_position: 2
+---
+
+# Histórico de voo {/* #flight-history */}
+
+O Fleet Manager registra a telemetria de cada drone uma vez por segundo enquanto ele está conectado: posição, altitude, velocidade, rumo, bateria, modo de voo, estado de armado e GPS. O **Histórico de voo** reproduz essa gravação no mapa.
+
+## Abrir o histórico de um drone {/* #open-a-drones-history */}
+
+No **Fleet Map**, selecione o marcador do drone e depois **History** no pop-up. A gaveta **_name_ - Flight History** abre na parte inferior do mapa.
+
+<Screenshot id="fleet-manager/map--history" alt="Gaveta de histórico de voo abaixo do mapa, com seletor de sessão, controles de reprodução, estatísticas e trajetória reproduzida" caption="Histórico de voo de um drone de inspeção: o voo salvo Turbine blade inspection selecionado, reprodução em 4x, e Duration, Max Alt, Max Speed e Avg Battery." />
+
+## Escolher uma sessão {/* #pick-a-session */}
+
+**Select flight session** lista:
+
+1. **Saved flights** primeiro (com ícone de marcador), os voos que sua equipe nomeou.
+2. Depois, uma entrada por **dia** com telemetria registrada, dos últimos 30 dias.
+
+Um dia agrupa toda a telemetria daquela data, então vários voos no mesmo dia aparecem como uma única sessão. Salve o trecho que interessa como voo nomeado para encontrá-lo rapidamente.
+
+## Reproduzir {/* #play-it-back */}
+
+- Reproduza e pause, volte ou avance 5 % da sessão, ou vá ao início ou ao fim. Arraste a linha do tempo para navegar.
+- Velocidades: **0.5x**, **1x** (tempo real), **2x**, **4x**, **8x**, **10x** e **20x**.
+- Teclado: **Space** para reproduzir/pausar, **←** / **→** para avançar e voltar, **Esc** para fechar.
+
+No mapa, um marcador verde **Start** e um vermelho **End** delimitam o voo. A parte já reproduzida aparece em ciano, o restante tracejado em cinza, e um ícone de drone com sua altitude se move ao longo do caminho.
+
+O painel de estatísticas mostra **Duration**, **Max Alt**, **Max Speed** e **Avg Battery**, e **Current Position** mostra **Alt**, **Speed**, **Heading** e **Mode** no ponto da reprodução.
+
+## Salvar, renomear e excluir voos {/* #save-rename-and-delete-flights */}
+
+Owners e Admins podem salvar, renomear e excluir voos nomeados. Viewers podem reproduzi-los.
+
+- **Save and name this flight** salva o intervalo de tempo atual com um nome (até 100 caracteres), por exemplo "Survey over Field A". Dois voos salvos não podem se sobrepor: **A saved session already exists for this time range**.
+- **Rename flight** altera o nome.
+- **Delete saved flight** remove apenas o nome. **Delete Saved Flight?** explica que a telemetria em si não é excluída.
+
+## Por quanto tempo o histórico é mantido {/* #how-long-history-is-kept */}
+
+Owners e Admins definem a retenção por organização em **Settings → History** (**Telemetry History**):
+
+- **Retention:** 7, 14, 30, 60 ou 90 dias, **6 months** ou **1 year**. O padrão e o máximo são 1 ano.
+- **Prune Now** exclui imediatamente os dados mais antigos que 7, 14, 30, 60 ou 90 dias (padrão 30), após a confirmação **Prune Old History**.
+- **Delete Drone History** (ícone de lixeira em cada drone) ou **Select All** → **Delete Selected (n)** limpa o histórico dos drones escolhidos.
+- Os cartões mostram **Storage Used**, **Total Records** e **Retention**.
+
+O Fleet Manager remove os dados além do período de retenção uma vez por dia. Dados mais antigos são comprimidos após 7 dias, então um ano de histórico para uma frota grande continua prático.
+
+<Screenshot id="fleet-manager/settings--history" alt="Aba Settings → History com seletor de retenção, opções de limpeza e lista de histórico por drone" caption="Settings → History de uma organização com 46 drones: Storage Used, Total Records, Retention 90 days e a lista por drone com botões Delete." />
+
+:::note Sem exportação de registros
+O Fleet Manager não exporta o histórico de voo como arquivo, e não armazena vídeo nem logs do controlador de voo (`.tlog`, DataFlash). Mantenha esses dados no software da sua estação de controle terrestre ou no cartão SD do controlador de voo. Para gravações de vídeo no drone, veja [Gravações e revisão de voo](../../guides/recording-flight-review.mdx).
+:::
+
+Remover um drone exclui todo o seu histórico, inclusive os voos salvos. Veja [Remover ou transferir um drone](../fleet/remove-or-transfer.mdx).

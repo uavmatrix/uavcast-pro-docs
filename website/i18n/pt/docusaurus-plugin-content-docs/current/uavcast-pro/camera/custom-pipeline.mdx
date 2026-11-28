@@ -1,0 +1,62 @@
+---
+title: "Pipeline GStreamer personalizado para câmeras IP e configurações especiais"
+description: "Use um pipeline GStreamer personalizado no UAVcast-Pro para transmitir uma câmera IP RTSP, uma câmera térmica, H.265 ou um padrão de teste, com exemplos e o comportamento da pré-visualização e dos destinos."
+sidebar_position: 4
+sidebar_label: "Pipeline personalizado"
+---
+
+# Pipeline GStreamer personalizado {/* #custom-gstreamer-pipeline */}
+
+Quando o suporte integrado a câmeras não cobre a sua câmera, forneça ao UAVcast-Pro o seu próprio pipeline GStreamer. Casos típicos são uma câmera IP RTSP ou de gimbal, uma câmera térmica, H.265 ou o envio para um endereço fixo. O UAVcast-Pro executa o pipeline como o serviço de câmera, reinicia-o se ele falhar e ainda pode alimentar a pré-visualização ao vivo e o gravador.
+
+## Configurar um pipeline personalizado {/* #set-up-a-custom-pipeline */}
+
+<Steps>
+
+1. Acesse **Câmera → Configurações da câmera**.
+2. Clique no slot **CAM 1** e escolha **Inserir Pipeline Personalizado**.
+3. Digite o pipeline em **Pipeline Personalizado**, sem o prefixo `gst-launch-1.0`. (Se você colar com o prefixo, o UAVcast-Pro o remove.)
+4. Selecione **Iniciar** (ou **Reiniciar**) e verifique os **Registros de Ações** para encontrar erros.
+
+</Steps>
+
+:::warning Um pipeline personalizado ignora a sua lista de estações de controle terrestre
+O pipeline decide para onde vai o vídeo. **Porta de Vídeo** e **Ativar Vídeo** em [Estações de Controle Terrestre](../ground-stations/index.mdx) não têm efeito: coloque o endereço e a porta da estação no `udpsink` do pipeline.
+:::
+
+Teste o pipeline por SSH com `gst-launch-1.0 -v <pipeline>` antes de colá-lo. As mensagens de erro ficam mais claras ali.
+
+## Exemplos {/* #examples */}
+
+```text title="Padrão de teste (padrão)"
+videotestsrc ! x264enc ! video/x-h264, stream-format=byte-stream ! rtph264pay ! udpsink host=192.168.0.100 port=5600
+```
+
+```text title="Câmera IP RTSP que já envia H.264 (sem recodificação)"
+rtspsrc location=rtsp://192.168.144.25:8554/main.264 latency=0 ! rtph264depay ! h264parse ! rtph264pay config-interval=1 pt=96 ! udpsink host=10.147.17.20 port=5600 sync=false
+```
+
+```text title="Câmera USB, codificada com configurações x264 de baixa latência"
+v4l2src device=/dev/video0 ! video/x-raw,width=1280,height=720,framerate=30/1 ! videoconvert ! x264enc tune=zerolatency speed-preset=superfast bitrate=1500 key-int-max=30 ! h264parse config-interval=1 ! rtph264pay pt=96 ! udpsink host=10.147.17.20 port=5600 sync=false
+```
+
+```text title="Enviar para duas estações de controle terrestre"
+videotestsrc ! x264enc tune=zerolatency ! rtph264pay pt=96 ! multiudpsink clients=10.147.17.20:5600,10.147.17.21:5600
+```
+
+Substitua os endereços IP pelos endereços das suas estações de controle terrestre (endereços VPN sobre 4G).
+
+## Pré-visualização ao vivo e gravação {/* #live-preview-and-recording */}
+
+Com **Ativar Pré-visualização ao Vivo?** marcado, o UAVcast-Pro adiciona um ramo ao seu pipeline que envia o vídeo codificado ao servidor de mídia integrado, para que a pré-visualização, a janela de vídeo do Mapa de Voo e a gravação continuem funcionando. Ele encontra o ponto certo automaticamente:
+
+- Se o pipeline tiver `tee name=t`, ele adiciona um ramo a partir desse tee.
+- Caso contrário, ele divide o fluxo logo antes de `rtph264pay` ou `rtph265pay`.
+- Para uma fonte RTSP sem um parser reconhecido, ele deixa o pipeline como está, e não há pré-visualização.
+
+Para o resultado mais previsível, termine o fluxo codificado com `h264parse` e um `tee name=t`, e coloque o seu próprio `udpsink` em um ramo desse tee.
+
+## Limitações {/* #limits */}
+
+- A transmissão dupla, a troca por canal RC e as configurações por câmera não se aplicam a um pipeline personalizado. O pipeline é toda a configuração de vídeo.
+- As configurações de resolução, FPS, taxa de bits e espelhamento ficam ocultas, porque o pipeline as define.

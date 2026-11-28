@@ -1,0 +1,53 @@
+---
+title: "Aggiungere audio da un microfono USB al flusso video del drone"
+description: "Aggiungi suono da un microfono USB o dal microfono integrato di una webcam all'anteprima dal vivo di UAVcast-Pro e invialo alle stazioni di controllo a terra come flusso RTP/Opus sulla Porta Video + 2."
+sidebar_position: 3
+sidebar_label: "Audio"
+---
+
+# Audio {/* #audio */}
+
+UAVcast-Pro può aggiungere suono da un microfono USB o dal microfono integrato di una telecamera USB. L'audio viene codificato in Opus, che richiede poca CPU e poca banda. Viene sempre riprodotto nell'anteprima dal vivo e puoi anche inviarlo alle stazioni di controllo a terra come flusso RTP separato. Lo trovi nella scheda **Audio** in **Telecamera → Impostazioni telecamera**.
+
+## Attivare l'audio {/* #turn-on-audio */}
+
+<Steps>
+
+1. Collega un microfono USB oppure usa una webcam con microfono integrato.
+2. In **Telecamera → Impostazioni telecamera**, attiva **Audio**.
+3. Lascia **Dispositivo audio** su **Automatico (microfono della telecamera, se presente)**, oppure scegline uno. Usa **Tono di prova (non serve microfono)** per verificare il percorso senza microfono.
+4. Osserva l'indicatore. **Audio attivo** con un misuratore di livello in movimento significa che il suono viene acquisito.
+5. In **Anteprima dal Vivo**, attiva il suono nel player. I browser avviano l'anteprima senza audio.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera--audio" alt="Scheda Audio nella pagina Telecamera con l'interruttore Audio disattivato e lo stato Audio disattivato" caption="Telecamera → Audio, disattivato. Attivalo per scegliere il microfono e il bitrate." />
+
+Un microfono che non funziona non interrompe mai il video. L'indicatore mostra invece **Errore audio** con il motivo.
+
+## Inviare l'audio alle stazioni di controllo a terra {/* #send-audio-to-ground-stations */}
+
+Attiva **Invia audio alle stazioni di terra**. UAVcast-Pro invia poi un flusso RTP/Opus separato a ogni stazione di controllo a terra che riceve il video, sulla **Porta Video + 2** di quella destinazione. Con la porta video predefinita è `5602`. Due destinazioni sullo stesso computer devono quindi avere porte video distanti almeno 3, ad esempio `5600` e `5603`.
+
+QGroundControl e Mission Planner ignorano l'audio. Riproducilo con GStreamer:
+
+```bash title="Sulla stazione di controllo a terra"
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp, media=(string)audio, clock-rate=(int)48000, encoding-name=(string)OPUS, payload=(int)97" ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+Il flusso è Opus a 48 kHz, con tipo di payload RTP 97. VLC può riprodurlo con un file SDP che descrive questi valori.
+
+## Riferimento impostazioni {/* #settings-reference */}
+
+| Impostazione | Predefinito | Valori | Note |
+|---|---|---|---|
+| **Audio** | Disattivato | Attivo, disattivato | Modificare una qualsiasi impostazione audio riavvia il servizio della telecamera. |
+| **Dispositivo audio** | **Automatico (microfono della telecamera, se presente)** | Automatico, dispositivi di acquisizione rilevati, **Tono di prova (non serve microfono)** | Un dispositivo salvato che viene scollegato appare come *(non connesso)*. |
+| **Bitrate** | `64 kbps` | 24, 32, 48, 64, 96, 128 kbps | 32–64 kbps bastano per il parlato e il rumore del motore. |
+| **Invia audio alle stazioni di terra** | Disattivato | Attivo, disattivato | RTP/Opus su Porta Video + 2 per ogni destinazione con video attivo. |
+
+## Risoluzione dei problemi {/* #troubleshooting */}
+
+- *No audio capture device found*: collega un microfono USB o una telecamera con microfono integrato. Sul drone, `arecord -l` elenca i dispositivi di acquisizione.
+- **No signal**: il dispositivo è aperto ma silenzioso. Controlla l'interruttore di muto del microfono oppure prova **Tono di prova**.
+- Audio presente nell'anteprima ma non sulla stazione di controllo a terra: verifica che **Invia audio alle stazioni di terra** sia attivo, che la destinazione abbia **Attiva Video** attivo e che il tuo ricevitore ascolti sulla Porta Video + 2.

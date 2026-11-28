@@ -1,0 +1,148 @@
+---
+title: "Raggiungi il drone via 4G con una VPN: Fleet Manager, Tailscale, ZeroTier"
+description: "Collega drone e stazione di controllo a terra alla stessa rete privata con la VPN di Fleet Manager oppure con la tua rete Tailscale o ZeroTier, così telemetria e video funzionano via 4G/LTE."
+sidebar_position: 2
+sidebar_label: "VPN"
+---
+
+# VPN {/* #vpn */}
+
+Via 4G/LTE il drone riceve un indirizzo dall'operatore mobile, che la stazione di controllo a terra non può raggiungere. Una VPN risolve il problema: il drone e la stazione di controllo a terra entrano nella stessa rete privata e ricevono su di essa indirizzi fissi, ovunque si trovino e qualunque rete utilizzino. Apri **Rete Privata Virtuale** nella barra laterale.
+
+Il modo più rapido è la **VPN di Fleet Manager**, inclusa nella tua licenza UAVcast-Pro. Se gestisci già una tua tailnet Tailscale o una rete ZeroTier, UAVcast-Pro può collegarsi a quella.
+
+<Screenshot id="uavcast-pro/private-network" alt="Pagina Rete Privata Virtuale con VPN attiva, Tailscale selezionato, la scheda Fleet Manager e Informazioni VPN che mostra Non Connesso" caption="Rete Privata Virtuale con Tailscale selezionato su un drone non ancora accoppiato né autenticato." />
+
+## Quale usare? {/* #which-one-should-i-use */}
+
+| | VPN di Fleet Manager | Tailscale | ZeroTier |
+|---|---|---|---|
+| Account | La tua organizzazione Fleet Manager (inclusa nella licenza) | Il tuo account Tailscale | La tua rete ZeroTier (gestita da te) |
+| Configurazione sul drone | Un clic durante o dopo l'accoppiamento | Accedi con un link nel browser o con una chiave di autenticazione | Incolla un ID di rete |
+| Stazioni di controllo a terra | Aggiunte dalla pagina **Network** di Fleet Manager, con flussi configurati tramite associazioni di flusso (stream binding) | Unisciti alla tua tailnet | Unisciti alla tua rete |
+| Ideale per | La maggior parte degli operatori e tutte le flotte | Team che usano già Tailscale | Team che usano già ZeroTier |
+
+Da questa pagina puoi collegare il drone a una sola VPN alla volta.
+
+:::note UAVnet è in dismissione
+UAVnet, il controller ZeroTier ospitato da UAVmatrix su uavnet.uavmatrix.com, viene dismesso in favore di Fleet Manager. Se i tuoi droni usano una rete UAVnet, spostali sulla VPN di Fleet Manager. Il pulsante **Apri Controller UAVNet** di questa pagina apre UAVnet.
+:::
+
+## VPN di Fleet Manager {/* #fleet-manager-vpn */}
+
+La VPN di Fleet Manager è la rete privata della tua organizzazione, gestita da Fleet Manager sul client Tailscale. Non ti serve un account Tailscale.
+
+<Steps>
+
+1. In Fleet Manager, apri **Network** e seleziona **Enable VPN Network** se non è ancora attiva. Vedi [Rete e VPN](../../fleet-manager/network/index.mdx).
+2. [Accoppia il drone](../fleet-pairing.mdx) e lascia spuntato **Enable VPN for this UAV** nella procedura guidata di accoppiamento. Un drone già accoppiato si collega dalla scheda **Fleet Manager** di questa pagina (vedi sotto), oppure con **Push to Drone** nella pagina **Network** di Fleet Manager.
+3. Collega ogni stazione di controllo a terra alla rete dalla pagina **Network** di Fleet Manager: [Collega una stazione di controllo a terra](../../fleet-manager/connect-gcs.mdx).
+4. Invia i flussi a questa rete con un'[associazione di flusso (stream binding)](../../fleet-manager/network/stream-bindings.mdx). Fleet Manager aggiunge la destinazione nella pagina [Stazioni di Controllo a Terra](../ground-stations/index.mdx) del drone per te.
+
+</Steps>
+
+Una procedura passo passo per il volo via 4G è descritta in [Volare oltre la linea di vista via 4G](../../guides/bvlos-4g.mdx).
+
+## Tailscale {/* #tailscale */}
+
+Usa questa opzione per la tua tailnet, oppure per la VPN di Fleet Manager su un drone già accoppiato. UAVcast-Pro installa Tailscale. Scegli come il drone effettua l'accesso in una delle tre schede.
+
+<Tabs groupId="tailscale">
+<TabItem value="web" label="Login Web" default>
+
+<Steps>
+
+1. Imposta **Attiva VPN** su **Sì** e scegli **Tailscale** in **Servizi**.
+2. In **Login Web**, seleziona **Genera URL di login**, poi **Autentica questo dispositivo**.
+3. Accedi a Tailscale nella nuova scheda e approva il dispositivo.
+4. Torna in UAVcast-Pro: lo stato passa a **Connesso** e mostra **Indirizzo IPv4**, **Nome Host** e **Tailnet**.
+
+</Steps>
+
+</TabItem>
+<TabItem value="key" label="Chiave di Autenticazione">
+
+<Steps>
+
+1. Nella [console di amministrazione di Tailscale](https://login.tailscale.com/admin/settings/keys), genera una chiave di autenticazione. Impostala come pre-approvata; rendila riutilizzabile se configuri più droni.
+2. In UAVcast-Pro, scegli **Tailscale**, apri **Chiave di Autenticazione**, incolla la chiave (`tskey-auth-…`) e, se vuoi, imposta **Nome Host (Opzionale)**.
+3. Seleziona **Connetti con Chiave di Autenticazione**.
+
+</Steps>
+
+Usa questa opzione per i droni su cui non hai un browser a portata di mano, oppure per configurare molti droni allo stesso modo.
+
+</TabItem>
+<TabItem value="fleet" label="Fleet Manager">
+
+Se il drone è [accoppiato con Fleet Manager](../fleet-pairing.mdx) e la tua organizzazione ha la VPN attiva, seleziona **Connect to Fleet Manager VPN**. La connessione può richiedere fino a 30 secondi. Lo stato mostra poi **Connesso a Fleet Manager**.
+
+Non ancora accoppiato? La scheda indica **Not Paired with Fleet Manager** e rimanda a **Go to Fleet Manager Pairing**.
+
+</TabItem>
+</Tabs>
+
+Installa Tailscale sulla stazione di controllo a terra, accedi alla stessa tailnet e usa il suo IP Tailscale (`100.x.y.z`) come destinazione nelle Stazioni di Controllo a Terra.
+
+Quando è connesso, **Interfaccia Disattivata** disattiva l'interfaccia Tailscale senza uscire dall'account, **Interfaccia Attivata** la riattiva e **Disconnetti** rimuove il dispositivo dalla tailnet.
+
+:::warning La VPN di Fleet Manager sostituisce il tuo accesso Tailscale
+La VPN di Fleet Manager gira su Tailscale con il server di login di Fleet Manager. Collegarsi a essa disconnette il drone dalla tua tailnet. Se la tua sessione SSH passa da quella tailnet, cade. Esegui questa operazione dalla rete locale.
+:::
+
+## ZeroTier {/* #zerotier */}
+
+Usa questa opzione se gestisci una tua rete ZeroTier, ad esempio in ZeroTier Central o su un controller proprio.
+
+### Collega il drone {/* #join-the-drone */}
+
+<Steps>
+
+1. In UAVcast-Pro, vai su **Rete Privata Virtuale**.
+2. Imposta **Attiva VPN** su **Sì**.
+3. In **Servizi**, scegli **ZeroTier**.
+4. Incolla l'ID di rete a 16 caratteri in **ID Rete** e seleziona **Unisciti alla Rete**.
+5. Autorizza il drone nel tuo controller ZeroTier se la rete è privata. Il pannello **Rete ZeroTier** mostra poi **Connesso** e l'**IP Dispositivo**.
+
+</Steps>
+
+**ACCESS_DENIED** significa che il membro non è ancora autorizzato.
+
+### Collega la stazione di controllo a terra {/* #join-the-ground-station */}
+
+<Steps>
+
+1. Installa [ZeroTier One](https://www.zerotier.com/download/) sul computer della stazione di controllo a terra.
+2. Unisciti allo stesso ID di rete: su Windows e macOS dall'icona ZeroTier nella barra delle applicazioni o nella barra dei menu (**Join New Network**); su Linux con `sudo zerotier-cli join <network-id>`.
+3. Autorizzala nel controller e annota l'indirizzo IP che riceve.
+
+</Steps>
+
+Nelle [Stazioni di Controllo a Terra](../ground-stations/index.mdx) imposta **IP o Host di Destinazione** sull'IP **ZeroTier** della stazione di controllo a terra. Telemetria e video ora passano dalla VPN.
+
+:::tip Passare da Wi-Fi a 4G
+ZeroTier e Tailscale seguono la rete migliore disponibile. Puoi partire dal Wi-Fi sul campo: quando il Wi-Fi esce dalla portata, il collegamento passa al modem senza che cambi alcun indirizzo.
+:::
+
+## Riferimento impostazioni {/* #settings-reference */}
+
+| Impostazione | Predefinito | Valori | Note |
+|---|---|---|---|
+| **Attiva VPN** | **No** | **Sì**, **No** | |
+| **Servizi** | **ZeroTier** | **ZeroTier**, **Tailscale** | Disattivato finché la VPN non è attiva. |
+| **ID Rete** (ZeroTier) | vuoto | ID di rete ZeroTier a 16 caratteri | Dal tuo controller ZeroTier. |
+| **Chiave di Autenticazione** (Tailscale) | vuoto | `tskey-auth-…` | |
+| **Nome Host (Opzionale)** (Tailscale) | nome host del sistema | testo | Nome mostrato nella console di amministrazione Tailscale. |
+
+## Risoluzione dei problemi {/* #troubleshooting */}
+
+| Sintomo | Verifica |
+|---|---|
+| ZeroTier mostra **ACCESS_DENIED** | Autorizza il membro nel tuo controller ZeroTier. |
+| Connesso, ma nessuna telemetria alla stazione di controllo a terra | La destinazione usa ancora l'IP LAN. Usa l'IP VPN della stazione di controllo a terra e consenti UDP 14550 e 5600 nel suo firewall. |
+| *No VPN Information Available* | La VPN è disattivata o il servizio non è in esecuzione. Controlla **Attiva VPN** e i **Registri azioni**. |
+| Il login web di Tailscale mostra *No Authentication URL* | Usa invece la scheda **Chiave di Autenticazione**. |
+
+Le interfacce compaiono nella pagina [Reti](./networks.mdx) come `zt…` (ZeroTier) oppure `tailscale0`, contrassegnate **VPN**.
+
+Ancora bloccato? Consulta [VPN collegata ma il drone non è raggiungibile](../../troubleshooting/vpn-cant-reach-drone.mdx).

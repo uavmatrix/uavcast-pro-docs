@@ -1,0 +1,60 @@
+---
+title: "UAVcast-Pro-documentatie: elke pagina van de webinterface"
+description: "Naslag voor de UAVcast-Pro-webinterface: dashboard, vluchtcontroller, vliegkaart, grondstations, camera, modem, VPN, Fleet Manager-koppeling, gebruikers en instellingen."
+sidebar_position: 1
+sidebar_label: "Overzicht"
+---
+
+# UAVcast-Pro {/* #uavcast-pro */}
+
+Dit gedeelte beschrijft elke pagina van de UAVcast-Pro-webinterface, in de volgorde van de zijbalk van de app. Elke pagina vertelt u waarvoor het scherm dient, hoe u het instelt, en somt elke instelling met de standaardwaarde op. Nieuw bij UAVcast-Pro? Begin met de [Snelstart](../get-started/quick-start.mdx).
+
+## Operaties {/* #operations */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/dashboard/" title="Dashboard" description="Gezondheid van de vluchtcontroller, GPS, verbindingen, video en voeding in één oogopslag." />
+  <Card href="/uavcast-pro/data-streams/" title="Datastromen" description="Aangepaste live dashboards voor elke MAVLink- of sensorwaarde." />
+  <Card href="/uavcast-pro/flight-controller/" title="Vluchtcontroller" description="USB- of UART-verbinding met automatische detectie van poort en baudrate, NTRIP/RTK en injectors." />
+  <Card href="/uavcast-pro/flight-map/" title="Vliegkaart" description="Live kaart, cockpit-HUD, armen en ontwapenen, modi, missies, radio, inspector en logboekanalyse." />
+  <Card href="/uavcast-pro/ground-stations/" title="Grondstations en video" description="Bestemmingen, plus stap-voor-stap instellingen voor Mission Planner, QGroundControl, GStreamer, Android en VLC." />
+</CardGrid>
+
+## Connectiviteit {/* #connectivity */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/connectivity/cellular-modem/" title="Modem" description="HiLink- en traditionele 4G/LTE-modems met automatische APN." />
+  <Card href="/uavcast-pro/connectivity/vpn/" title="Virtueel Privénetwerk" description="Het Fleet Manager-VPN, of uw eigen Tailscale- of ZeroTier-netwerk." />
+  <Card href="/uavcast-pro/connectivity/dynamic-dns/" title="Dynamische DNS" description="Houd een hostnaam gekoppeld aan het publieke IP-adres van de drone." />
+  <Card href="/uavcast-pro/connectivity/networks/" title="Netwerken" description="Interfaces en de prioriteit van Wi-Fi versus modem." />
+</CardGrid>
+
+## Media {/* #media */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/camera/" title="Camera-instellingen" description="CSI- en USB-camera's, resolutie, bitsnelheid, H.264 met lage latentie over UDP." />
+  <Card href="/uavcast-pro/camera/multi-camera/" title="Twee camera's" description="Wisselen via RC-kanaal of dubbele stream." />
+  <Card href="/uavcast-pro/camera/audio/" title="Audio" description="Microfoonaudio in het voorbeeld en naar grondstations." />
+  <Card href="/uavcast-pro/camera/recordings/" title="Opnames" description="Video- en telemetrieopnames op de drone, met vluchtterugblik." />
+</CardGrid>
+
+## Beheer {/* #management */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/fleet-pairing/" title="Fleet Management" description="De drone koppelen aan UAVmatrix Fleet Manager." />
+  <Card href="/uavcast-pro/users/" title="Users" description="Beheerdersaanmelding en alleen-lezen gebruikers." />
+  <Card href="/uavcast-pro/application-settings/" title="Applicatie" description="Poort, taal, logboeken voor support, databaseback-up en -herstel." />
+</CardGrid>
+
+## Poorten in één oogopslag {/* #ports-at-a-glance */}
+
+| Poort | Richting | Gebruikt voor |
+|---|---|---|
+| TCP 80 | Browser → drone | Webinterface (instelbaar) en HTTP-injectors |
+| UDP 14550 | Drone → grondstation | MAVLink-telemetrie (per bestemming, instelbaar) |
+| UDP 5600 | Drone → grondstation | Video, camera 1 (per bestemming, instelbaar) |
+| UDP 5601 | Drone → grondstation | Video, camera 2 met dubbele stream (standaard Videopoort + 1) |
+| UDP 5602 | Drone → grondstation | Audio (Videopoort + 2) |
+| TCP 8889, UDP 8189 | Browser → drone | Live voorvertoning (WebRTC-signalering en media) |
+| TCP 8883 | Drone → Fleet Manager | Verbinding met Fleet Manager (MQTT over TLS) |
+| TCP 2101 | Drone → NTRIP-caster | RTK-correcties (poort van de caster) |
+| UDP 14600 | Sensor → drone | UDP-injector (standaard, instelbaar) |

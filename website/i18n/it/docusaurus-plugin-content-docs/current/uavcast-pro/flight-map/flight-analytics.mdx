@@ -1,0 +1,40 @@
+---
+title: "Traccia la telemetria live e analizza i file .tlog in UAVcast-Pro"
+description: "Grafica la telemetria MAVLink live o un file .tlog registrato in Analitica di Volo di UAVcast-Pro. Scegli fino a 10 parametri, confrontali nel tempo e rivedi un volo sul drone."
+sidebar_position: 5
+sidebar_label: "Analitica di Volo"
+---
+
+# Analitica di Volo {/* #flight-analytics */}
+
+Analitica di Volo traccia i valori MAVLink nel tempo, sia in diretta dal controllore di volo sia da un file `.tlog` registrato. Usala per controllare vibrazioni, calo di batteria, mantenimento della quota o valori del segnale senza copiare i log su un PC. Apri **Mappa di Volo → Analitica di Volo**.
+
+<Screenshot id="uavcast-pro/flight-map--flight-analytics" alt="Scheda Analisi di Volo con Nessun file di log caricato, il pulsante Apri File di Log, l'interruttore Live e il pannello Parametri" caption="Analisi di Volo prima di caricare un log. Apri File di Log carica un .tlog." />
+
+## Traccia la telemetria live {/* #plot-live-telemetry */}
+
+<Steps>
+
+1. Seleziona **Live**. La lista dei parametri si riempie man mano che arrivano i messaggi. Se resta su *In attesa di dati MAVLink*, collega prima il controllore di volo.
+2. Cerca in **Parametri** e spunta i valori da tracciare. Puoi tracciarne fino a **10** alla volta.
+3. Attiva **Accumula dati** per conservare ogni punto (*Memorizzazione di tutti i punti dati*). Disattivato, il grafico mantiene una finestra mobile (*Ultimi … punti*).
+
+</Steps>
+
+## Analizza un log registrato {/* #analyze-a-recorded-log */}
+
+<Steps>
+
+1. Seleziona **Apri File di Log**.
+2. In **Seleziona File di Log**, scegli un `.tlog` registrato. I log di telemetria provengono da [Registrazioni](../camera/recordings.mdx) (di default uno per ogni volo armato).
+3. Spunta i parametri da tracciare. **Durata** e il numero di **Parametri** nel file sono mostrati in alto.
+
+</Steps>
+
+**Cancella Tutto** rimuove tutti i parametri tracciati.
+
+## Da dove arrivano i log {/* #where-the-logs-come-from */}
+
+La telemetria viene registrata sul drone in base a **Registra telemetria** in **Telecamera → Registrazioni → Impostazioni**: **Mentre armato** (predefinito), **Sempre mentre connesso** oppure **Disattivato**. Gli stessi file `.tlog` si aprono in Mission Planner, MAVExplorer e UAV Log Viewer.
+
+La scheda laterale **Registrazioni** della Mappa di Volo elenca gli stessi log di telemetria con **Messaggi**, **Alt Max** e **Distanza**, e ti permette di **Scarica .tlog**, **Elimina** o **Riproduci** un log. La riproduzione invia la telemetria registrata alla mappa come se il drone stesse volando.

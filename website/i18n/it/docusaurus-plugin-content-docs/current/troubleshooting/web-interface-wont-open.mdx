@@ -1,0 +1,80 @@
+---
+title: "L'interfaccia web di UAVcast-Pro non si apre dopo l'installazione"
+sidebar_label: L'interfaccia web non si apre
+description: "Impossibile aprire UAVcast-Pro su http://ip-dispositivo dopo l'installazione? Trova l'indirizzo giusto, controlla il servizio uavcast-web, la porta del server e la porta 80."
+sidebar_position: 9
+---
+
+# L'interfaccia web non si apre {/* #web-interface-wont-open */}
+
+L'installer è terminato, ma `http://<ip-dispositivo>/` va in timeout, rifiuta la connessione oppure mostra la pagina di un altro programma.
+
+<SymptomTable rows={[
+  {symptom: 'Timeout, oppure la pagina non si carica mai', cause: 'Indirizzo errato, oppure il tuo computer è su un’altra rete', start: '#check-1'},
+  {symptom: 'Connessione rifiutata', cause: 'Il servizio web non è in esecuzione', start: '#check-2'},
+  {symptom: 'Un’altra pagina web, per esempio nginx o Apache', cause: 'Qualcos’altro usa la porta 80', start: '#check-3'},
+  {symptom: 'Funzionava prima, ha smesso dopo una modifica alle impostazioni', cause: 'La porta del server è stata cambiata', start: '#check-4'},
+  {symptom: 'Si carica, ma ogni pagina rimanda ad Applicazione', cause: 'Nessuna licenza ancora attiva', start: '#check-5'},
+]} />
+
+## Controllo 1: usa l'indirizzo giusto {/* #check-1 */}
+
+L'interfaccia web usa per impostazione predefinita la **porta 80**, quindi l'indirizzo è semplicemente `http://<ip-dispositivo>/`.
+
+<Steps>
+
+1. Trova l'IP del dispositivo. L'installer lo stampa alla fine. Sul dispositivo puoi anche eseguire `hostname -I`.
+2. Su una Raspberry Pi con l'hostname predefinito, prova `http://raspberrypi.local/`.
+3. Usa `http://`, non `https://`. L'interfaccia web non serve HTTPS.
+4. Assicurati che il tuo computer sia sulla stessa rete del dispositivo, oppure sulla stessa VPN. Con il 4G devi usare l'indirizzo VPN del drone.
+
+</Steps>
+
+## Controllo 2: il servizio web è in esecuzione? {/* #check-2 */}
+
+Sul dispositivo, esegui:
+
+```bash
+sudo systemctl status uavcast-web
+```
+
+Dovrebbe indicare **active (running)**. In caso contrario, avvialo e leggi il motivo per cui si è fermato:
+
+```bash
+sudo systemctl restart uavcast-web
+journalctl -u uavcast-web --since "1 hour ago"
+```
+
+Anche l'interfaccia web richiede i servizi in background. Controllali allo stesso modo: `uavcast-factory`, `mavlink-manager`, `uavcast-camera` e `redis-server`. L'elenco completo è in [Servizi e file](../reference/services-and-files.mdx).
+
+## Controllo 3: porta 80 già in uso {/* #check-3 */}
+
+Se sul dispositivo è installato un altro server web, potrebbe occupare la porta 80. Scopri chi è in ascolto:
+
+```bash
+sudo ss -ltnp | grep ':80 '
+```
+
+Ferma e disabilita l'altro server (per esempio `sudo systemctl disable --now nginx`), poi riavvia `uavcast-web`.
+
+## Controllo 4: la porta del server è stata cambiata {/* #check-4 */}
+
+**Applicazione → Impostazioni → Porta Server** sposta l'interfaccia web su un'altra porta, e l'indirizzo diventa `http://<ip-dispositivo>:<porta>/`. Se non ricordi la porta, leggila sul dispositivo:
+
+```bash
+grep SERVER_PORT /etc/systemd/system/uavcast-web.service
+```
+
+## Controllo 5: ogni pagina rimanda ad Applicazione {/* #check-5 */}
+
+È il comportamento previsto finché sul dispositivo non è attiva una licenza. Attivala in **Applicazione → Gestore Licenze**. Se l'attivazione non riesce, vedi [La licenza non si attiva](./license-activation-failed.mdx).
+
+## Controllo 6: l'installer non è terminato {/* #check-6 */}
+
+Se `uavcast-web` non esiste (`Unit uavcast-web.service could not be found`), l'installazione si è interrotta prima del previsto. Vedi [L'installazione non riesce](./installation-fails.mdx).
+
+## Ancora nessun risultato? {/* #still-no-luck */}
+
+Invia l'output di `systemctl status uavcast-web` e `journalctl -u uavcast-web --since yesterday`, più `/opt/uavcast-pro/installer.log`, a **support@uavmatrix.com**.
+
+Correlati: [Installare UAVcast-Pro](../get-started/installation.mdx) · [Impostazioni dell'applicazione](../uavcast-pro/application-settings.mdx)

@@ -1,0 +1,41 @@
+---
+title: "Probleemoplossing UAVcast-Pro en Fleet Manager"
+description: "Los geen video, geen MAVLink-heartbeat, problemen met modem en VPN, licentiefouten en Fleet Manager-koppeling op. Begin bij wat u ziet en volg de controles."
+sidebar_position: 1
+---
+
+# Probleemoplossing {/* #troubleshooting */}
+
+Begin bij het symptoom. Elke onderstaande pagina somt de waarschijnlijke oorzaken op in de volgorde waarin ze in de praktijk voorkomen, met genummerde controles die de exacte labels uit de interfaces van UAVcast-Pro en Fleet Manager gebruiken.
+
+:::tip Controleer eerst het dashboard
+Open **Dashboard** in UAVcast-Pro. De statuskaart vat de drone in één regel samen (**Alle systemen normaal**, of het aantal problemen en waarschuwingen) en heeft per onderdeel een rij: **Vluchtcontroller**, **Grondstation**, **Mobiel**, **VPN**, **RTK-correcties**, **Video** en **Voeding**. De eerste rode rij is meestal het beste startpunt.
+:::
+
+<Screenshot id="uavcast-pro/dashboard" alt="UAVcast-Pro-dashboard met de statuskaart die 2 problemen toont: GPS geen fix en VPN niet verbonden" caption="Dashboard → statuskaart. Rijen met een probleem worden rood en meegeteld in de badge met problemen, hier GPS (geen fix) en VPN (niet verbonden)." />
+
+## Zoek op uw symptoom {/* #match-your-symptom */}
+
+| Wat u ziet | Waarschijnlijke oorzaak | Ga naar |
+|---|---|---|
+| Telemetrie werkt, maar het videogebied in QGroundControl of Mission Planner is zwart | **Video Inschakelen** staat uit voor dat grondstation, verkeerd IP-adres, of een firewall | [Geen video in het grondstation](./no-video-in-gcs.mdx) |
+| Video bevriest, loopt grijs uit of loopt seconden achter | Bitsnelheid te hoog voor de verbinding, of keyframes staan te ver uit elkaar | [Haperend of vertraagd beeld](./choppy-or-delayed-video.mdx) |
+| Pagina Vluchtcontroller toont **Geen heartbeat**, **Wachten op apparaat** of **Baudrate detecteren** | Kabel, bedrading, poort of baudrate | [Geen MAVLink-heartbeat](./no-mavlink-heartbeat.mdx) |
+| UAVcast-Pro toont de vluchtcontroller als **Verbonden**, het GCS wacht op een verbinding | Telemetrie wordt niet naar het GCS gestuurd, of het GCS luistert niet | [Geen telemetrie in het grondstation](./no-telemetry-in-gcs.mdx) |
+| **Geen camera's beschikbaar** bij **Selecteer Camera** | CSI-camerastack ontbreekt, flatkabel, of USB-camera niet gezien | [Camera niet gedetecteerd](./camera-not-detected.mdx) |
+| **Ongeldige licentiesleutel**, **Maximaal aantal activeringen bereikt** of **Licentieactivering mislukt** | Verkeerde sleutel, geen vrije apparaatplek, of geen internet | [Licentie wordt niet geactiveerd](./license-activation-failed.mdx) |
+| Modem toont een signaal en een provider, maar er laadt niets | APN, netwerkprioriteit of simdata | [4G-modem verbonden maar geen internet](./modem-no-internet.mdx) |
+| De browser kan `http://<device-ip>/` niet bereiken na de installatie | Verkeerd adres, service draait niet, of poort is gewijzigd | [Webinterface opent niet](./web-interface-wont-open.mdx) |
+| Het installatieprogramma stopt met een fout | 32-bits besturingssysteem, geen internet, of weinig schijfruimte | [Installatie mislukt](./installation-fails.mdx) |
+| ZeroTier of Tailscale meldt verbonden, maar u kunt de drone niet pingen of openen | Lid niet geautoriseerd, verkeerd netwerk, of GCS niet op het VPN | [VPN verbonden maar drone niet bereikbaar](./vpn-cant-reach-drone.mdx) |
+| NTRIP-status is niet **Correcties worden gestreamd**, of de fix bereikt nooit **RTK Vast** | Caster-instellingen, GGA, of een ontvanger die geen RTK ondersteunt | [RTK-correcties komen niet aan](./rtk-corrections-not-arriving.mdx) |
+| **Spanning te laag - gebruik een sterkere voeding** of **Vertraagd (hitte of voeding)** | Zwakke voeding of kabel, oververhitting | [Onderspanning en throttling](./undervoltage-and-throttling.mdx) |
+| De drone is **Offline** in Fleet Manager | Drone heeft geen internet, MQTT-poort geblokkeerd, of opnieuw koppelen vereist | [Drone offline in Fleet Manager](./drone-offline-fleet-manager.mdx) |
+| **Invalid pairing code**, **This pairing code has expired** of **License is not owned by any member of this organization** | Code verkeerd getypt of te oud, of licentie in bezit van iemand buiten de organisatie | [Koppelcode ongeldig of verlopen](./pairing-code-invalid.mdx) |
+
+## Nog vast? {/* #still-stuck */}
+
+1. [Verzamel de logbestanden](./collect-logs.mdx). De download bevat een `diagnostics.txt`-momentopname van uw instellingen en hardware, zodat support die niet hoeft op te vragen.
+2. Stuur ze naar **support@uavmatrix.com** met uw UAVcast-Pro-versie, de hardware die u gebruikt en wat u al heeft geprobeerd. U kunt ook een vraag stellen op de [UAVmatrix Discord](https://discord.gg/xwqMTXh).
+
+Korte antwoorden op veelgestelde vragen staan in de [FAQ](./faq.mdx).

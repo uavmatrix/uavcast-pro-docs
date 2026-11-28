@@ -1,0 +1,56 @@
+---
+title: "¿Qué es UAVcast-Pro? Telemetría y video de drones con 4G/LTE"
+description: "UAVcast-Pro convierte una Raspberry Pi o una computadora Linux a bordo en un enlace 4G/LTE para telemetría MAVLink y video H.264. Descubre cómo funciona junto con Fleet Manager."
+sidebar_position: 1
+sidebar_label: "Descripción general"
+---
+
+# ¿Qué es UAVcast-Pro? {/* #what-is-uavcast-pro */}
+
+UAVcast-Pro es un software para una computadora de a bordo en tu dron, normalmente una Raspberry Pi. Lee MAVLink de cualquier controlador de vuelo MAVLink (ArduPilot o PX4), transmite video H.264 desde una o dos cámaras y envía ambos a tu estación de control en tierra por Wi-Fi, Ethernet o un módem 4G/LTE. Lo configuras y lo supervisas desde una interfaz web que se ejecuta en el dron.
+
+UAVmatrix Fleet Manager es el tablero en la nube que lo acompaña. Si vinculas un dron con UAVcast-Pro a Fleet Manager, puedes ver toda la flota en un solo mapa, abrir una terminal remota, planificar misiones y enviar el video y la telemetría a las estaciones de control sin reenvío de puertos. Fleet Manager está incluido en cada licencia de UAVcast-Pro.
+
+## Cómo se conectan las piezas {/* #how-the-pieces-connect */}
+
+```text
+ Controlador de vuelo ──USB/UART──►  Computadora de a bordo con UAVcast-Pro
+ (ArduPilot, PX4)                    │  router MAVLink, servidor de cámara, módem,
+ Cámara(s) ──CSI/USB────────────►    │  VPN, cliente NTRIP, grabador, interfaz web
+                                     │
+                                     ├── UDP 14550 (telemetría) ─┐
+                                     ├── UDP 5600  (video)    ───┼─► Mission Planner / QGroundControl
+                                     │                           │   por LAN, VPN o 4G
+                                     └── MQTT/TLS 8883 ──────────┴─► Fleet Manager (opcional)
+```
+
+- **En el dron**: UAVcast-Pro controla el puerto serie del controlador de vuelo y reenvía MAVLink a cada estación de control que agregues. El servidor de cámara codifica H.264 y envía RTP por UDP a las mismas estaciones de control. Nada escucha conexiones de telemetría entrantes a menos que tú lo agregues.
+- **Entre el dron y tierra**: en una red local basta con la IP de la estación de control. Por 4G el dron no tiene dirección pública, así que conectas ambos extremos a una VPN. La [VPN de Fleet Manager](../uavcast-pro/connectivity/vpn.mdx), incluida en cada licencia, hace esto por ti; UAVcast-Pro también puede unirse a tu propia red de Tailscale o ZeroTier.
+- **En la nube**: cuando está vinculado, el dron mantiene una conexión MQTT saliente autenticada con certificado hacia Fleet Manager. Consulta [Vincular un dron con Fleet Manager](../uavcast-pro/fleet-pairing.mdx).
+
+## Qué puedes hacer con él {/* #what-you-can-do-with-it */}
+
+| Área | Qué hace | Página |
+|---|---|---|
+| Telemetría | Detecta automáticamente el puerto y la tasa de baudios del controlador de vuelo, envía MAVLink a cualquier número de estaciones de control y admite destinos opcionales de solo lectura | [Controlador de vuelo](../uavcast-pro/flight-controller/index.mdx), [Estaciones de control en tierra](../uavcast-pro/ground-stations/index.mdx) |
+| Video | Cámaras CSI y USB de Raspberry Pi, dos cámaras con cambio por RC o flujo doble, audio, pipelines personalizados de GStreamer | [Cámara y video](../uavcast-pro/camera/index.mdx) |
+| Grabación | Graba el video y la telemetría de cada vuelo en el dron, con un reproductor de revisión de vuelo | [Grabaciones](../uavcast-pro/camera/recordings.mdx) |
+| Mapa de vuelo | Mapa en vivo, HUD de cabina, armar/desarmar, RTL y loiter, planificador de misiones, inspector MAVLink, análisis de registros | [Mapa de vuelo](../uavcast-pro/flight-map/index.mdx) |
+| Conectividad | Módems 4G/LTE con APN automático, la VPN de Fleet Manager o tu propia red de Tailscale o ZeroTier, DNS dinámico, prioridad Wi-Fi frente a módem | [Conectividad](/uavcast-pro/connectivity/) |
+| RTK | Cliente NTRIP que envía correcciones RTCM3 al controlador de vuelo | [NTRIP / RTK](../uavcast-pro/flight-controller/ntrip-rtk.mdx) |
+| Datos personalizados | Conecta sensores y scripts a MAVLink y grafícalos | [Inyectores](../uavcast-pro/flight-controller/injectors.mdx), [Flujos de Datos](../uavcast-pro/data-streams.mdx) |
+
+## Qué necesitas {/* #what-you-need */}
+
+- Una computadora Linux de 64 bits a bordo (arm64 o amd64). Raspberry Pi 3, 4, 5 y Zero 2 W son la opción habitual; los mini PC x86 también funcionan, y NVIDIA Jetson, Orange Pi y otras placas arm64 a partir de UAVcast-Pro 6.5.3. Consulta [Requisitos de hardware](./hardware-requirements.mdx).
+- Un controlador de vuelo MAVLink: ArduPilot o PX4. Los botones de modo de vuelo siguen los nombres de modo de ArduPilot.
+- Una licencia de UAVcast-Pro de la [tienda UAVmatrix](https://uavmatrix.com/products/). Consulta [Licencias y activación](./license-activation.mdx).
+- Para vuelos fuera del alcance del Wi-Fi: un módem 4G/LTE y una SIM con datos.
+
+## Próximos pasos {/* #next-steps */}
+
+<CardGrid>
+  <Card href="/get-started/quick-start/" title="Inicio rápido" description="De una Raspberry Pi nueva a telemetría y video en Mission Planner o QGroundControl." />
+  <Card href="/get-started/installation/" title="Instalar UAVcast-Pro" description="Un solo comando en Raspberry Pi OS, Debian o Ubuntu (arm64 y amd64)." />
+  <Card href="/get-started/license-activation/" title="Activar tu licencia" description="Activa en un dispositivo, revisa los espacios de dispositivos y mueve la licencia a nuevo hardware." />
+</CardGrid>

@@ -1,0 +1,53 @@
+---
+title: "Audio van een USB-microfoon toevoegen aan de videostream van de drone"
+description: "Voeg geluid toe van een USB-microfoon of de ingebouwde microfoon van een webcam aan de live voorvertoning van UAVcast-Pro, en stuur het naar grondstations als RTP/Opus-stream op Videopoort + 2."
+sidebar_position: 3
+sidebar_label: "Audio"
+---
+
+# Audio {/* #audio */}
+
+UAVcast-Pro kan geluid toevoegen van een USB-microfoon of de ingebouwde microfoon van een USB-camera. Audio wordt gecodeerd als Opus, wat weinig CPU en bandbreedte kost. Het wordt altijd afgespeeld in de live voorvertoning, en u kunt het ook als apart RTP-stream naar uw grondstations sturen. U vindt het op de kaart **Audio** onder **Camera → Camera-instellingen**.
+
+## Audio inschakelen {/* #turn-on-audio */}
+
+<Steps>
+
+1. Sluit een USB-microfoon aan, of gebruik een webcam met ingebouwde microfoon.
+2. Schakel op **Camera → Camera-instellingen** **Audio** in.
+3. Laat **Audioapparaat** op **Automatisch (cameramicrofoon indien aanwezig)** staan, of kies een apparaat. Gebruik **Testtoon (geen microfoon nodig)** om het pad zonder microfoon te testen.
+4. Let op de indicator. **Audio live** met een bewegende niveaumeter betekent dat er geluid wordt opgenomen.
+5. Hef in de **Live Voorvertoning** de demping van de speler op. Browsers starten de voorvertoning gedempt.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera--audio" alt="Kaart Audio op de pagina Camera met de Audio-schakelaar uit en de status Audio uit" caption="Camera → Audio, uitgeschakeld. Schakel in om de microfoon en bitrate te kiezen." />
+
+Een microfoon die faalt, onderbreekt nooit de video. De indicator toont in plaats daarvan **Audiofout** met de reden.
+
+## Audio naar grondstations sturen {/* #send-audio-to-ground-stations */}
+
+Schakel **Audio naar grondstations sturen** in. UAVcast-Pro stuurt dan een apart RTP/Opus-stream naar elk grondstation dat video ontvangt, op de **Videopoort + 2** van die bestemming. Met de standaard videopoort is dat `5602`. Twee bestemmingen op dezelfde computer hebben daarom videopoorten nodig die minstens 3 uit elkaar liggen, bijvoorbeeld `5600` en `5603`.
+
+QGroundControl en Mission Planner negeren audio. Speel het af met GStreamer:
+
+```bash title="Op het grondstation"
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp, media=(string)audio, clock-rate=(int)48000, encoding-name=(string)OPUS, payload=(int)97" ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+De stream is Opus bij 48 kHz, RTP-payloadtype 97. VLC kan deze afspelen met een SDP-bestand dat die waarden beschrijft.
+
+## Instellingenoverzicht {/* #settings-reference */}
+
+| Instelling | Standaard | Waarden | Opmerkingen |
+|---|---|---|---|
+| **Audio** | Uit | Aan, uit | Elke wijziging van een audio-instelling herstart de cameraservice. |
+| **Audioapparaat** | **Automatisch (cameramicrofoon indien aanwezig)** | Automatisch, gedetecteerde opnameapparaten, **Testtoon (geen microfoon nodig)** | Een opgeslagen apparaat dat is losgekoppeld, wordt getoond als *(niet verbonden)*. |
+| **Bitrate** | `64 kbps` | 24, 32, 48, 64, 96, 128 kbps | 32–64 kbps is ruim voldoende voor spraak en motorgeluid. |
+| **Audio naar grondstations sturen** | Uit | Aan, uit | RTP/Opus naar Videopoort + 2 op elke bestemming met ingeschakelde video. |
+
+## Probleemoplossing {/* #troubleshooting */}
+
+- *Geen opnameapparaat gevonden*: sluit een USB-microfoon of een camera met ingebouwde microfoon aan. Op de drone toont `arecord -l` de opnameapparaten.
+- **Geen signaal**: het apparaat is geopend maar stil. Controleer de dempschakelaar van de microfoon, of probeer **Testtoon**.
+- Audio in de voorvertoning maar niet op het grondstation: controleer of **Audio naar grondstations sturen** aan staat, of de bestemming **Video Inschakelen** aan heeft, en of uw ontvanger naar Videopoort + 2 luistert.

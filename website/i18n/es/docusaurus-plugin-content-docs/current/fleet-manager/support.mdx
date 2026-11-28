@@ -1,0 +1,58 @@
+---
+title: Soporte de Fleet Manager - FleetBot y tickets de soporte
+sidebar_label: Soporte
+description: "Obtén ayuda dentro de Fleet Manager: pregúntale al asistente FleetBot, abre un ticket de soporte con una captura de pantalla, sigue su estado y revisa el estado del sistema."
+sidebar_position: 15
+---
+
+# Soporte y FleetBot {/* #support-and-fleetbot */}
+
+La ayuda está a un clic en cada página de Fleet Manager: el botón de soporte redondo en la esquina inferior derecha abre un panel con dos pestañas, **FleetBot** y **Ticket**.
+
+## Pregúntale a FleetBot {/* #ask-fleetbot */}
+
+**FleetBot** es un asistente de IA que conoce las páginas y funciones de Fleet Manager. Pregúntale algo como "¿Cómo conecto una segunda estación de control?" y te responderá con enlaces a la página correcta.
+
+<Screenshot id="fleet-manager/support-bubble--fleetbot" alt="Panel de soporte en la pestaña FleetBot con una pregunta y una respuesta que enlaza a la página Network" caption="Panel de soporte, pestaña FleetBot, respondiendo cómo agregar una vinculación de stream, con un enlace a Network → Stream Bindings." />
+
+- Escribe tu pregunta en **Ask FleetBot...** y envíala.
+- Una conversación admite hasta 20 mensajes, cada uno de hasta 2000 caracteres. Si llegas al límite, inicia una conversación nueva.
+- FleetBot puede equivocarse, sobre todo en los números. Cuando no coincida con estos documentos, los documentos prevalecen.
+
+:::note Lo que ve FleetBot
+FleetBot recibe solo lo que escribes en el chat, no los datos de tus drones. Los mensajes se envían al modelo de IA Claude de Anthropic para generar la respuesta. No pegues claves de autenticación, contraseñas ni claves de licencia.
+:::
+
+## Abre un ticket de soporte {/* #open-a-support-ticket */}
+
+<Steps>
+
+1. Abre el panel de soporte y elige la pestaña **Ticket**.
+2. Elige una **Category**: **Bug Report**, **Feature Request**, **General Inquiry** o **Question**.
+3. Escribe un **Subject** (de 5 a 200 caracteres) y un **Message** (de 20 a 5000 caracteres). Indica qué dron es, qué hiciste y qué esperabas.
+4. Opcional: agrega una captura de pantalla. **Capture** toma la pantalla a través de tu navegador (tú eliges la ventana), **Upload** adjunta un archivo de imagen de hasta 5 MB.
+5. Selecciona **Submit Ticket**.
+
+</Steps>
+
+<Screenshot id="fleet-manager/support-bubble--ticket" alt="Panel de soporte en la pestaña Ticket con los campos de categoría, asunto, mensaje y captura de pantalla" caption="Pestaña Ticket completada como un Bug Report sobre un dron atascado en PAIRING, con Capture y Upload para una captura de pantalla opcional." />
+
+Recibes un número de ticket como `SUP-7KQ2XA`. Fleet Manager también registra la página en la que estabas y tu navegador, para que soporte pueda reproducir el problema.
+
+:::tip Incluye registros para problemas del dron
+Para problemas del lado del dron, adjunta el paquete de registros de UAVcast-Pro (consulta [Recopilar registros](../troubleshooting/collect-logs.mdx)) o el archivo **Download logs** de la pestaña **Logs** del dron.
+:::
+
+## Sigue tus tickets {/* #follow-your-tickets */}
+
+**Settings → Support** lista tus tickets con su estado: **Open**, **In Progress**, **Resolved** o **Closed**. Ábrelo para ver los detalles y la captura adjunta. Selecciona **Close Ticket** cuando tu problema esté resuelto. También puedes crear un ticket allí con **Create Support Ticket**.
+
+## Oculta el botón de soporte {/* #hide-the-support-button */}
+
+Selecciona el ícono de ocultar (**Hide support bubble**) en el encabezado del panel, o desactiva **Support Chat Bubble** en **Settings → Support**. Vuelve a activarlo en el mismo lugar. Siempre puedes abrir tickets desde **Settings → Support**.
+
+## Otras formas de obtener ayuda {/* #other-ways-to-get-help */}
+
+- **Estado del sistema:** **System → Status** muestra incidentes activos y pasados. Si muchos drones se desconectan a la vez, revísalo primero. Consulta [Indicadores de estado y notificaciones](./alerts-and-status.mdx#status-page).
+- **Correo electrónico:** support@uavmatrix.com.
+- **Comunidad:** el [Discord de UAVmatrix](https://discord.gg/xwqMTXh).

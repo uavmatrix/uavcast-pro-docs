@@ -1,0 +1,34 @@
+---
+title: "Guías de UAVcast-Pro y Fleet Manager"
+description: "Guías paso a paso para UAVcast-Pro: volar por 4G, acceso remoto por VPN, varias estaciones de control en tierra, RTK sobre NTRIP, dos cámaras e incorporación de flotas."
+sidebar_position: 1
+---
+
+# Guías {/* #guides */}
+
+Guías de principio a fin que combinan varias funciones para completar un trabajo real. Cada guía indica de antemano lo que necesitas y termina con una comprobación de que funciona.
+
+## Conectividad {/* #connectivity */}
+
+<CardGrid>
+  <Card href="/guides/bvlos-4g/" title="Volar más allá del alcance visual por 4G" description="Módem, VPN de Fleet Manager, telemetría y video hacia QGroundControl o Mission Planner." />
+  <Card href="/guides/remote-access-tailscale/" title="Acceso remoto con Tailscale" description="Accede al dron en tu tailnet por LTE, sin reenvío de puertos." />
+  <Card href="/guides/multiple-ground-stations/" title="Transmite a varias estaciones de control en tierra" description="Piloto, operador de carga útil y observadores de solo lectura en un mismo dron." />
+</CardGrid>
+
+## Posicionamiento y video {/* #positioning-and-video */}
+
+<CardGrid>
+  <Card href="/guides/rtk-ntrip-caster/" title="RTK por 4G con un caster NTRIP" description="Correcciones RTCM3 desde un caster hasta el controlador de vuelo para RTK Fijo." />
+  <Card href="/guides/dual-camera-rc-switching/" title="Dos cámaras con cambio por RC o transmisión doble" description="Cambia de cámara desde el transmisor, o transmite ambas a la vez." />
+  <Card href="/uavcast-pro/ground-stations/" title="Recibe el video en tu estación de control en tierra" description="Mission Planner, QGroundControl, GStreamer en Windows, Linux y macOS, Android, VLC y RTSP." />
+  <Card href="/guides/recording-flight-review/" title="Graba vuelos y revísalos" description="Video y telemetría en el dron, reproducidos en una misma línea de tiempo." />
+</CardGrid>
+
+## Flotas {/* #fleets */}
+
+<CardGrid>
+  <Card href="/guides/fleet-onboarding/" title="Incorpora una flota con Fleet Manager" description="Licencias, nombres, emparejamiento, la VPN de la organización y las vinculaciones de stream para más de 20 drones." />
+</CardGrid>
+
+¿Algo no funciona? Empieza en [Solución de problemas](../troubleshooting/index.mdx).

@@ -1,0 +1,66 @@
+---
+title: "UAVcast-Pro ondersteunde hardware en besturingssystemen"
+sidebar_label: Ondersteunde hardware
+description: "Boards, besturingssystemen, vluchtcontrollers, camera's, LTE-modems en RTK-ontvangers die werken met UAVcast-Pro v6: Raspberry Pi, Jetson en andere arm64-boards, en x86-pc's."
+sidebar_position: 4
+---
+
+# Ondersteunde hardware {/* #supported-hardware */}
+
+UAVcast-Pro v6 draait op elke 64-bits Linux-computer met Raspberry Pi OS, Debian of Ubuntu, op **arm64** of **amd64** (arm64-boards die geen Raspberry Pi zijn, vanaf UAVcast-Pro 6.5.3). De onderstaande tabellen tonen wat wordt gedetecteerd en getest. Voor voedingen, bedrading en aankoopadvies, zie [Hardwarevereisten](../get-started/hardware-requirements.mdx).
+
+## Companion computers {/* #companion-computers */}
+
+| Board | Architectuur | Seriële poort voor TELEM | Opmerkingen |
+|---|---|---|---|
+| Raspberry Pi 5 | arm64 | GPIO-UART (`uart0`) | Beste videoprestaties. Heeft actieve koeling nodig voor continu coderen. |
+| Raspberry Pi 4 | arm64 | GPIO-UART | Aanbevolen allround keuze. |
+| Raspberry Pi 3 | arm64 | GPIO-UART | Prima voor telemetrie en één camera bij gematigde instellingen. |
+| Raspberry Pi Zero 2 W | arm64 | GPIO-UART | Werkt, maar is traag om te installeren en beperkt voor video. Eén camera, lage resolutie. |
+| Raspberry Pi Compute Module | arm64 | Afhankelijk van het carrier-board | Ondersteuning in het installatieprogramma is vastgelegd in v6.3.1. |
+| NVIDIA Jetson (Nano, Orin Nano, Xavier NX, AGX, TX2) | arm64 | `ttyTHS*` op de 40-pins header | USB-camera's. Jetson-CSI-camera's worden niet door de cameraserver afgehandeld; die hebben een handmatig geschreven **Aangepaste Pipeline** nodig. |
+| Orange Pi (Zero, Zero 2, 3, 4, 5, Plus) | arm64 | `ttyS*`, afhankelijk van het model | USB-camera's. De UART moet mogelijk in de device tree worden ingeschakeld. |
+| Banana Pi en andere arm64-boards | arm64 | Afhankelijk van het model | USB-camera's. |
+| x86 mini-pc, Intel NUC, laptop | amd64 | USB-serieel-adapter | USB-camera's. |
+
+:::note Niet-Raspberry Pi arm64-boards
+Jetson, Orange Pi, Banana Pi en andere arm64-boards die geen Raspberry Pi zijn, hebben UAVcast-Pro 6.5.3 of later nodig. Oudere installatieprogramma's stoppen op deze boards met *Device is not a Raspberry Pi*.
+:::
+
+**Alleen Raspberry Pi:** CSI-camera's (rpicam/libcamera) hebben een Raspberry Pi nodig. Op een Pi schakelt het installatieprogramma de UART in, verwijdert het de seriële console en schakelt het op Pi 3/4/Zero 2 W Bluetooth uit, zodat de volledige UART vrij is.
+
+## Besturingssystemen {/* #operating-systems */}
+
+| Besturingssysteem | Status |
+|---|---|
+| Raspberry Pi OS (64-bit) | Aanbevolen op Raspberry Pi. Vereist voor CSI-camera's. |
+| Debian (64-bit) | Ondersteund. |
+| Ubuntu (64-bit), inclusief Ubuntu voor Raspberry Pi | Ondersteund. CSI-camera's op een Pi werken niet op Ubuntu, omdat de Raspberry Pi-camerastack niet is verpakt; USB-camera's wel. |
+| Elk 32-bits besturingssysteem | **Niet ondersteund.** Het installatieprogramma stopt met *No installation candidate*. |
+
+## Vluchtcontrollers {/* #flight-controllers */}
+
+UAVcast-Pro v6 werkt met elke MAVLink-vluchtcontroller via USB of een TELEM-poort: ArduPilot (Copter, Plane, Rover, VTOL en andere voertuigtypen) en PX4, op Pixhawk- en Cube-boards, Matek, Holybro, CUAV en andere. Vluchtmodusnamen en modusknoppen op de Vliegkaart en in Fleet Manager volgen ArduPilot; bij PX4 wisselt u de modus via uw grondstation.
+
+## Camera's {/* #cameras */}
+
+| Type | Voorbeelden | Opmerkingen |
+|---|---|---|
+| Raspberry Pi CSI | Camera Module 2 en 3, HQ Camera, andere libcamera-sensoren (imx219, imx708 …) | Raspberry Pi OS of Debian. Twee CSI-camera's op boards met twee connectors (Pi 5, Compute Module). |
+| USB (UVC) | Logitech C920, C615 en de meeste UVC-webcams | Elk besturingssysteem. |
+| Andere bronnen | IP-camera's, HDMI-capture | Via een **Aangepaste Pipeline**. |
+
+Maximaal twee camera's, die worden omgeschakeld of tegelijk worden gestreamd. Audio van een USB-microfoon of de ingebouwde microfoon van een camera.
+
+## LTE- / 4G-modems {/* #lte--4g-modems */}
+
+| Type | Werking | Voorbeelden |
+|---|---|---|
+| **HiLink** | Het modem is een kleine router en verschijnt als netwerkadapter (stuurprogramma's `cdc_ether`, `huawei_cdc_ncm`, `rndis_host`) | Huawei E3372h, E8372h |
+| **Traditioneel (PPP)** | Beheerd door ModemManager; UAVcast-Pro verbindt het, kiest de APN en maakt opnieuw verbinding | Huawei E3372s, Quectel- en Sierra Wireless-modules op USB-carriers |
+
+Traditionele modems moeten door ModemManager worden ondersteund: zie de [ModemManager-lijst met ondersteunde apparaten](https://www.freedesktop.org/wiki/Software/ModemManager/SupportedDevices/). Kies een model waarvan de frequentiebanden passen bij uw provider.
+
+## RTK GPS-ontvangers {/* #rtk-gps-receivers */}
+
+NTRIP-correcties hebben op de vluchtcontroller een RTK-geschikte ontvanger (draaggolffase) nodig, bijvoorbeeld modules op basis van de u-blox ZED-F9P, de CubePilot Here3+ of de Septentrio Mosaic. Standaard navigatiemodules zoals M8N, M9N of M10 kunnen geen RTK-correcties gebruiken.

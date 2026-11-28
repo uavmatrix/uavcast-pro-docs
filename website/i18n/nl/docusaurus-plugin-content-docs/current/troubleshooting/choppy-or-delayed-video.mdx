@@ -1,0 +1,85 @@
+---
+title: "Haperend, vertraagd of grijs beeld via 4G"
+sidebar_label: Haperend of vertraagd beeld
+description: "Los stotterend beeld, grijze vlekken en vertraging op in UAVcast-Pro-video via LTE of VPN door bitsnelheid, resolutie, FPS en Stream Herstelsnelheid af te stemmen op de verbinding."
+sidebar_position: 3
+---
+
+# Haperend, vertraagd of grijs beeld via 4G {/* #choppy-laggy-or-grey-video-over-4g */}
+
+Het beeld komt aan, maar het stottert, bevriest, toont grijze blokken over het scherm of loopt seconden achter. Bijna altijd vraagt de stream meer dan de verbinding aankan, of stuurt de encoder te zelden keyframes om verloren pakketten te herstellen.
+
+<SymptomTable rows={[
+  {symptom: 'Grijze of groene vlekken die na een seconde of twee verdwijnen', cause: 'Pakketten verloren en te weinig keyframes om te herstellen', start: '#check-2'},
+  {symptom: 'Vloeiend op Wi-Fi, stottert of bevriest via LTE', cause: 'Bitsnelheid hoger dan wat de mobiele uplink aankan', start: '#check-1'},
+  {symptom: 'Stottert zelfs op het lokale netwerk', cause: 'CPU-limiet op de drone, of het GCS kan niet snel genoeg decoderen', start: '#check-3'},
+  {symptom: 'Video loopt seconden achter de drone', cause: 'U kijkt naar de browserpreview, of het GCS buffert', start: '#check-4'},
+]} />
+
+## Controle 1: Verlaag de bitsnelheid en resolutie {/* #check-1 */}
+
+Een mobiele uplink is veel trager dan de downloadsnelheid en verandert wanneer de drone tussen cellen beweegt. Begin laag en verhoog stapsgewijs.
+
+<Steps>
+
+1. Ga naar **Camera → Camera-instellingen**.
+2. Stel **Resolutie** in op 1280×720 of lager.
+3. Stel **Selecteer FPS** in op 15 of 20.
+4. Zet de schuif **Bitsnelheid:** op ongeveer 1000–1500 kbps. `0` betekent automatisch.
+5. Instellingen worden opgeslagen terwijl u ze wijzigt, en de camera past ze toe.
+6. Vlieg, of rijd, de route waar het u om gaat. Als die goed werkt, verhoog dan één waarde per keer.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera--settings" alt="Kaart Camera-instellingen met Resolutie, Selecteer FPS, Bitsnelheid en Stream Herstelsnelheid" caption="Camera → Camera-instellingen: Resolutie, Selecteer FPS, Bitsnelheid en Stream Herstelsnelheid zijn de waarden om af te stemmen op de uplink." />
+
+:::tip Hoeveel capaciteit heeft de verbinding?
+**Dashboard → Netwerkverkeer** toont de live TX-snelheid per interface. Als de modeminterface bij elke ingestelde bitsnelheid op hetzelfde plafond blijft steken, dan is dat plafond uw uplink.
+:::
+
+## Controle 2: Stel een snellere Stream Herstelsnelheid in {/* #check-2 */}
+
+Grijze overlays komen van verloren pakketten. De decoder kan het beeld alleen herstellen bij het volgende keyframe. **Stream Herstelsnelheid** bepaalt hoe vaak keyframes worden verzonden.
+
+<Steps>
+
+1. Zoek in **Camera → Camera-instellingen** naar **Stream Herstelsnelheid**.
+2. Verschuif de schuif van **Automatisch** richting **Ultra Snel**: minder frames tussen keyframes herstellen het beeld sneller, maar gebruiken meer bandbreedte. Richting **Bandbreedte Bespaarder** bespaart bandbreedte, maar herstelt langzamer. De hint onder de schuif (bijvoorbeeld *VPN/WiFi-vriendelijk*) geeft aan waar elke stand geschikt voor is.
+3. Sla op en vergelijk. Als de verbinding erg traag is, combineer dan een snellere herstelsnelheid met een lagere bitsnelheid (controle 1).
+
+</Steps>
+
+Bij **Automatisch** stuurt UAVcast-Pro één keyframe per seconde (één per *FPS*-frames, of elke 30 frames wanneer FPS op automatisch staat).
+
+## Controle 3: Bekijk de CPU-belasting {/* #check-3 */}
+
+UAVcast-Pro encodeert H.264 in software. Op een Raspberry Pi Zero 2 W, of met twee camera's die tegelijk streamen, kan de CPU tekortschieten.
+
+<Steps>
+
+1. Open **Camera → Camera-instellingen** en bekijk de kaart **Systeembelasting**.
+2. Als er **CPU zit bijna aan de limiet. Verlaag de resolutie of bitsnelheid.** staat, doe dan precies dat.
+3. Met **Dubbele stream** aan: verlaag de resolutie of bitsnelheid van één stream, of schakel de tweede stream uit.
+4. Controleer op het **Dashboard** of er **Vertraagd (hitte of voeding)** staat onder **Voeding**. Een gethrottelde CPU encodeert trager. Zie [Onderspanning en throttling](./undervoltage-and-throttling.mdx).
+
+</Steps>
+
+## Controle 4: Weet welke stream u bekijkt {/* #check-4 */}
+
+De **Live Voorvertoning** in de browser en het videovenster op de **Vliegkaart** lopen via de ingebouwde mediaserver, die vertraging toevoegt. Ze zijn bedoeld voor het instellen, niet voor het vliegen. De stream naar uw grondstation gaat rechtstreeks via UDP en heeft veel lagere latentie.
+
+Als het grondstation zelf achterloopt:
+
+- Controleer in QGroundControl of de lage-latentiemodus aan staat in de video-instellingen.
+- Gebruik in GStreamer-pipelines `sync=false` op de videosink, zoals in het [testcommando](./no-video-in-gcs.mdx#check-5).
+- Controleer bij VPN of ZeroTier of Tailscale de drone rechtstreeks bereikt en niet via een relay. Tailscale toont de gebruikte relay onder **Relay** op de pagina **Virtueel Privénetwerk**.
+
+## Controle 5: Controleer het mobiele signaal {/* #check-5 */}
+
+Ga naar **Modem** en bekijk **Signaalkwaliteit** en **Technologie** onder **Modeminformatie**. Een zwak signaal, of een terugval van LTE naar 3G, verbreekt de uplink. Plaats het modem uit de buurt van de vluchtcontroller, ESC's en voedingskabels, of gebruik een modem met externe antennes.
+
+## Nog steeds haperend? {/* #still-choppy */}
+
+[Download de logboeken](./collect-logs.mdx) (**Camera Server**, laatste 30 minuten) en stuur ze naar **support@uavmatrix.com** met uw cameramodel, resolutie, FPS, bitsnelheid en het type verbinding waarmee u vliegt.
+
+Gerelateerd: [Camera-instellingen](../uavcast-pro/camera/index.mdx) · [Mobiel modem](../uavcast-pro/connectivity/cellular-modem.mdx)

@@ -1,0 +1,44 @@
+---
+title: "無人機的動態 DNS：No-IP、DynDNS 與 DuckDNS"
+description: "使用 UAVcast-Pro 動態 DNS（No-IP、DynDNS、DuckDNS 或自訂的通用網址），讓主機名稱持續指向無人機變動中的公用 IP，並說明何時改用 VPN 較為合適。"
+sidebar_position: 3
+sidebar_label: "動態DNS"
+---
+
+# 動態 DNS {/* #dynamic-dns */}
+
+動態 DNS 會讓主機名稱（例如 `mydrone.ddns.net`）持續指向無人機目前的公用 IP 位址。UAVcast-Pro 每 5 分鐘檢查一次公用 IP，並在變更時更新您的 DNS 服務供應商。請在側邊欄中開啟 **動態DNS**。
+
+:::note 多數行動網路連線需要改用 VPN
+動態 DNS 只有在無人機的公用 IP 能接收傳入連線時才有用。多數行動電信業者會將 SIM 卡置於電信級 NAT（CGNAT）之後，因此公用 IP 屬於電信業者，而非您的無人機。除非您的 SIM 卡具有公用 IP 位址（通常稱為「固定」或「M2M」），否則請使用 [VPN](./vpn.mdx)。
+:::
+
+動態 DNS 不會改變 UAVcast-Pro 傳送遙測與視訊的目的地：這些資料一律傳送至[地面控制站](../ground-stations/index.mdx)中設定的 IP 位址。它的用途是讓您從外部連線至無人機的網頁介面或 SSH。
+
+## 設定方式 {/* #set-it-up */}
+
+<Steps>
+
+1. 向您的 DNS 服務供應商（No-IP、DynDNS 或 DuckDNS）建立主機名稱。
+2. 在 UAVcast-Pro 中前往 **動態DNS**，並將 **啟用動態DNS？** 設為 **是**。
+3. 選擇您的 **DNS系統**。
+4. 輸入您的帳號使用者名稱（欄位標示為 **動態DNS配置**）、您的 **密碼**，並在 **別名** 中輸入主機名稱。若使用 DuckDNS，請將權杖放在使用者名稱欄位中，**密碼** 欄位則填入任意內容（表單必填，DuckDNS 會忽略）。欄位會在您離開時自動儲存。
+5. 點擊 **連接** 以啟動更新程式。它會立即傳送目前的 IP，之後每 5 分鐘檢查一次。點擊 **斷開連接** 即可停止。
+
+</Steps>
+
+<Screenshot id="uavcast-pro/dynamic-dns" alt="動態DNS管理器，啟用動態DNS設為否，使用者名稱、密碼與別名欄位為空白，DNS系統為 noip" caption="啟用前的動態DNS管理器。" />
+
+## 設定參考 {/* #settings-reference */}
+
+| 設定 | 預設值 | 可選值 | 說明 |
+|---|---|---|---|
+| **啟用動態DNS？** | **否** | **是**、**否** | |
+| **DNS系統** | **No-IP** | **No-IP**、**DynDNS**、**DuckDNS**、**通用** | |
+| **DNS網址** | 留空 | 更新網址 | 僅適用於 **通用**。服務供應商提供的 DynDNS 相容更新網址。 |
+| **動態DNS配置**（使用者名稱） | 留空 | | 您的 DNS 帳號使用者名稱；若為 DuckDNS，則填入權杖。此欄位的標示較為特別，實際上是使用者名稱。 |
+| **密碼** | 留空 | | 您的 DNS 帳號密碼。表單必填；DuckDNS 會忽略此欄位。 |
+| **別名** | 留空 | 主機名稱 | 要更新的主機名稱，例如 `mydrone.ddns.net`。 |
+| 更新間隔 | 5 分鐘 | 固定值 | |
+
+[儀表板](../dashboard.mdx)上的 **動態DNS** 列會顯示更新程式是否正在執行。**操作日誌** 會顯示每次更新以及服務供應商的回覆。

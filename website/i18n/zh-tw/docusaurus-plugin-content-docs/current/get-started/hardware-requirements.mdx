@@ -1,0 +1,100 @@
+---
+title: "UAVcast-Pro 硬體需求（Pi、飛控、攝影機、數據機）"
+description: "哪些 Raspberry Pi 或 Linux 電腦、飛行控制器、攝影機及 4G/LTE 數據機可搭配 UAVcast-Pro 使用，並說明接線、電源與儲存空間需求。"
+sidebar_position: 3
+sidebar_label: "硬體需求"
+---
+
+# 硬體需求 {/* #hardware-requirements */}
+
+UAVcast-Pro 在連接任何 MAVLink 飛行控制器（ArduPilot 或 PX4）的 64 位元 Linux 伴隨電腦上執行。若需要影像，請加裝攝影機；若需在 Wi-Fi 範圍之外飛行，請加裝 4G/LTE 數據機。最常見的配置是搭配 Pi 攝影機與 USB 數據機的 Raspberry Pi 4 或 5。
+
+## 伴隨電腦 {/* #companion-computer */}
+
+UAVcast-Pro 可安裝於任何搭載 **arm64** 或 **amd64（x86-64）** CPU、執行 Raspberry Pi OS、Debian 或 Ubuntu 的 **64 位元** Linux 開發板或電腦。不支援 32 位元系統（`armv7l`、`i686`）。
+
+| 開發板 | 狀態 | 備註 |
+|---|---|---|
+| Raspberry Pi 5 | 支援 | 沒有硬體 H.264 編碼器。影像會以軟體編碼，因此在高解析度或雙串流時，請留意攝影機頁面上的 **系統負載** 指標。 |
+| Raspberry Pi 4 | 支援，建議使用 | CPU 效能、耗電與價格兼顧。建議 2 GB 以上記憶體。 |
+| Raspberry Pi 3 / 3B+ | 支援 | 適合遙測與一路 720p 串流。安裝約需 30 分鐘。 |
+| Raspberry Pi Zero 2 W | 支援 | 體積最小、重量最輕。安裝約需 30 分鐘；影像請維持適度的規格。 |
+| Raspberry Pi Compute Module 3+/4 | 支援 | 與對應的 Pi 型號相同。 |
+| NVIDIA Jetson、Orange Pi、Banana Pi 及其他 arm64 開發板 | 支援 | 請使用廠商提供的 64 位元 Ubuntu 或 Debian 映像檔。UAVcast-Pro 會辨識這些開發板，並建議飛行控制器使用的序列埠。請使用 USB 攝影機（CSI 攝影機需要 Pi）。 |
+| x86-64 電腦（Intel NUC、迷你電腦、筆電） | 支援 | 使用 amd64 版本。USB 序列埠轉接器會顯示為 `/dev/ttyUSB*` 或 `/dev/ttyACM*`。 |
+
+在開發板上執行 `uname -m` 可檢查架構，結果應為 `aarch64` 或 `x86_64`。
+
+:::note 非 Raspberry Pi 的 arm64 開發板
+Jetson、Orange Pi、Banana Pi 及其他非 Raspberry Pi 的 arm64 開發板，需要 UAVcast-Pro 6.5.3 或更新版本。舊版安裝程式會在這些開發板上停止，並顯示 *Device is not a Raspberry Pi*。
+:::
+
+### 儲存空間 {/* #storage */}
+
+- **根磁碟至少需有 500 MB 可用空間**，否則安裝程式會停止。實務上最低建議為 8 GB 的記憶卡；若要在無人機上錄製影像，請使用 32 GB 或更大的容量。
+- 請使用效能良好的 A1/A2 等級 microSD 記憶卡，或從 SSD 開機。錄製內容也可以儲存到 USB 隨身碟或 SSD（請參閱 [錄製](../uavcast-pro/camera/recordings.mdx)）。
+
+:::note 授權綁定於儲存裝置
+UAVcast-Pro 會以 CPU 序號加上開機磁碟（SD 卡或 SSD）的序號來識別裝置。更換為新的 SD 卡會被視為新裝置。請先註銷舊裝置。請參閱[將授權移至新硬體](./license-activation.mdx#move-to-new-hardware)。
+:::
+
+### 電源 {/* #power */}
+
+Raspberry Pi 需要穩定的 **5.1 V** 電源，且該電源必須能同時供應 Pi 與其所有 USB 連接埠的負載。4G 數據機在傳輸時可能耗用超過 500 mA，USB 攝影機還會再增加負載。
+
+- 請使用專用的 5 V BEC 或穩壓器為 Pi 供電，其容量需足以負荷整體負載。飛行控制器的 TELEM 或 USB 連接埠無法為 Pi 供電。
+- 若數據機造成 Pi 電壓過低而重新開機，請改用具備外接電源的 USB 集線器，或另外的 5 V 電源供電。
+- 請在[儀表板](../uavcast-pro/dashboard.mdx)上檢查 **電源** 列。*Voltage too low - use a stronger power supply* 表示 Pi 目前電壓不足。*Slowed down (heat or power)* 表示 CPU 正在降頻，限制效能。
+
+## 飛行控制器 {/* #flight-controller */}
+
+UAVcast-Pro 可搭配**任何 MAVLink 飛行控制器**：ArduPilot（Copter、Plane、Rover、Sub）與 PX4，涵蓋 Pixhawk 與 Cube 系列、Matek、Holybro、CUAV、mRo 及其他大多數開發板。建議使用 MAVLink 2。
+
+飛行模式名稱與模式按鈕（位於飛行地圖與 Fleet Manager 中）採用 ArduPilot 為 Copter、Plane、Rover 與 Sub 所定義的模式。在 PX4 飛行控制器上，遙測、影像、傳送至地面站、地圖與 HUD 的運作方式相同；請使用您的地面站來變更 PX4 飛行模式。
+
+請以下列兩種方式之一連接：
+
+| 連接方式 | 接線 | 使用時機 |
+|---|---|---|
+| **USB** | 以 USB 線從飛行控制器的 USB 連接埠連接至伴隨電腦。 | 最簡單。無須設定鮑率。請使用短而品質良好的資料線。 |
+| **UART / Serial** | TELEM 連接埠 TX → 電腦 RX、RX → 電腦 TX、GND → GND。或使用 USB 轉序列（FTDI）線。 | 當 USB 連接埠用於其他用途，或想要更乾淨的安裝方式時。請在該連接埠啟用 MAVLink：ArduPilot 上為 `SERIALx_PROTOCOL = 2`（MAVLink2），PX4 上為 `MAV_x_CONFIG`。 |
+
+**僅適用於 Raspberry Pi：** GPIO UART 為 `/dev/serial0`（GPIO 14 TX、GPIO 15 RX）。安裝程式會將其釋放給飛行控制器使用：停用序列登入主控台，並且在 Pi 3、4 與 Zero 2 W 上，將藍牙從 UART 移開。當雙方各自有獨立電源時，切勿將飛行控制器的 5 V 腳位連接到 Pi。
+
+在其他開發板上，請使用該開發板的 UART（例如 Jetson 上的 `ttyTHS*`、Orange Pi 上的 `ttyS*`），或 USB 轉序列轉接器。
+
+| 飛行控制器 TELEM 連接埠 | Raspberry Pi GPIO 腳位 |
+|---|---|
+| TX | GPIO 15（RXD），第 10 腳 |
+| RX | GPIO 14（TXD），第 8 腳 |
+| GND | GND，例如第 6 腳 |
+
+TX 一律接 RX。TELEM 連接埠的 5 V 腳位請保持不接。
+
+UAVcast-Pro 會自動找到序列埠與鮑率。請參閱[連接飛行控制器](../uavcast-pro/flight-controller/index.mdx)。
+
+## 攝影機 {/* #cameras */}
+
+| 攝影機 | 備註 |
+|---|---|
+| Raspberry Pi 攝影機模組（v1、v2、v3、HQ、Global Shutter）及其他 libcamera CSI 攝影機 | 延遲最低。Raspberry Pi 5 與 Compute Module 可同時運作兩台 CSI 攝影機。 |
+| 羅技 C920 或 C615 等 USB（UVC）網路攝影機 | 隨插即用。會以 `/dev/video*` 被識別。 |
+| HDMI 影像來源（GoPro、攝影機雲台） | 透過 HDMI 轉 CSI 橋接器（會顯示為 CSI 攝影機），或 USB HDMI 擷取棒（會顯示為 USB 攝影機）。 |
+| IP 攝影機及其他 GStreamer 可讀取的來源 | 透過[自訂管道](../uavcast-pro/camera/custom-pipeline.mdx)。 |
+
+兩台攝影機可同時運作，可透過 RC 通道切換，或同時串流。請參閱[雙攝影機與 RC 切換](../uavcast-pro/camera/multi-camera.mdx)。音訊方面，任何 USB 麥克風或內建麥克風的網路攝影機皆可使用。請參閱[音訊](../uavcast-pro/camera/audio.mdx)。
+
+## 4G/LTE 數據機 {/* #4glte-modems */}
+
+UAVcast-Pro 支援兩種 USB 數據機：
+
+| 類型 | 運作方式 | 範例 |
+|---|---|---|
+| **HiLink** | 數據機本身是一台小型路由器。它會顯示為網路卡（通常為 `eth1` 或 `usb0`），並自動連線。無須在 UAVcast-Pro 中設定。 | Huawei E3372**h**（HiLink 韌體）、E8372，以及大多數「附網頁介面的 LTE USB 網卡」 |
+| **Traditional (PPP)** | 由 ModemManager 與 NetworkManager 管理。UAVcast-Pro 會負責連線、找到 APN，並在中斷後重新連線。 | Huawei E3372**s**（隨身碟韌體）、Quectel EC25 / EG25 / EM06，以及 USB 轉接器中的 Sierra Wireless 模組 |
+
+[ModemManager 支援裝置清單](https://www.freedesktop.org/wiki/Software/ModemManager/SupportedDevices/)中的任何數據機，應可作為傳統型（Traditional）數據機使用。請使用您所在地區具備數據方案的 SIM 卡，並確認您的電信業者是否阻擋傳入流量（VPN 可解決此問題）。請參閱[行動數據機](../uavcast-pro/connectivity/cellular-modem.mdx)。
+
+## 地面站電腦 {/* #ground-station-computer */}
+
+任何執行 Mission Planner、QGroundControl 或其他 MAVLink 地面站軟體的電腦皆可使用。預設情況下，它會透過 UDP 14550 接收遙測，並透過 UDP 5600 接收影像。若要在 Mission Planner 中顯示影像，您需要安裝 GStreamer；QGroundControl 則已內建。

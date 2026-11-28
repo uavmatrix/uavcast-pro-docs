@@ -1,0 +1,34 @@
+---
+title: "Руководства по UAVcast-Pro и Fleet Manager"
+description: "Пошаговые руководства по UAVcast-Pro: полёты по 4G, удалённый доступ через VPN, несколько наземных станций, RTK по NTRIP, две камеры и подключение парка дронов."
+sidebar_position: 1
+---
+
+# Руководства {/* #guides */}
+
+Сквозные инструкции, которые сочетают несколько функций для решения реальной задачи. В начале каждого руководства перечислено, что понадобится, а в конце есть проверка, что всё работает.
+
+## Связь {/* #connectivity */}
+
+<CardGrid>
+  <Card href="/guides/bvlos-4g/" title="Полёт за пределами прямой видимости по 4G" description="Модем, VPN Fleet Manager, телеметрия и видео в QGroundControl или Mission Planner." />
+  <Card href="/guides/remote-access-tailscale/" title="Удалённый доступ через Tailscale" description="Доступ к дрону в вашей tailnet по LTE без проброса портов." />
+  <Card href="/guides/multiple-ground-stations/" title="Передача на несколько наземных станций" description="Пилот, оператор полезной нагрузки и наблюдатели с доступом только для чтения на одном дроне." />
+</CardGrid>
+
+## Позиционирование и видео {/* #positioning-and-video */}
+
+<CardGrid>
+  <Card href="/guides/rtk-ntrip-caster/" title="RTK по 4G с NTRIP-кастером" description="Поправки RTCM3 от кастера на полётный контроллер для RTK Fixed." />
+  <Card href="/guides/dual-camera-rc-switching/" title="Две камеры: переключение по RC или двойной поток" description="Переключение камер с пульта или передача обеих камер одновременно." />
+  <Card href="/uavcast-pro/ground-stations/" title="Приём видео на наземной станции" description="Mission Planner, QGroundControl, GStreamer в Windows, Linux и macOS, Android, VLC и RTSP." />
+  <Card href="/guides/recording-flight-review/" title="Запись полётов и их разбор" description="Видео и телеметрия на дроне, воспроизведённые на одной шкале времени." />
+</CardGrid>
+
+## Парки дронов {/* #fleets */}
+
+<CardGrid>
+  <Card href="/guides/fleet-onboarding/" title="Подключение парка дронов к Fleet Manager" description="Лицензии, имена, сопряжение, VPN организации и привязки потоков для 20+ дронов." />
+</CardGrid>
+
+Что-то не работает? Начните с [Устранения неполадок](../troubleshooting/index.mdx).

@@ -1,0 +1,262 @@
+import React, {useEffect, useRef} from 'react';
+import clsx from 'clsx';
+import Link from '@docusaurus/Link';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import {useLocation} from '@docusaurus/router';
+import {translate} from '@docusaurus/Translate';
+import {useColorMode} from '@docusaurus/theme-common';
+import {useNavbarMobileSidebar} from '@docusaurus/theme-common/internal';
+import SearchBar from '@theme/SearchBar';
+import Icon from '@site/src/components/Icon';
+import {track} from '@site/src/analytics';
+import Menu from '@site/src/components/Menu';
+import {PRODUCTS, TOP_NAV} from '@site/src/data/navigation';
+import {useDocResolver} from '@site/src/hooks/useDocResolver';
+import {useLocales} from '@site/src/hooks/useLocales';
+import {useInstallLinks} from '@site/src/components/InstallCommand';
+import {useStoreLinks} from '@site/src/components/BuyLicense';
+
+export function Brand({onClick}: {onClick?: () => void}) {
+  const home = useBaseUrl('/');
+  const logo = useBaseUrl('/img/logo.webp');
+  return (
+    <Link to={home} className="uvm-brand" onClick={onClick} aria-label={translate({id: 'nav.homeAria', message: 'UAVmatrix Docs home'})}>
+      <img src={logo} alt="" width={22} height={22} decoding="async" />
+      <span>UAVmatrix</span>
+      <span className="uvm-brand__docs">{translate({id: 'nav.brandDocs', message: 'Docs'})}</span>
+    </Link>
+  );
+}
+
+function useCurrentArea(): string | undefined {
+  const {pathname} = useLocation();
+  const {siteConfig} = useDocusaurusContext();
+  const rel = pathname.slice(siteConfig.baseUrl.length);
+  return rel.split('/')[0] || undefined;
+}
+
+function ProductMenu() {
+  const {resolve} = useDocResolver();
+  const area = useCurrentArea();
+  const current = PRODUCTS.find((p) => p.key === area) ?? PRODUCTS[2];
+  const label =
+    current.key === 'all' ? translate({id: 'product.allShort', message: 'All products'}) : current.label;
+  return (
+    <Menu
+      label={translate({id: 'product.menuLabel', message: 'Products'})}
+      className="uvm-product"
+      button={
+        <>
+          <span>{label}</span>
+          <Icon name="down" className="uvm-ghost__chev" />
+        </>
+      }>
+      {(close) =>
+        PRODUCTS.map((p) => {
+          const to = resolve(p.to, {areaFallback: p.key === 'all' ? undefined : p.key});
+          if (!to) return null;
+          return (
+            <Link
+              key={p.key}
+              to={to}
+              role="menuitemradio"
+              aria-checked={p.key === current.key}
+              className="uvm-mi"
+              onClick={close}>
+              <span className="uvm-glyph">
+                <Icon name={p.icon} />
+              </span>
+              <span>
+                <span className="uvm-mi__title">{p.label}</span>
+                <span className="uvm-mi__sub">{p.sub}</span>
+              </span>
+              <Icon name="check" className="uvm-mi__tick" />
+            </Link>
+          );
+        })
+      }
+    </Menu>
+  );
+}
+
+/** Short code for the language button: EN, ES … and 简 / 繁 for the two Chinese locales. */
+function localeCode(locale: string): string {
+  if (locale === 'zh-Hans') return '简';
+  if (locale === 'zh-Hant') return '繁';
+  return locale.toUpperCase();
+}
+
+/**
+ * Keeps the top bar on one row in every language: when the items don't fit,
+ * first drop the "Docs" label and narrow the search box, then hide the text
+ * links, then the "Buy" label, then the "Install" label, then the product switcher. Measured on the real DOM (no fixed breakpoints), on resize,
+ * after web fonts load and when the route changes the product label.
+ */
+const COLLAPSE_LEVELS = 5;
+function useBarCollapse(ref: React.RefObject<HTMLDivElement | null>, deps: unknown[]) {
+  useEffect(() => {
+    const bar = ref.current;
+    if (!bar) return undefined;
+    const fit = () => {
+      for (let level = 0; level <= COLLAPSE_LEVELS; level += 1) {
+        for (let i = 1; i <= COLLAPSE_LEVELS; i += 1) bar.classList.toggle(`is-c${i}`, i <= level);
+        // Reading scrollWidth forces layout with the classes just set.
+        if (bar.scrollWidth <= bar.clientWidth + 1) break;
+      }
+      bar.classList.add('is-fitted');
+    };
+    fit();
+    const ro = new ResizeObserver(() => fit());
+    ro.observe(bar);
+    document.fonts?.ready.then(fit).catch(() => undefined);
+    return () => ro.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+}
+
+export function LocaleMenu({compact}: {compact?: boolean}) {
+  const locales = useLocales();
+  const current = locales.find((l) => l.current)!;
+  return (
+    <Menu
+      align="right"
+      className="uvm-lang"
+      ariaLabel={translate({id: 'nav.language', message: 'Language'})}
+      label={translate({id: 'nav.languageLabel', message: 'Language · same as the UAVcast-Pro app'})}
+      button={
+        <>
+          <Icon name="globe" />
+          {!compact && <span className="uvm-mono uvm-lang__code">{localeCode(current.locale)}</span>}
+        </>
+      }>
+      {(close) => (
+        <>
+          <div className="uvm-lang__grid">
+            {locales.map((l) =>
+              l.published ? (
+                <Link
+                  key={l.locale}
+                  to={l.href}
+                  lang={l.htmlLang}
+                  hrefLang={l.htmlLang}
+                  role="menuitemradio"
+                  aria-checked={l.current}
+                  className="uvm-mi"
+                  onClick={() => {
+                    if (!l.current) track('docs_locale_switch', {from: current.locale, to: l.locale}, {beacon: true});
+                    close();
+                  }}
+                  autoAddBaseUrl={false}>
+                  <span className="uvm-lang__name">{l.label}</span>
+                  <span className="uvm-lang__prefix">{l.prefix}</span>
+                </Link>
+              ) : (
+                <span key={l.locale} className="uvm-mi uvm-mi--disabled" role="menuitemradio" aria-checked={false} aria-disabled="true" lang={l.htmlLang} tabIndex={-1}>
+                  <span className="uvm-lang__name">{l.label}</span>
+                  <span className="uvm-lang__soon">{translate({id: 'nav.languageSoon', message: 'Soon'})}</span>
+                </span>
+              ),
+            )}
+          </div>
+          <div className="uvm-menu__foot">
+            {translate({
+              id: 'nav.languageFoot',
+              message: 'Translations are on the way. The product UI is already available in all of these languages.',
+            })}
+          </div>
+        </>
+      )}
+    </Menu>
+  );
+}
+
+export function ThemeToggle() {
+  const {colorMode, setColorMode} = useColorMode();
+  const next = colorMode === 'dark' ? 'light' : 'dark';
+  return (
+    <button
+      type="button"
+      className="uvm-iconbtn"
+      onClick={() => setColorMode(next)}
+      title={translate({id: 'nav.theme', message: 'Switch between dark and light mode'})}
+      aria-label={translate({id: 'nav.theme', message: 'Switch between dark and light mode'})}>
+      <Icon name="sun" className="uvm-theme-sun" />
+      <Icon name="moon" className="uvm-theme-moon" />
+    </button>
+  );
+}
+
+export function useTopNav() {
+  const {resolve} = useDocResolver();
+  return TOP_NAV.map((l) => ({...l, href: resolve(l.to, {areaFallback: l.area})})).filter((l) => l.href);
+}
+
+export default function NavbarContent() {
+  const mobileSidebar = useNavbarMobileSidebar();
+  const nav = useTopNav();
+  const {siteConfig} = useDocusaurusContext();
+  const area = useCurrentArea();
+  const fleetUrl = siteConfig.customFields?.fleetManagerUrl as string;
+  const install = useInstallLinks();
+  const store = useStoreLinks();
+  const {pathname} = useLocation();
+  const barRef = useRef<HTMLDivElement>(null);
+  useBarCollapse(barRef, [pathname]);
+
+  return (
+    <div className="navbar__inner uvm-bar" ref={barRef}>
+      <button
+        type="button"
+        className="uvm-iconbtn uvm-only-mobile"
+        aria-label={translate({id: 'nav.openMenu', message: 'Open navigation'})}
+        aria-expanded={mobileSidebar.shown}
+        onClick={mobileSidebar.toggle}>
+        <Icon name="menu" />
+      </button>
+      <Brand />
+      <span className="uvm-slash" aria-hidden="true">
+        /
+      </span>
+      <ProductMenu />
+      <nav className="uvm-navlinks" aria-label={translate({id: 'nav.primary', message: 'Primary'})}>
+        {nav.map((l) => (
+          <Link
+            key={l.id}
+            to={l.href!}
+            className={clsx(l.area && area === l.area && 'is-active')}
+            aria-current={l.area && area === l.area ? 'true' : undefined}>
+            {l.label}
+          </Link>
+        ))}
+      </nav>
+      <div className="uvm-spacer" />
+      <Link
+        to={install.command}
+        className="uvm-navinstall uvm-hide-md"
+        title={translate({id: 'nav.installTitle', message: 'Install UAVcast-Pro: the one-line install command'})}
+        aria-label={translate({id: 'nav.installTitle', message: 'Install UAVcast-Pro: the one-line install command'})}>
+        <Icon name="term" size={14} />
+        <span className="uvm-navinstall__label">{translate({id: 'nav.install', message: 'Install'})}</span>
+      </Link>
+      <SearchBar />
+      <LocaleMenu />
+      <ThemeToggle />
+      <span className="uvm-vsep uvm-hide-md" />
+      <a
+        className="uvm-btn uvm-btn--primary uvm-navbuy uvm-hide-md"
+        href={store.buy}
+        target="_blank"
+        rel="noopener"
+        title={translate({id: 'nav.buyTitle', message: 'Buy UAVcast-Pro in the UAVmatrix store'})}
+        aria-label={translate({id: 'nav.buyTitle', message: 'Buy UAVcast-Pro in the UAVmatrix store'})}>
+        <Icon name="key" size={13} />
+        <span className="uvm-navbuy__label">{translate({id: 'nav.buy', message: 'Buy'})}</span>
+      </a>
+      <a className="uvm-btn uvm-btn--outline uvm-hide-md" href={fleetUrl} target="_blank" rel="noopener">
+        {translate({id: 'nav.openFleet', message: 'Open Fleet Manager'})}
+        <Icon name="ext" size={13} className="uvm-faint" />
+      </a>
+    </div>
+  );
+}

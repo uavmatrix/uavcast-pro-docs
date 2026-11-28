@@ -1,0 +1,153 @@
+---
+title: "Нет видео в QGroundControl или Mission Planner"
+sidebar_label: Нет видео в наземной станции
+description: "Телеметрия работает, но видео в QGroundControl или Mission Planner остаётся чёрным? Проверьте камеру, «Включить видео», IP-адрес пункта назначения, UDP 5600 и наземную станцию."
+sidebar_position: 2
+---
+
+# Нет видео в QGroundControl или Mission Planner {/* #no-video-in-qgroundcontrol-or-mission-planner */}
+
+Телеметрия приходит, и дрон отображается на карте, но область видео остаётся чёрной, или в окне видео QGroundControl выводится **WAITING FOR VIDEO**. Проверяйте по порядку. Чаще всего помогают проверки 2 или 3.
+
+<Screenshot id="gcs/qgroundcontrol--fly-view" url="QGroundControl" alt="Вид Fly в QGroundControl, подключённый к аппарату ArduPilot: панель инструментов с Not Ready и Stabilize, миссия из пяти маршрутных точек на карте с No GPS Lock for Vehicle и окно видео в левом нижнем углу с надписью WAITING FOR VIDEO" caption="Симптом в QGroundControl: телеметрия приходит (Not Ready и Stabilize на панели инструментов; No GPS Lock, потому что в этом стенде нет GPS), но окно видео в левом нижнем углу показывает WAITING FOR VIDEO." />
+
+<SymptomTable rows={[
+  {symptom: 'Видео чёрное в наземной станции и в предпросмотре UAVcast-Pro', cause: 'Камера не запущена на дроне', start: '#check-1'},
+  {symptom: 'Предпросмотр работает, а наземная станция остаётся чёрной', cause: 'Для этой наземной станции выключено Включить видео или неверный IP', start: '#check-2'},
+  {symptom: 'Дома по Wi-Fi работало, по 4G — чёрный экран', cause: 'В пункте назначения указан локальный IP вместо IP VPN', start: '#check-2'},
+  {symptom: 'Всё выглядит правильно, но на Windows экран всё равно чёрный', cause: 'Брандмауэр блокирует входящий UDP на порту 5600', start: '#check-3'},
+  {symptom: 'QGroundControl показывает видео, а Mission Planner — нет', cause: 'В Mission Planner не задан источник GStreamer', start: '#check-4'},
+]} />
+
+## Проверка 1: убедитесь, что камера ведёт трансляцию на дроне {/* #check-1 */}
+
+Если дрон не выдаёт видео, никакие настройки наземной станции не помогут.
+
+<Steps>
+
+1. Откройте веб-интерфейс UAVcast-Pro и перейдите в **Камера → Настройки камеры**.
+2. Проверьте, что **Включить камеру?** установлено в **Да** и что камера выбрана в **Select Camera**.
+3. Проверьте, что камера работает: строка **Video** на панели управления должна показывать **Running**. Если камера остановлена, нажмите **Запустить** на странице «Камера» (пока камера работает, кнопка показывает **Перезапустить**).
+4. Включите **Включить Предпросмотр в Реальном Времени?** и посмотрите на **Предварительный просмотр**. Если вы видите картинку, камера работает, и можно переходить к проверке 2.
+5. Если **Select Camera** показывает **No cameras available**, перейдите к разделу [Камера не обнаружена](./camera-not-detected.mdx).
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera" alt="Страница «Настройки камеры» в UAVcast-Pro с включённой КАМ 1 и панелью предпросмотра, где написано No Video Available" caption="Камера → Настройки камеры с включённой КАМ 1. Предварительный просмотр показывает No Video Available, пока не отмечена опция Включить Предпросмотр в Реальном Времени?." />
+
+:::note Предпросмотр — это не поток для наземной станции
+Предпросмотр в браузере идёт через встроенный медиасервер (WebRTC на порту 8889). Наземная станция получает отдельный поток H.264 по UDP. Работающий предпросмотр доказывает, что камера работает, но не то, что поток UDP доходит до вашего ноутбука.
+:::
+
+Если **Журнал действий** на странице «Камера» сообщает, что камера *does not support* разрешение, выберите другое значение в **Resolution**. UAVcast-Pro переходит на наибольший поддерживаемый размер и записывает в журнал, какой размер был использован.
+
+## Проверка 2: проверьте пункт назначения наземной станции {/* #check-2 */}
+
+UAVcast-Pro отправляет видео только в те пункты назначения, где видео включено. Телеметрия и видео имеют отдельные переключатели, и **оба выключены у нового пункта назначения**.
+
+<Steps>
+
+1. Перейдите в **Наземные станции** и найдите карточку компьютера, на котором работает ваша наземная станция.
+2. Убедитесь, что **Включить конечную точку** и **Включить видео** включены.
+3. Проверьте **IP-адрес или хост назначения**. Это должен быть IPv4-адрес компьютера с наземной станцией, каким его видит дрон. Имена хостов не принимаются.
+4. Проверьте, что **Порт видео** равен `5600` или порту, который слушает ваша наземная станция.
+5. Поля сохраняются при выходе из них или нажатии Enter. Зелёная галочка подтверждает сохранение.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/ground-control--video-enabled" alt="Порт видео 5600 и переключатель «Включить видео» включён" caption="Наземные станции: пункт назначения с включённой опцией «Включить видео» и портом видео 5600." />
+
+:::warning Летите через 4G? Используйте IP VPN
+Через сотовое соединение дрон не может достучаться до локального адреса вашего ноутбука (например, `192.168.1.20`). Используйте адрес, который ноутбук получает в VPN (Fleet Manager VPN, Tailscale или ZeroTier). В Windows выполните `ipconfig` и найдите адаптер Tailscale или ZeroTier.
+:::
+
+Используете Fleet Manager? Пункты назначения создаются автоматически, когда вы добавляете привязку потока, и каждый дополнительный дрон на той же наземной станции получает собственные порты. Проверьте порт видео, указанный в привязке, а не 5600. См. [Привязки потоков](../fleet-manager/network/stream-bindings.mdx).
+
+## Проверка 3: разрешите UDP 5600 через брандмауэр {/* #check-3 */}
+
+Видео приходит как входящий трафик UDP. В Windows он заблокирован по умолчанию, даже когда телеметрия проходит, потому что наземная станция запросила исключение.
+
+<Tabs>
+<TabItem value="windows" label="Windows" default>
+
+Откройте **PowerShell от имени администратора** и выполните:
+
+```powershell title="PowerShell (Administrator)"
+New-NetFirewallRule -DisplayName "UAV Video" -Direction Inbound -Protocol UDP -LocalPort 5600 -Action Allow
+New-NetFirewallRule -DisplayName "MAVLink Telemetry" -Direction Inbound -Protocol UDP -LocalPort 14550 -Action Allow
+```
+
+Адаптеры ZeroTier и Tailscale часто относятся к сети *Public*. Правило, созданное таким образом, применяется ко всем профилям.
+
+</TabItem>
+<TabItem value="linux" label="Linux">
+
+```bash title="UFW"
+sudo ufw allow 5600/udp comment 'UAV Video'
+sudo ufw allow 14550/udp comment 'MAVLink Telemetry'
+```
+
+</TabItem>
+<TabItem value="macos" label="macOS">
+
+Брандмауэр macOS разрешает входящий UDP для приложений, которые вы подтвердили. Если при первом запуске QGroundControl вы нажали *Deny*, разрешите его снова в **Системные настройки → Сеть → Брандмауэр → Параметры**.
+
+</TabItem>
+</Tabs>
+
+## Проверка 4: настройте видео в наземной станции {/* #check-4 */}
+
+<Tabs>
+<TabItem value="qgc" label="QGroundControl" default>
+
+<Steps>
+
+1. Нажмите значок **Q**, затем **Application Settings**.
+2. Откройте настройки видео (**Video** или **General → Video** в старых версиях).
+3. Установите **Source** в **UDP h.264 Video Stream** и проверьте, что UDP-адрес использует порт `5600` (**UDP URL** `0.0.0.0:5600` в текущих версиях, **UDP Port** `5600` в старых).
+4. Вернитесь к виду Fly. Окно видео должно показать изображение в течение нескольких секунд.
+
+</Steps>
+
+</TabItem>
+<TabItem value="mp" label="Mission Planner">
+
+Mission Planner выводит видео в HUD. Если оно остаётся чёрным, задайте источник вручную:
+
+<Steps>
+
+1. Щёлкните правой кнопкой мыши по HUD и выберите **Video → Set GStreamer Source**.
+2. Вставьте этот конвейер и подтвердите:
+
+</Steps>
+
+```text title="Mission Planner GStreamer source"
+udpsrc port=5600 caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! video/x-raw,format=BGRA ! appsink name=outsink
+```
+
+</TabItem>
+</Tabs>
+
+## Проверка 5: проверьте поток без наземной станции {/* #check-5 */}
+
+Это исключает из проверки программное обеспечение наземной станции. Если открывается окно с видео, значит дрон, сеть и брандмауэр исправны, а проблема в настройках наземной станции.
+
+```bash title="Windows, Linux and macOS"
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+:::warning Windows: выберите полную установку
+При установке GStreamer (среда выполнения MSVC 64-bit) выберите **Complete**. Вариант Typical пропускает декодер H.264, и команда завершается с ошибкой `no element "avdec_h264"`.
+:::
+
+Закройте тест перед тем, как снова открыть наземную станцию: на порту 5600 одновременно может слушать только одна программа. Пошаговая настройка приёмника: [Mission Planner](../uavcast-pro/ground-stations/mission-planner.mdx), [QGroundControl](../uavcast-pro/ground-stations/qgroundcontrol.mdx), а также GStreamer для [Windows](../uavcast-pro/ground-stations/gstreamer-windows.mdx), [Linux](../uavcast-pro/ground-stations/gstreamer-linux.mdx) или [macOS](../uavcast-pro/ground-stations/gstreamer-macos.mdx).
+
+:::tip Видео есть, но по 4G оно прерывается?
+См. [Прерывистое или задержанное видео](./choppy-or-delayed-video.mdx).
+:::
+
+## Всё ещё нет видео? {/* #still-no-video */}
+
+[Скачайте журналы](./collect-logs.mdx) с выбранным **Сервер камеры** в списке журналов и отправьте их на **support@uavmatrix.com** вместе с версией UAVcast-Pro, моделью камеры и используемой наземной станцией.
+
+Связанное: [Настройки камеры](../uavcast-pro/camera/index.mdx) · [Наземные станции](../uavcast-pro/ground-stations/index.mdx)

@@ -1,0 +1,194 @@
+---
+title: "UAVcast-Pro installeren op Raspberry Pi, Debian of Ubuntu"
+description: "Installeer UAVcast-Pro met één commando op een 64-bit Raspberry Pi OS-, Debian- of Ubuntu-systeem (arm64 of amd64), open daarna de webinterface en maak een beheerdersgebruiker aan."
+sidebar_position: 4
+sidebar_label: "Installatie"
+keywords: [installeren, hoe installeren, installatielink, installatiecommando, installer, installatie in één regel, curl-installatie, installatiescript, UAVcast-Pro downloaden]
+---
+
+# UAVcast-Pro installeren {/* #install-uavcast-pro */}
+
+<InstallCommand />
+
+<BuyLicense />
+
+UAVcast-Pro installeert met één commando op elk 64-bit, op Debian gebaseerd Linux-systeem: Raspberry Pi OS, Debian of Ubuntu, op arm64 of amd64. De installer downloadt de nieuwste release, installeert de afhankelijkheden en services, en toont het adres van de webinterface als hij klaar is. Het duurt ongeveer 10 minuten, of ongeveer 30 minuten op een Raspberry Pi Zero 2 W, 2 of 3.
+
+## Voordat u begint {/* #before-you-begin */}
+
+- Een 64-bit-besturingssysteem op de companion computer. Controleer dit met `uname -m`: het moet `aarch64` of `x86_64` tonen.
+- Minstens 500 MB vrij op de rootschijf (`df -h /`).
+- Internettoegang op het apparaat tijdens de installatie.
+- SSH of een toetsenbord en scherm op het apparaat, en een gebruiker met `sudo`-rechten.
+
+## Stap 1: Het besturingssysteem flashen {/* #step-1-flash-the-operating-system */}
+
+<Tabs groupId="os">
+<TabItem value="rpi" label="Raspberry Pi" default>
+
+<Steps>
+
+1. Open [Raspberry Pi Imager](https://www.raspberrypi.com/software/) en kies uw Pi-model.
+2. Kies **Raspberry Pi OS (64-bit)**. De **Lite**-versie is voldoende en laat meer cpu over voor video.
+3. Open de instellingen voor het besturingssysteem. Stel een hostnaam, een gebruikersnaam en wachtwoord, uw wifi-netwerk en land in, en schakel SSH in.
+4. Schrijf de kaart, plaats hem in de Pi en zet de Pi aan.
+
+</Steps>
+
+Ubuntu Server 64-bit voor Raspberry Pi werkt ook.
+
+</TabItem>
+<TabItem value="other" label="Andere arm64-boards">
+
+Flash het 64-bit Ubuntu- of Debian-image van de leverancier (bijvoorbeeld JetPack's Ubuntu op NVIDIA Jetson), voltooi de installatie bij de eerste keer opstarten en schakel SSH in.
+
+Arm64-boards die geen Raspberry Pi zijn, hebben UAVcast-Pro 6.5.3 of later nodig; oudere installers stoppen met *Device is not a Raspberry Pi*.
+
+</TabItem>
+<TabItem value="amd64" label="x86-64-pc">
+
+Installeer een 64-bit Debian of Ubuntu (Server of Desktop). De installer controleert de releaseversie niet, dus gebruik een actuele, ondersteunde release, bijvoorbeeld Ubuntu 22.04 LTS of nieuwer.
+
+</TabItem>
+</Tabs>
+
+Meld u daarna via SSH aan en werk het systeem bij:
+
+```bash
+sudo apt update && sudo apt full-upgrade -y
+```
+
+## Stap 2: De installer uitvoeren {/* #step-2-run-the-installer */}
+
+Op de drone:
+
+<InstallCommand variant="step" />
+
+De installer:
+
+1. Detecteert de architectuur en downloadt de bijpassende release naar `/opt/uavcast-pro`.
+2. Installeert de systeempakketten die hij nodig heeft: NetworkManager, ModemManager, GStreamer, v4l-utils, Redis, Python en meer.
+3. Maakt op een Raspberry Pi de GPIO-UART vrij voor de vluchtcontroller (verwijdert de seriële console uit `cmdline.txt` en verplaatst Bluetooth weg van de UART) en verhoogt het geheugen voor camera's bij opstellingen met twee camera's. Uw oorspronkelijke `config.txt` en `cmdline.txt` worden eerst geback-upt.
+4. Installeert ZeroTier, Tailscale, mavlink-router en MediaMTX.
+5. Installeert en start de UAVcast-Pro-services.
+6. Controleert of de belangrijkste tools aanwezig zijn en toont het webadres.
+
+Wanneer de installatie klaar is, ziet u:
+
+```text
+✅ Installation completed successfully!
+
+Please reboot your device to complete the installation.
+
+To access the UAVcast-Pro web interface, open your browser and navigate to:
+http://192.168.1.50
+```
+
+Start het apparaat opnieuw op, zodat de UART- en cameraveranderingen van kracht worden:
+
+```bash
+sudo reboot
+```
+
+:::tip Laat langzame boards hun werk afmaken
+Op een Pi Zero 2 W kan de voortgangsbalk minutenlang stilstaan terwijl apt werkt. Start geen tweede installatie: de installer weigert twee keer te draaien, en een tweede kopie vertraagt alleen de eerste. Het volledige logboek staat in `/opt/uavcast-pro/installer.log`.
+:::
+
+### Een specifieke versie installeren {/* #install-a-specific-version */}
+
+Lijst de versies die beschikbaar zijn voor uw architectuur:
+
+```bash
+curl -fsSL https://install.uavmatrix.com | bash -s -- -l
+```
+
+Installeer er een met `-b`:
+
+```bash
+curl -fsSL https://install.uavmatrix.com | sudo bash -s -- -b 6.5.2
+```
+
+U kunt later ook van versie wisselen via de webinterface. Zie [UAVcast-Pro bijwerken](./updating.mdx).
+
+## Stap 3: De webinterface openen {/* #step-3-open-the-web-interface */}
+
+Open op een computer in hetzelfde netwerk een browser en ga naar het adres dat de installer heeft getoond, bijvoorbeeld `http://192.168.1.50`. De webinterface draait op poort **80**.
+
+Als u het adres niet kent:
+
+- Probeer de hostnaam die u in Raspberry Pi Imager heeft ingesteld, bijvoorbeeld `http://raspberrypi.local`. Dit vereist mDNS, dat op de meeste thuisnetwerken werkt en op macOS, Linux en Windows 10 of nieuwer.
+- Zoek het apparaat in de lijst met verbonden clients van uw router.
+- Voer op het apparaat `hostname -I` uit.
+
+De eerste pagina die u ziet is **Applicatie**, omdat UAVcast-Pro nog geen licentie heeft. De zijbalk blijft grijs (*Functie vereist licentie*) totdat het apparaat is gelicentieerd.
+
+## Stap 4: Activeer uw licentie {/* #step-4-activate-your-license */}
+
+Ga naar **Applicatie → Licentie Beheer**, plak uw sleutel in **Voer Licentiesleutel in** en selecteer **Valideren**. Het apparaat heeft hiervoor internettoegang nodig. De volledige procedure, de apparaatplekken en het verplaatsen van een licentie staan in [Licentie & activering](./license-activation.mdx).
+
+## Stap 5: Maak een beheerdersgebruiker aan {/* #step-5-create-an-admin-user */}
+
+Een verse installatie heeft **geen gebruikers en geen login**: iedereen die de webinterface kan bereiken, heeft volledige beheerderstoegang. Maak een beheerdersaccount aan voordat de drone op een gedeeld netwerk of op internet komt.
+
+<Steps>
+
+1. Ga in de zijbalk naar **Users** (onder **Beheer**).
+2. Selecteer **Add User**.
+3. Voer een **Username** in (minstens 3 tekens) en een **Password** (minstens 6 tekens). De eerste gebruiker is altijd **Admin**.
+4. Selecteer **Create User**.
+
+</Steps>
+
+Vanaf nu vraagt de webinterface om een login. Sessies duren 7 dagen. Zie [Gebruikers & toegang](../uavcast-pro/users.mdx) voor alleen-lezen accounts.
+
+## Wat er wordt geïnstalleerd {/* #what-gets-installed */}
+
+| Onderdeel | Locatie |
+|---|---|
+| Applicatie, binaries, database (`uavcast.db`), logboeken | `/opt/uavcast-pro` |
+| Installatielogboek | `/opt/uavcast-pro/installer.log` |
+| systemd-services | `uavcast-web`, `uavcast-factory`, `mavlink-manager`, `uavcast-camera`, `uavcast-ntrip`, `uavcast-dns`, `mediamtx`, `internet-check` |
+| MAVLink-routerconfiguratie | `/etc/mavlink-router/main.conf` (gegenereerd door UAVcast-Pro, niet bewerken) |
+
+Controleer of de webservice draait:
+
+```bash
+sudo systemctl status uavcast-web
+```
+
+## Verwijderen {/* #uninstall */}
+
+De installerbinary heeft een verwijdermodus. Die stopt en verwijdert alle UAVcast-Pro-services, de instellingendatabase en de programmabestanden in `/opt/uavcast-pro`, en verwijdert ZeroTier, Tailscale en Redis als UAVcast-Pro ze heeft geïnstalleerd. Algemene pakketten zoals NetworkManager, ModemManager en GStreamer blijven staan.
+
+```bash
+sudo /opt/uavcast-pro/factory/ApplicationInstaller --uninstall
+```
+
+Vanaf UAVcast-Pro 6.5.3 blijven vluchtopnames in `/opt/uavcast-pro/recordings` behouden. Voeg `--delete-recordings` toe om ze ook te verwijderen, of `--purge-deps` om ook ZeroTier, Tailscale en Redis te verwijderen die vóór UAVcast-Pro waren geïnstalleerd. In eerdere versies wist het verwijderen de hele map `/opt/uavcast-pro`, inclusief opnames, dus kopieer eerst de opnames die u wilt bewaren.
+
+:::warning Schrijf het apparaat eerst uit
+Verwijderen maakt de licentieplek niet vrij. Schrijf het apparaat uit op **Applicatie → Licentie Beheer** voordat u het wist, anders kunt u de plek niet vrijmaken zonder een ander apparaat. Zie [Een apparaat uitschrijven](./license-activation.mdx#unregister-a-device).
+:::
+
+## Upgraden vanaf UAVcast-Pro 4.x of 5.x {/* #upgrading-from-uavcast-pro-4x-or-5x */}
+
+Versie 6 is een volledige herschrijving en kan geen instellingen uit 4.x of 5.x importeren. Noteer uw instellingen voor grondstation, camera en modem, flash een nieuw 64-bit besturingssysteem en installeer versie 6.
+
+Als de installer meldt *An older version of UAVcast-Pro has been detected at /opt/UAVcast-Pro*, verwijder die dan eerst. Dit verwijdert de oude instellingen:
+
+```bash
+sudo rm -rf /opt/UAVcast-Pro
+```
+
+## Als de installatie mislukt {/* #if-the-install-fails */}
+
+| Melding of symptoom | Oplossing |
+|---|---|
+| *No installation candidate for … found!* | Het besturingssysteem is 32-bit of de architectuur wordt niet ondersteund. Controleer `uname -m` en flash opnieuw met een 64-bit-image. |
+| *Not enough free space. … need 500MB* | Maak ruimte vrij of gebruik een grotere kaart. |
+| *Another process is currently using the system package manager* | Een automatische update draait. Wacht enkele minuten en voer de installer opnieuw uit. |
+| *Another installer is already running* | Laat de eerste installatie eerst afronden. |
+| *Installation completed with errors* met een rode ✗ | Voer de installer opnieuw uit. Als het probleem blijft terugkomen, stuur dan `/opt/uavcast-pro/installer.log` naar support@uavmatrix.com. |
+| De webpagina laadt niet | Controleer `sudo systemctl status uavcast-web`, probeer het IP-adres in plaats van de hostnaam en zorg dat niets anders poort 80 gebruikt. |
+
+Meer oplossingen: [Installatie mislukt](../troubleshooting/installation-fails.mdx) en [Webinterface opent niet](../troubleshooting/web-interface-wont-open.mdx).

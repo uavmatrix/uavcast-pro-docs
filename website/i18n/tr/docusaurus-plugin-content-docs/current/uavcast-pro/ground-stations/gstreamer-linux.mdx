@@ -1,0 +1,93 @@
+---
+title: "GStreamer ile Linux'ta (Ubuntu, Debian) drone videosunu alın"
+description: "GStreamer'ı Ubuntu, Debian veya Fedora'ya kurun; UAVcast-Pro H.264 drone videosunu ve Opus sesini gst-launch-1.0 ile oynatın. İkinci kamera, düşük gecikme ve ufw dahil."
+sidebar_position: 5
+sidebar_label: "Linux'ta GStreamer"
+---
+
+# Linux'ta GStreamer {/* #gstreamer-on-linux */}
+
+GStreamer, UAVcast-Pro video akışını tek bir komutla bir pencerede oynatır. Video yolunu test etmek, ikinci kamerayı izlemek veya sesi duymak için kullanın. Yer kontrol istasyonu olarak kullanılan bir Raspberry Pi dahil, her masaüstü Linux'ta çalışır.
+
+## Başlamadan önce {/* #before-you-begin */}
+
+Dronda, [Yer Kontrol İstasyonları](./index.mdx) bölümünde bu bilgisayarın IP adresiyle (`ip -4 addr`; 4G üzerinden VPN adresini kullanın) bir hedef ekleyin ve **Videoyu Etkinleştir** seçeneğini açın.
+
+## GStreamer'ı kurun {/* #install-gstreamer */}
+
+<Tabs groupId="linux-distro">
+<TabItem value="debian" label="Ubuntu / Debian / Raspberry Pi OS" default>
+
+```bash
+sudo apt update
+sudo apt install gstreamer1.0-tools gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav
+```
+
+`gstreamer1.0-libav` H.264 çözücüyü (`avdec_h264`) sağlar. Bu paket olmadan aşağıdaki komut başarısız olur.
+
+</TabItem>
+<TabItem value="fedora" label="Fedora">
+
+```bash
+sudo dnf install gstreamer1 gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugin-libav
+```
+
+Fedora'nın kendi depoları, patent nedenleriyle H.264 desteğinin çoğunu dışarıda bırakır; bu nedenle bu kurulumdan sonra da `avdec_h264` eksik olabilir. Aşağıdaki kontrol başarısız olursa [RPM Fusion](https://rpmfusion.org/) deposunu etkinleştirin ve tam codec kütüphanelerini almak için multimedya kılavuzunu izleyin.
+
+</TabItem>
+</Tabs>
+
+H.264 çözücünün mevcut olduğunu kontrol edin:
+
+```bash
+gst-inspect-1.0 avdec_h264
+```
+
+Elemanın ayrıntılarını yazdırır. *No such element or plugin* çıktısı çözücünün eksik olduğu anlamına gelir.
+
+## Videoyu oynatın {/* #play-the-video */}
+
+```bash title="Kamera 1, port 5600"
+gst-launch-1.0 -v udpsrc port=5600 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=(int)96" ! rtpjitterbuffer ! rtph264depay ! avdec_h264 ! videoconvert ! autovideosink sync=false
+```
+
+İlk anahtar kare geldiğinde bir pencere açılır. Durdurmak için **Ctrl+C**'ye basın.
+
+:::tip Ne görmelisiniz
+
+1. Terminal `Setting pipeline to PLAYING ...` yazdırır ve video bekler.
+2. İlk paketler geldiğinde `-v`, `caps = application/x-rtp` içeren satırlar yazdırır.
+3. Kamera görüntüsüyle bir video penceresi açılır.
+
+Adım 1'den sonra duruyorsa bu bilgisayara video ulaşmıyor demektir: aşağıdaki sorun giderme tablosuna bakın.
+:::
+
+- **Kamera 2** için [çift akış](../camera/multi-camera.mdx) kapsamında komutu `port=5601` ile yeniden çalıştırın.
+- İyi bir bağlantıda **daha düşük gecikme** için `rtpjitterbuffer` yerine `rtpjitterbuffer latency=0` kullanın. 4G'de varsayılanı koruyun.
+
+## Sesi dinleyin {/* #hear-the-audio */}
+
+**Sesi yer kontrol istasyonlarına gönder** açıkken ses Video Portu + 2 üzerinden gelir:
+
+```bash title="Ses, port 5602"
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp, media=(string)audio, clock-rate=(int)48000, encoding-name=(string)OPUS, payload=(int)97" ! rtpjitterbuffer ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+## Güvenlik duvarı {/* #firewall */}
+
+Çoğu masaüstü dağıtımı gelen UDP trafiğini engellemez. `ufw` etkinse:
+
+```bash
+sudo ufw allow 5600:5602/udp
+sudo ufw allow 14550/udp
+```
+
+## Sorun giderme {/* #troubleshooting */}
+
+| Mesaj veya belirti | Çözüm |
+|---|---|
+| *no element "avdec_h264"* | `gstreamer1.0-libav` paketini kurun. |
+| *no element "rtph264depay"* | `gstreamer1.0-plugins-good` paketini kurun. |
+| Çalışıyor, ama pencere yok | Hiçbir şey gelmiyor. Dronda hedef IP'yi, **Videoyu Etkinleştir** seçeneğini ve güvenlik duvarını kontrol edin. `sudo tcpdump -ni any udp port 5600` paketlerin bilgisayara ulaşıp ulaşmadığını gösterir. |
+| Başlangıçta bağlama hatası | Başka bir program (QGroundControl, başka bir GStreamer) bu portu dinliyor. Kapatın. |
+| Pencere açılıyor, görüntü gri lekelerle bozuluyor | Paket kaybı. Drondaki bit hızını düşürün ve **Akış Kurtarma Hızı** değerini 15–30 kare olarak ayarlayın. |

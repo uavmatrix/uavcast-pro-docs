@@ -1,0 +1,74 @@
+{
+  "version.label": {
+    "message": "下一版",
+    "description": "The label for version current"
+  },
+  "sidebar.docs.category.Get started": {
+    "message": "快速入门",
+    "description": "The label for category 'Get started' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.UAVcast-Pro": {
+    "message": "UAVcast-Pro",
+    "description": "The label for category 'UAVcast-Pro' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Flight Controller": {
+    "message": "飞行控制器",
+    "description": "The label for category 'Flight Controller' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Flight Map": {
+    "message": "飞行地图",
+    "description": "The label for category 'Flight Map' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Ground stations & video": {
+    "message": "地面站与视频",
+    "description": "The label for category 'Ground stations & video' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity": {
+    "message": "连接",
+    "description": "The label for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity.link.generated-index.title": {
+    "message": "连接：调制解调器、VPN、DNS 与网络",
+    "description": "The generated-index page title for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Connectivity.link.generated-index.description": {
+    "message": "通过 4G/LTE 将 UAVcast-Pro 连接到互联网，通过 VPN 访问设备，使用动态 DNS 对外发布，并选择由哪个网络承载流量。",
+    "description": "The generated-index page description for category 'Connectivity' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Camera & video": {
+    "message": "摄像头与视频",
+    "description": "The label for category 'Camera & video' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fleet Manager": {
+    "message": "Fleet Manager",
+    "description": "The label for category 'Fleet Manager' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Team & roles": {
+    "message": "团队与角色",
+    "description": "The label for category 'Team & roles' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Fleet & UAVs": {
+    "message": "Fleet 与无人机",
+    "description": "The label for category 'Fleet & UAVs' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Live map": {
+    "message": "实时地图",
+    "description": "The label for category 'Live map' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Network & VPN": {
+    "message": "网络与 VPN",
+    "description": "The label for category 'Network & VPN' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Guides": {
+    "message": "指南",
+    "description": "The label for category 'Guides' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Troubleshooting & FAQ": {
+    "message": "故障排除与常见问题",
+    "description": "The label for category 'Troubleshooting & FAQ' in sidebar 'docs'"
+  },
+  "sidebar.docs.category.Reference": {
+    "message": "参考",
+    "description": "The label for category 'Reference' in sidebar 'docs'"
+  }
+}

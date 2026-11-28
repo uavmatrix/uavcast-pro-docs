@@ -1,0 +1,129 @@
+---
+title: "UAVcast-Pro lisansı satın alın, etkinleştirin ve taşıyın"
+description: "UAVcast-Pro lisansını nasıl satın alacağınızı, bir drone üzerinde nasıl etkinleştireceğinizi, cihaz yuvalarını nasıl kontrol edeceğinizi, lisansı nasıl yenileyeceğinizi ve eski cihazın kaydını silerek yeni bir Raspberry Pi'ye veya SD karta nasıl taşıyacağınızı öğrenin."
+sidebar_position: 5
+sidebar_label: "Lisanslama ve etkinleştirme"
+---
+
+# Lisanslama ve etkinleştirme {/* #licensing--activation */}
+
+UAVcast-Pro, her drone üzerinde etkinleştirilmiş bir lisans anahtarı gerektirir. Lisansı UAVmatrix mağazasından satın alırsınız; anahtarı drone üzerindeki **Uygulama → Lisans Yöneticisi** bölümüne yapıştırıp **Doğrula**'yı seçersiniz. Her lisansın belirli sayıda cihaz yuvası vardır. Bir drone'u etkinleştirmek bir yuva kullanır; kaydını silmek ise yuvayı başka bir drone için serbest bırakır.
+
+<BuyLicense />
+
+## Lisans satın alın {/* #buy-a-license */}
+
+Lisanslar [uavmatrix.com/products](https://uavmatrix.com/products/) adresinde satılır. Her lisans, tüm dönemi için güncellemeleri ve [Fleet Manager](../fleet-manager/index.mdx) hizmetini (4G üzerinden drone'a erişim için VPN dahil) içerir.
+
+| Plan | Cihaz yuvası | Geçerlilik süresi |
+|---|---|---|
+| Basic | 1 | 1 yıl |
+| Silver | 2 | 1 yıl |
+| Gold | 4 | 2 yıl |
+
+Mağaza sayfası her zaman güncel planları ve fiyatları gösterir. Ücretsiz deneme lisansı yoktur.
+
+Ödemeden sonra, beş grup halinde, her biri dört karakterden oluşan **lisans anahtarını** içeren bir sipariş onay e-postası alırsınız.
+
+Anahtar ayrıca mağaza hesabınızda, **Licenses** altında, cihaz yuvaları ve son kullanma tarihiyle birlikte bulunur.
+
+:::info Lisans dönemi ilk etkinleştirmede başlar
+Bugün satın alınıp gelecek ay etkinleştirilen bir lisans, satın alma tarihinden değil, etkinleştirme tarihinden bir dönem sonra sona erer.
+:::
+
+## Lisansı bir drone üzerinde etkinleştirin {/* #activate-the-license-on-a-drone */}
+
+Etkinleştirme sırasında drone'un internet erişimi olmalıdır (Wi-Fi, Ethernet veya modem).
+
+<Steps>
+
+1. UAVcast-Pro web arayüzünü açın. Lisanssız bir cihaz her zaman **Uygulama** sayfasında açılır.
+2. **Lisans Yöneticisi**'nde anahtarı **Lisans Anahtarını Girin** alanına yapıştırın.
+3. **Doğrula**'yı seçin. *License activated successfully* mesajını görürsünüz ve kenar çubuğunun geri kalanı açılır.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/application--license-activated" alt="Kayıtlı isim, izin verilen ve kalan cihazlar, son kullanma tarihi ve etkin cihazlar tablosu gösteren, etkin bir lisansa sahip UAVcast-Pro Lisans Yöneticisi" caption="Etkinleştirmeden sonra Uygulama → Lisans Yöneticisi. Geçerli cihaz, Aktif Cihazlar bölümünde Current olarak işaretlenir." />
+
+**Lisans Detayları** şunları gösterir:
+
+| Alan | Anlamı |
+|---|---|
+| **Kayıtlı İsim** | Lisansın ait olduğu mağaza hesabı. |
+| **Lisans Durumu** | **Aktif**, **Pasif** veya **Expired**. |
+| **İzin Verilen Cihazlar** | Toplam cihaz yuvası. |
+| **Kalan Cihazlar** | Boş yuvalar. |
+| **Aktivasyon Tarihi** / **Bitiş Tarihi** | Lisans döneminin ne zaman başladığı ve ne zaman sona erdiği. |
+
+**Aktif Cihazlar**, bu lisanstaki her drone'u **Cihaz Adı**, **Ana Bilgisayar Adı** ve **Aktivasyon Tarihi** ile listeler. Bulunduğunuz drone **Current** olarak işaretlenir. Tanıyabileceğiniz bir ad vermek için **Düzenle**'yi seçin.
+
+### Etkinleştirme hataları {/* #activation-errors */}
+
+| Mesaj | Ne yapmalı |
+|---|---|
+| *Maximum activations reached. Please deactivate another device first or upgrade your license.* | Tüm yuvalar kullanımda. [Bir cihazın kaydını silin](#unregister-a-device) veya yuva ekleyin. |
+| *Invalid license key* | Yazım hatalarını veya fazla boşlukları kontrol edin. Anahtarı mağaza hesabınızdan kopyalayın. |
+| *License already activated on this device* | Yapılacak bir şey yok. Bu cihazın zaten bir yuvası var (örneğin aynı SD kart üzerinde yeniden kurulumdan sonra). |
+| *Network error! Could not fetch license details…* | Cihazın internet erişimi yok. **Ağlar** bölümünü kontrol edip yeniden deneyin. |
+
+## Lisans nasıl kontrol edilir {/* #how-the-license-is-checked */}
+
+- Drone, lisansı UAVmatrix lisans sunucusuyla her **4 saatte bir** kontrol eder.
+- Sunucuya ulaşılamazsa drone son bilinen durumunu korur. Hiç internet bağlantısı olmadan da uçabilirsiniz; çevrimdışıyken hiçbir şey kilitlenmez.
+- Bir cihaz, CPU seri numarası ve önyükleme diskinin (SD kart veya SSD) seri numarasıyla tanımlanır. Aynı Pi üzerinde ve aynı kartla yeniden kurulum, aynı kimliği ve yuvayı korur. Yeni bir SD kart veya SSD **yeni bir cihaz** sayılır.
+- Drone üzerindeki lisans verisi bu kimlikle şifrelenir. Bu nedenle bir [veritabanı yedeği](../uavcast-pro/application-settings.mdx#database) başka donanıma geri yüklenirse, lisansın yeniden etkinleştirilmesi gerekir.
+
+## Bir cihazın kaydını silin {/* #unregister-a-device */}
+
+Kaydı silmek yuvayı hemen serbest bırakır. Lisanstaki **herhangi** bir cihazın kaydını, lisansın etkin olduğu **herhangi** bir drone'dan silebilirsiniz; yalnızca üzerinde bulunduğunuz drone ile sınırlı değilsiniz.
+
+<Steps>
+
+1. **Uygulama → Lisans Yöneticisi → Aktif Cihazlar** bölümüne gidin.
+2. Cihazı bulun ve **Kaydı Sil**'i seçin. *Device unregistered successfully* mesajını görürsünüz.
+
+</Steps>
+
+Üzerinde çalıştığınız drone'un kaydını silerseniz lisanssız hale gelir ve yeniden bir anahtar etkinleştirene kadar web arayüzü **Uygulama** sayfasına kilitlenir.
+
+:::note Kaydı mağazadan silemezsiniz
+Mağaza kayıtlı cihazları gösterir ancak bunları kaldıramaz. Kaydı, lisansın cihazlarından birinde UAVcast-Pro üzerinden silin. Lisanstaki tüm cihazlar kaybolur veya silinirse, lisans anahtarınızla birlikte support@uavmatrix.com adresine e-posta gönderin.
+:::
+
+## Yeni donanıma taşıma {/* #move-to-new-hardware */}
+
+Pi'nizi değiştirdiğinizde, SD kartı takas ettiğinizde veya bir test tezgahından uçağa geçtiğinizde bunu kullanın.
+
+<Steps>
+
+1. **Eski** cihazda **Uygulama → Lisans Yöneticisi** bölümüne gidin ve yanındaki **Kaydı Sil**'i seçin. Bunu kartı silmeden önce yapın.
+2. Yeni donanıma UAVcast-Pro'yu kurun. Bkz. [Kurulum](./installation.mdx).
+3. Aynı anahtarı yeni cihazda etkinleştirin.
+
+</Steps>
+
+Eski cihaz çalışmıyorsa, aynı lisanstaki başka bir drone'dan kaydını silin veya destekle iletişime geçin.
+
+## Yenileme veya yükseltme {/* #renew-or-upgrade */}
+
+Mağaza hesabınızdan lisansı açın ve **Upgrade Options**'ı seçin:
+
+- **Extend subscription** bir dönem daha ekler. Lisans hâlâ geçerliyse yeni dönem mevcut bitiş tarihine eklenir; süresi dolmuşsa yenileme tarihinde başlar. Anahtar aynı kalır.
+- **Add devices** lisansa yuva ekler. Süresi dolmuş bir lisansın önce yenilenmesi gerekir.
+- **Upgrade tier** lisansı daha fazla yuvası olan bir plana taşır.
+
+Drone yeni bitiş tarihini ve yuvaları bir sonraki kontrolünde, en geç 4 saat içinde alır. Hemen yenilemek için **Lisans Yöneticisi**'nde **Değiştir**'i seçin, aynı anahtarı girin ve **Doğrula**'yı seçin.
+
+## Lisans sona erdiğinde {/* #when-a-license-expires */}
+
+:::danger Süresi dolan lisans UAVcast-Pro'yu kilitler
+Bir lisansın süresi dolduğunda, UAVcast-Pro o lisansa bağlı drone'ların hiçbirinde artık kullanılamaz. Kurulu sürümde çalışmaya devam etmez.
+:::
+
+Lisans sunucusu lisansı süresi dolmuş olarak bildirdiğinde drone kendini lisanssız olarak işaretler: web arayüzü yalnızca **Uygulama** sayfasını açar; telemetri, video, NTRIP ve Dinamik DNS, servislerin bir sonraki yeniden başlatılmasında durur. Kesinti yaşamamak için lisansı bitiş tarihinden önce yenileyin ve kilidi açmak için anahtarı drone üzerinde yeniden doğrulayın (ya da en geç 4 saat içindeki bir sonraki kontrolü bekleyin).
+
+## Lisanslar ve Fleet Manager {/* #licenses-and-fleet-manager */}
+
+Fleet Manager, UAVcast-Pro lisansınıza dahildir ve aynı lisansı kullanır. Bir drone, yalnızca lisansı bir organizasyonun üyesine ait ise o organizasyonla eşleştirilebilir. Lisansı, Fleet Manager'da oturum açtığınızdan farklı bir e-posta ile satın aldıysanız, o e-postayı Fleet Manager'a ekleyin (bkz. [Fleet Manager'da lisanslar](../fleet-manager/licenses.mdx)). Bkz. [Drone'u Fleet Manager ile eşleştirme](../uavcast-pro/fleet-pairing.mdx).
+
+Etkinleştirme sorunları için bkz. [Lisans etkinleştirme başarısız](../troubleshooting/license-activation-failed.mdx).

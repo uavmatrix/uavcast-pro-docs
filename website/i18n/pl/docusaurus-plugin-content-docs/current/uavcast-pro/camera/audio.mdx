@@ -1,0 +1,53 @@
+---
+title: "Dodawanie dźwięku z mikrofonu USB do strumienia wideo drona"
+description: "Dodaj dźwięk z mikrofonu USB lub wbudowanego mikrofonu kamery internetowej do podglądu na żywo UAVcast-Pro i wyślij go do stacji naziemnych jako strumień RTP/Opus na porcie Port Wideo + 2."
+sidebar_position: 3
+sidebar_label: "Dźwięk"
+---
+
+# Dźwięk {/* #audio */}
+
+UAVcast-Pro może dodać dźwięk z mikrofonu USB lub wbudowanego mikrofonu kamery USB. Dźwięk jest kodowany w formacie Opus, który zużywa mało procesora i przepustowości. Zawsze jest odtwarzany w podglądzie na żywo, a dodatkowo możesz wysłać go do stacji naziemnych jako osobny strumień RTP. Znajdziesz go w karcie **Dźwięk** w sekcji **Kamera → Ustawienia kamery**.
+
+## Włączanie dźwięku {/* #turn-on-audio */}
+
+<Steps>
+
+1. Podłącz mikrofon USB lub użyj kamery internetowej z wbudowanym mikrofonem.
+2. W sekcji **Kamera → Ustawienia kamery** włącz **Dźwięk**.
+3. Pozostaw **Urządzenie audio** na **Auto (mikrofon kamery, jeśli jest)** lub wybierz urządzenie. Użyj **Ton testowy (bez mikrofonu)**, aby sprawdzić tor dźwiękowy bez mikrofonu.
+4. Obserwuj wskaźnik. **Dźwięk na żywo** z poruszającym się miernikiem poziomu oznacza, że dźwięk jest przechwytywany.
+5. W **Podglądzie na Żywo** odcisz odtwarzacz. Przeglądarki uruchamiają podgląd wyciszony.
+
+</Steps>
+
+<Screenshot id="uavcast-pro/camera--audio" alt="Karta Dźwięk na stronie Kamera z wyłączonym przełącznikiem Dźwięk i statusem Dźwięk wyłączony" caption="Kamera → Dźwięk, wyłączony. Włącz go, aby wybrać mikrofon i bitrate." />
+
+Mikrofon, który nie działa, nigdy nie przerywa wideo. Wskaźnik pokazuje wtedy **Błąd dźwięku** wraz z przyczyną.
+
+## Wysyłanie dźwięku do stacji naziemnych {/* #send-audio-to-ground-stations */}
+
+Włącz **Wysyłaj dźwięk do stacji naziemnych**. UAVcast-Pro wyśle wtedy osobny strumień RTP/Opus do każdej stacji naziemnej, która odbiera wideo, na porcie **Port Wideo + 2** danego miejsca docelowego. Przy domyślnym porcie wideo jest to `5602`. Dwa miejsca docelowe na tym samym komputerze muszą więc mieć porty wideo oddalone o co najmniej 3, na przykład `5600` i `5603`.
+
+QGroundControl i Mission Planner ignorują dźwięk. Odtwórz go za pomocą GStreamer:
+
+```bash title="Na stacji naziemnej"
+gst-launch-1.0 udpsrc port=5602 caps="application/x-rtp, media=(string)audio, clock-rate=(int)48000, encoding-name=(string)OPUS, payload=(int)97" ! rtpopusdepay ! opusdec ! audioconvert ! autoaudiosink
+```
+
+Strumień to Opus o częstotliwości 48 kHz, z typem ładunku RTP 97. VLC może go odtworzyć za pomocą pliku SDP opisującego te wartości.
+
+## Opis ustawień {/* #settings-reference */}
+
+| Ustawienie | Domyślnie | Wartości | Uwagi |
+|---|---|---|---|
+| **Dźwięk** | Wyłączony | Włączony, wyłączony | Zmiana dowolnego ustawienia dźwięku restartuje usługę kamery. |
+| **Urządzenie audio** | **Auto (mikrofon kamery, jeśli jest)** | Auto, wykryte urządzenia przechwytujące, **Ton testowy (bez mikrofonu)** | Zapisane urządzenie, które zostało odłączone, pokazuje się jako *(nie połączono)*. |
+| **Bitrate** | `64 kbps` | 24, 32, 48, 64, 96, 128 kbps | 32–64 kbps w zupełności wystarcza do mowy i szumu silnika. |
+| **Wysyłaj dźwięk do stacji naziemnych** | Wyłączony | Włączony, wyłączony | RTP/Opus na Port Wideo + 2 w każdym miejscu docelowym z włączonym wideo. |
+
+## Rozwiązywanie problemów {/* #troubleshooting */}
+
+- *Nie znaleziono urządzenia do przechwytywania dźwięku*: podłącz mikrofon USB lub kamerę z wbudowanym mikrofonem. Na dronie `arecord -l` wyświetla urządzenia przechwytujące.
+- **Brak sygnału**: urządzenie jest otwarte, ale ciche. Sprawdź przełącznik wyciszenia mikrofonu lub spróbuj **Ton testowy**.
+- Dźwięk słychać w podglądzie, ale nie na stacji naziemnej: upewnij się, że **Wysyłaj dźwięk do stacji naziemnych** jest włączone, że w miejscu docelowym włączono **Włącz Wideo** i że odbiornik nasłuchuje na porcie Port Wideo + 2.

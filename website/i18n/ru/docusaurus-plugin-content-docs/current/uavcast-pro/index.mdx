@@ -1,0 +1,60 @@
+---
+title: "Документация UAVcast-Pro: каждая страница веб-интерфейса"
+description: "Справочник по веб-интерфейсу UAVcast-Pro: панель управления, полётный контроллер, карта полёта, наземные станции, камера, модем, VPN, сопряжение с Fleet Manager, пользователи и настройки."
+sidebar_position: 1
+sidebar_label: "Обзор"
+---
+
+# UAVcast-Pro {/* #uavcast-pro */}
+
+Этот раздел описывает каждую страницу веб-интерфейса UAVcast-Pro в порядке боковой панели приложения. Каждая страница объясняет, для чего нужен экран, как его настроить, и перечисляет все настройки с их значениями по умолчанию. Впервые в UAVcast-Pro? Начните с [Быстрого старта](../get-started/quick-start.mdx).
+
+## Операции {/* #operations */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/dashboard/" title="Панель управления" description="Состояние полётного контроллера, GPS, каналов связи, видео и питания одним взглядом." />
+  <Card href="/uavcast-pro/data-streams/" title="Потоки данных" description="Пользовательские живые панели для любого значения MAVLink или датчика." />
+  <Card href="/uavcast-pro/flight-controller/" title="Полётный контроллер" description="Связь по USB или UART с автоматическим определением порта и скорости, NTRIP/RTK и инжекторы." />
+  <Card href="/uavcast-pro/flight-map/" title="Карта Полёта" description="Живая карта, кабинный HUD, взведение и разоружение, режимы, миссии, радио, инспектор и анализ журналов." />
+  <Card href="/uavcast-pro/ground-stations/" title="Наземные станции и видео" description="Пункты назначения и пошаговая настройка Mission Planner, QGroundControl, GStreamer, Android и VLC." />
+</CardGrid>
+
+## Связь {/* #connectivity */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/connectivity/cellular-modem/" title="Модем" description="Модемы HiLink и традиционные модемы 4G/LTE с автоматическим APN." />
+  <Card href="/uavcast-pro/connectivity/vpn/" title="Виртуальная частная сеть" description="VPN Fleet Manager или ваша собственная сеть Tailscale или ZeroTier." />
+  <Card href="/uavcast-pro/connectivity/dynamic-dns/" title="Динамический DNS" description="Держите имя хоста указывающим на публичный IP-адрес дрона." />
+  <Card href="/uavcast-pro/connectivity/networks/" title="Сети" description="Сетевые интерфейсы и приоритет Wi-Fi или модема." />
+</CardGrid>
+
+## Медиа {/* #media */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/camera/" title="Настройки камеры" description="Камеры CSI и USB, разрешение, битрейт, H.264 с низкой задержкой по UDP." />
+  <Card href="/uavcast-pro/camera/multi-camera/" title="Две камеры" description="Переключение по RC-каналу или два потока." />
+  <Card href="/uavcast-pro/camera/audio/" title="Звук" description="Звук с микрофона в предпросмотре и на наземных станциях." />
+  <Card href="/uavcast-pro/camera/recordings/" title="Записи" description="Запись видео и телеметрии на дроне с разбором полёта." />
+</CardGrid>
+
+## Управление {/* #management */}
+
+<CardGrid>
+  <Card href="/uavcast-pro/fleet-pairing/" title="Fleet Management" description="Сопряжение дрона с UAVmatrix Fleet Manager." />
+  <Card href="/uavcast-pro/users/" title="Пользователи" description="Вход администратора и пользователи только для чтения." />
+  <Card href="/uavcast-pro/application-settings/" title="Приложение" description="Порт, язык, журналы для поддержки, резервное копирование и восстановление базы данных." />
+</CardGrid>
+
+## Порты в одном месте {/* #ports-at-a-glance */}
+
+| Порт | Направление | Назначение |
+|---|---|---|
+| TCP 80 | Браузер → дрон | Веб-интерфейс (настраивается) и HTTP-инжекторы |
+| UDP 14550 | Дрон → наземная станция | Телеметрия MAVLink (для каждого пункта назначения, настраивается) |
+| UDP 5600 | Дрон → наземная станция | Видео, камера 1 (для каждого пункта назначения, настраивается) |
+| UDP 5601 | Дрон → наземная станция | Видео, камера 2 в режиме двух потоков (по умолчанию Порт видео + 1) |
+| UDP 5602 | Дрон → наземная станция | Звук (Порт видео + 2) |
+| TCP 8889, UDP 8189 | Браузер → дрон | Предварительный просмотр (сигнализация и медиа WebRTC) |
+| TCP 8883 | Дрон → Fleet Manager | Подключение к Fleet Manager (MQTT через TLS) |
+| TCP 2101 | Дрон → кастер NTRIP | Поправки RTK (порт кастера) |
+| UDP 14600 | Датчик → дрон | UDP-инжектор (по умолчанию, настраивается) |

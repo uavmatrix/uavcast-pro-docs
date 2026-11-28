@@ -1,0 +1,55 @@
+---
+title: Segurança, criptografia e retenção de dados do Fleet Manager
+sidebar_label: Segurança e retenção de dados
+description: Como o Fleet Manager protege os drones com certificados TLS por drone, isola organizações em VPNs WireGuard privadas, aplica funções e armazena dados.
+sidebar_position: 16
+---
+
+# Segurança e privacidade {/* #security-and-privacy */}
+
+Esta página é para as pessoas que precisam aprovar o Fleet Manager: responsáveis por segurança, gerentes de TI e de operações.
+
+## Conexão do drone {/* #drone-connection */}
+
+- **Certificados de cliente por drone.** No pareamento, o Fleet Manager emite a cada drone o seu próprio certificado de cliente TLS. O drone o usa para se conectar ao broker MQTT do Fleet Manager na porta **8883**, o único listener público do broker. Não há senha compartilhada.
+- **Cada drone só pode usar os seus próprios tópicos.** A identidade do certificado é o ID do dispositivo do drone, e o broker só permite que um drone publique e assine tópicos sob os seus próprios tópicos. Um drone comprometido não consegue ler nem comandar outro.
+- **Somente saída.** Os drones se conectam para fora, em direção ao Fleet Manager. Você não abre portas de entrada no drone nem na sua rede.
+- **Janela de pareamento curta.** Os códigos de pareamento têm 8 dígitos aleatórios, são válidos por 5 minutos e podem ser usados uma única vez. As verificações de código têm limite de taxa (10 verificações e 5 tentativas de pareamento por usuário por minuto). O certificado e a chave da VPN do drone só são entregues até que o drone se conecte pela primeira vez, e nunca mais de 15 minutos após o código expirar.
+- **Atualizações de certificado.** Quando o Fleet Manager reforça o esquema de certificados, os drones mais antigos são marcados como **Re-pair required**, em vez de serem confiados silenciosamente.
+
+## VPN privada por organização {/* #private-vpn-per-organization */}
+
+- Cada organização recebe a sua própria rede no servidor VPN do Fleet Manager (`vpn-connect.uavmatrix.com`), um servidor de controle compatível com Tailscale e hospedado pela própria UAVmatrix. O tráfego entre dispositivos é criptografado de ponta a ponta com WireGuard. Os dispositivos de uma organização não conseguem ver os dispositivos de outra: o servidor VPN aplica uma regra de acesso separada para cada organização. Se o Fleet Manager não conseguir confirmar esse isolamento, ele oculta a chave de autenticação (*VPN isolation could not be verified, so the auth key is hidden.*) em vez de entregar uma chave.
+- Ingressar na rede exige uma chave de autenticação que somente Owners e Admins podem criar. As chaves expiram após 90 dias. Os drones recebem a chave automaticamente durante o pareamento ou com **Push to Drone**, e somente com o consentimento de um Owner ou Admin.
+- Remover um dispositivo em **Network** o remove do servidor VPN.
+
+## Controle de acesso {/* #access-control */}
+
+- O login é feito pela sua conta UAVmatrix. O Fleet Manager não armazena senhas.
+- Três funções por organização (Owner, Admin, Viewer), aplicadas no servidor para cada ação. Consulte [Funções e permissões](./team/roles-and-permissions.mdx).
+- O terminal SSH e o acesso remoto ao UAVcast-Pro são limitados a Owners e Admins.
+- Os links de convite são criptografados, podem ser usados uma única vez e expiram após 7 dias.
+- A UAVmatrix pode suspender contas ou organizações que violem os termos. Usuários suspensos veem **Account Suspended** ou **Organization Suspended**, com o motivo e um contato de suporte.
+
+## Dados armazenados pelo Fleet Manager {/* #data-fleet-manager-stores */}
+
+| Dados | Retenção |
+|---|---|
+| Telemetria (posição, altitude, velocidade, rumo, bateria, modo, estado de armado, GPS, estado dos serviços), uma vez por segundo | Conforme a configuração de retenção da organização: de 7 dias a 1 ano (padrão de 1 ano). Compactada após 7 dias. Excluída quando o drone é removido. |
+| Nomes e intervalos de tempo de voos salvos | Até serem excluídos, ou até o drone ser removido |
+| Comandos enviados aos drones, com quem os enviou | Até o drone ser removido |
+| Registro de atividades (quem pareou, removeu, convidou ou alterou funções) | Mantido quando drones ou membros são removidos |
+| Missões | Até serem excluídas, ou até a organização ser excluída |
+| Tickets de suporte e suas capturas de tela | Mantidos para o suporte |
+
+O Fleet Manager não armazena vídeo. O vídeo e o MAVLink para as estações de controle terrestre trafegam pela VPN entre os seus dispositivos, e o Fleet Manager não os grava.
+
+O terminal e o proxy remoto do UAVcast-Pro passam pela conexão criptografada do Fleet Manager até o drone; o conteúdo deles não é armazenado.
+
+O tráfego da VPN vai diretamente entre os seus dispositivos quando as redes permitem. Quando não permitem (por exemplo, atrás de NAT restritivo ou de uma operadora móvel), ele recorre aos servidores de retransmissão públicos (DERP) do Tailscale. Em qualquer caso, o tráfego continua criptografado de ponta a ponta com WireGuard; a UAVmatrix não opera um servidor de retransmissão.
+
+## Terceiros {/* #third-parties */}
+
+- **Mapas:** os tiles do mapa vêm da Esri; a camada de espaço aéreo, da OpenAIP por meio do Fleet Manager.
+- **FleetBot:** as mensagens do chat são enviadas à Anthropic para gerar as respostas. Nada mais da sua organização é enviado. Consulte [Suporte e FleetBot](./support.mdx#ask-fleetbot).
+- **Análises de produto e relatórios de erros:** o Fleet Manager usa o PostHog para análises de uso, como quais páginas são abertas e quais botões são usados, e para relatar erros do aplicativo.

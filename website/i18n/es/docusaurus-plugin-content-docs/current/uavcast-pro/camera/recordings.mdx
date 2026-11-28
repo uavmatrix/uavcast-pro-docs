@@ -1,0 +1,73 @@
+---
+title: "Grabar video del dron y telemetría en la computadora de a bordo"
+description: "Graba el video de la cámara y la telemetría MAVLink en el dron con UAVcast-Pro, automáticamente al armar, en una tarjeta SD o en un SSD USB, y revisa los vuelos con video, mapa y datos."
+sidebar_position: 5
+sidebar_label: "Grabaciones y revisión de vuelo"
+---
+
+# Grabaciones y revisión de vuelo {/* #recordings-and-flight-review */}
+
+UAVcast-Pro graba cada vuelo en el propio dron: el video de la cámara y un registro de telemetría MAVLink (`.tlog`). La grabación usa el stream que ya está codificado, así que no consume CPU adicional y nunca interrumpe el video en vivo hacia tu estación de control en tierra. Como los archivos se escriben en el dron, obtienes video a calidad completa incluso cuando el enlace celular se corta. Las grabaciones comienzan automáticamente al armar, o manualmente desde el Mapa de Vuelo. Requiere la versión 6.5.1 o posterior.
+
+Abre **Cámara → Grabaciones**. Tiene dos pestañas: **Biblioteca** y **Ajustes**.
+
+<Screenshot id="uavcast-pro/camera--recordings" alt="Biblioteca de grabaciones con una barra de almacenamiento y dos vuelos grabados con duraciones, e insignias CAM 1 y Telemetría" caption="Cámara → Grabaciones → Biblioteca con dos vuelos grabados." />
+
+## Grabar automáticamente al armar {/* #record-automatically-when-armed */}
+
+Esta opción viene activada de forma predeterminada. La grabación comienza cuando los motores se arman y se detiene cuando se desarman. Si el enlace se cae en vuelo, la grabación continúa.
+
+Antes de depender de ella:
+
+- Revisa el espacio libre en **Almacenamiento de grabaciones** en el Mapa de Vuelo o en **Ajustes**.
+- La grabación no necesita **¿Activar Vista Previa en Vivo?**. Con la grabación activada, la cámara mantiene una copia del stream en el servidor de medios integrado incluso cuando la vista previa está desactivada.
+
+## Grabar manualmente {/* #record-by-hand */}
+
+La barra superior del Mapa de Vuelo tiene un grupo **Grabación**: **CAM 1** (y **CAM 2** con stream dual) para iniciar y detener el video, y **Telemetría** para iniciar y detener un registro de telemetría. Un punto rojo indica qué se está grabando. Los usuarios de solo lectura no pueden iniciar grabaciones.
+
+## Ajustes de almacenamiento {/* #storage-settings */}
+
+Abre **Cámara → Grabaciones → Ajustes**.
+
+| Ajuste | Predeterminado | Valores | Notas |
+|---|---|---|---|
+| **Ubicación de almacenamiento** | **Almacenamiento interno** | Almacenamiento interno, una unidad USB o SSD detectada, **O otra carpeta** | Conecta un disco y selecciona **Buscar discos de nuevo** para verlo. El almacenamiento interno es `/opt/uavcast-pro/recordings/video`. |
+| **Mantener libre** | `2` GB | 0.5–1000 GB | La grabación nunca llena el disco por encima de este valor. El sistema también necesita espacio. |
+| **Eliminar las grabaciones más antiguas cuando se acabe el espacio** | Activado | Activado, desactivado | Como una cámara de salpicadero: la grabación nunca se detiene por falta de espacio. Desactivado: la grabación se detiene en su lugar. |
+| **Eliminar grabaciones anteriores a** | `0` días | 0–3650 días | `0` conserva las grabaciones hasta que se necesite el espacio. |
+| **Grabar automáticamente al armar** | Activado | Activado, desactivado | |
+| **Grabar cámara 1** | Activado | Activado, desactivado | Se aplica a la grabación automática. |
+| **Grabar cámara 2** | Activado | Activado, desactivado | Solo con stream dual activado. |
+| **Duración del archivo** | `1` min | 1–30 min | El video se guarda en fragmentos de esta duración. Los fragmentos más cortos pierden menos datos tras un corte de energía. |
+| **Grabar telemetría** | **Mientras esté armado** | **Mientras esté armado**, **Siempre mientras esté conectado**, **Desactivado** | El `.tlog` que aparece junto al video. **Siempre** también registra en tierra e inicia un archivo nuevo en cada armado, desarmado y cada hora. |
+
+<Screenshot id="uavcast-pro/camera--recordings-settings" alt="Ajustes de grabación con Almacenamiento interno seleccionado, 2 GB de espacio libre, eliminar las grabaciones más antiguas activado y grabar automáticamente al armar activado" caption="Almacenamiento interno seleccionado, con grabación automática al armar." />
+
+:::tip Grabar en un SSD USB
+Un SSD USB 3 es más rápido y mucho más duradero que una tarjeta microSD para video continuo. Conéctalo, selecciona **Buscar discos de nuevo** y luego elígelo en **Ubicación de almacenamiento**.
+:::
+
+## Archivos y formatos {/* #files-and-formats */}
+
+- El video se escribe en segmentos MP4 fragmentados, que siguen siendo reproducibles si se corta la energía durante el vuelo. Las descargas son en MP4.
+- La telemetría es un `.tlog` MAVLink estándar, legible en Mission Planner, MAVExplorer, UAV Log Viewer y en [Analíticas de Vuelo](../flight-map/flight-analytics.mdx).
+- Una grabación en la biblioteca es un único clip siempre que sus archivos se sucedan sin una pausa de más de 15 segundos.
+
+## Revisar un vuelo {/* #review-a-flight */}
+
+Selecciona **Reproducir** en una grabación para abrir la **Revisión de vuelo**: el video, la trayectoria en el mapa, la vista de cabina y los datos de vuelo en una misma línea de tiempo.
+
+- La línea de tiempo marca **Armado**, **Desarmado** y los cambios de modo de vuelo.
+- **Retroceder 10 segundos**, **Reproducir**/**Pausar**, **Avanzar 10 segundos** y **Velocidad de reproducción** (de 0.5× a 4×).
+- Con dos cámaras, **Cambiar diseño de video** alterna entre **Imagen en imagen** y **Lado a lado**; **Mostrar esta cámara grande** los intercambia.
+- El panel de datos muestra **Altitud**, **Velocidad**, **Batería**, **Satélites** y **Modo** en el momento actual.
+- **Descargar** guarda el clip como MP4.
+
+<Screenshot id="uavcast-pro/camera--flight-review" alt="Reproductor de revisión de vuelo con el área de video, la trayectoria en el mapa, la vista de cabina y una línea de tiempo con controles de reproducción" caption="Revisión de vuelo: video, mapa, cabina y telemetría en una misma línea de tiempo." />
+
+Si el reproductor indica *No hay registro de telemetría para esta grabación*, la telemetría no estaba grabando en ese momento (de forma predeterminada, solo registra mientras el dron está armado).
+
+## Eliminar grabaciones {/* #delete-recordings */}
+
+Selecciona **Eliminar** en una grabación. Si tiene un registro de telemetría, eliges **Eliminar solo el video** o **Eliminar video y telemetría**. Eliminar es permanente. Una grabación que todavía está en curso debe detenerse primero.

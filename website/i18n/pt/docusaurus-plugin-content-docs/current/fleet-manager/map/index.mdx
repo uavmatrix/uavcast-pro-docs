@@ -1,0 +1,85 @@
+---
+title: Mapa ao vivo - acompanhe vários drones em tempo real
+description: Acompanhe todos os drones da sua frota em um único mapa ao vivo, com anéis de status, linhas de rumo, rastros de 5 minutos, modo de acompanhamento e camadas de espaço aéreo do OpenAIP.
+sidebar_position: 1
+---
+
+# Mapa ao vivo {/* #live-map */}
+
+O **Fleet Map** (barra lateral **Overview → Fleet Map**) mostra todos os drones da organização selecionada em um único mapa, atualizado ao vivo conforme a telemetria chega. Ele foi feito para uma sala de controle: deixe-o aberto e você vê de relance quais aeronaves estão no ar, para onde apontam e quais precisam de atenção.
+
+<Screenshot id="fleet-manager/map" alt="Mapa da frota com muitos marcadores coloridos de drones, linhas de rumo e trajetos de voo sobre uma região" caption="Fleet Map no estilo Dark sobre o Porto de Roterdã: cada drone em sua cor, com linha de rumo e rastro, e marcadores cinza offline rotulados com o tempo desde a última vez em que foram vistos." />
+
+## Lendo um marcador {/* #reading-a-marker */}
+
+Cada drone é desenhado em sua própria cor, com um ícone para o tipo de veículo: quadricóptero, hexacóptero, avião, VTOL, rover, barco ou submarino. Anéis e distintivos ao redor do marcador sinalizam problemas:
+
+| No marcador | Significado |
+|---|---|
+| Cor do drone, sem anel | Online e saudável. |
+| Marcador cinza, anel cinza tracejado e distintivo de relógio | **Offline**: nada recebido há 20 segundos. |
+| Anel laranja com distintivo **!** | **NO MAVLINK**: o UAVcast-Pro está online, mas não recebe telemetria do controlador de voo há 10 segundos. Verifique a conexão com o controlador de voo. |
+| Anel vermelho tracejado | **GPS lost**: sem satélites ou sem fixação. |
+| Anel amarelo tracejado | **GPS weak**: menos de 6 satélites ou apenas fixação 2D. |
+| Marcador **H** | A origem do drone, definida ao armar. Passe o cursor para ver a altitude (AMSL). |
+
+Armado ou desarmado não é mostrado pelo próprio marcador. Abra o pop-up ou use o [painel de controle](../fleet/remote-control.mdx) para ver **Armed**.
+
+O rótulo ao lado do marcador mostra `Name • FLIGHTMODE`, com **NO MAVLINK**, **NO GPS** ou **WEAK GPS** acrescentados quando se aplicam, ou `Name • OFFLINE • 5 mins ago` para um drone offline.
+
+### Linha de rumo e rastro {/* #heading-line-and-trail */}
+
+- A **linha de rumo** é uma linha tracejada na cor do drone apontando para onde o nariz do drone aponta. Ela fica oculta quando o drone está offline.
+- O **rastro de voo** mostra os últimos **5 minutos** da trajetória, como uma linha tracejada na cor do drone (cinza quando offline). Um novo ponto é adicionado a cada 11 m de deslocamento, aproximadamente.
+
+## Pop-up do drone {/* #drone-popup */}
+
+Selecione um marcador para abrir seu pop-up: nome, organização e status, depois **Battery**, **Altitude**, **Mode**, **Armed**, **GPS** (satélites e tipo de fixação: No Fix, 2D, 3D, DGPS ou RTK), **Signal** e, quando offline, **Last seen**. A última mensagem de status do controlador de voo também aparece, o que costuma ser a forma mais rápida de entender uma falha de pré-armamento.
+
+**Signal** é o tempo de ida e volta entre o Fleet Manager e o drone, medido a cada 10 segundos: excelente abaixo de 100 ms, bom abaixo de 300 ms, razoável abaixo de 600 ms, e ruim acima disso ou após três pings sem resposta.
+
+<Screenshot id="fleet-manager/map--popup" alt="Pop-up de drone no mapa com linhas de bateria, altitude, modo, armado, GPS e sinal, além dos botões Follow, History e Controls" caption="Pop-up de um drone de levantamento armado em AUTO: Battery 71%, Altitude 85.5 m, GPS 20 sats (3D), Signal 61 ms (Excellent), com Follow, History e Controls." />
+
+Três botões:
+
+- **Follow** mantém o drone em vista. Veja abaixo.
+- **History** abre o [histórico de voo](./flight-history.mdx) deste drone.
+- **Controls** abre o [Painel de controle do UAV](../fleet/remote-control.mdx).
+
+## Acompanhar um drone {/* #follow-a-drone */}
+
+Selecione **Follow** no pop-up. O mapa aproxima (até pelo menos o nível de zoom 14) e centraliza no drone, então só se desloca quando o drone se aproxima da borda da tela, para que o mapa não trema. Um banner **Following *name*** aparece; selecione seu **X** ou **Unfollow** para parar. Abrir **History** também interrompe o acompanhamento.
+
+<Screenshot id="fleet-manager/map--follow" alt="Mapa acompanhando um drone, com o banner Following no topo" caption="Modo de acompanhamento de um drone de asa fixa mapeando um corredor, com o banner Following e o rastro atrás dele." />
+
+## Drones sem GPS {/* #drones-without-gps */}
+
+Drones online que ainda não têm posição são listados em uma caixa **drones without GPS** no mapa. Selecione um deles para abrir seu painel de controle. O contador **n drones on map** mostra quantos estão plotados.
+
+## Configurações do mapa {/* #map-settings */}
+
+Selecione o botão de engrenagem no canto superior direito para abrir **Map Settings**. Suas escolhas são salvas neste navegador.
+
+| Seção | Opção | Padrão |
+|---|---|---|
+| **Overlays** | **Airspace Layers**: espaço aéreo restrito, aeroportos, heliportos | Desligado |
+| **Drone Filter** | **All Drones**, **Online Only** ou **Offline Only** | All Drones |
+| **Marker Options** | **Heading Line** | Ligado |
+| | **Marker Tooltip**: rótulo com o nome nos marcadores | Ligado |
+| | **Always Visible**: mostra o rótulo permanentemente, em vez de apenas ao passar o cursor | Ligado |
+| | **Flight Trail**: trajetória recente (últimos 5 min) | Ligado |
+| **Map Style** | **Satellite**, **Light** ou **Dark** | Dark |
+
+<Screenshot id="fleet-manager/map--settings" alt="Painel Map Settings com sobreposições, filtro de drones, opções de marcador e estilo do mapa" caption="Painel Map Settings com Airspace Layers ligado, Drone Filter em Online Only e Map Style em Satellite." />
+
+:::tip Para um mapa movimentado
+Com 20 ou mais drones na mesma área, desative **Always Visible** para que os rótulos apareçam apenas ao passar o cursor, e use **Online Only** para ocultar aeronaves estacionadas.
+:::
+
+## Camadas de espaço aéreo {/* #airspace-layers */}
+
+**Airspace Layers** desenha sobre o mapa espaços aéreos restritos, aeroportos e heliportos do OpenAIP. A camada aparece a partir do nível de zoom 7 e mais próximo. É uma única camada combinada; não é possível ativar categorias separadamente.
+
+:::warning Não substitui as verificações oficiais do espaço aéreo
+A camada de espaço aéreo serve para consciência situacional. Consulte os NOTAMs e o mapa nacional de drones ou o serviço UTM antes de cada voo.
+:::

@@ -1,0 +1,100 @@
+---
+title: "UAVcast-Pro hardwarevereisten (Pi, vluchtcontroller, camera's, modems)"
+description: "Welke Raspberry Pi of Linux-computer, vluchtcontroller, camera en 4G/LTE-modem werken met UAVcast-Pro, plus eisen voor bedrading, voeding en opslag."
+sidebar_position: 3
+sidebar_label: "Hardwarevereisten"
+---
+
+# Hardwarevereisten {/* #hardware-requirements */}
+
+UAVcast-Pro draait op een 64-bit Linux companion computer die is verbonden met een willekeurige MAVLink-vluchtcontroller (ArduPilot of PX4). Voeg een camera toe voor video en een 4G/LTE-modem voor vluchten buiten het wifi-bereik. Een Raspberry Pi 4 of 5 met een Pi-camera en een USB-modem is de meest voorkomende opstelling.
+
+## Companion computer {/* #companion-computer */}
+
+UAVcast-Pro installeert op elk **64-bit** Linux-bord of elke pc met een **arm64**- of **amd64 (x86-64)**-processor waarop Raspberry Pi OS, Debian of Ubuntu draait. 32-bit-systemen (`armv7l`, `i686`) worden niet ondersteund.
+
+| Bord | Status | Opmerkingen |
+|---|---|---|
+| Raspberry Pi 5 | Ondersteund | Geen hardwarematige H.264-encoder. Video wordt in software gecodeerd, dus let bij hoge resoluties of twee streams op de indicator **Systeembelasting** op de Camera-pagina. |
+| Raspberry Pi 4 | Ondersteund, aanbevolen | Goede balans tussen cpu, stroomverbruik en prijs. 2 GB RAM of meer. |
+| Raspberry Pi 3 / 3B+ | Ondersteund | Geschikt voor telemetrie en één 720p-stream. De installatie duurt ongeveer 30 minuten. |
+| Raspberry Pi Zero 2 W | Ondersteund | Het kleinst en lichtst. De installatie duurt ongeveer 30 minuten; houd video beperkt. |
+| Raspberry Pi Compute Module 3+/4 | Ondersteund | Hetzelfde als het overeenkomende Pi-model. |
+| NVIDIA Jetson, Orange Pi, Banana Pi en andere arm64-boards | Ondersteund | Gebruik het 64-bit Ubuntu- of Debian-image van de leverancier. UAVcast-Pro herkent deze boards en stelt hun seriële poorten voor de vluchtcontroller voor. Gebruik een USB-camera (Raspberry Pi CSI-camera's hebben een Pi nodig). |
+| x86-64-pc (Intel NUC, mini-pc, laptop) | Ondersteund | Gebruikt de amd64-build. USB-seriële adapters verschijnen als `/dev/ttyUSB*` of `/dev/ttyACM*`. |
+
+Voer `uname -m` uit op het bord om de architectuur te controleren. U wilt `aarch64` of `x86_64`.
+
+:::note Arm64-boards die geen Raspberry Pi zijn
+Jetson, Orange Pi, Banana Pi en andere arm64-boards die geen Raspberry Pi zijn, hebben UAVcast-Pro 6.5.3 of later nodig. Oudere installers stoppen op deze boards met *Device is not a Raspberry Pi*.
+:::
+
+### Opslag {/* #storage */}
+
+- **Minimaal 500 MB vrij** op de rootschijf, anders stopt de installer. Een kaart van 8 GB of groter is het praktische minimum; gebruik 32 GB of meer als u video op de drone opneemt.
+- Gebruik een goede microSD-kaart met A1/A2-classificatie, of start vanaf een SSD. Opnames kunnen ook naar een USB-stick of SSD worden geschreven (zie [Opnames](../uavcast-pro/camera/recordings.mdx)).
+
+:::note De licentie is gekoppeld aan het opslagapparaat
+UAVcast-Pro identificeert een apparaat aan de hand van het serienummer van de cpu plus het serienummer van de bootschijf (SD-kaart of SSD). Overstappen naar een nieuwe SD-kaart telt als een nieuw apparaat. Schrijf het oude apparaat eerst uit. Zie [Naar nieuwe hardware verplaatsen](./license-activation.mdx#move-to-new-hardware).
+:::
+
+### Voeding {/* #power */}
+
+De Raspberry Pi heeft een stabiele voeding van **5,1 V** nodig die de Pi kan leveren, plus alles wat op zijn USB-poorten is aangesloten. Een 4G-modem kan bij zenden ruim boven 500 mA trekken, en een USB-camera vraagt er nog meer.
+
+- Voed de Pi via een aparte 5 V-BEC of regelaar die is afgestemd op de volledige belasting. De TELEM- of USB-poort van een vluchtcontroller kan de Pi niet voeden.
+- Als het modem de Pi laat instorten, voed hem dan via een USB-hub met eigen voeding of een aparte 5 V-voeding.
+- Controleer de rij **Voeding** op het [Dashboard](../uavcast-pro/dashboard.mdx). *Voltage too low - use a stronger power supply* betekent dat de Pi op dit moment onderspanning heeft. *Slowed down (heat or power)* betekent dat de cpu wordt beperkt.
+
+## Vluchtcontroller {/* #flight-controller */}
+
+UAVcast-Pro werkt met **elke MAVLink-vluchtcontroller**: ArduPilot (Copter, Plane, Rover, Sub) en PX4, op Pixhawk- en Cube-families, Matek, Holybro, CUAV, mRo en de meeste andere boards. MAVLink 2 wordt aanbevolen.
+
+De namen van vliegmodi en de modusknoppen (in de Vliegkaart en in Fleet Manager) gebruiken de modi van ArduPilot voor Copter, Plane, Rover en Sub. Bij een PX4-vluchtcontroller werken telemetrie, video, routering naar grondstations, de kaart en de HUD op dezelfde manier; gebruik uw grondstation om PX4-vliegmodi te wijzigen.
+
+Sluit de vluchtcontroller op een van twee manieren aan:
+
+| Verbinding | Bedrading | Wanneer gebruiken |
+|---|---|---|
+| **USB** | USB-kabel van de USB-poort van de vluchtcontroller naar de companion computer. | Het eenvoudigst. Geen baudrate instellen. Gebruik een korte, goede datakabel. |
+| **UART / Serial** | TELEM-poort TX → computer RX, RX → computer TX, GND → GND. Of een USB-serieel (FTDI)-kabel. | Wanneer de USB-poort voor iets anders wordt gebruikt, of voor een schonere installatie. Schakel MAVLink op die poort in: `SERIALx_PROTOCOL = 2` (MAVLink2) op ArduPilot, `MAV_x_CONFIG` op PX4. |
+
+**Alleen Raspberry Pi:** de GPIO-UART is `/dev/serial0` (GPIO 14 TX, GPIO 15 RX). De installer maakt deze vrij voor de vluchtcontroller: hij schakelt de seriële inlogconsole uit en verplaatst bij Pi 3, 4 en Zero 2 W Bluetooth weg van de UART. Verbind de 5 V-pin van de vluchtcontroller nooit met de Pi wanneer beide hun eigen voeding hebben.
+
+Gebruik op andere boards de UART van het bord (bijvoorbeeld `ttyTHS*` op Jetson, `ttyS*` op Orange Pi) of een USB-seriële adapter.
+
+| TELEM-poort van vluchtcontroller | GPIO-header van Raspberry Pi |
+|---|---|
+| TX | GPIO 15 (RXD), pin 10 |
+| RX | GPIO 14 (TXD), pin 8 |
+| GND | GND, bijvoorbeeld pin 6 |
+
+TX gaat altijd naar RX. Laat de 5 V-pin van de TELEM-poort niet aangesloten.
+
+UAVcast-Pro vindt de poort en de baudrate automatisch. Zie [De vluchtcontroller verbinden](../uavcast-pro/flight-controller/index.mdx).
+
+## Camera's {/* #cameras */}
+
+| Camera | Opmerkingen |
+|---|---|
+| Raspberry Pi-cameramodules (v1, v2, v3, HQ, Global Shutter) en andere libcamera CSI-camera's | Beste latentie. Raspberry Pi 5 en Compute Modules kunnen twee CSI-camera's aansturen. |
+| USB (UVC)-webcams zoals Logitech C920 of C615 | Plug-and-play. Wordt herkend als `/dev/video*`. |
+| HDMI-bronnen (GoPro, camera-gimbals) | Via een HDMI-naar-CSI-brug (verschijnt als CSI-camera) of een USB HDMI-capturestick (verschijnt als USB-camera). |
+| IP-camera's en alles wat GStreamer kan lezen | Via een [aangepaste pipeline](../uavcast-pro/camera/custom-pipeline.mdx). |
+
+Twee camera's kunnen tegelijk draaien, ofwel omgeschakeld via een RC-kanaal, ofwel samen gestreamd. Zie [Twee camera's en RC-omschakeling](../uavcast-pro/camera/multi-camera.mdx). Voor audio werkt elke USB-microfoon of webcam met ingebouwde microfoon. Zie [Audio](../uavcast-pro/camera/audio.mdx).
+
+## 4G/LTE-modems {/* #4glte-modems */}
+
+UAVcast-Pro ondersteunt twee soorten USB-modems:
+
+| Type | Werking | Voorbeelden |
+|---|---|---|
+| **HiLink** | Het modem is een kleine router. Het verschijnt als netwerkkaart (meestal `eth1` of `usb0`) en verbindt zichzelf. Er is niets in UAVcast-Pro te configureren. | Huawei E3372**h** (HiLink-firmware), E8372, de meeste "LTE USB-sticks met webinterface" |
+| **Traditioneel (PPP)** | Beheerd door ModemManager en NetworkManager. UAVcast-Pro verbindt het, vindt de APN en maakt opnieuw verbinding na onderbrekingen. | Huawei E3372**s** (stick-firmware), Quectel EC25 / EG25 / EM06 en Sierra Wireless-modules in een USB-adapter |
+
+Elk modem op de [lijst met ondersteunde apparaten van ModemManager](https://www.freedesktop.org/wiki/Software/ModemManager/SupportedDevices/) zou als traditioneel modem moeten werken. Gebruik een simkaart met een dataabonnement voor uw regio en controleer of uw provider inkomend verkeer blokkeert (een VPN werkt dit tegen). Zie [Mobiel modem](../uavcast-pro/connectivity/cellular-modem.mdx).
+
+## Computer van het grondstation {/* #ground-station-computer */}
+
+Elke computer waarop Mission Planner, QGroundControl of een ander MAVLink-grondstation draait. Standaard ontvangt die telemetrie op UDP 14550 en video op UDP 5600. Voor video in Mission Planner moet GStreamer zijn geïnstalleerd; QGroundControl heeft het ingebouwd.

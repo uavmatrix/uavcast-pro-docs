@@ -1,0 +1,47 @@
+---
+title: "Wi-Fi o 4G primero: prioridad de red en un dron con UAVcast-Pro"
+description: "Consulta todas las interfaces de red del dron y elige si el Wi-Fi o el módem 4G/LTE transporta el tráfico, para que el enlace se mantenga en celular cuando vueles fuera del alcance del Wi-Fi."
+sidebar_position: 4
+sidebar_label: "Redes"
+---
+
+# Redes {/* #networks */}
+
+La página Redes muestra todas las interfaces de red del dron (Ethernet, Wi-Fi, módem, VPN) y cuál es la ruta predeterminada. También es donde eliges si el Wi-Fi o el módem celular tienen preferencia cuando ambos están conectados. Abre **Redes** en la barra lateral.
+
+<Screenshot id="uavcast-pro/networks" alt="Página Redes con tarjetas de resumen, Prioridad de Red en Automático y la tabla de interfaces con eth0 y wlan0" caption="Redes con Automático (Predeterminado del Sistema) activo y Wi-Fi como ruta predeterminada." />
+
+## Elegir la prioridad de red {/* #choose-the-network-priority */}
+
+Cuando el Wi-Fi y el módem están conectados a la vez, Linux envía el tráfico por el que tenga la métrica de ruta más baja. **Prioridad de Red** establece esas métricas por ti:
+
+| Opción | Úsala cuando | Efecto |
+|---|---|---|
+| **Prioridad WiFi (Modo Interior)** | En el banco de pruebas o en casa, para ahorrar datos móviles. | Métrica de Wi-Fi 100, métrica del módem 600. |
+| **Prioridad Módem (Modo Exterior)** | Antes de cada vuelo sobre celular. | Métrica del módem 100, métrica de Wi-Fi 600. |
+| **Automático (Predeterminado del Sistema)** | No quieres que UAVcast-Pro cambie nada. | Las métricas propias de NetworkManager. |
+
+:::warning Cambia a Prioridad Módem antes del despegue
+Si el dron despega con prioridad Wi-Fi, el enlace se mantiene en Wi-Fi hasta que se pierde, y entonces tiene que cambiar al módem en el aire. Eso provoca un corte en la telemetría y en el video. Selecciona **Prioridad Módem (Modo Exterior)** en tierra.
+:::
+
+El cambio se aplica a las conexiones activas sin reiniciarlas (*Aplicando cambios...*).
+
+:::note Qué conexiones se cambian
+La métrica de Wi-Fi se establece en la conexión de NetworkManager llamada `preconfigured`, que es el nombre que Raspberry Pi Imager asigna al Wi-Fi que introduces al grabar la imagen. El Wi-Fi configurado de cualquier otra forma conserva su propia métrica, y Ethernet nunca se modifica.
+:::
+
+## Información de las interfaces {/* #interface-information */}
+
+Las tarjetas de resumen muestran **Interfaces Activas**, **Puerta de Enlace Predeterminada** (y la interfaz por la que pasa) y **Total de Interfaces**. **Interfaces de Red** enumera cada interfaz con **Nombre**, **Dirección IP**, **Puerta de Enlace**, **Estado** (**Activo**, **Inactivo**, **VPN**), **Velocidad**, **Tipo** y cuál aparece marcada como **Predeterminado**.
+
+Nombres de interfaz habituales:
+
+| Nombre | Qué es |
+|---|---|
+| `eth0`, `end0` | Ethernet cableado |
+| `wlan0` | Wi-Fi |
+| `ppp0`, `wwan0` | Módem tradicional |
+| `usb0`, `eth1` | Módem HiLink |
+| `zt…` | ZeroTier |
+| `tailscale0` | Tailscale |
