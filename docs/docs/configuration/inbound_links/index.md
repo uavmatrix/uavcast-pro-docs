@@ -1,6 +1,8 @@
 ---
 slug: /configuration-inbound-links
-title: Inbound Links
+title: "Inbound Links: Receive MAVLink Streams on the Vehicle"
+sidebar_label: "Inbound Links"
+description: "Let the vehicle listen for an incoming MAVLink stream over the network and merge it into its own MAVLink network, all the way to the flight controller."
 authors: Bernt Christian Egeland
 tags: []
 ---

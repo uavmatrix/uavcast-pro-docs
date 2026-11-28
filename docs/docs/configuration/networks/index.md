@@ -1,6 +1,8 @@
 ---
 slug: /configuration-networks
-title: Networks
+title: "Network Interfaces and Connection Priority"
+sidebar_label: "Networks"
+description: "See the network interfaces and default gateway on your companion computer and set which connection UAVcast-Pro should prefer."
 authors: Bernt Christian Egeland
 tags: []
 ---

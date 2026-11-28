@@ -1,6 +1,8 @@
 ---
 slug: /configuration-rtk
-title: NTRIP / RTK Corrections
+title: "NTRIP RTK Corrections over 4G for ArduPilot and PX4"
+sidebar_label: "NTRIP / RTK Corrections"
+description: "Stream RTCM3 corrections from any NTRIP caster over the cellular link to your flight controller for centimeter-level RTK positioning, without a base station on site."
 authors: Bernt Christian Egeland
 tags: []
 ---

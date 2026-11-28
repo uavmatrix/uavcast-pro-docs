@@ -1,6 +1,8 @@
 ---
 slug: /quick-start
-title: Quick Start Tutorial
+title: "Quick Start: Fly over 4G with Mission Planner or QGroundControl"
+sidebar_label: "Quick Start Tutorial"
+description: "Step-by-step setup of UAVcast-Pro v6: activate the license, connect the flight controller, create a ZeroTier VPN and stream telemetry and video to Mission Planner or QGroundControl."
 authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 4
@@ -36,7 +38,7 @@ After installation, access the UAVcast-Pro web interface:
 3. You should see the UAVcast-Pro login/dashboard page
 
 :::tip Finding Your IP Address
-If you need help finding your Raspberry Pi's IP address, see the [Installation Guide](/docs/6.x/installation#finding-your-raspberry-pi-ip-address).
+If you need help finding your Raspberry Pi's IP address, see the [Installation Guide](/docs/6.x/installation#finding-your-device-ip-address).
 :::
 
 ## 2. License Activation

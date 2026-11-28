@@ -1,6 +1,8 @@
 ---
 slug: /configuration-users
-title: Users Management
+title: "User Accounts and Roles"
+sidebar_label: "Users Management"
+description: "Create and manage UAVcast-Pro user accounts with admin and read-only roles to control who can change settings."
 authors: Bernt Christian Egeland
 tags: []
 ---

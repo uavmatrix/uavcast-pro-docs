@@ -1,21 +1,73 @@
 import { themes as prismThemes } from "prism-react-renderer";
-import type { Config } from "@docusaurus/types";
+import type { Config, Plugin } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
+import fs from "fs/promises";
+import path from "path";
+import { SITE_URL, redirects, rawRedirects } from "./redirects";
+
+const redirectPageHtml = (toUrl: string) => `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=${toUrl}">
+    <link rel="canonical" href="${toUrl}" />
+  </head>
+  <script>
+    window.location.href = '${toUrl}';
+  </script>
+</html>
+`;
+
+/**
+ * Fails the build if a redirect points to a page that does not exist or
+ * would shadow a real page, and writes the redirect pages for legacy paths
+ * with spaces, which plugin-client-redirects cannot express.
+ */
+function redirectChecksPlugin(): Plugin {
+	return {
+		name: "uavmatrix-redirect-checks",
+		async postBuild({ routesPaths, outDir }) {
+			const routes = new Set(routesPaths);
+			const problems: string[] = [];
+			const seen = new Set<string>();
+			for (const r of [...redirects, ...rawRedirects]) {
+				if (seen.has(r.from)) problems.push(`duplicate redirect source: ${r.from}`);
+				seen.add(r.from);
+				if (routes.has(r.from)) problems.push(`redirect source is a real page: ${r.from}`);
+				const toPath = r.to.startsWith(SITE_URL) ? r.to.slice(SITE_URL.length) : r.to;
+				if (!routes.has(toPath)) problems.push(`redirect target is not a page: ${r.from} -> ${r.to}`);
+			}
+			if (problems.length > 0) {
+				throw new Error(`Invalid redirects in redirects.ts:\n- ${problems.join("\n- ")}`);
+			}
+			for (const r of rawRedirects) {
+				const file = path.join(outDir, r.from, "index.html");
+				await fs.mkdir(path.dirname(file), { recursive: true });
+				await fs.writeFile(file, redirectPageHtml(r.to), { flag: "wx" });
+			}
+		},
+	};
+}
 
 const config: Config = {
-	title: "UAVcast-Pro Documentation",
+	title: "UAVcast-Pro Docs",
 	tagline: "UAVcast-Pro Documentation",
 	favicon: "img/favicon.ico",
 
 	// Set the production url of your site here
-	url: "https://docs.uavmatrix.com",
+	url: SITE_URL,
 	// Set the /<baseUrl>/ pathname under which your site is served
 	// For GitHub pages deployment, it is often '/<projectName>/'
 	baseUrl: "/",
 
+	// GitHub Pages serves every page as a folder (/page/index.html) and 301s
+	// /page to /page/. Emit the slashed URL everywhere (canonical tags,
+	// sitemap, internal links) so it matches what is actually served.
+	trailingSlash: true,
+
 	// GitHub pages deployment config.
 	// If you aren't using GitHub pages, you don't need these.
-	organizationName: "facebook", // Usually your GitHub org/user name.
+	organizationName: "UAVmatrix", // Usually your GitHub org/user name.
 	projectName: "uavcast-pro-docs", // Usually your repo name.
 
 	onBrokenLinks: "throw",
@@ -48,33 +100,39 @@ const config: Config = {
 							label: "6.x",
 							path: "6.x",
 						},
+						// Old versions stay reachable for existing users, but are kept
+						// out of search results and the sitemap so they do not compete
+						// with the 6.x pages.
+						"5.x": {
+							noIndex: true,
+						},
+						"4.x": {
+							noIndex: true,
+						},
 					},
 					sidebarPath: "./sidebars.ts",
-					// Please change this to your repo.
-					// Remove this to remove the "edit this page" links.
-					editUrl:
-						"https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
+					editUrl: "https://github.com/UAVmatrix/uavcast-pro-docs/edit/master/docs/",
 				},
-				blog: {
-					showReadingTime: true,
-					feedOptions: {
-						type: ["rss", "atom"],
-						xslt: true,
-					},
-					// Please change this to your repo.
-					// Remove this to remove the "edit this page" links.
-					editUrl:
-						"https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/",
-					// Useful options to enforce blogging best practices
-					onInlineTags: "warn",
-					onInlineAuthors: "warn",
-					onUntruncatedBlogPosts: "warn",
-				},
+				blog: false,
 				theme: {
 					customCss: "./src/css/custom.css",
 				},
+				sitemap: {
+					lastmod: "date",
+					ignorePatterns: ["/search/**", "/docs/*/category/**"],
+				},
 			} satisfies Preset.Options,
 		],
+	],
+
+	plugins: [
+		[
+			"@docusaurus/plugin-client-redirects",
+			{
+				redirects,
+			},
+		],
+		redirectChecksPlugin,
 	],
 
 	themes: [
@@ -95,13 +153,12 @@ const config: Config = {
 	],
 
 	themeConfig: {
-		// Replace with your project's social card
 		colorMode: {
 			defaultMode: "dark",
 			respectPrefersColorScheme: false,
 			disableSwitch: false,
 		},
-		image: "img/docusaurus-social-card.jpg",
+		image: "img/uavcast-pro-social-card.jpg",
 		navbar: {
 			title: "UAVcast-Pro",
 			logo: {

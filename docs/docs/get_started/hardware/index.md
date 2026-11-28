@@ -1,6 +1,8 @@
 ---
 slug: /hardware
-title: Supported Hardware
+title: "Hardware Requirements: Raspberry Pi, 4G Modems and Cameras"
+sidebar_label: "Supported Hardware"
+description: "Hardware you need for UAVcast-Pro: supported Raspberry Pi models, MAVLink flight controllers, power supply, recommended 4G/LTE modems by country, and cameras."
 authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 4

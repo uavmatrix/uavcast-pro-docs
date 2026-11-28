@@ -1,6 +1,8 @@
 ---
 slug: /configuration-settings
-title: Application Settings
+title: "Application Settings: License, Updates, Logs and Backup"
+sidebar_label: "Application Settings"
+description: "Manage the UAVcast-Pro license, install updates, change the server port and language, download logs, and back up or restore the database."
 authors: Bernt Christian Egeland
 tags: []
 ---

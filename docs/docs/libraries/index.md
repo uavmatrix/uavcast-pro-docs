@@ -1,6 +1,8 @@
 ---
 slug: /configuration-libraries
-title: Libraries
+title: "Open-Source Libraries and Licenses"
+sidebar_label: "Libraries"
+description: "Open-source libraries used by UAVcast-Pro and the licenses they are distributed under."
 authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 9

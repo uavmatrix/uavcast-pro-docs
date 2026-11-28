@@ -1,6 +1,8 @@
 ---
 slug: /configuration-ground-controller
-title: Ground Control Stations
+title: "Stream Telemetry and Video to Mission Planner and QGroundControl"
+sidebar_label: "Ground Control Stations"
+description: "Send MAVLink telemetry and video from UAVcast-Pro to one or more ground control stations such as Mission Planner and QGroundControl, including ports and firewall setup."
 authors: Bernt Christian Egeland
 tags: []
 ---

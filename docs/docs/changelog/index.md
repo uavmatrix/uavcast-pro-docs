@@ -1,6 +1,8 @@
 ---
 slug: /changelog
-title: Changelog
+title: "Changelog and Release Notes"
+sidebar_label: "Changelog"
+description: "Release notes for every UAVcast-Pro v6 version, newest first: new features, fixes and changes."
 authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 40

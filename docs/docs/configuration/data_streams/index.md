@@ -1,6 +1,8 @@
 ---
 slug: /configuration-data-streams
-title: Data Streams
+title: "Data Streams: Custom Live Telemetry Dashboards"
+sidebar_label: "Data Streams"
+description: "Build custom live telemetry dashboards in UAVcast-Pro with drag-and-drop widgets bound to any MAVLink value or injected NAMED_VALUE_FLOAT signal."
 authors: Bernt Christian Egeland
 tags: []
 ---

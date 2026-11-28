@@ -1,6 +1,8 @@
 ---
 slug: /configuration-vpn
-title: VPN / Private Network
+title: "VPN for Drones: ZeroTier and Tailscale Setup"
+sidebar_label: "VPN / Private Network"
+description: "Connect your drone and ground control station securely over the internet with ZeroTier or Tailscale, without port forwarding or exposed services."
 authors: Bernt Christian Egeland
 tags: []
 ---

@@ -2,6 +2,7 @@
   "label": "Configuration",
   "position": 4,
   "link": {
-    "type": "generated-index"
+    "type": "generated-index",
+    "description": "Configure each part of UAVcast-Pro v6: flight controller, ground control stations, camera, cellular modem, VPN, RTK corrections, injectors and system settings."
   }
 }

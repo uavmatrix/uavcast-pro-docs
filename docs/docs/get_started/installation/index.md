@@ -1,6 +1,8 @@
 ---
 slug: /installation
-title: Installation
+title: "Install on Raspberry Pi and Linux (arm64/amd64)"
+sidebar_label: "Installation"
+description: "Install UAVcast-Pro v6 on 64-bit Raspberry Pi OS or another arm64/amd64 Linux system with the one-line installer, pin a specific version, and upgrade from earlier releases."
 authors: Bernt Christian Egeland
 tags: []
 sidebar_position: 2

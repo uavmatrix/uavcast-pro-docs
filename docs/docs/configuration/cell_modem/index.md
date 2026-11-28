@@ -1,6 +1,8 @@
 ---
 slug: /configuration-cell-modem
-title: Cellular Modem
+title: "Configure a 4G/LTE Cellular Modem"
+sidebar_label: "Cellular Modem"
+description: "Set up a 4G/LTE USB modem in UAVcast-Pro: choose HiLink or traditional stick mode and enter the APN, username, password and SIM PIN."
 authors: Bernt Christian Egeland
 tags: []
 ---
